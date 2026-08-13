@@ -149,3 +149,7 @@ None required to complete this plan. Plan 05's live orchestration run (which wil
 ---
 *Phase: 01-data-pipeline*
 *Completed: 2026-08-13*
+
+## Self-Check: PASSED
+
+All created files (scripts/lib/coverage.ts, tests/coverage.test.ts, public/logos/placeholder.svg, this SUMMARY.md) and commit hashes (50586c8, 5b7fc57, d08aea3, 4d0fa25) verified present on disk / in git log.

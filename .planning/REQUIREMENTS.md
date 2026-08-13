@@ -7,8 +7,8 @@
 
 ### Data Pipeline (DATA)
 
-- [ ] **DATA-01**: A committed, season-namespaced JSON dataset of all 2026 FBS teams (conference, colors, logo, CFBD id) exists, produced by a one-time fetch script
-- [ ] **DATA-02**: A committed, season-namespaced JSON dataset of all 2026 FBS games (teams, week, conference-game flag, neutral-site flag, championship-game flag) exists, produced by the same fetch script
+- [x] **DATA-01**: A committed, season-namespaced JSON dataset of all 2026 FBS teams (conference, colors, logo, CFBD id) exists, produced by a one-time fetch script
+- [x] **DATA-02**: A committed, season-namespaced JSON dataset of all 2026 FBS games (teams, week, conference-game flag, neutral-site flag, championship-game flag) exists, produced by the same fetch script
 - [ ] **DATA-03**: Every dataset carries a `scheduleHash` fingerprint so stored scenarios and share links can detect a stale schedule
 - [ ] **DATA-04**: Team logos are vendored into the repo at build time (not hotlinked), sourced from CFBD's own `/teams` logo URLs with a placeholder fallback for teams with no available logo
 - [ ] **DATA-05**: A build-time validation script fails loudly and lists any team missing a logo, color, or required field, and produces a committed coverage report
@@ -117,8 +117,8 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Pending |
 | DATA-04 | Phase 1 | Pending |
 | DATA-05 | Phase 1 | Pending |
@@ -162,6 +162,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | SHARE-04 | Phase 8 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 43 total
 - Mapped to phases: 43
 - Unmapped: 0 ✓

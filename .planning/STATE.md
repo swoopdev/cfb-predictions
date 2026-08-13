@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: foundation-read-only-slate
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-08-13T22:29:31.837Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-08-13T22:43:55.536Z"
 last_activity: 2026-08-13
 last_activity_desc: Phase 01 complete, transitioned to Phase 2
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 ## Current Position
 
 Phase: 02 (foundation-read-only-slate) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-08-13 — Phase 02 execution started
 
-Progress: [████████░░] 78%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Progress: [████████░░] 78%
 |------|----------|-------|-------|
 | Phase 02 P01 | 22min | 3 tasks | 13 files |
 | Phase 02 P02 | 6min | 2 tasks | 2 files |
+| Phase 02 P03 | 12min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 01-05]: Open Question #2 resolved: 127 of 888 games have an awayId (FCS opponent) not present in teams.json, since CFBD's classification=fbs filter on /games only requires the home team to be FBS; per DATA-06/DATA-07 raw-passthrough, fetch-data.ts does not filter these out -- documented for Phase 2/5 planners
 - [Phase 02-01]: Kept RESEARCH.md's literal import { $fetch } from 'ofetch' — probed that vi.mock('ofetch', factory) works in plain vitest and Nuxt's tsconfig aliases ofetch, so no deviation needed
 - [Phase 02-01]: No REFACTOR commits needed for Task 2/Task 3 TDD cycles — first GREEN implementations were already the simplest correct shape
+- [Phase 02-03]: Implemented Task 3's buildConfQuery/buildTeamQuery before Task 2's component wiring (dependency order, not stubbed)
+- [Phase 02-03]: conf/teamId are writable computeds in week/[week].vue (get: sanitize from route.query; set: setConf/setTeam -> buildConfQuery/buildTeamQuery) so filter components bind with plain v-model
+- [Phase 02-03]: KNOWN_CONFERENCES/CONFERENCE_ITEMS exported from ConferenceFilter.vue's plain <script> block since <script setup> cannot hold non-type named exports
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-13T22:29:31.821Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-08-13T22:43:55.523Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

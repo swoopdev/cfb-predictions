@@ -71,7 +71,7 @@ Plans:
   4. Week and filter selections are reflected in the URL, so any view is linkable and back/forward navigation works
   5. The production build makes zero network requests for schedule/team data after initial load, with no runtime API key and no server route
 
-**Plans**: 2/4 plans executed
+**Plans**: 3/4 plans executed
 Plans:
 **Wave 1**
 
@@ -80,7 +80,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [x] 02-02-PLAN.md — Static build config: ssr:false, prerendered week routes, Cloudflare SPA fallback
-- [ ] 02-03-PLAN.md — Conference + team filters with URL round-trip and input sanitization
+- [x] 02-03-PLAN.md — Conference + team filters with URL round-trip and input sanitization
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 2/4 | In Progress|  |
+| 2. Foundation & Read-Only Slate | 3/4 | In Progress|  |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |

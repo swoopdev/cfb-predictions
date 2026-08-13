@@ -24,8 +24,8 @@
 ### Slate & Navigation (SLATE)
 
 - [ ] **SLATE-01**: User can browse the schedule week by week, with a control to move to the next/previous week
-- [ ] **SLATE-02**: User can filter the visible slate down to a single conference (SEC, Big Ten, Big 12, ACC) or "All"
-- [ ] **SLATE-03**: User can filter the visible slate down to a single team's games
+- [x] **SLATE-02**: User can filter the visible slate down to a single conference (SEC, Big Ten, Big 12, ACC) or "All"
+- [x] **SLATE-03**: User can filter the visible slate down to a single team's games
 - [x] **SLATE-04**: Every game in the slate displays both teams' logos and names
 - [x] **SLATE-05**: Filter selections (week, conference, team) are reflected in the URL so views are linkable and back/forward navigation works
 
@@ -128,8 +128,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-02 | Phase 2 | Complete |
 | FOUND-03 | Phase 2 | Complete |
 | SLATE-01 | Phase 2 | Pending |
-| SLATE-02 | Phase 2 | Pending |
-| SLATE-03 | Phase 2 | Pending |
+| SLATE-02 | Phase 2 | Complete |
+| SLATE-03 | Phase 2 | Complete |
 | SLATE-04 | Phase 2 | Complete |
 | SLATE-05 | Phase 2 | Complete |
 | TIE-01 | Phase 3 | Pending |

@@ -82,6 +82,25 @@ export function sanitizeTeamParam(raw: string | undefined, teamsById: Map<number
   return teamsById.has(id) ? id : undefined
 }
 
+/**
+ * D-03 mutual exclusivity + Pitfall 6 (Vue Router's `router.push({ query })`
+ * replaces rather than merges the query object). Returns the next full
+ * query object: `conf` set, `team` always nulled out, every other current
+ * key re-spread so it survives the replace.
+ */
+export function buildConfQuery(currentQuery: Record<string, unknown>, conf: string | undefined): Record<string, unknown> {
+  return { ...currentQuery, conf, team: undefined }
+}
+
+/**
+ * D-03 mutual exclusivity + Pitfall 6. Returns the next full query object:
+ * `team` set, `conf` always nulled out, every other current key re-spread
+ * so it survives Vue Router's query-replace behavior.
+ */
+export function buildTeamQuery(currentQuery: Record<string, unknown>, team: number | undefined): Record<string, unknown> {
+  return { ...currentQuery, team, conf: undefined }
+}
+
 export interface LoadStateInput {
   isPending: boolean
   isError: boolean

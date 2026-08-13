@@ -1,9 +1,10 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { client, getFbsTeams, getGames } from 'cfbd'
 
-import { reportRequiredFieldFailures, transformTeam, transformGame, type TeamOutput } from './lib/schemas'
+import { transformTeam, transformGame, type TeamOutput } from './lib/schemas'
 import { vendorLogo, buildCoverageReport, type CoverageEntryInput } from './lib/coverage'
 import { computeScheduleHash } from './lib/schedule-hash'
+import { fetchSourceData } from './lib/fetch-source'
 
 type TeamOutputWithLogo = TeamOutput & { logo: string }
 
@@ -29,31 +30,15 @@ client.setConfig({
   headers: { Authorization: `Bearer ${apiKey}` }
 })
 
-const { data: rawTeams, error: teamsError } = await getFbsTeams({ query: { year: season } })
-if (teamsError || !rawTeams) {
-  console.error('Failed to fetch teams from CFBD:', teamsError ?? '(no data returned)')
+const sourceResult = await fetchSourceData(season, {
+  fetchTeams: () => getFbsTeams({ query: { year: season } }),
+  fetchGames: () => getGames({ query: { year: season, classification: 'fbs' } })
+})
+if (!sourceResult.ok) {
+  console.error(sourceResult.reason)
   process.exit(1)
 }
-if (rawTeams.length === 0) {
-  console.error(`CFBD returned 0 teams for season ${season} — refusing to overwrite committed data.`)
-  process.exit(1)
-}
-
-const { data: rawGames, error: gamesError } = await getGames({ query: { year: season, classification: 'fbs' } })
-if (gamesError || !rawGames) {
-  console.error('Failed to fetch games from CFBD:', gamesError ?? '(no data returned)')
-  process.exit(1)
-}
-if (rawGames.length === 0) {
-  console.error(`CFBD returned 0 games for season ${season} — refusing to overwrite committed data.`)
-  process.exit(1)
-}
-
-const failures = reportRequiredFieldFailures(rawTeams)
-if (failures.length > 0) {
-  console.error(JSON.stringify(failures, null, 2))
-  process.exit(1)
-}
+const { rawTeams, rawGames } = sourceResult
 
 const teams: TeamOutputWithLogo[] = []
 const coverageEntries: CoverageEntryInput[] = []

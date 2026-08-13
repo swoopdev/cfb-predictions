@@ -1,0 +1,978 @@
+{
+  "season": 2026,
+  "generatedAt": "2026-08-13T17:11:01.209Z",
+  "teams": [
+    {
+      "id": 2005,
+      "school": "Air Force",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2006,
+      "school": "Akron",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 333,
+      "school": "Alabama",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2026,
+      "school": "App State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 12,
+      "school": "Arizona",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 9,
+      "school": "Arizona State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 8,
+      "school": "Arkansas",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2032,
+      "school": "Arkansas State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 349,
+      "school": "Army",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2,
+      "school": "Auburn",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2050,
+      "school": "Ball State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 239,
+      "school": "Baylor",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 68,
+      "school": "Boise State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 103,
+      "school": "Boston College",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 189,
+      "school": "Bowling Green",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2084,
+      "school": "Buffalo",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 252,
+      "school": "BYU",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 25,
+      "school": "California",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2117,
+      "school": "Central Michigan",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2429,
+      "school": "Charlotte",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2132,
+      "school": "Cincinnati",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 228,
+      "school": "Clemson",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 324,
+      "school": "Coastal Carolina",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 38,
+      "school": "Colorado",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 36,
+      "school": "Colorado State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 48,
+      "school": "Delaware",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 150,
+      "school": "Duke",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 151,
+      "school": "East Carolina",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2199,
+      "school": "Eastern Michigan",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 57,
+      "school": "Florida",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2226,
+      "school": "Florida Atlantic",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2229,
+      "school": "Florida International",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 52,
+      "school": "Florida State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 278,
+      "school": "Fresno State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 61,
+      "school": "Georgia",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 290,
+      "school": "Georgia Southern",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2247,
+      "school": "Georgia State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 59,
+      "school": "Georgia Tech",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 62,
+      "school": "Hawai'i",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 248,
+      "school": "Houston",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 356,
+      "school": "Illinois",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 84,
+      "school": "Indiana",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2294,
+      "school": "Iowa",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 66,
+      "school": "Iowa State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 55,
+      "school": "Jacksonville State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 256,
+      "school": "James Madison",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2305,
+      "school": "Kansas",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2306,
+      "school": "Kansas State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 338,
+      "school": "Kennesaw State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2309,
+      "school": "Kent State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 96,
+      "school": "Kentucky",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2335,
+      "school": "Liberty",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 309,
+      "school": "Louisiana",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2348,
+      "school": "Louisiana Tech",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 97,
+      "school": "Louisville",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 99,
+      "school": "LSU",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 276,
+      "school": "Marshall",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 120,
+      "school": "Maryland",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 113,
+      "school": "Massachusetts",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 235,
+      "school": "Memphis",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2390,
+      "school": "Miami",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 193,
+      "school": "Miami (OH)",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 130,
+      "school": "Michigan",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 127,
+      "school": "Michigan State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2393,
+      "school": "Middle Tennessee",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 135,
+      "school": "Minnesota",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 344,
+      "school": "Mississippi State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 142,
+      "school": "Missouri",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2623,
+      "school": "Missouri State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2426,
+      "school": "Navy",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 152,
+      "school": "NC State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 158,
+      "school": "Nebraska",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2440,
+      "school": "Nevada",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 167,
+      "school": "New Mexico",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 166,
+      "school": "New Mexico State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 153,
+      "school": "North Carolina",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2449,
+      "school": "North Dakota State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2459,
+      "school": "Northern Illinois",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 249,
+      "school": "North Texas",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 77,
+      "school": "Northwestern",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 87,
+      "school": "Notre Dame",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 195,
+      "school": "Ohio",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 194,
+      "school": "Ohio State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 201,
+      "school": "Oklahoma",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 197,
+      "school": "Oklahoma State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 295,
+      "school": "Old Dominion",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 145,
+      "school": "Ole Miss",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2483,
+      "school": "Oregon",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 204,
+      "school": "Oregon State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 213,
+      "school": "Penn State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 221,
+      "school": "Pittsburgh",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2509,
+      "school": "Purdue",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 242,
+      "school": "Rice",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 164,
+      "school": "Rutgers",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 16,
+      "school": "Sacramento State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2534,
+      "school": "Sam Houston",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 21,
+      "school": "San Diego State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 23,
+      "school": "San José State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2567,
+      "school": "SMU",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 6,
+      "school": "South Alabama",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2579,
+      "school": "South Carolina",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2572,
+      "school": "Southern Miss",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 58,
+      "school": "South Florida",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 24,
+      "school": "Stanford",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 183,
+      "school": "Syracuse",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2628,
+      "school": "TCU",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 218,
+      "school": "Temple",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2633,
+      "school": "Tennessee",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 251,
+      "school": "Texas",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 245,
+      "school": "Texas A&M",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 326,
+      "school": "Texas State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2641,
+      "school": "Texas Tech",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2649,
+      "school": "Toledo",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2653,
+      "school": "Troy",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2655,
+      "school": "Tulane",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 202,
+      "school": "Tulsa",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 5,
+      "school": "UAB",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2116,
+      "school": "UCF",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 26,
+      "school": "UCLA",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 41,
+      "school": "UConn",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2433,
+      "school": "UL Monroe",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2439,
+      "school": "UNLV",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 30,
+      "school": "USC",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 254,
+      "school": "Utah",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 328,
+      "school": "Utah State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2638,
+      "school": "UTEP",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2636,
+      "school": "UTSA",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 238,
+      "school": "Vanderbilt",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 258,
+      "school": "Virginia",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 259,
+      "school": "Virginia Tech",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 154,
+      "school": "Wake Forest",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 264,
+      "school": "Washington",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 265,
+      "school": "Washington State",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 98,
+      "school": "Western Kentucky",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2711,
+      "school": "Western Michigan",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 277,
+      "school": "West Virginia",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 275,
+      "school": "Wisconsin",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    },
+    {
+      "id": 2751,
+      "school": "Wyoming",
+      "requiredFields": "pass",
+      "missingFields": [],
+      "logo": "pass"
+    }
+  ],
+  "summary": {
+    "totalTeams": 138,
+    "requiredFieldFailures": 0,
+    "logosVendored": 138,
+    "logosMissing": 0
+  }
+}

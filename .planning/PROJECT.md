@@ -16,12 +16,11 @@ If the standings math or the tiebreaker resolution is wrong, nothing else about 
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Fetch the 2026 FBS schedule and team metadata from CFBD once, commit as static JSON — Validated in Phase 1: Data Pipeline. `pnpm fetch-data 2026` produces committed, season-namespaced `public/data/2026/teams.json` (138 teams) and `games.json` (888 games), each carrying a `scheduleHash` fingerprint. Re-running for 2027 needs only the season CLI argument — zero hardcoded `2026` in `scripts/`.
+- [x] Pull team logos into `public/` at build time — Validated in Phase 1, with a correction to how this requirement was originally scoped: logos are vendored directly from CFBD's own `/teams` endpoint (`team.logos[]`, an `https:`-only-gated download with a placeholder SVG fallback), **not** from the separate `CFBD/cfb-web` GitHub repo this bullet originally assumed. One fewer data source to keep in sync; team IDs still join without a mapping layer. 138/138 logos vendored on the live 2026 run, 0 missing.
 
 ### Active
 
-- [ ] Fetch the 2026 FBS schedule and team metadata from CFBD once, commit as static JSON
-- [ ] Pull team logos from the CFBD `cfb-web` repo into `public/` at build time
 - [ ] Week-first browsing of the full slate, filterable down to a single conference or team
 - [ ] Pick a winner for any game; picks persist across sessions
 - [ ] Conference standings derive from picks (conference record, overall record)
@@ -29,7 +28,7 @@ If the standings math or the tiebreaker resolution is wrong, nothing else about 
 - [ ] Tied teams that bottom out at a ranking-based tiebreaker step surface for manual user selection
 - [ ] Multiple named scenarios, saved and switchable
 - [ ] Encode a scenario into a shareable URL that opens with those picks applied
-- [ ] Season-parameterized data and storage keys so 2027 is a re-run of the fetch script
+- [ ] Season-parameterized storage keys so 2027 picks/scenarios don't collide with 2026's (the fetch-script half of this is already validated above — this remaining bullet is specifically about `useStorage` key namespacing, which lands with Phase 4's picks/persistence work)
 
 ### Out of Scope
 
@@ -42,9 +41,13 @@ If the standings math or the tiebreaker resolution is wrong, nothing else about 
 
 ## Context
 
-**Starting point:** The repo is the stock Nuxt 4 + Nuxt UI 4 starter — `app/pages/index.vue`, `AppLogo.vue`, `TemplateMenu.vue`, and nothing else. `@tanstack/vue-query` v5 is already a dependency but not yet wired up. pnpm, TypeScript, ESLint via `@nuxt/eslint`. No app code to preserve.
+**Starting point (as of initialization):** The repo was the stock Nuxt 4 + Nuxt UI 4 starter — `app/pages/index.vue`, `AppLogo.vue`, `TemplateMenu.vue`, and nothing else. `@tanstack/vue-query` v5 was already a dependency but not yet wired up.
 
-**Data:** [CollegeFootballData](https://collegefootballdata.com) API — `/games` for the schedule, `/teams/fbs` for team metadata (conference, colors, alternate colors, IDs). Free API key, one-time fetch. Logos come from [CFBD/cfb-web](https://github.com/CFBD/cfb-web), whose filenames key off the same team IDs, so schedule and logo join without a mapping layer.
+**Current state (after Phase 1: Data Pipeline, 2026-08-13):** The data foundation exists and is committed: `scripts/fetch-data.ts` + `scripts/lib/{schedule-hash,schemas,coverage,fetch-source}.ts` orchestrate a validated, tested fetch pipeline (36 tests). `public/data/2026/{teams,games,coverage}.json` and `public/logos/*.png` are committed. The app layer (`app/`) is still untouched — Phase 2 is the first phase that builds user-facing UI against this data.
+
+**Data:** [CollegeFootballData](https://collegefootballdata.com) API — `/games` for the schedule, `/teams/fbs` for team metadata (conference, colors, alternate colors, IDs). Free API key, one-time fetch. Logos are vendored directly from the `logos[]` URLs CFBD's own `/teams` response already includes (see Requirements/Validated above — no separate cfb-web repo needed).
+
+**Data pipeline hardening (Phase 1 code review):** The initial fetch script only checked the CFBD SDK's `data` field and defaulted to `[]` on failure — a rotated/expired key or a rate limit would have silently overwritten the committed dataset with an empty one. Fixed before Phase 1 closed: `scripts/lib/fetch-source.ts` now gates on the SDK's `error` field, a missing-`data` case, and a suspiciously-empty response before anything is written, and per-game validation failures are now reported structurally instead of throwing an uncaught exception mid-run.
 
 **Why static JSON:** The 2026 schedule doesn't meaningfully change once released, so there's no reason to hit an API at runtime. A committed fetch script produces `teams.json` and `games.json`; re-running it for a new season is a one-liner.
 
@@ -66,15 +69,15 @@ If the standings math or the tiebreaker resolution is wrong, nothing else about 
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| CFBD over SportRadar for schedule data | Free key, no redistribution restrictions, and team IDs match the CFBD logo repo — no mapping layer needed | — Pending |
-| Static committed JSON, no runtime API calls | Schedule is immutable once released; removes the API key from the deploy entirely | — Pending |
-| TanStack Query even for local JSON | Uniform call sites and a query-key factory that survives the eventual switch to a live results endpoint | — Pending |
-| Fetch all FBS games, surface P4 | Costs nothing extra at fetch time; P4 non-conference records need G5/FCS games anyway, and extending to G5 later needs no re-fetch | — Pending |
-| Tiebreakers auto-resolve with manual override at ranking steps | Published procedures are computable right up to the ranking-based step; guessing there would be arbitrary, so hand it to the user | — Pending |
+| CFBD over SportRadar for schedule data | Free key, no redistribution restrictions, and team IDs match the CFBD logo repo — no mapping layer needed | Confirmed, Phase 1 — 138 teams / 888 games fetched via the official `cfbd` SDK, ids join cleanly between teams/games/logos with no mapping layer |
+| Static committed JSON, no runtime API calls | Schedule is immutable once released; removes the API key from the deploy entirely | Confirmed, Phase 1 — `public/data/2026/*.json` committed with a `scheduleHash` fingerprint; `CFBD_API_KEY` lives only in a gitignored `.env`, never in the deploy |
+| TanStack Query even for local JSON | Uniform call sites and a query-key factory that survives the eventual switch to a live results endpoint | — Pending (Phase 2) |
+| Fetch all FBS games, surface P4 | Costs nothing extra at fetch time; P4 non-conference records need G5/FCS games anyway, and extending to G5 later needs no re-fetch | Confirmed, Phase 1 — all 888 FBS games fetched, including 127 with an FCS opponent (documented, not filtered) |
+| Tiebreakers auto-resolve with manual override at ranking steps | Published procedures are computable right up to the ranking-based step; guessing there would be arbitrary, so hand it to the user | — Pending (Phase 3) |
 | No live results in v1 | Keeps the app fully static — the alternative forces a server route or a cron rebuild before the core picking flow is even proven | — Pending |
-| Season-parameterized from day one | Cheap now (a key prefix and a script arg), a refactor later | — Pending |
-| Week-first navigation, filterable by conference/team | Matches how the season is actually consumed; conference and team views are filters over one slate rather than separate screens | — Pending |
-| Logos vendored into `public/` at build time | Hotlinking raw.githubusercontent.com in production is fragile and rate-limited | — Pending |
+| Season-parameterized from day one | Cheap now (a key prefix and a script arg), a refactor later | Confirmed for the fetch script, Phase 1 — 2027 needs only a season CLI argument, zero hardcoded `2026` in `scripts/` (grep-verified). Storage-key namespacing side still pending, Phase 4 |
+| Week-first navigation, filterable by conference/team | Matches how the season is actually consumed; conference and team views are filters over one slate rather than separate screens | — Pending (Phase 2) |
+| Logos vendored into `public/` at build time | Hotlinking raw.githubusercontent.com in production is fragile and rate-limited | Confirmed, Phase 1 — 138/138 logos vendored as local PNGs, `https:`-only source gate, placeholder SVG fallback for any miss (none occurred on this run) |
 | Defer 12-team CFP bracket to v2 | Depends on conference champions being correct; sequencing it after the foundation avoids rework | — Pending |
 
 ## Evolution
@@ -95,4 +98,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-12 after initialization*
+*Last updated: 2026-08-13 after Phase 1: Data Pipeline*

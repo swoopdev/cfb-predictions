@@ -7,8 +7,16 @@ const route = useRoute()
 // (RESEARCH.md Pitfall 3: string/number comparison silently matches nothing).
 const week = computed(() => Number(route.params.week))
 
-const { data: teams } = useTeams()
-const { data: games } = useGames()
+const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
+const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
+
+// Drives loading/error branching for the ONE-TIME initial data resolution.
+// Subsequent week/filter changes read already-cached data (staleTime:
+// Infinity) and never re-enter 'loading'.
+const loadState = computed(() => determineLoadState([
+  { isPending: teamsPending.value, isError: teamsError.value },
+  { isPending: gamesPending.value, isError: gamesError.value }
+]))
 
 const teamsById = computed<Map<number, Team>>(() => new Map((teams.value ?? []).map(t => [t.id, t])))
 
@@ -24,7 +32,35 @@ const conferenceGroups = computed(() => groupByConference(rawWeekGames.value, te
     <h1 class="text-xl font-semibold mb-4">
       Week {{ week }}
     </h1>
-    <div class="space-y-8">
+
+    <div
+      v-if="loadState === 'loading'"
+      class="grid gap-4"
+      style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
+    >
+      <USkeleton
+        v-for="n in 6"
+        :key="n"
+        class="h-20 w-full rounded-lg"
+      />
+    </div>
+
+    <div
+      v-else-if="loadState === 'error'"
+      class="py-12 text-center"
+    >
+      <h2 class="text-2xl font-semibold mb-2">
+        Couldn't load the schedule.
+      </h2>
+      <p class="text-dimmed">
+        Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
+      </p>
+    </div>
+
+    <div
+      v-else
+      class="space-y-8"
+    >
       <div
         v-for="group in conferenceGroups"
         :key="group.conference"

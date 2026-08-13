@@ -28,3 +28,20 @@ export function groupByConference(games: Game[], teamsById: Map<number, Team>): 
     .map(([conference, groupGames]) => ({ conference, games: groupGames }))
     .sort((a, b) => a.conference.localeCompare(b.conference))
 }
+
+export interface LoadStateInput {
+  isPending: boolean
+  isError: boolean
+}
+
+/**
+ * Derives the page's loading/error/ready state from one or more
+ * `useQuery` results. `error` takes precedence over `pending` — an errored
+ * query outranks a still-resolving one, since a broken deploy is worse than
+ * a slow one and must not be masked by a permanent-looking skeleton.
+ */
+export function determineLoadState(states: LoadStateInput[]): 'loading' | 'error' | 'ready' {
+  if (states.some(s => s.isError)) return 'error'
+  if (states.some(s => s.isPending)) return 'loading'
+  return 'ready'
+}

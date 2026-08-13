@@ -101,16 +101,48 @@ export function buildTeamQuery(currentQuery: Record<string, unknown>, team: numb
   return { ...currentQuery, team, conf: undefined }
 }
 
-/** D-15: all 15 weeks present in the 2026 schedule, including empty week 14. */
-export const WEEKS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+/**
+ * D-15 superseded during Phase 2 UAT: week 14 has zero games and was
+ * removed from navigation entirely (see 02-CONTEXT.md D-15 note). `WEEKS`
+ * now lists only the 14 navigable weeks — 1 through 13, then 15 — so week
+ * 14 is unreachable via Prev/Next or the week-picker. The `/week/14` route
+ * itself still resolves for a direct deep link; it's just no longer listed
+ * here.
+ */
+export const WEEKS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15]
+
+// `WEEKS` is a non-empty literal array by construction; these fallbacks
+// only exist to satisfy `noUncheckedIndexedAccess` and are never actually
+// reached.
+const FIRST_WEEK = WEEKS[0] ?? 1
+const LAST_WEEK = WEEKS[WEEKS.length - 1] ?? 1
 
 /**
  * D-14 boundary behavior for WeekNav's Prev/Next buttons: Prev is disabled
- * at week 1, Next is disabled at week 15 (the last week present in the
- * data). Strict numeric sequence — no skipping over empty week 14 (D-15).
+ * at the first navigable week, Next is disabled at the last navigable week
+ * — derived from `WEEKS`' own bounds rather than hardcoded literals, so it
+ * stays correct if the navigable range ever changes.
  */
 export function isWeekBoundary(week: number): { prevDisabled: boolean, nextDisabled: boolean } {
-  return { prevDisabled: week <= 1, nextDisabled: week >= 15 }
+  return { prevDisabled: week <= FIRST_WEEK, nextDisabled: week >= LAST_WEEK }
+}
+
+/**
+ * Post-D-15 navigation helper: finds the previous/next NAVIGABLE week in
+ * `WEEKS` relative to `week`, skipping any gap (e.g. the removed week 14)
+ * rather than stepping by `week ± 1`. Works even when `week` itself isn't
+ * in `WEEKS` (e.g. a direct `/week/14` deep link) by falling back to the
+ * nearest neighbor in the requested direction. Falls back to the range
+ * boundary when there's nowhere further to go, matching `isWeekBoundary`'s
+ * disabled state (a no-op click at the edges).
+ */
+export function getAdjacentWeek(week: number, direction: 'prev' | 'next'): number {
+  if (direction === 'prev') {
+    const candidates = WEEKS.filter(w => w < week)
+    return candidates.length > 0 ? candidates[candidates.length - 1]! : FIRST_WEEK
+  }
+  const candidates = WEEKS.filter(w => w > week)
+  return candidates.length > 0 ? candidates[0]! : LAST_WEEK
 }
 
 /**

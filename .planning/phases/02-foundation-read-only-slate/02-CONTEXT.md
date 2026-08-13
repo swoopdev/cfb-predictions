@@ -35,6 +35,7 @@ A fully static Nuxt app where users browse the full 2026 FBS schedule week by we
 - **D-13:** Navigation controls: Prev/Next buttons plus a week picker dropdown for direct jumps.
 - **D-14:** Boundary behavior: Prev is disabled at week 1, Next is disabled at week 15 (the last week present in the data).
 - **D-15:** **Week 14 has zero games** (the dataset's weeks are 1–13, then jumps to 15 — confirmed by direct inspection of `games.json`). Per user decision, navigation is **strict numeric sequence** — clicking Next from week 13 lands on week 14, which renders an empty state ("No games this week"), rather than skipping straight to 15. The week picker dropdown should still list 14 as a selectable option (with the same empty state on selection).
+  - **Superseded during Phase 2 UAT:** the user reversed this during manual verification of plan 02-04 — week 14 is now fully unreachable via Prev/Next and the week-picker (Prev/Next jumps directly 13↔15, and 14 is not listed in the picker). `/week/14` still resolves for a direct deep link; it's just no longer part of the navigable UI contract.
 - **D-16:** No postseason/championship placeholder in Phase 2. All 888 fetched games are `seasonType: "regular"` (confirmed in Phase 1); conference championship games don't exist as schedule rows and will be constructed from computed standings in Phase 5/6, not sourced from this data. Phase 2 covers exactly weeks 1–15 as fetched.
 
 ### Claude's Discretion

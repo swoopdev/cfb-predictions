@@ -87,7 +87,30 @@ Plans:
   3. When a tiebreaker cannot be resolved from picks alone (a ranking-based step, or a step requiring scores), the engine reports which teams remain tied and why, rather than guessing or crashing
   4. Correctness is demonstrated by hand-verified fixtures covering 2-, 3-, 4-, and 5-way ties per conference, including a case where restarting vs. continuing the procedure produces a different champion
 
-**Plans**: TBD
+**Plans**: 8 plans
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Conference record derivation (deriveConferenceRecords) + frozen base ordering (computeBaseOrdering) + Big 12 FCS win count (deriveOverallWinCount)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-02-PLAN.md — Tiebreaker step evaluators (head-to-head, common-opponents, next-highest-placed-common-opponent w/ D-05 collective-bucket, cumulative-opponent-win-pct, total-wins)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 03-03-PLAN.md — Recursive restart/continue engine (resolveTiedGroup) + CONFERENCE_RULES data table + ACC's defineTiedTeams + resolveConferenceChampionship orchestration
+
+**Wave 4** *(blocked on Wave 3 completion; SEC/Big Ten/Big 12/ACC plans run in parallel)*
+
+- [ ] 03-04-PLAN.md — SEC hand-verified fixture matrix + tests
+- [ ] 03-05-PLAN.md — Big Ten hand-verified fixture matrix + tests
+- [ ] 03-06-PLAN.md — Big 12 hand-verified fixture matrix + tests (incl. D-05-revised collective-bucket regression)
+- [ ] 03-07-PLAN.md — ACC hand-verified fixture matrix + tests (incl. mixed 8/9-game tied-team definition)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 03-08-PLAN.md — D-11 coverage threshold (shared/domain/tiebreakers/** at 90%) + full-suite verification
 
 ### Phase 4: Picks & Persistence
 
@@ -177,7 +200,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
 | 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
-| 3. Tiebreaker Engine | 0/TBD | Not started | - |
+| 3. Tiebreaker Engine | 0/8 | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |

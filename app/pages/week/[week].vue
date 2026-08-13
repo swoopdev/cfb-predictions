@@ -69,12 +69,7 @@ const conferenceGroups = computed(() => groupByConference(filteredGames.value, t
 // otherwise non-empty week to zero games" (e.g. a team's bye week) are
 // different empty states with different copy — branch on WHY it's empty,
 // not just whether the grid is empty.
-type EmptyVariant = 'week' | 'filter' | 'none'
-const emptyVariant = computed<EmptyVariant>(() => {
-  if (rawWeekGames.value.length === 0) return 'week'
-  if (filteredGames.value.length === 0) return 'filter'
-  return 'none'
-})
+const emptyVariant = computed(() => determineEmptyStateVariant(rawWeekGames.value, filteredGames.value))
 
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
@@ -125,7 +120,7 @@ const filterLabel = computed(() => {
     </div>
 
     <div
-      v-else-if="emptyVariant === 'week'"
+      v-else-if="emptyVariant === 'week-empty'"
       class="py-12 text-center"
     >
       <h2 class="text-2xl font-semibold mb-2">
@@ -137,7 +132,7 @@ const filterLabel = computed(() => {
     </div>
 
     <div
-      v-else-if="emptyVariant === 'filter'"
+      v-else-if="emptyVariant === 'filter-empty'"
       class="py-12 text-center"
     >
       <h2 class="text-2xl font-semibold mb-2">

@@ -126,6 +126,20 @@ export function buildWeekQuery(currentQuery: Record<string, unknown>, week: numb
   return { params: { week }, query: currentQuery }
 }
 
+/**
+ * Pitfall 4: "the week itself has zero games" (e.g. week 14, D-15) and "an
+ * active filter narrowed an otherwise non-empty week to zero games" (e.g. a
+ * team's bye week) are different situations requiring different copy.
+ * Checked against `rawWeekGames` (PRE-filter) vs `filteredGames`
+ * (POST-filter) — never derived from the filtered list alone, which cannot
+ * distinguish the two causes.
+ */
+export function determineEmptyStateVariant(rawWeekGames: Game[], filteredGames: Game[]): 'week-empty' | 'filter-empty' | 'populated' {
+  if (rawWeekGames.length === 0) return 'week-empty'
+  if (filteredGames.length === 0) return 'filter-empty'
+  return 'populated'
+}
+
 export interface LoadStateInput {
   isPending: boolean
   isError: boolean

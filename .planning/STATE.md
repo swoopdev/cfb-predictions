@@ -5,8 +5,8 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: foundation-read-only-slate
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-08-13T22:43:55.536Z"
+stopped_at: "02-04-PLAN.md Task 3 checkpoint:human-verify (full read-only slate UAT) — awaiting human verification"
+last_updated: "2026-08-13T22:49:09.887Z"
 last_activity: 2026-08-13
 last_activity_desc: Phase 01 complete, transitioned to Phase 2
 progress:
@@ -89,6 +89,8 @@ Recent decisions affecting current work:
 - [Phase 02-03]: Implemented Task 3's buildConfQuery/buildTeamQuery before Task 2's component wiring (dependency order, not stubbed)
 - [Phase 02-03]: conf/teamId are writable computeds in week/[week].vue (get: sanitize from route.query; set: setConf/setTeam -> buildConfQuery/buildTeamQuery) so filter components bind with plain v-model
 - [Phase 02-03]: KNOWN_CONFERENCES/CONFERENCE_ITEMS exported from ConferenceFilter.vue's plain <script> block since <script setup> cannot hold non-type named exports
+- [Phase ?]: [Phase 02-04]: WeekNav.vue is a dumb control (props: week, emits: navigate) — page owns router.push via buildWeekQuery, matching ConferenceFilter/TeamFilter's page-owns-navigation pattern
+- [Phase ?]: [Phase 02-04]: week/[week].vue's inline emptyVariant computed now delegates to determineEmptyStateVariant (schedule.ts) instead of duplicating the week-empty/filter-empty branching logic inline
 
 ### Pending Todos
 
@@ -108,6 +110,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-13T22:43:55.523Z
-Stopped at: Completed 02-03-PLAN.md
-Resume file: None
+Last session: 2026-08-13T22:49:09.874Z
+Stopped at: 02-04-PLAN.md Task 3 checkpoint:human-verify (full read-only slate UAT) — awaiting human verification
+Resume file: .planning/phases/02-foundation-read-only-slate/02-04-PLAN.md

@@ -71,7 +71,21 @@ Plans:
   4. Week and filter selections are reflected in the URL, so any view is linkable and back/forward navigation works
   5. The production build makes zero network requests for schedule/team data after initial load, with no runtime API key and no server route
 
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Tracer: query layer (useTeams/useGames), shared types, GameCard, /week/[week] page with conference grouping + loading/error states
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-02-PLAN.md — Static build config: ssr:false, prerendered week routes, Cloudflare SPA fallback
+- [ ] 02-03-PLAN.md — Conference + team filters with URL round-trip and input sanitization
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 02-04-PLAN.md — Week nav (Prev/Next/picker), distinct empty states, full-slate UAT checkpoint
+
 **UI hint**: yes
 
 ### Phase 3: Tiebreaker Engine
@@ -176,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
+| 2. Foundation & Read-Only Slate | 0/4 | Not started | - |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |

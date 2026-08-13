@@ -384,7 +384,7 @@ Source: `node_modules/@nuxt/ui/dist/runtime/components/InputMenu.vue.d.ts` (read
 
 ## Open Questions
 
-1. **Does `nuxt generate` under `ssr:false` actually run the Nitro prerender crawler at all, or does it produce exactly one `index.html` SPA shell regardless of `routeRules`/`nitro.prerender` config?**
+1. **(RESOLVED: verified via 02-02 Task 2's build-output check)** Does `nuxt generate` under `ssr:false` actually run the Nitro prerender crawler at all, or does it produce exactly one `index.html` SPA shell regardless of `routeRules`/`nitro.prerender` config?
    - What we know: Nuxt's own docs distinguish `ssr:true`+`nuxt generate` (full per-route prerendering, real content) from `ssr:false` (empty-div shell per route) — implying per-route files ARE still produced under `ssr:false`, just with empty content, which is exactly what's needed to avoid a 404 (the *file* existing matters more than its *content* here since the SPA hydrates client-side regardless).
    - What's unclear: Whether `nitro.prerender.routes` entries under `ssr:false` are honored to produce per-path files, or whether Nitro's static preset collapses everything to one shell + `_redirects`/`200.html` fallback automatically, making the explicit routes list redundant.
    - Recommendation: The plan should include a concrete verification task — run `pnpm build` (or `nuxt generate`), then `ls .output/public/week/` — before relying on either mechanism, and treat "add a Cloudflare Pages SPA fallback" as the reliable backstop regardless of what the prerender step does.

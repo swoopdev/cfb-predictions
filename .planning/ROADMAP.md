@@ -37,7 +37,13 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
   2. Every FBS team has a logo, primary color, and alternate color vendored into the repo; any team missing an asset or required field is listed in a committed coverage report, not silently blank
   3. `conferenceGame` and season-type (regular vs. conference championship) are trusted directly from CFBD data, never re-derived from comparing team conferences, so championship games can be excluded from regular-season standings computation
   4. Re-running the fetch script for a future season (e.g. 2027) requires only a season argument change, not code changes
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 01-01-PLAN.md — Install cfbd/zod/tsx/vitest deps (with legitimacy checkpoint), wire up Vitest + scripts tsconfig, author test fixtures
+- [ ] 01-02-PLAN.md — TDD: computeScheduleHash (scheduleHash fingerprint, D-11/D-12)
+- [ ] 01-03-PLAN.md — TDD: team/game Zod validation + transform (hard-fail split, conferenceGame/seasonType passthrough)
+- [ ] 01-04-PLAN.md — TDD: vendorLogo + buildCoverageReport, placeholder.svg
+- [ ] 01-05-PLAN.md — fetch-data.ts orchestration, live 2026 run, human spot-check checkpoint
 
 ### Phase 2: Foundation & Read-Only Slate
 **Goal**: Users can browse the full 2026 schedule week by week, filtered by conference or team, in a fully static app with no backend.
@@ -136,7 +142,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Pipeline | 0/TBD | Not started | - |
+| 1. Data Pipeline | 0/5 | Planned | - |
 | 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |

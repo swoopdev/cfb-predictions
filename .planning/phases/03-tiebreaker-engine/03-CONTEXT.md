@@ -93,7 +93,7 @@ Given a complete set of picked game outcomes, correctly determine each P4 confer
 <specifics>
 ## Specific Ideas
 
-No UI/visual requirements — this is a domain-logic phase. Key specifics captured above: 2-valued return type, per-conference terminal-reason metadata, one-opponent-at-a-time Big 12 comparison (documented assumption), nested-cycle trace with per-cycle tied-team lists, full per-conference fixture matrix with a coverage gate, full-trace-content fixture assertions.
+No UI/visual requirements — this is a domain-logic phase. Key specifics captured above: 2-valued return type, per-conference terminal-reason metadata, collective-bucket Big 12 comparison confirmed against the primary-source PDF (D-05, revised) and extrapolated to SEC/Big Ten as a documented assumption (D-13), nested-cycle trace with per-cycle tied-team lists, full per-conference fixture matrix with a coverage gate, full-trace-content fixture assertions.
 
 </specifics>
 

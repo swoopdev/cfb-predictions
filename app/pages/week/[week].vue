@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import type { LocationQueryRaw } from 'vue-router'
 import type { Game, Team } from '#shared/types/schedule'
+import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 
 const route = useRoute()
+const router = useRouter()
 
 // Coerce once — never re-read `route.params.week` directly downstream
 // (RESEARCH.md Pitfall 3: string/number comparison silently matches nothing).
@@ -22,9 +25,54 @@ const teamsById = computed<Map<number, Team>>(() => new Map((teams.value ?? []).
 
 const rawWeekGames = computed<Game[]>(() => (games.value?.games ?? []).filter(g => g.week === week.value))
 
+function setConf(value: string | undefined) {
+  router.push({ query: buildConfQuery(route.query, value) as LocationQueryRaw })
+}
+
+function setTeam(id: number | undefined) {
+  router.push({ query: buildTeamQuery(route.query, id) as LocationQueryRaw })
+}
+
+// D-10/Security Domain V5: sanitized straight from the URL query — an
+// invalid/malicious `conf`/`team` value falls back to unfiltered ("All")
+// rather than crashing or rendering a broken partial state. Writable so
+// ConferenceFilter/TeamFilter can `v-model` directly; the setter routes
+// through setConf/setTeam -> buildConfQuery/buildTeamQuery, never an
+// inline partial query object (D-03 mutual exclusivity, Pitfall 6).
+const conf = computed<string | undefined>({
+  get: () => sanitizeConfParam(route.query.conf as string | undefined, KNOWN_CONFERENCES),
+  set: value => setConf(value)
+})
+
+const teamId = computed<number | undefined>({
+  get: () => sanitizeTeamParam(route.query.team as string | undefined, teamsById.value),
+  set: value => setTeam(value)
+})
+
+const filteredGames = computed<Game[]>(() =>
+  filterGames(rawWeekGames.value, { conf: conf.value, team: teamId.value }, teamsById.value)
+)
+
 // D-07: games within a week group under their home team's conference,
 // sorted alphabetically by conference name.
-const conferenceGroups = computed(() => groupByConference(rawWeekGames.value, teamsById.value))
+const conferenceGroups = computed(() => groupByConference(filteredGames.value, teamsById.value))
+
+// Pitfall 4: "week has zero games" (e.g. week 14) and "filter narrowed an
+// otherwise non-empty week to zero games" (e.g. a team's bye week) are
+// different empty states with different copy — branch on WHY it's empty,
+// not just whether the grid is empty.
+type EmptyVariant = 'week' | 'filter' | 'none'
+const emptyVariant = computed<EmptyVariant>(() => {
+  if (rawWeekGames.value.length === 0) return 'week'
+  if (filteredGames.value.length === 0) return 'filter'
+  return 'none'
+})
+
+const filterLabel = computed(() => {
+  if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
+  if (conf.value !== undefined) return conf.value
+  return 'This filter'
+})
 </script>
 
 <template>
@@ -32,6 +80,11 @@ const conferenceGroups = computed(() => groupByConference(rawWeekGames.value, te
     <h1 class="text-xl font-semibold mb-4">
       Week {{ week }}
     </h1>
+
+    <div class="flex flex-wrap items-center gap-4 mb-6">
+      <ConferenceFilter v-model="conf" />
+      <TeamFilter v-model="teamId" />
+    </div>
 
     <div
       v-if="loadState === 'loading'"
@@ -54,6 +107,30 @@ const conferenceGroups = computed(() => groupByConference(rawWeekGames.value, te
       </h2>
       <p class="text-dimmed">
         Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
+      </p>
+    </div>
+
+    <div
+      v-else-if="emptyVariant === 'week'"
+      class="py-12 text-center"
+    >
+      <h2 class="text-2xl font-semibold mb-2">
+        No games this week
+      </h2>
+      <p class="text-dimmed">
+        Week {{ week }} has no games in the 2026 schedule. Try another week.
+      </p>
+    </div>
+
+    <div
+      v-else-if="emptyVariant === 'filter'"
+      class="py-12 text-center"
+    >
+      <h2 class="text-2xl font-semibold mb-2">
+        No games match this filter
+      </h2>
+      <p class="text-dimmed">
+        {{ filterLabel }} has no games in Week {{ week }}. Clear the filter or pick another week.
       </p>
     </div>
 

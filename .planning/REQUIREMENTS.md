@@ -49,8 +49,8 @@
 
 ### Tiebreakers (TIE)
 
-- [ ] **TIE-01**: The two conference championship game participants for each of SEC, Big Ten, Big 12, and ACC are resolved automatically wherever the published conference procedure is computable from picked game outcomes
-- [ ] **TIE-02**: Each conference's tiebreaker procedure is implemented per its own official published rules, including correct handling of unbalanced schedules and non-percentage tie definitions where applicable (e.g. ACC)
+- [x] **TIE-01**: The two conference championship game participants for each of SEC, Big Ten, Big 12, and ACC are resolved automatically wherever the published conference procedure is computable from picked game outcomes
+- [x] **TIE-02**: Each conference's tiebreaker procedure is implemented per its own official published rules, including correct handling of unbalanced schedules and non-percentage tie definitions where applicable (e.g. ACC)
 - [ ] **TIE-03**: Multi-team ties correctly restart the tiebreaker procedure from the first step when a step only partially separates the group, and continue to the next step when a step separates no one
 - [ ] **TIE-04**: When a tiebreaker procedure bottoms out at a step that cannot be computed from picks alone (a ranking/rating step, or a step requiring scores), the tied teams are surfaced to the user with an explanation of why, and the user selects who advances
 - [ ] **TIE-05**: The resolution UI shows the step-by-step reasoning that produced the result — the tied group, the step applied, each team's value at that step, and any restart events — not just the final answer
@@ -132,8 +132,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | SLATE-03 | Phase 2 | Pending |
 | SLATE-04 | Phase 2 | Pending |
 | SLATE-05 | Phase 2 | Pending |
-| TIE-01 | Phase 3 | Pending |
-| TIE-02 | Phase 3 | Pending |
+| TIE-01 | Phase 3 | Complete |
+| TIE-02 | Phase 3 | Complete |
 | TIE-03 | Phase 3 | Pending |
 | TIE-04 | Phase 3 | Pending |
 | PICK-01 | Phase 4 | Pending |

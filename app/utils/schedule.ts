@@ -101,6 +101,31 @@ export function buildTeamQuery(currentQuery: Record<string, unknown>, team: numb
   return { ...currentQuery, team, conf: undefined }
 }
 
+/** D-15: all 15 weeks present in the 2026 schedule, including empty week 14. */
+export const WEEKS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+/**
+ * D-14 boundary behavior for WeekNav's Prev/Next buttons: Prev is disabled
+ * at week 1, Next is disabled at week 15 (the last week present in the
+ * data). Strict numeric sequence — no skipping over empty week 14 (D-15).
+ */
+export function isWeekBoundary(week: number): { prevDisabled: boolean, nextDisabled: boolean } {
+  return { prevDisabled: week <= 1, nextDisabled: week >= 15 }
+}
+
+/**
+ * Pitfall 6 (Vue Router's `router.push` replaces rather than merges the
+ * query object) applies to week navigation too, but unlike
+ * `buildConfQuery`/`buildTeamQuery` (which intentionally null out the OTHER
+ * filter per D-03), a week change must NOT touch the currently-active
+ * conf/team filter — it should survive unchanged across Prev/Next/picker
+ * navigation. `week` moves to the route `params`, not `query` (the route is
+ * `/week/[week]`), so it's returned separately from the preserved query.
+ */
+export function buildWeekQuery(currentQuery: Record<string, unknown>, week: number): { params: { week: number }, query: Record<string, unknown> } {
+  return { params: { week }, query: currentQuery }
+}
+
 export interface LoadStateInput {
   isPending: boolean
   isError: boolean

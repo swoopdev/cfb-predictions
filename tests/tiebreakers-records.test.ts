@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { deriveConferenceRecords } from '../shared/domain/tiebreakers/records'
+import { deriveConferenceRecords, deriveOverallWinCount } from '../shared/domain/tiebreakers/records'
 import type { Game } from '../shared/domain/tiebreakers/types'
 
 // Team ids follow the real CFBD id shape (arbitrary large integers) but use
@@ -8,6 +8,10 @@ import type { Game } from '../shared/domain/tiebreakers/types'
 const TEAM_A = 1
 const TEAM_B = 2
 const TEAM_C = 3
+// Non-FBS opponents: ids deliberately absent from any `knownFbsTeamIds` set
+// supplied to deriveOverallWinCount below.
+const FCS_OPPONENT_1 = 901
+const FCS_OPPONENT_2 = 902
 
 describe('deriveConferenceRecords', () => {
   it('produces correct wins/losses/gamesPlayed/beat/lostTo/opponents for a 2-team round-robin', () => {
@@ -113,5 +117,71 @@ describe('deriveConferenceRecords', () => {
       expect([...a.lostTo].sort()).toEqual([...b.lostTo].sort())
       expect([...a.opponents].sort()).toEqual([...b.opponents].sort())
     }
+  })
+})
+
+describe('deriveOverallWinCount', () => {
+  it('credits exactly 1 toward the FCS cap for a team with 2 wins over non-FBS opponents', () => {
+    const games: Game[] = [
+      { id: 401, homeId: TEAM_A, awayId: FCS_OPPONENT_1, conferenceGame: false },
+      { id: 402, homeId: TEAM_A, awayId: FCS_OPPONENT_2, conferenceGame: false }
+    ]
+    const outcomes = new Map<number, number>([
+      [401, TEAM_A],
+      [402, TEAM_A]
+    ])
+    const knownFbsTeamIds = new Set([TEAM_A, TEAM_B, TEAM_C])
+
+    const winCounts = deriveOverallWinCount(games, outcomes, knownFbsTeamIds)
+
+    expect(winCounts.get(TEAM_A)).toBe(1)
+  })
+
+  it('credits 2 total wins for a team with 1 FBS win + 1 non-FBS win', () => {
+    const games: Game[] = [
+      { id: 501, homeId: TEAM_A, awayId: TEAM_B, conferenceGame: true },
+      { id: 502, homeId: TEAM_A, awayId: FCS_OPPONENT_1, conferenceGame: false }
+    ]
+    const outcomes = new Map<number, number>([
+      [501, TEAM_A],
+      [502, TEAM_A]
+    ])
+    const knownFbsTeamIds = new Set([TEAM_A, TEAM_B, TEAM_C])
+
+    const winCounts = deriveOverallWinCount(games, outcomes, knownFbsTeamIds)
+
+    expect(winCounts.get(TEAM_A)).toBe(2)
+  })
+
+  it('does not cap wins against known-FBS opponents, even when many', () => {
+    const games: Game[] = [
+      { id: 601, homeId: TEAM_A, awayId: TEAM_B, conferenceGame: true },
+      { id: 602, homeId: TEAM_A, awayId: TEAM_C, conferenceGame: false }
+    ]
+    const outcomes = new Map<number, number>([
+      [601, TEAM_A],
+      [602, TEAM_A]
+    ])
+    const knownFbsTeamIds = new Set([TEAM_A, TEAM_B, TEAM_C])
+
+    const winCounts = deriveOverallWinCount(games, outcomes, knownFbsTeamIds)
+
+    expect(winCounts.get(TEAM_A)).toBe(2)
+  })
+
+  it('respects a custom fcsWinCap', () => {
+    const games: Game[] = [
+      { id: 701, homeId: TEAM_A, awayId: FCS_OPPONENT_1, conferenceGame: false },
+      { id: 702, homeId: TEAM_A, awayId: FCS_OPPONENT_2, conferenceGame: false }
+    ]
+    const outcomes = new Map<number, number>([
+      [701, TEAM_A],
+      [702, TEAM_A]
+    ])
+    const knownFbsTeamIds = new Set([TEAM_A, TEAM_B, TEAM_C])
+
+    const winCounts = deriveOverallWinCount(games, outcomes, knownFbsTeamIds, 2)
+
+    expect(winCounts.get(TEAM_A)).toBe(2)
   })
 })

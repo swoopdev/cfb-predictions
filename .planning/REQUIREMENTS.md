@@ -17,9 +17,9 @@
 
 ### Foundation (FOUND)
 
-- [ ] **FOUND-01**: The app runs as a fully static site with no runtime API key and no server routes
+- [x] **FOUND-01**: The app runs as a fully static site with no runtime API key and no server routes
 - [x] **FOUND-02**: A single query-key factory and set of composables (`useTeams`, `useGames`) provide typed, cached access to the static datasets via TanStack Query
-- [ ] **FOUND-03**: A production build shows zero network fetches for schedule/team data after initial load
+- [x] **FOUND-03**: A production build shows zero network fetches for schedule/team data after initial load
 
 ### Slate & Navigation (SLATE)
 
@@ -124,9 +124,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | DATA-05 | Phase 1 | Complete |
 | DATA-06 | Phase 1 | Complete |
 | DATA-07 | Phase 1 | Complete |
-| FOUND-01 | Phase 2 | Pending |
+| FOUND-01 | Phase 2 | Complete |
 | FOUND-02 | Phase 2 | Complete |
-| FOUND-03 | Phase 2 | Pending |
+| FOUND-03 | Phase 2 | Complete |
 | SLATE-01 | Phase 2 | Pending |
 | SLATE-02 | Phase 2 | Pending |
 | SLATE-03 | Phase 2 | Pending |

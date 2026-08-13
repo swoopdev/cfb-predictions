@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: data-pipeline
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-08-13T16:10:15.510Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-08-13T16:16:36.677Z"
 last_activity: 2026-08-13
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 ## Current Position
 
 Phase: 01 (data-pipeline) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-08-13 — Phase 01 execution started
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01 | 20min | 3 tasks | 8 files |
 | Phase 01 P02 | 2min | 1 tasks | 2 files |
 | Phase 01 P03 | 8min | 1 tasks | 2 files |
+| Phase 01 P04 | 12min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 01-01]: Added passWithNoTests: true to vitest.config.ts so zero-test runs exit 0 per plan acceptance criteria
 - [Phase 01-01]: Added scripts/env.d.ts placeholder so tsc -p tsconfig.scripts.json has an input until Plans 02-05 land real script files
 - [Phase 01]: No REFACTOR step for computeScheduleHash — implementation was already a single clear pipeline
+- [Phase 01-04]: Kept vendorLogo's skip-if-exists check before the https-scheme gate (matches plan's specified order) so an already-vendored file short-circuits regardless of URL validity unless force:true
+- [Phase 01-04]: Reworded buildCoverageReport's doc comment to avoid the literal string process.env so it doesn't trip the plan's own grep-based acceptance gate
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-13T16:09:54.337Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-08-13T16:16:32.208Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None

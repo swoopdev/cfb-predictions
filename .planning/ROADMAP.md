@@ -41,7 +41,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
   3. `conferenceGame` and season-type (regular vs. conference championship) are trusted directly from CFBD data, never re-derived from comparing team conferences, so championship games can be excluded from regular-season standings computation
   4. Re-running the fetch script for a future season (e.g. 2027) requires only a season argument change, not code changes
 
-**Plans**: 3/5 plans executed
+**Plans**: 4/5 plans executed
 Plans:
 **Wave 1**
 
@@ -51,7 +51,7 @@ Plans:
 
 - [x] 01-02-PLAN.md — TDD: computeScheduleHash (scheduleHash fingerprint, D-11/D-12)
 - [x] 01-03-PLAN.md — TDD: team/game Zod validation + transform (hard-fail split, conferenceGame/seasonType passthrough)
-- [ ] 01-04-PLAN.md — TDD: vendorLogo + buildCoverageReport, placeholder.svg
+- [x] 01-04-PLAN.md — TDD: vendorLogo + buildCoverageReport, placeholder.svg
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -175,7 +175,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Pipeline | 3/5 | In Progress|  |
+| 1. Data Pipeline | 4/5 | In Progress|  |
 | 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |

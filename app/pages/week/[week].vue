@@ -33,6 +33,14 @@ function setTeam(id: number | undefined) {
   router.push({ query: buildTeamQuery(route.query, id) as LocationQueryRaw })
 }
 
+// D-14/D-15/Pitfall 6: navigating weeks via WeekNav must preserve the
+// currently-active conf/team filter unchanged — never null it out the way
+// buildConfQuery/buildTeamQuery intentionally null out EACH OTHER.
+function goToWeek(targetWeek: number) {
+  const { params, query } = buildWeekQuery(route.query, targetWeek)
+  router.push({ path: `/week/${params.week}`, query: query as LocationQueryRaw })
+}
+
 // D-10/Security Domain V5: sanitized straight from the URL query — an
 // invalid/malicious `conf`/`team` value falls back to unfiltered ("All")
 // rather than crashing or rendering a broken partial state. Writable so
@@ -77,9 +85,15 @@ const filterLabel = computed(() => {
 
 <template>
   <div class="px-6 lg:px-8 py-6">
-    <h1 class="text-xl font-semibold mb-4">
-      Week {{ week }}
-    </h1>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <h1 class="text-xl font-semibold">
+        Week {{ week }}
+      </h1>
+      <WeekNav
+        :week="week"
+        @navigate="goToWeek"
+      />
+    </div>
 
     <div class="flex flex-wrap items-center gap-4 mb-6">
       <ConferenceFilter v-model="conf" />

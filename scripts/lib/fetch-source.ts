@@ -1,4 +1,4 @@
-import { reportRequiredFieldFailures } from './schemas'
+import { reportRequiredFieldFailures, reportGameFailures } from './schemas'
 
 export interface FetchSourceDeps {
   fetchTeams: () => Promise<{ data?: unknown[], error?: unknown }>
@@ -22,6 +22,10 @@ function describeError(error: unknown): string {
  *  - a successful-but-suspiciously-empty response (misconfigured query
  *    params can return 200 with an empty array too).
  *  - per-team required-field validation (`reportRequiredFieldFailures`).
+ *  - per-game schema validation (`reportGameFailures`) — WR-02: reports
+ *    every failing game as a structured entry instead of letting
+ *    `transformGame` throw an uncaught `ZodError` mid-`.map()` on the
+ *    first bad record.
  *
  * Deliberately side-effect free — no `process.exit`, no console output —
  * so it is unit-testable in isolation with a mocked `deps`, and so nothing
@@ -45,9 +49,14 @@ export async function fetchSourceData(season: number, deps: FetchSourceDeps): Pr
     return { ok: false, reason: `CFBD returned 0 games for season ${season} — refusing to overwrite committed data.` }
   }
 
-  const failures = reportRequiredFieldFailures(rawTeams)
-  if (failures.length > 0) {
-    return { ok: false, reason: JSON.stringify(failures, null, 2) }
+  const teamFailures = reportRequiredFieldFailures(rawTeams)
+  if (teamFailures.length > 0) {
+    return { ok: false, reason: JSON.stringify(teamFailures, null, 2) }
+  }
+
+  const gameFailures = reportGameFailures(rawGames)
+  if (gameFailures.length > 0) {
+    return { ok: false, reason: JSON.stringify(gameFailures, null, 2) }
   }
 
   return { ok: true, rawTeams, rawGames }

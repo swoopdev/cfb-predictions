@@ -116,6 +116,10 @@ export interface GameOutput {
  * `seasonType` must never be recomputed by comparing home/away team
  * conferences (DATA-06's constraint, RESEARCH.md Anti-Patterns) — this
  * function copies them straight through.
+ *
+ * Callers should gate on `reportGameFailures` first (mirroring the team
+ * path's `reportRequiredFieldFailures`) so a single malformed game doesn't
+ * throw an uncaught `ZodError` mid-`.map()`.
  */
 export function transformGame(raw: unknown): GameOutput {
   const game = RawGameSchema.parse(raw)
@@ -130,4 +134,26 @@ export function transformGame(raw: unknown): GameOutput {
     conferenceGame: game.conferenceGame,
     neutralSite: game.neutralSite
   }
+}
+
+export interface GameFailure {
+  gameId: number | undefined
+  errors: Record<string, string[] | undefined>
+}
+
+/**
+ * Maps every raw game through `RawGameSchema.safeParse` and returns only the
+ * failures — never throws. The game-validation sibling of
+ * `reportRequiredFieldFailures`: drives the same hard-fail-before-any-write
+ * gate for games that teams already have, and reports every failing game in
+ * one pass instead of throwing mid-`.map()` on the first bad record.
+ */
+export function reportGameFailures(rawGames: unknown[]): GameFailure[] {
+  return rawGames
+    .map(raw => ({ raw, result: RawGameSchema.safeParse(raw) }))
+    .filter(({ result }) => !result.success)
+    .map(({ raw, result }) => ({
+      gameId: (raw as { id?: number }).id,
+      errors: z.flattenError(result.error!).fieldErrors
+    }))
 }

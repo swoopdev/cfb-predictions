@@ -88,6 +88,24 @@ describe('fetchSourceData', () => {
     }
   })
 
+  it('fails and reports the structured game failures (WR-02) instead of throwing mid-map when a game is malformed', async () => {
+    const malformedGame = { ...(rawGames[0] as Record<string, unknown>) }
+    delete malformedGame.conferenceGame
+
+    const fetchTeams = vi.fn().mockResolvedValue({ data: wellFormedTeams, error: undefined })
+    const fetchGames = vi.fn().mockResolvedValue({ data: [malformedGame, rawGames[1], rawGames[2]], error: undefined })
+
+    const result = await fetchSourceData(2026, { fetchTeams, fetchGames })
+
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      const parsed = JSON.parse(result.reason) as Array<{ gameId: number, errors: Record<string, unknown> }>
+      expect(parsed).toHaveLength(1)
+      expect(parsed[0].gameId).toBe((rawGames[0] as { id: number }).id)
+      expect(parsed[0].errors).toHaveProperty('conferenceGame')
+    }
+  })
+
   it('never throws even when a mocked dependency rejects — surfaced as a rejected promise, not silently swallowed', async () => {
     const fetchTeams = vi.fn().mockRejectedValue(new Error('DNS lookup failed'))
     const fetchGames = vi.fn()

@@ -7,7 +7,8 @@ import {
   transformTeam,
   reportRequiredFieldFailures,
   RawGameSchema,
-  transformGame
+  transformGame,
+  reportGameFailures
 } from '../scripts/lib/schemas'
 
 const fixturesDir = fileURLToPath(new URL('./fixtures/', import.meta.url))
@@ -103,6 +104,23 @@ describe('seasonType passthrough', () => {
       expect(transformGame(raw).seasonType).toBe((raw as { seasonType: string }).seasonType)
     }
     expect(transformGame(postseasonCase).seasonType).toBe('postseason')
+  })
+})
+
+describe('reportGameFailures', () => {
+  it('flags exactly one entry, for the fixture id, with a conferenceGame key in errors, and never throws', () => {
+    const missingConferenceGame = { ...(rawGames[0] as Record<string, unknown>) }
+    delete missingConferenceGame.conferenceGame
+
+    const failures = reportGameFailures([rawGames[1], missingConferenceGame, rawGames[2]])
+    expect(failures).toHaveLength(1)
+    expect(failures[0].gameId).toBe((rawGames[0] as { id: number }).id)
+    expect(failures[0].errors).toHaveProperty('conferenceGame')
+  })
+
+  it('returns an empty array when every game satisfies RawGameSchema', () => {
+    const failures = reportGameFailures(rawGames)
+    expect(failures).toEqual([])
   })
 })
 

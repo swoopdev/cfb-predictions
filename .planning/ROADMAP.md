@@ -17,7 +17,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 
 **Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2, 4, and 5, then wired into the UI in Phase 6.
 
-- [ ] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint
+- [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
 - [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
 - [ ] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
@@ -41,7 +41,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
   3. `conferenceGame` and season-type (regular vs. conference championship) are trusted directly from CFBD data, never re-derived from comparing team conferences, so championship games can be excluded from regular-season standings computation
   4. Re-running the fetch script for a future season (e.g. 2027) requires only a season argument change, not code changes
 
-**Plans**: 4/5 plans executed
+**Plans**: 5/5 plans complete
 Plans:
 **Wave 1**
 
@@ -55,7 +55,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-05-PLAN.md — fetch-data.ts orchestration, live 2026 run, human spot-check checkpoint
+- [x] 01-05-PLAN.md — fetch-data.ts orchestration, live 2026 run, human spot-check checkpoint
 
 ### Phase 2: Foundation & Read-Only Slate
 
@@ -175,7 +175,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Pipeline | 4/5 | In Progress|  |
+| 1. Data Pipeline | 5/5 | Complete   | 2026-08-13 |
 | 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |

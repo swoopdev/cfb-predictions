@@ -11,9 +11,9 @@
 - [x] **DATA-02**: A committed, season-namespaced JSON dataset of all 2026 FBS games (teams, week, conference-game flag, neutral-site flag, championship-game flag) exists, produced by the same fetch script
 - [x] **DATA-03**: Every dataset carries a `scheduleHash` fingerprint so stored scenarios and share links can detect a stale schedule
 - [ ] **DATA-04**: Team logos are vendored into the repo at build time (not hotlinked), sourced from CFBD's own `/teams` logo URLs with a placeholder fallback for teams with no available logo
-- [ ] **DATA-05**: A build-time validation script fails loudly and lists any team missing a logo, color, or required field, and produces a committed coverage report
-- [ ] **DATA-06**: `conferenceGame` is trusted directly from CFBD data, never re-derived from comparing team conferences
-- [ ] **DATA-07**: Non-regular-season games (conference championships) are excluded from regular-season standings computation
+- [x] **DATA-05**: A build-time validation script fails loudly and lists any team missing a logo, color, or required field, and produces a committed coverage report
+- [x] **DATA-06**: `conferenceGame` is trusted directly from CFBD data, never re-derived from comparing team conferences
+- [x] **DATA-07**: Non-regular-season games (conference championships) are excluded from regular-season standings computation
 
 ### Foundation (FOUND)
 
@@ -121,9 +121,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
-| DATA-07 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Complete |
+| DATA-06 | Phase 1 | Complete |
+| DATA-07 | Phase 1 | Complete |
 | FOUND-01 | Phase 2 | Pending |
 | FOUND-02 | Phase 2 | Pending |
 | FOUND-03 | Phase 2 | Pending |

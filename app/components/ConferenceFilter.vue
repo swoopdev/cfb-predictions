@@ -42,5 +42,7 @@ const selected = computed<string>({
     v-model="selected"
     :items="CONFERENCE_ITEMS"
     placeholder="All conferences"
+    class="w-56 sm:w-64"
+    :ui="{ content: 'min-w-[16rem]' }"
   />
 </template>

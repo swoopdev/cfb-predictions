@@ -52,6 +52,8 @@ const picked = computed<number>({
       value-key="value"
       label-key="label"
       placeholder="Jump to week…"
+      class="w-32"
+      :ui="{ content: 'min-w-[8rem]' }"
     />
     <UButton
       icon="i-lucide-chevron-right"

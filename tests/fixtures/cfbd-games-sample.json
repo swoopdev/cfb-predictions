@@ -1,0 +1,35 @@
+[
+  {
+    "id": 401628355,
+    "week": 1,
+    "seasonType": "regular",
+    "homeId": 1,
+    "homeTeam": "Ohio State",
+    "awayId": 2,
+    "awayTeam": "Missing Conference U",
+    "conferenceGame": false,
+    "neutralSite": false
+  },
+  {
+    "id": 401628301,
+    "week": 13,
+    "seasonType": "postseason",
+    "homeId": 1,
+    "homeTeam": "Ohio State",
+    "awayId": 3,
+    "awayTeam": "No Logo State",
+    "conferenceGame": true,
+    "neutralSite": true
+  },
+  {
+    "id": 401628288,
+    "week": 5,
+    "seasonType": "regular",
+    "homeId": 2,
+    "homeTeam": "Missing Conference U",
+    "awayId": 3,
+    "awayTeam": "No Logo State",
+    "conferenceGame": true,
+    "neutralSite": false
+  }
+]

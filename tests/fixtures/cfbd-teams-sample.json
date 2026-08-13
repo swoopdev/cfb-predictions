@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "school": "Ohio State",
+    "mascot": "Buckeyes",
+    "abbreviation": "OSU",
+    "conference": "Big Ten",
+    "classification": "fbs",
+    "color": "#BB0000",
+    "alternateColor": "#666666",
+    "logos": [
+      "https://a.espncdn.com/i/teamlogos/ncaa/500/1.png",
+      "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/1.png"
+    ]
+  },
+  {
+    "id": 2,
+    "school": "Missing Conference U",
+    "mascot": "Wolves",
+    "abbreviation": "MCU",
+    "conference": null,
+    "classification": "fbs",
+    "color": "#112233",
+    "alternateColor": "#445566",
+    "logos": [
+      "https://a.espncdn.com/i/teamlogos/ncaa/500/2.png"
+    ]
+  },
+  {
+    "id": 3,
+    "school": "No Logo State",
+    "mascot": "Sentinels",
+    "abbreviation": "NLS",
+    "conference": "Big 12",
+    "classification": "fbs",
+    "color": "#003366",
+    "alternateColor": "#FFCC00",
+    "logos": []
+  }
+]

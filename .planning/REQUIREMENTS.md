@@ -127,15 +127,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-01 | Phase 2 | Pending |
 | FOUND-02 | Phase 2 | Pending |
 | FOUND-03 | Phase 2 | Pending |
-| SLATE-01 | Phase 3 | Pending |
-| SLATE-02 | Phase 3 | Pending |
-| SLATE-03 | Phase 3 | Pending |
-| SLATE-04 | Phase 3 | Pending |
-| SLATE-05 | Phase 3 | Pending |
-| TIE-01 | Phase 3b | Pending |
-| TIE-02 | Phase 3b | Pending |
-| TIE-03 | Phase 3b | Pending |
-| TIE-04 | Phase 3b | Pending |
+| SLATE-01 | Phase 2 | Pending |
+| SLATE-02 | Phase 2 | Pending |
+| SLATE-03 | Phase 2 | Pending |
+| SLATE-04 | Phase 2 | Pending |
+| SLATE-05 | Phase 2 | Pending |
+| TIE-01 | Phase 3 | Pending |
+| TIE-02 | Phase 3 | Pending |
+| TIE-03 | Phase 3 | Pending |
+| TIE-04 | Phase 3 | Pending |
 | PICK-01 | Phase 4 | Pending |
 | PICK-02 | Phase 4 | Pending |
 | PICK-03 | Phase 4 | Pending |
@@ -162,10 +162,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | SHARE-04 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 42 total
-- Mapped to phases: 42
+- v1 requirements: 43 total
+- Mapped to phases: 43
 - Unmapped: 0 ✓
+
+**Note:** the count was corrected from a previously stated "42 total" — a direct count of `XXX-NN` requirement entries in this file totals 43. Phase 2 in the roadmap ("Foundation & Read-Only Slate") merges the FOUND and SLATE categories into one vertical slice; Phase 3 ("Tiebreaker Engine") corresponds to research/SUMMARY.md's "Phase 3b," promoted to a first-class, explicitly parallel phase.
 
 ---
 *Requirements defined: 2026-08-12*
-*Last updated: 2026-08-12 after initial definition*
+*Last updated: 2026-08-12 after roadmap creation*

@@ -24,7 +24,21 @@ function goNext() {
 // row a visible "Week N" label (object items with a `label`/`value` shape
 // use USelect's default `label-key`/`value-key`, so no extra props needed
 // beyond passing them explicitly for clarity).
-const weekItems = computed(() => WEEKS.map(w => ({ label: `Week ${w}`, value: w })))
+//
+// WR-02: `WEEKS` intentionally excludes 14 (D-15, zero games), but the
+// `/week/14` route still resolves for a direct deep link. Without a
+// matching item, USelect has nothing to bind `picked` to and the trigger
+// renders as unselected even though Prev/Next (getAdjacentWeek) already
+// handle 14 correctly. Synthesize a transient item for any week not in
+// `WEEKS` so the picker always has something to display.
+const weekItems = computed(() => {
+  const items = WEEKS.map(w => ({ label: `Week ${w}`, value: w }))
+  if (!WEEKS.includes(props.week)) {
+    items.push({ label: `Week ${props.week}`, value: props.week })
+    items.sort((a, b) => a.value - b.value)
+  }
+  return items
+})
 
 // USelect needs a concrete v-model; reads the current week, writes emit a
 // navigate event rather than mutating state directly.

@@ -102,3 +102,51 @@ export function deriveConferenceRecords(
 
   return records
 }
+
+/**
+ * Counts each team's total wins across every supplied game (conference AND
+ * non-conference), capping wins credited against non-FBS opponents (any
+ * team id not present in `knownFbsTeamIds`) at `fcsWinCap` per team --
+ * additional FCS wins beyond the cap add zero further credit. This is the
+ * Big 12's own policy, verbatim: "Only one win against a team from the
+ * NCAA Football Championship Subdivision or lower division will be
+ * counted annually."
+ *
+ * This helper is scoped ONLY to the Big 12's `total-wins` tiebreaker step
+ * (RESEARCH.md Open Question 3's resolution: "total number of wins in a
+ * 12-game season" is a genuinely season-wide count, the one exception
+ * among all four conferences' steps to the rule that every tiebreaker
+ * step is conference-games-only). It is NOT part of the shared
+ * conference-scoped `ConferenceRecord` contract -- Phase 5's standings
+ * engine must not call this for its own overall win totals; that is a
+ * different, uncapped count.
+ */
+export function deriveOverallWinCount(
+  allSeasonGames: readonly Game[],
+  outcomes: ReadonlyMap<GameId, TeamId>,
+  knownFbsTeamIds: ReadonlySet<TeamId>,
+  fcsWinCap: number = 1
+): ReadonlyMap<TeamId, number> {
+  const totalWins = new Map<TeamId, number>()
+  const fcsWinsCredited = new Map<TeamId, number>()
+
+  for (const game of allSeasonGames) {
+    const winnerId = outcomes.get(game.id)
+    if (winnerId === undefined) continue
+
+    const loserId = winnerId === game.homeId ? game.awayId : game.homeId
+
+    if (knownFbsTeamIds.has(loserId)) {
+      totalWins.set(winnerId, (totalWins.get(winnerId) ?? 0) + 1)
+      continue
+    }
+
+    const creditedSoFar = fcsWinsCredited.get(winnerId) ?? 0
+    if (creditedSoFar < fcsWinCap) {
+      totalWins.set(winnerId, (totalWins.get(winnerId) ?? 0) + 1)
+      fcsWinsCredited.set(winnerId, creditedSoFar + 1)
+    }
+  }
+
+  return totalWins
+}

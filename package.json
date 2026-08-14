@@ -25,6 +25,7 @@
     "@nuxt/eslint": "^1.17.0",
     "@types/node": "^26.2.0",
     "@vitest/coverage-v8": "^4.1.10",
+    "@vueuse/nuxt": "14.4.0",
     "cfbd": "^5.24.0",
     "eslint": "^10.8.1",
     "tsx": "^4.23.12",

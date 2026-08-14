@@ -3,6 +3,7 @@ import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
+import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +17,10 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 
 // Pick state: loaded from localStorage and reactive
 const picks: Ref<Record<number, number>> = usePicksStorage(2026)
+const { autoFilled, markAutoFilled } = useAutoFilledGames(2026)
+
+// Clear Season confirmation modal state
+const showClearSeasonModal = ref(false)
 
 // Drives loading/error branching for the ONE-TIME initial data resolution.
 // Subsequent week/filter changes read already-cached data (staleTime:
@@ -80,14 +85,90 @@ const filterLabel = computed(() => {
   if (conf.value !== undefined) return conf.value
   return 'This filter'
 })
+
+// Bulk operation handlers (D-12 through D-15)
+function handleFillWeek() {
+  if (!games.value?.games) return
+  const { newPicks, autoFilledIds } = fillWeekRemaining(games.value.games, week.value, picks.value)
+  picks.value = newPicks
+  markAutoFilled(autoFilledIds)
+}
+
+function handleFillSeason() {
+  if (!games.value?.games) return
+  const { newPicks, autoFilledIds } = fillSeasonRemaining(games.value.games, picks.value)
+  picks.value = newPicks
+  markAutoFilled(autoFilledIds)
+}
+
+function handleClearWeek() {
+  if (!games.value?.games) return
+  picks.value = clearWeek(games.value.games, week.value, picks.value)
+}
+
+function handleClearSeason() {
+  showClearSeasonModal.value = true
+}
+
+function confirmClearSeason() {
+  picks.value = clearSeason()
+  autoFilled.value = [] // Also clear provenance tracking
+  showClearSeasonModal.value = false
+}
 </script>
 
 <template>
   <div class="px-6 lg:px-8 py-6">
+    <!-- Global Progress Badge (D-09): displays overall season progress -->
+    <div class="mb-4">
+      <PickProgress />
+    </div>
+
+    <!-- Season Controls -->
     <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-      <h1 class="text-xl font-semibold">
-        Week {{ week }}
-      </h1>
+      <div class="flex gap-2">
+        <UButton
+          @click="handleFillSeason"
+          variant="ghost"
+          size="sm"
+        >
+          Fill Season
+        </UButton>
+        <UButton
+          @click="handleClearSeason"
+          variant="ghost"
+          size="sm"
+        >
+          Clear Season
+        </UButton>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+      <!-- Week heading with per-week progress badge (D-10) -->
+      <div class="flex items-center gap-4">
+        <h1 class="text-xl font-semibold">
+          Week {{ week }}
+        </h1>
+        <PickProgressWeek :week-num="week" />
+      </div>
+      <!-- Week Controls -->
+      <div class="flex gap-2">
+        <UButton
+          @click="handleFillWeek"
+          variant="ghost"
+          size="sm"
+        >
+          Fill Week
+        </UButton>
+        <UButton
+          @click="handleClearWeek"
+          variant="ghost"
+          size="sm"
+        >
+          Clear Week
+        </UButton>
+      </div>
       <WeekNav
         :week="week"
         @navigate="goToWeek"
@@ -172,5 +253,35 @@ const filterLabel = computed(() => {
         </div>
       </div>
     </div>
+
+    <!-- Clear Season Confirmation Modal (D-14) -->
+    <UModal
+      v-model="showClearSeasonModal"
+      title="Clear all season picks?"
+    >
+      <template #default>
+        <div class="p-4">
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            This will clear all picks across the entire season. This action cannot be undone.
+          </p>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex gap-2 justify-end">
+          <UButton
+            @click="showClearSeasonModal = false"
+            variant="ghost"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            @click="confirmClearSeason"
+            color="red"
+          >
+            Clear All
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

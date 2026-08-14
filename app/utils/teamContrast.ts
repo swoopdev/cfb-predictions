@@ -52,7 +52,7 @@ function getLuminance(r: number, g: number, b: number): number {
   const [rs, gs, bs] = [r, g, b].map(v => {
     const norm = v / 255
     return norm <= 0.03928 ? norm / 12.92 : Math.pow((norm + 0.055) / 1.055, 2.4)
-  })
+  }) as [number, number, number]
 
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs
 }
@@ -129,7 +129,7 @@ export function validateTeamContrast(
     { name: 'brightness(0.65)', factor: 0.65 }
   ]
 
-  let bestFilter = filters[0]
+  let bestFilterName = filters[0]!.name
   let bestRatio = 0
 
   for (const { name, factor } of filters) {
@@ -144,17 +144,17 @@ export function validateTeamContrast(
 
     // Pick the filter that gets closest to (but >= 4.5) or the one with highest ratio
     if (ratio >= 4.5 && ratio < (bestRatio >= 4.5 ? bestRatio : Infinity)) {
-      bestFilter = { name, factor }
+      bestFilterName = name
       bestRatio = ratio
     } else if (bestRatio < 4.5 && ratio > bestRatio) {
-      bestFilter = { name, factor }
+      bestFilterName = name
       bestRatio = ratio
     }
   }
 
   return {
     valid: false,
-    filter: bestFilter.name
+    filter: bestFilterName
   }
 }
 

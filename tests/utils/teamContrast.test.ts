@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateTeamContrast, applyContrastFilter } from '~/app/utils/teamContrast'
+import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 
 describe('teamContrast', () => {
   describe('validateTeamContrast', () => {

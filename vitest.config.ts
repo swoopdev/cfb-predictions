@@ -31,6 +31,16 @@ export default defineConfig({
           branches: 90,
           functions: 90,
           lines: 90
+        },
+        // Phase 5 (05-01 <verification>): the standings engine is the other
+        // half of "if the math is wrong, nothing else matters" — same
+        // rationale as the tiebreaker gate above, set at the plan's stated
+        // 85% floor.
+        'shared/domain/standings/**': {
+          statements: 85,
+          branches: 85,
+          functions: 85,
+          lines: 85
         }
       }
     }

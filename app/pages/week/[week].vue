@@ -70,6 +70,11 @@ const filteredGames = computed<Game[]>(() =>
   filterGames(rawWeekGames.value, { conf: conf.value, team: teamId.value }, teamsById.value)
 )
 
+// All games for the entire season, filtered by active conference/team filter
+const allFilteredGames = computed<Game[]>(() =>
+  filterGames(games.value?.games ?? [], { conf: conf.value, team: teamId.value }, teamsById.value)
+)
+
 // D-07, D-14/D-16: games within a week group under their home team's conference
 // (sorted alphabetically), UNLESS a conference filter is active (D-14/D-16), in which case
 // all games involving that conference appear in a single section (D-14/D-16).
@@ -132,7 +137,7 @@ function confirmClearSeason() {
   <div class="px-6 lg:px-8 py-6">
     <!-- Global Progress Badge (D-09): displays overall season progress -->
     <div class="mb-4">
-      <PickProgress />
+      <PickProgress :games="allFilteredGames" />
     </div>
 
     <!-- Season Controls (D-11: positioned above game grid) -->
@@ -165,7 +170,7 @@ function confirmClearSeason() {
           Week {{ week }}
         </h1>
         <div class="flex-1 max-w-xs">
-          <PickProgressWeek :week-num="week" />
+          <PickProgressWeek :week-num="week" :games="filteredGames" />
         </div>
       </div>
       <!-- Week navigation -->

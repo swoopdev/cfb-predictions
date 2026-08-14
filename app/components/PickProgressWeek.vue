@@ -1,15 +1,30 @@
 <script setup lang="ts">
+import type { Game } from '#shared/types/schedule'
 import { usePickProgress } from '~/composables/usePickProgress'
+import { usePicksStorage } from '~/composables/usePicksStorage'
 
 interface Props {
   weekNum: number
   season?: number
+  games?: Game[]
 }
 
 const props = withDefaults(defineProps<Props>(), { season: 2026 })
 
+const picks = usePicksStorage(props.season)
 const { progressForWeek } = usePickProgress(props.season)
-const weekProgress = progressForWeek(props.weekNum)
+
+// If games are provided (filtered), calculate progress from those; otherwise use composable
+const weekProgress = computed(() => {
+  if (props.games !== undefined) {
+    // Use provided games (already filtered by conference/team)
+    const total = props.games.length
+    const picked = props.games.filter(g => g.id in picks.value).length
+    return { picked, total }
+  }
+  // Fallback to unfiltered week progress from composable
+  return progressForWeek(props.weekNum).value
+})
 
 const percentage = computed(() => {
   if (weekProgress.value.total === 0) return 0

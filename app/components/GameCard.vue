@@ -70,9 +70,11 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 
 <template>
   <UCard
-    :ui="{ body: 'p-3 sm:p-3' }"
-    :class="{
-      'bg-white dark:bg-slate-900': isPicked
+    :ui="isPicked ? {
+      root: 'bg-gray-200 dark:bg-gray-700',
+      body: 'p-3 sm:p-3'
+    } : {
+      body: 'p-3 sm:p-3'
     }"
   >
     <!-- Away team row (clickable for picking) -->
@@ -114,7 +116,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm"
+          class="truncate text-sm text-black dark:text-gray-50"
           :title="away.school"
         >{{ away.school }}</span>
       </div>
@@ -164,7 +166,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm"
+          class="truncate text-sm text-black dark:text-gray-50"
           :title="home?.school"
         >{{ home?.school }}</span>
       </div>

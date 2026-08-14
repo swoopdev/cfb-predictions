@@ -28,9 +28,12 @@ const headingId = useId()
 
 <template>
   <section :aria-labelledby="headingId">
+    <!-- `text-toned`, not `text-dimmed`: with four conferences stacked in the
+         sidebar this heading is the primary wayfinding element, not a
+         de-emphasised label. -->
     <h3
       :id="headingId"
-      class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-2"
+      class="text-xs font-semibold uppercase tracking-wide text-toned mb-2"
     >
       {{ conferenceName }}
     </h3>
@@ -49,11 +52,16 @@ const headingId = useId()
       <caption class="sr-only">
         {{ conferenceName }} standings: rank, team, overall record, conference record
       </caption>
+      <!-- `text-xs` + `text-muted` rather than a 10px dimmed label: CLAUDE.md
+           requires contrast to hold up at small sizes in BOTH themes, and
+           dimmed-on-default at 10px is the first thing to fail that in light
+           mode. `w-8` on the rank column fits the two-digit ranks that an
+           18-team Big Ten produces without the column reflowing. -->
       <thead>
-        <tr class="border-b border-default text-[10px] uppercase tracking-wide text-dimmed">
+        <tr class="border-b border-default text-xs uppercase tracking-wide text-muted">
           <th
             scope="col"
-            class="w-6 py-1.5 pr-2 text-left font-medium"
+            class="w-8 py-1.5 pr-2 text-left font-medium"
           >
             Rank
           </th>
@@ -83,20 +91,30 @@ const headingId = useId()
         <tr
           v-for="team in standings"
           :key="team.id"
+          class="hover:bg-elevated/60 transition-colors"
         >
-          <td class="py-1.5 pr-2 text-left tabular-nums text-muted">
+          <!-- The rank column carries the entire tie signal (D-05/D-06: no
+               badge, no icon, no tooltip), so it is left-aligned, tabular and
+               at full text weight — three teams sharing a `2` have to be
+               obvious in a single downward glance, which a dimmed
+               right-aligned number is not. -->
+          <td class="py-1.5 pr-2 text-left tabular-nums font-medium text-default">
             {{ team.rank }}
           </td>
+          <!-- No `truncate`/`nowrap`: at the sidebar's 320px the longest P4
+               school ("Mississippi State") fits, and if a narrower viewport
+               forces it, wrapping is the correct failure — a clipped team
+               name is not. -->
           <th
             scope="row"
             class="py-1.5 pr-2 text-left font-normal text-highlighted"
           >
             {{ team.school }}
           </th>
-          <td class="py-1.5 pr-2 text-right tabular-nums text-muted">
+          <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
             {{ team.overallRecord.wins }}-{{ team.overallRecord.losses }}
           </td>
-          <td class="py-1.5 text-right tabular-nums text-default">
+          <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
             {{ team.confRecord.wins }}-{{ team.confRecord.losses }}
           </td>
         </tr>

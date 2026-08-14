@@ -79,19 +79,41 @@ const panelId = useId()
     class="w-full lg:w-80 lg:shrink-0 lg:sticky lg:top-6"
     aria-label="Conference standings"
   >
+    <!-- Mobile only: the panel is tall (up to 67 rows across four
+         conferences), so it stays collapsed until asked for rather than
+         pushing the game slate off the bottom of the screen. On `lg` and up
+         the button is gone and the panel is unconditionally visible — the
+         breakpoint is `lg`, not the `md` the plan suggested, because between
+         768px and 1024px a 320px sidebar leaves the 280px-min game grid a
+         single cramped column. -->
     <button
       type="button"
-      class="lg:hidden mb-2 w-full inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-default bg-elevated ring ring-accented hover:bg-accented transition-colors"
+      class="lg:hidden mb-2 w-full inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-default bg-elevated ring ring-accented hover:bg-accented transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       :aria-expanded="expanded"
       :aria-controls="panelId"
       @click="expanded = !expanded"
     >
       {{ expanded ? 'Hide standings' : 'Show standings' }}
+      <!-- Decorative: the button's own text already says which way it goes,
+           so the chevron is hidden from assistive tech. -->
+      <svg
+        class="size-4 transition-transform"
+        :class="expanded ? 'rotate-180' : ''"
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6 8l4 4 4-4" />
+      </svg>
     </button>
 
     <div
       :id="panelId"
-      class="lg:block lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto rounded-lg bg-default ring ring-default p-3 sm:p-4"
+      class="lg:block lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto overscroll-contain rounded-lg bg-default ring ring-default p-3 sm:p-4"
       :class="expanded ? 'block' : 'hidden'"
     >
       <p

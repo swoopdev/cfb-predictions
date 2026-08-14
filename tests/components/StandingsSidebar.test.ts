@@ -117,6 +117,64 @@ describe('StandingsSidebar', () => {
     expect(wrapper.text()).toContain('No teams to show for ACC.')
   })
 
+  describe('responsive collapse (D-01)', () => {
+    it('starts collapsed and wires the toggle to the panel it controls', () => {
+      const wrapper = mount(StandingsSidebar, { props: { standings } })
+
+      const toggle = wrapper.get('button')
+      const panel = wrapper.get(`#${CSS.escape(toggle.attributes('aria-controls')!)}`)
+
+      expect(toggle.attributes('aria-expanded')).toBe('false')
+      expect(panel.classes()).toContain('hidden')
+      expect(panel.classes()).not.toContain('block')
+    })
+
+    it('expands and re-collapses the panel when the toggle is clicked', async () => {
+      const wrapper = mount(StandingsSidebar, { props: { standings } })
+      const toggle = wrapper.get('button')
+      const panelSelector = `#${CSS.escape(toggle.attributes('aria-controls')!)}`
+
+      await toggle.trigger('click')
+      expect(toggle.attributes('aria-expanded')).toBe('true')
+      expect(wrapper.get(panelSelector).classes()).toContain('block')
+      expect(toggle.text()).toBe('Hide standings')
+
+      await toggle.trigger('click')
+      expect(toggle.attributes('aria-expanded')).toBe('false')
+      expect(wrapper.get(panelSelector).classes()).toContain('hidden')
+      expect(toggle.text()).toBe('Show standings')
+    })
+
+    // happy-dom does not evaluate media queries, so the desktop half of the
+    // contract is asserted at the class level: the toggle is `lg:hidden` and
+    // the panel is `lg:block`, which together mean the collapsed state cannot
+    // survive past the `lg` breakpoint and strand a user with no standings
+    // and no visible way to reveal them.
+    it('is unconditionally visible on desktop regardless of the collapsed state', () => {
+      const wrapper = mount(StandingsSidebar, { props: { standings } })
+      const toggle = wrapper.get('button')
+
+      expect(toggle.classes()).toContain('lg:hidden')
+      expect(wrapper.get(`#${CSS.escape(toggle.attributes('aria-controls')!)}`).classes())
+        .toContain('lg:block')
+    })
+
+    it('labels the region and keeps the chevron out of the accessibility tree', () => {
+      const wrapper = mount(StandingsSidebar, { props: { standings } })
+
+      expect(wrapper.get('aside').attributes('aria-label')).toBe('Conference standings')
+      expect(wrapper.get('button svg').attributes('aria-hidden')).toBe('true')
+    })
+
+    it('never clips a team name', () => {
+      const wrapper = mount(StandingsSidebar, { props: { standings } })
+
+      const classes = wrapper.findAll('tbody th').flatMap(th => th.classes())
+      expect(classes).not.toContain('truncate')
+      expect(classes).not.toContain('whitespace-nowrap')
+    })
+  })
+
   it('does not re-filter or reorder the rows it is given', () => {
     const secondPlace = team('Georgia', 'SEC', 2)
     const wrapper = mount(StandingsSidebar, {

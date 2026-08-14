@@ -77,3 +77,66 @@ export interface StepOutcome {
   partition: readonly TeamId[][]
   separated: boolean
 }
+
+/**
+ * A single cycle in the recursive tiebreaker resolution.
+ * Records the tied teams at the start of the cycle, all steps attempted
+ * in this cycle, the outcome (resolved, restart, or exhausted), and which
+ * teams were removed (seeded or eliminated) at the end.
+ *
+ * D-08: Restarts are represented as nested cycle groups, not a flat step
+ * list. The trace is an array of cycles; each cycle has its own ordered
+ * step list and records which team(s), if any, were removed at the end.
+ *
+ * D-09: Every cycle records its own explicit tied-team list. This gives
+ * one consistent trace shape across conferences.
+ */
+export interface TiebreakerCycle {
+  tiedTeams: readonly TeamId[]
+  steps: readonly StepOutcome[]
+  outcome: 'resolved' | 'restart' | 'exhausted'
+  removed: readonly { teamId: TeamId; reason: 'seeded' | 'eliminated'; atStep: TiebreakerStepId }[]
+}
+
+/**
+ * Terminal-step metadata used to populate NeedsUserInput.reason when the
+ * last computable step doesn't fully separate the tied group.
+ *
+ * D-04: static metadata (reason code + citation text + source name) attached
+ * separately from the executable step list, used to populate ruleCitation
+ * when manual intervention is needed. Keeps the step list purely executable;
+ * citation text is purely descriptive.
+ */
+export interface TerminalReason {
+  code: 'ranking-step' | 'needs-scores' | 'draw'
+  ruleCitation: string
+  sourceName: string
+}
+
+/**
+ * The result of resolving a tied group to a final order (or identifying
+ * that the group cannot be resolved without user input).
+ *
+ * D-01: Return type is 2-valued: Resolved(order) | NeedsUserInput(tiedTeams,
+ * reason, trace). No separate Impossible variant — a human can always pick
+ * a winner, even where the official procedure would use a coin-flip draw.
+ */
+export type TiebreakerResult =
+  | { status: 'resolved'; order: readonly TeamId[]; trace: readonly TiebreakerCycle[] }
+  | {
+      status: 'needsUserInput'
+      tiedTeams: readonly TeamId[]
+      reason: TerminalReason
+      trace: readonly TiebreakerCycle[]
+    }
+
+/**
+ * The result of resolving both championship spots (seed 1 and seed 2) for a
+ * conference. Each seed is resolved independently; if seed 1 is
+ * needsUserInput, seed 2 is set to the same result (both spots blocked).
+ */
+export interface ChampionshipResult {
+  conference: ConferenceId
+  seed1: TiebreakerResult
+  seed2: TiebreakerResult
+}

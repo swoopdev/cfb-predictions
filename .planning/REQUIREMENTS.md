@@ -42,10 +42,10 @@
 
 ### Standings (STAND)
 
-- [ ] **STAND-01**: Conference standings display rank, team, conference record (W-L), and overall record (W-L) for each of SEC, Big Ten, Big 12, and ACC
-- [ ] **STAND-02**: Standings recompute immediately when any pick changes, with no perceptible delay
-- [ ] **STAND-03**: Conference win/loss/games-played are tracked as separate values, never collapsed to a single win percentage, so unbalanced conference schedules remain comparable
-- [ ] **STAND-04**: Teams tied on the relevant standings criteria are visually indicated as tied, before any tiebreaker is applied
+- [x] **STAND-01**: Conference standings display rank, team, conference record (W-L), and overall record (W-L) for each of SEC, Big Ten, Big 12, and ACC
+- [x] **STAND-02**: Standings recompute immediately when any pick changes, with no perceptible delay
+- [x] **STAND-03**: Conference win/loss/games-played are tracked as separate values, never collapsed to a single win percentage, so unbalanced conference schedules remain comparable
+- [x] **STAND-04**: Teams tied on the relevant standings criteria are visually indicated as tied, before any tiebreaker is applied
 
 ### Tiebreakers (TIE)
 
@@ -144,10 +144,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | PICK-06 | Phase 4 | Pending |
 | PICK-07 | Phase 4 | Pending |
 | PICK-08 | Phase 4 | Pending |
-| STAND-01 | Phase 5 | Pending |
-| STAND-02 | Phase 5 | Pending |
-| STAND-03 | Phase 5 | Pending |
-| STAND-04 | Phase 5 | Pending |
+| STAND-01 | Phase 5 | Complete |
+| STAND-02 | Phase 5 | Complete |
+| STAND-03 | Phase 5 | Complete |
+| STAND-04 | Phase 5 | Complete |
 | TIE-05 | Phase 6 | Pending |
 | TIE-06 | Phase 6 | Pending |
 | TIE-07 | Phase 6 | Pending |

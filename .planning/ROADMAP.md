@@ -143,10 +143,12 @@ Plans:
 **Plans**: 4/4 plans
 Plans:
 **Wave 0**
+
 - [ ] 04-01-PLAN.md — Install @vueuse/nuxt, author usePicksStorage + useAutoFilledGames composables with corruption recovery and test fixtures
 - [ ] 04-02-PLAN.md — Extend GameCard.vue with click-to-pick interaction, visual feedback (border + checkmark), keyboard/accessibility support
 
 **Wave 1** *(blocked on Wave 0 completion)*
+
 - [ ] 04-03-PLAN.md — Create progress badge components (global + per-week), integrate into week page layout, author usePickProgress composable
 - [ ] 04-04-PLAN.md — Implement bulk fill/clear operations, confirmation modal for Clear Season, integrate buttons into week page, manual UAT verification
 
@@ -168,6 +170,7 @@ Plans:
 **Plans**: 1/1 plan created
 Plans:
 **Wave 1**
+
 - [ ] 04-01-POLISH-PLAN.md — Refactor progress components to horizontal bars, add white background to picked cards, reposition bulk operation buttons, update game grouping for conference filters
 
 **UI hint**: yes
@@ -185,12 +188,14 @@ Plans:
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
   4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
-**Plans**: 2/2 plans created
+**Plans**: 1/2 plans executed
 Plans:
 **Wave 1**
-- [ ] 05-01-PLAN.md — Core standings computation (computeStandings) and SEC display with reactive updates from picks
+
+- [x] 05-01-PLAN.md — Core standings computation (computeStandings) and SEC display with reactive updates from picks
 
 **Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 05-02-PLAN.md — Multi-conference display, conference filter integration, responsive sidebar collapse, and visual polish
 
 **UI hint**: yes
@@ -253,7 +258,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
-| 5. Standings Engine & UI | 0/TBD | Not started | - |
+| 5. Standings Engine & UI | 1/2 | In Progress|  |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 4
-current_phase_name: Picks & Persistence
+current_phase: 05
+current_phase_name: standings-engine-ui
 status: executing
-stopped_at: Phase 5 context gathered and discussion complete
-last_updated: "2026-08-14T16:26:33.695Z"
-last_activity: 2026-08-15
-last_activity_desc: Phase 04 UI-SPEC approved (6/6 dimensions), ready for /gsd-plan-phase
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-08-14T16:51:48.636Z"
+last_activity: 2026-08-14
+last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 9
   completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
+  total_plans: 20
+  completed_plans: 19
   percent: 44
 ---
 
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-12)
 
 **Core value:** Pick a game, and every downstream consequence — records, conference standings, tiebreakers, championship game matchups — updates correctly and instantly.
-**Current focus:** Phase 03 — tiebreaker-engine
+**Current focus:** Phase 05 — standings-engine-ui
 
 ## Current Position
 
-Phase: 4 — Picks & Persistence
-Plan: Not started
-Status: Context & UI design contract complete, ready for planning
-Last activity: 2026-08-15 — Phase 04 UI-SPEC approved (6/6 dimensions), ready for /gsd-plan-phase
+Phase: 05 (standings-engine-ui) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-08-14 — Phase 05 execution started
 
 Progress: [██████████] 100%
 
@@ -63,6 +63,7 @@ Progress: [██████████] 100%
 | Phase 01 P05 | 25min | 3 tasks | 142 files |
 | Phase 03 P01 | 2min | 2 tasks | 5 files |
 | Phase 03 P07 | 25min | 2 tasks | 2 files |
+| Phase 05 P01 | 50 min | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,10 @@ Recent decisions affecting current work:
 - [Phase 01-05]: Open Question #2 resolved: 127 of 888 games have an awayId (FCS opponent) not present in teams.json, since CFBD's classification=fbs filter on /games only requires the home team to be FBS; per DATA-06/DATA-07 raw-passthrough, fetch-data.ts does not filter these out -- documented for Phase 2/5 planners
 - [Phase 03]: shared/domain/ deliberately does not import GameOutput from scripts/lib/schemas.ts -- Game is a structurally-compatible subset so Phase 2/4/5 callers can pass real fetched games with no cast — Keeps shared/domain/ decoupled from the scripts/ build-time fetch tool per RESEARCH.md
 - [Phase 03]: deriveOverallWinCount is scoped only to the Big 12's total-wins step, explicitly not part of the shared ConferenceRecord contract Phase 5 will import — Big 12's FCS win cap needs a season-wide (not conference-only) win count; folding it into the shared aggregation would widen every conference's contract for one Big-12-only step
+- [Phase 5]: reuse Phase 3's deriveConferenceRecords as the sole win/loss tallier rather than a second implementation (PROJECT.md DRY)
+- [Phase 5]: resolved tiebreaker orders teams WITHIN a shared rank, never splits the rank -- reconciles D-04 with D-11
+- [Phase 5]: resolveAllConferences() lives in shared/domain/standings so no tiebreaker orchestration sits in the Vue layer
+- [Phase 5]: P4 membership derived from CONFERENCE_RULES keys, never re-listed
 
 ### Pending Todos
 
@@ -102,6 +107,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-14T16:26:33.686Z
-Stopped at: Phase 5 context gathered and discussion complete
-Resume file: .planning/phases/05-standings-engine-ui/05-CONTEXT.md
+Last session: 2026-08-14T16:51:48.627Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None

@@ -140,7 +140,16 @@ Plans:
   4. A visible progress indicator shows how many games are picked, overall and per week
   5. If stored pick data is corrupted or unreadable, the app recovers gracefully instead of crashing or silently discarding the user's picks
 
-**Plans**: TBD
+**Plans**: 4/4 plans
+Plans:
+**Wave 0**
+- [ ] 04-01-PLAN.md — Install @vueuse/nuxt, author usePicksStorage + useAutoFilledGames composables with corruption recovery and test fixtures
+- [ ] 04-02-PLAN.md — Extend GameCard.vue with click-to-pick interaction, visual feedback (border + checkmark), keyboard/accessibility support
+
+**Wave 1** *(blocked on Wave 0 completion)*
+- [ ] 04-03-PLAN.md — Create progress badge components (global + per-week), integrate into week page layout, author usePickProgress composable
+- [ ] 04-04-PLAN.md — Implement bulk fill/clear operations, confirmation modal for Clear Season, integrate buttons into week page, manual UAT verification
+
 **UI hint**: yes
 
 ### Phase 5: Standings Engine & UI

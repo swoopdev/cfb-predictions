@@ -18,8 +18,8 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 **Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2, 4, and 5, then wired into the UI in Phase 6.
 
 - [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
-- [x] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team (completed 2026-08-13)
-- [ ] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules
+- [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
+- [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
 - [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged
 - [ ] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties
@@ -101,7 +101,30 @@ Plans:
   3. When a tiebreaker cannot be resolved from picks alone (a ranking-based step, or a step requiring scores), the engine reports which teams remain tied and why, rather than guessing or crashing
   4. Correctness is demonstrated by hand-verified fixtures covering 2-, 3-, 4-, and 5-way ties per conference, including a case where restarting vs. continuing the procedure produces a different champion
 
-**Plans**: TBD
+**Plans**: 1/8 plans executed
+Plans:
+**Wave 1**
+
+- [x] 03-01-PLAN.md — Conference record derivation (deriveConferenceRecords) + frozen base ordering (computeBaseOrdering) + Big 12 FCS win count (deriveOverallWinCount)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 03-02-PLAN.md — Tiebreaker step evaluators (head-to-head, common-opponents, next-highest-placed-common-opponent w/ D-05 collective-bucket, cumulative-opponent-win-pct, total-wins)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [x] 03-03-PLAN.md — Recursive restart/continue engine (resolveTiedGroup) + CONFERENCE_RULES data table + ACC's defineTiedTeams + resolveConferenceChampionship orchestration
+
+**Wave 4** *(blocked on Wave 3 completion; SEC/Big Ten/Big 12/ACC plans run in parallel)*
+
+- [x] 03-04-PLAN.md — SEC hand-verified fixture matrix + tests
+- [x] 03-05-PLAN.md — Big Ten hand-verified fixture matrix + tests
+- [x] 03-06-PLAN.md — Big 12 hand-verified fixture matrix + tests (incl. D-05-revised collective-bucket regression)
+- [x] 03-07-PLAN.md — ACC hand-verified fixture matrix + tests (incl. mixed 8/9-game tied-team definition)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [x] 03-08-PLAN.md — D-11 coverage threshold (shared/domain/tiebreakers/** at 90%) + full-suite verification
 
 ### Phase 4: Picks & Persistence
 
@@ -190,8 +213,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 4/4 | Complete    | 2026-08-13 |
-| 3. Tiebreaker Engine | 0/TBD | Not started | - |
+| 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
+| 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |

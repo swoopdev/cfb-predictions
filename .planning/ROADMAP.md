@@ -165,10 +165,10 @@ Plans:
   3. Fill/Clear buttons are positioned below week headings (not inline), with season buttons above the game grid
   4. When filtering to a specific conference, all games involving that conference appear in a single section (not split by opponent conference), including out-of-conference games
 
-**Plans**: 1 plan (focused UI updates)
+**Plans**: 1/1 plan created
 Plans:
-**Single wave**
-- [ ] 04-01-POLISH-PLAN.md — Update GameCard component (white background for picked state), refactor progress components (horizontal bars), reposition bulk operation buttons, update game grouping logic for conference-specific filters
+**Wave 1**
+- [ ] 04-01-POLISH-PLAN.md — Refactor progress components to horizontal bars, add white background to picked cards, reposition bulk operation buttons, update game grouping for conference filters
 
 **UI hint**: yes
 

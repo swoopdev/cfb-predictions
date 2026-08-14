@@ -94,28 +94,28 @@ export function resolveTiedGroup(
     const rest = restBuckets.flat()
 
     // Check if this step fully resolved the top bucket into a single team
-    if (winners.length === 1 && rest.length === 0) {
+    if (winners!.length === 1 && rest.length === 0) {
       // Fully resolved within this cycle
       cycles.push({
         tiedTeams,
         steps,
         outcome: 'resolved',
-        removed: [{ teamId: winners[0]!, reason: 'seeded', atStep: stepId }]
+        removed: [{ teamId: winners![0]!, reason: 'seeded', atStep: stepId }]
       })
       return {
         status: 'resolved',
-        order: [...winners],
+        order: [...winners!],
         trace: cycles
       }
     }
 
-    if (winners.length >= 1 && rest.length > 0) {
+    if (winners!.length >= 1 && rest.length > 0) {
       // Partial separation: restart with the reduced group (Pitfall 1)
       cycles.push({
         tiedTeams,
         steps,
         outcome: 'restart',
-        removed: winners.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
+        removed: winners!.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
       })
 
       // Invariant (a): `rest` must be strictly smaller than `tiedTeams`
@@ -126,7 +126,7 @@ export function resolveTiedGroup(
       }
 
       // Compute the next alreadyCommitted set, growing it to include the just-seeded teams
-      const nextAlreadyCommitted = new Set([...alreadyCommitted, ...winners])
+      const nextAlreadyCommitted = new Set([...alreadyCommitted, ...winners!])
 
       // Re-invoke defineTiedTeams with the growing alreadyCommitted set
       // (This is how the ACC's per-restart redefinition works correctly)
@@ -156,7 +156,7 @@ export function resolveTiedGroup(
       if (restResult.status === 'resolved') {
         return {
           status: 'resolved',
-          order: [...winners, ...restResult.order],
+          order: [...winners!, ...restResult.order],
           trace: restResult.trace
         }
       } else {
@@ -208,10 +208,10 @@ export function resolveTiedGroup(
  */
 export function resolveConferenceChampionship(
   conference: ConferenceId,
-  conferenceGames: readonly { id: number, homeId: TeamId, awayId: TeamId }[],
+  conferenceGames: readonly { id: number, homeId: TeamId, awayId: TeamId, conferenceGame: boolean }[],
   outcomes: ReadonlyMap<number, TeamId>,
   teamIds: ReadonlySet<TeamId>,
-  allSeasonGames?: readonly { id: number, homeId: TeamId, awayId: TeamId }[],
+  allSeasonGames?: readonly { id: number, homeId: TeamId, awayId: TeamId, conferenceGame: boolean }[],
   knownFbsTeamIds?: ReadonlySet<TeamId>
 ): ChampionshipResult {
   // Validate entry boundary (T-03-02): every outcome entry must map to a valid game/team pair

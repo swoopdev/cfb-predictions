@@ -273,6 +273,5 @@ function handleClearSeason() {
         </div>
       </div>
     </div>
-
   </div>
 </template>

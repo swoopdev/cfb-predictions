@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { LocationQueryRaw } from 'vue-router'
+import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
+import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
 const route = useRoute()
 const router = useRouter()
@@ -12,6 +14,10 @@ const week = computed(() => Number(route.params.week))
 
 const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
 const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
+
+// Pick state: loaded from localStorage and reactive
+const picks: Ref<Record<number, number>> = usePicksStorage(2026)
+const { autoFilled, markAutoFilled } = useAutoFilledGames(2026)
 
 // Drives loading/error branching for the ONE-TIME initial data resolution.
 // Subsequent week/filter changes read already-cached data (staleTime:
@@ -61,9 +67,25 @@ const filteredGames = computed<Game[]>(() =>
   filterGames(rawWeekGames.value, { conf: conf.value, team: teamId.value }, teamsById.value)
 )
 
-// D-07: games within a week group under their home team's conference,
-// sorted alphabetically by conference name.
-const conferenceGroups = computed(() => groupByConference(filteredGames.value, teamsById.value))
+// All games for the entire season, filtered by active conference/team filter
+const allFilteredGames = computed<Game[]>(() =>
+  filterGames(games.value?.games ?? [], { conf: conf.value, team: teamId.value }, teamsById.value)
+)
+
+// D-07, D-14/D-16: games within a week group under their home team's conference
+// (sorted alphabetically), UNLESS a conference filter is active (D-14/D-16), in which case
+// all games involving that conference appear in a single section (D-14/D-16).
+const conferenceGroups = computed(() => {
+  // D-14/D-16: when conference filter is active, show all games in single section
+  if (conf.value !== undefined) {
+    return [{
+      conference: `${conf.value} Games`,
+      games: filteredGames.value
+    }]
+  }
+  // Otherwise, use existing grouping by home team's conference
+  return groupByConference(filteredGames.value, teamsById.value)
+})
 
 // Pitfall 4: "week has zero games" (e.g. week 14) and "filter narrowed an
 // otherwise non-empty week to zero games" (e.g. a team's bye week) are
@@ -76,18 +98,101 @@ const filterLabel = computed(() => {
   if (conf.value !== undefined) return conf.value
   return 'This filter'
 })
+
+// Bulk operation handlers (D-12 through D-15)
+function handleFillWeek() {
+  if (!games.value?.games) return
+  const { newPicks, autoFilledIds } = fillWeekRemaining(games.value.games, week.value, picks.value)
+  picks.value = newPicks
+  markAutoFilled(autoFilledIds)
+}
+
+function handleFillSeason() {
+  if (!games.value?.games) return
+  const { newPicks, autoFilledIds } = fillSeasonRemaining(games.value.games, picks.value)
+  picks.value = newPicks
+  markAutoFilled(autoFilledIds)
+}
+
+function handleClearWeek() {
+  if (!games.value?.games) return
+  picks.value = clearWeek(games.value.games, week.value, picks.value)
+}
+
+function handleClearSeason() {
+  picks.value = clearSeason()
+  autoFilled.value.splice(0) // Also clear provenance tracking
+}
 </script>
 
 <template>
   <div class="px-6 lg:px-8 py-6">
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-      <h1 class="text-xl font-semibold">
-        Week {{ week }}
-      </h1>
+    <!-- Global Progress Badge (D-09): displays overall season progress -->
+    <div class="mb-4">
+      <PickProgress :games="allFilteredGames" />
+    </div>
+
+    <!-- Season Controls (D-11: positioned above game grid) -->
+    <div class="flex flex-wrap items-center gap-4 mb-6">
+      <div class="flex gap-2">
+        <UButton
+          :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
+          variant="ghost"
+          size="sm"
+          @click="handleFillSeason"
+        >
+          Fill Season
+        </UButton>
+        <UButton
+          :disabled="Object.keys(picks).length === 0"
+          variant="ghost"
+          size="sm"
+          @click="handleClearSeason"
+        >
+          Clear Season
+        </UButton>
+      </div>
+    </div>
+
+    <!-- Week heading with per-week progress bar and navigation -->
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+      <!-- Week heading with per-week progress bar (D-10, D-02) -->
+      <div class="flex items-center gap-4 flex-1">
+        <h1 class="text-xl font-semibold">
+          Week {{ week }}
+        </h1>
+        <div class="flex-1 max-w-xs">
+          <PickProgressWeek
+            :week-num="week"
+            :games="filteredGames"
+          />
+        </div>
+      </div>
+      <!-- Week navigation -->
       <WeekNav
         :week="week"
         @navigate="goToWeek"
       />
+    </div>
+
+    <!-- Week-level action buttons (repositioned below heading per D-10) -->
+    <div class="flex gap-2 mb-6">
+      <UButton
+        :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
+        variant="ghost"
+        size="sm"
+        @click="handleFillWeek"
+      >
+        Fill Week
+      </UButton>
+      <UButton
+        :disabled="filteredGames.filter(g => g.id in picks).length === 0"
+        variant="ghost"
+        size="sm"
+        @click="handleClearWeek"
+      >
+        Clear Week
+      </UButton>
     </div>
 
     <div class="flex flex-wrap items-center gap-4 mb-6">
@@ -163,6 +268,7 @@ const filterLabel = computed(() => {
             :key="game.id"
             :game="game"
             :teams-by-id="teamsById"
+            :picks="picks"
           />
         </div>
       </div>

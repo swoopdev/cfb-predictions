@@ -8,7 +8,6 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { TiebreakerResult, TeamId } from '../shared/domain/tiebreakers/types'
 import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
 import {
   bigTenTwoWayTie,
@@ -21,26 +20,6 @@ import {
   bigTenUnbalancedScheduleAndNeedsUserInput,
   bigTenCollectiveBucketComparison
 } from './fixtures/tiebreakers/bigten.fixtures'
-
-/**
- * Helper: assert that a TiebreakerResult resolved to a specific order.
- */
-function assertResolved(result: TiebreakerResult, expectedOrder: readonly TeamId[], label: string) {
-  expect(result.status, label).toBe('resolved')
-  if (result.status === 'resolved') {
-    expect(result.order, `${label}: order`).toEqual(expectedOrder)
-  }
-}
-
-/**
- * Helper: assert that a TiebreakerResult needs user input with a specific reason code.
- */
-function assertNeedsUserInput(result: TiebreakerResult, expectedReason: string, label: string) {
-  expect(result.status, label).toBe('needsUserInput')
-  if (result.status === 'needsUserInput') {
-    expect(result.reason.code, `${label}: reason.code`).toBe(expectedReason)
-  }
-}
 
 describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
   describe('Fixture 1: bigTenTwoWayTie', () => {

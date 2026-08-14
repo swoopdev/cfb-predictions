@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import type { TeamId, StepOutcome, BaseOrdering, TiebreakerResult, TerminalReason, TiebreakerCycle } from '../shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '../shared/domain/tiebreakers/records'
-import { resolveTiedGroup, resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
 
 /**
  * Fixture builder for synthetic tiebreaker test cases.
@@ -162,7 +162,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
       teamIds,
       () => teamIds, // defineTiedTeams: returns same group
       () => [], // procedure is empty (shouldn't be called)
-      () => ({ step: 'none' as any, values: [], partition: [[1]], separated: false }),
+      () => ({ step: 'head-to-head' as TiebreakerStepId, values: [], partition: [[1]], separated: false }),
       baseOrdering,
       records,
       terminalReason
@@ -204,7 +204,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
         }
       }
       return {
-        step: stepId as any,
+        step: stepId as TiebreakerStepId,
         values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
         partition: [Array.from(teams)],
         separated: false
@@ -250,7 +250,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
     const procedureFor = () => ['step1']
 
     const mockEvaluator = (stepId: string, teams: readonly TeamId[]): StepOutcome => ({
-      step: stepId as any,
+      step: stepId as TiebreakerStepId,
       values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
       partition: [[1], [2, 3]],
       separated: true
@@ -278,7 +278,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
     const procedureFor = () => ['step1', 'step2']
 
     const mockEvaluator = (stepId: string, teams: readonly TeamId[]): StepOutcome => ({
-      step: stepId as any,
+      step: stepId as TiebreakerStepId,
       values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
       partition: [Array.from(teams)],
       separated: false

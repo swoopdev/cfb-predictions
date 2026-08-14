@@ -78,7 +78,7 @@ export function evaluateHeadToHead(
     // Non-round-robin: check for beatAllOthers and lostToAllOthers
     const values: Array<{ teamId: TeamId, value: StepValue }> = []
     let beatAllOthersTeam: TeamId | null = null
-    let lostToAllOthersTeam: TeamId | null = null
+    let _lostToAllOthersTeam: TeamId | null = null
 
     for (const teamId of tiedTeams) {
       const record = records.get(teamId)!
@@ -96,7 +96,7 @@ export function evaluateHeadToHead(
         beatAllOthersTeam = teamId
       }
       if (lostToAllOthers) {
-        lostToAllOthersTeam = teamId
+        _lostToAllOthersTeam = teamId
       }
 
       // Determine result code
@@ -467,8 +467,9 @@ export function evaluateStep(
       return evaluateNextHighestPlacedCommonOpponent(tiedTeams, baseOrdering, records)
     case 'total-wins':
       return evaluateTotalWins(tiedTeams, overallWinCounts)
-    default:
+    default: {
       const exhaustive: never = stepId
       throw new Error(`Unknown step ID: ${exhaustive}`)
+    }
   }
 }

@@ -21,7 +21,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
 - [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
-- [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged
+- [x] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (completed 2026-08-14)
 - [ ] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties
 - [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
 - [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks
@@ -188,7 +188,7 @@ Plans:
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
   4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
-**Plans**: 1/2 plans executed
+**Plans**: 2/2 plans complete
 Plans:
 **Wave 1**
 
@@ -196,7 +196,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 05-02-PLAN.md — Multi-conference display, conference filter integration, responsive sidebar collapse, and visual polish
+- [x] 05-02-PLAN.md — Multi-conference display, conference filter integration, responsive sidebar collapse, and visual polish
 
 **UI hint**: yes
 
@@ -258,7 +258,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
-| 5. Standings Engine & UI | 1/2 | In Progress|  |
+| 5. Standings Engine & UI | 2/2 | Complete   | 2026-08-14 |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

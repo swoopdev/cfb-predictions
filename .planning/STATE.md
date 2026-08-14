@@ -4,17 +4,17 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 05
 current_phase_name: standings-engine-ui
-status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-08-14T16:51:48.636Z"
+status: verifying
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-08-14T17:34:04.489Z"
 last_activity: 2026-08-14
-last_activity_desc: Phase 05 execution started
+last_activity_desc: "Completed 05-02-PLAN.md: multi-conference standings sidebar"
 progress:
   total_phases: 9
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 20
-  completed_plans: 19
-  percent: 44
+  completed_plans: 20
+  percent: 56
 ---
 
 # Project State
@@ -30,8 +30,8 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 
 Phase: 05 (standings-engine-ui) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
-Last activity: 2026-08-14 - Completed quick task 260814-f6z: Repair 45 pre-existing test failures blocking the Phase 5 gate
+Status: Phase complete — ready for verification
+Last activity: 2026-08-14 - Completed 05-02-PLAN.md: filter-aware multi-conference standings sidebar
 
 Progress: [██████████] 100%
 
@@ -64,6 +64,7 @@ Progress: [██████████] 100%
 | Phase 03 P01 | 2min | 2 tasks | 5 files |
 | Phase 03 P07 | 25min | 2 tasks | 2 files |
 | Phase 05 P01 | 50 min | 3 tasks | 11 files |
+| Phase 05 P02 | 25min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,10 @@ Recent decisions affecting current work:
 - [Phase 5]: resolved tiebreaker orders teams WITHIN a shared rank, never splits the rank -- reconciles D-04 with D-11
 - [Phase 5]: resolveAllConferences() lives in shared/domain/standings so no tiebreaker orchestration sits in the Vue layer
 - [Phase 5]: P4 membership derived from CONFERENCE_RULES keys, never re-listed
+- [Phase 5]: StandingsSidebar owns the all-four-vs-single-conference branching; the week page passes the unfiltered result through, keeping filtering display-only
+- [Phase 5]: sidebar collapse breakpoint stays lg (1024px), not the plan's md (768px) — a 320px sidebar leaves the 280px-min game grid a single cramped column below 1024px
+- [Phase 5]: components needing render tests avoid Nuxt UI components and Nuxt auto-imports entirely (plain button over UButton), since the vitest project registers no auto-import plugin
+- [Phase 5]: responsive styling lives in components as Tailwind lg: variants; app/app.css was never created (it does not exist and is not in nuxt.config's css array)
 
 ### Pending Todos
 
@@ -113,6 +118,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-14T16:51:48.627Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-08-14T17:34:04.480Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

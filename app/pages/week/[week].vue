@@ -2,6 +2,8 @@
 import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
+import type { StandingsResult } from '#shared/types/standings'
+import { computeStandings, resolveAllConferences } from '#shared/domain/standings'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
@@ -93,6 +95,32 @@ const conferenceGroups = computed(() => {
 // not just whether the grid is empty.
 const emptyVariant = computed(() => determineEmptyStateVariant(rawWeekGames.value, filteredGames.value))
 
+// D-13/STAND-02: standings are a plain `computed` over (games, teams, picks)
+// — no watcher, no debounce. Vue invalidates it the instant `picks` mutates,
+// so a pick and its standings consequence land in the same render. Measured
+// at ~7ms for the full 888-game slate across all four conferences, which is
+// well under a frame and is why no debounce is warranted.
+const resolvedTiebreakers = computed(() => {
+  const slate = games.value?.games
+  if (!slate || !teams.value) return undefined
+  return resolveAllConferences(slate, teams.value, picks.value)
+})
+
+const standings = computed<StandingsResult>(() => {
+  const slate = games.value?.games
+  if (!slate || !teams.value) return {}
+  return computeStandings(slate, teams.value, picks.value, resolvedTiebreakers.value)
+})
+
+// Plan 05-01 ships the SEC only; Plan 05-02 adds the StandingsSidebar wrapper
+// that renders all four P4 conferences (or one, when a conference filter is
+// active per D-02). `computeStandings` already returns all four.
+const secStandings = computed(() => standings.value.SEC ?? [])
+
+// Ephemeral per-session sidebar visibility on narrow viewports (D-01). Never
+// persisted — Plan 05-02 replaces this with the full drawer treatment.
+const showStandings = ref(false)
+
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
   if (conf.value !== undefined) return conf.value
@@ -127,151 +155,191 @@ function handleClearSeason() {
 
 <template>
   <div class="px-6 lg:px-8 py-6">
-    <!-- Global Progress Badge (D-09): displays overall season progress -->
-    <div class="mb-4">
-      <PickProgress :games="allFilteredGames" />
-    </div>
+    <!-- D-01: games slate and standings share one page, side by side on
+         desktop; the sidebar stacks below the slate on narrow viewports. -->
+    <div class="flex flex-col lg:flex-row lg:items-start gap-6">
+      <div class="min-w-0 flex-1">
+        <!-- Global Progress Badge (D-09): displays overall season progress -->
+        <div class="mb-4">
+          <PickProgress :games="allFilteredGames" />
+        </div>
 
-    <!-- Season Controls (D-11: positioned above game grid) -->
-    <div class="flex flex-wrap items-center gap-4 mb-6">
-      <div class="flex gap-2">
-        <UButton
-          :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
-          variant="ghost"
-          size="sm"
-          @click="handleFillSeason"
-        >
-          Fill Season
-        </UButton>
-        <UButton
-          :disabled="Object.keys(picks).length === 0"
-          variant="ghost"
-          size="sm"
-          @click="handleClearSeason"
-        >
-          Clear Season
-        </UButton>
-      </div>
-    </div>
+        <!-- Season Controls (D-11: positioned above game grid) -->
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <div class="flex gap-2">
+            <UButton
+              :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
+              variant="ghost"
+              size="sm"
+              @click="handleFillSeason"
+            >
+              Fill Season
+            </UButton>
+            <UButton
+              :disabled="Object.keys(picks).length === 0"
+              variant="ghost"
+              size="sm"
+              @click="handleClearSeason"
+            >
+              Clear Season
+            </UButton>
+          </div>
+        </div>
 
-    <!-- Week heading with per-week progress bar and navigation -->
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-      <!-- Week heading with per-week progress bar (D-10, D-02) -->
-      <div class="flex items-center gap-4 flex-1">
-        <h1 class="text-xl font-semibold">
-          Week {{ week }}
-        </h1>
-        <div class="flex-1 max-w-xs">
-          <PickProgressWeek
-            :week-num="week"
-            :games="filteredGames"
+        <!-- Week heading with per-week progress bar and navigation -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+          <!-- Week heading with per-week progress bar (D-10, D-02) -->
+          <div class="flex items-center gap-4 flex-1">
+            <h1 class="text-xl font-semibold">
+              Week {{ week }}
+            </h1>
+            <div class="flex-1 max-w-xs">
+              <PickProgressWeek
+                :week-num="week"
+                :games="filteredGames"
+              />
+            </div>
+          </div>
+          <!-- Week navigation -->
+          <WeekNav
+            :week="week"
+            @navigate="goToWeek"
           />
         </div>
-      </div>
-      <!-- Week navigation -->
-      <WeekNav
-        :week="week"
-        @navigate="goToWeek"
-      />
-    </div>
 
-    <!-- Week-level action buttons (repositioned below heading per D-10) -->
-    <div class="flex gap-2 mb-6">
-      <UButton
-        :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
-        variant="ghost"
-        size="sm"
-        @click="handleFillWeek"
-      >
-        Fill Week
-      </UButton>
-      <UButton
-        :disabled="filteredGames.filter(g => g.id in picks).length === 0"
-        variant="ghost"
-        size="sm"
-        @click="handleClearWeek"
-      >
-        Clear Week
-      </UButton>
-    </div>
+        <!-- Week-level action buttons (repositioned below heading per D-10) -->
+        <div class="flex gap-2 mb-6">
+          <UButton
+            :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
+            variant="ghost"
+            size="sm"
+            @click="handleFillWeek"
+          >
+            Fill Week
+          </UButton>
+          <UButton
+            :disabled="filteredGames.filter(g => g.id in picks).length === 0"
+            variant="ghost"
+            size="sm"
+            @click="handleClearWeek"
+          >
+            Clear Week
+          </UButton>
+        </div>
 
-    <div class="flex flex-wrap items-center gap-4 mb-6">
-      <ConferenceFilter v-model="conf" />
-      <TeamFilter v-model="teamId" />
-    </div>
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <ConferenceFilter v-model="conf" />
+          <TeamFilter v-model="teamId" />
+        </div>
 
-    <div
-      v-if="loadState === 'loading'"
-      class="grid gap-4"
-      style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
-    >
-      <USkeleton
-        v-for="n in 6"
-        :key="n"
-        class="h-20 w-full rounded-lg"
-      />
-    </div>
-
-    <div
-      v-else-if="loadState === 'error'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        Couldn't load the schedule.
-      </h2>
-      <p class="text-dimmed">
-        Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
-      </p>
-    </div>
-
-    <div
-      v-else-if="emptyVariant === 'week-empty'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        No games this week
-      </h2>
-      <p class="text-dimmed">
-        Week {{ week }} has no games in the 2026 schedule. Try another week.
-      </p>
-    </div>
-
-    <div
-      v-else-if="emptyVariant === 'filter-empty'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        No games match this filter
-      </h2>
-      <p class="text-dimmed">
-        {{ filterLabel }} has no games in Week {{ week }}. Clear the filter or pick another week.
-      </p>
-    </div>
-
-    <div
-      v-else
-      class="space-y-8"
-    >
-      <div
-        v-for="group in conferenceGroups"
-        :key="group.conference"
-      >
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
-          {{ group.conference }}
-        </h2>
         <div
+          v-if="loadState === 'loading'"
           class="grid gap-4"
           style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
         >
-          <GameCard
-            v-for="game in group.games"
-            :key="game.id"
-            :game="game"
-            :teams-by-id="teamsById"
-            :picks="picks"
+          <USkeleton
+            v-for="n in 6"
+            :key="n"
+            class="h-20 w-full rounded-lg"
           />
         </div>
+
+        <div
+          v-else-if="loadState === 'error'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            Couldn't load the schedule.
+          </h2>
+          <p class="text-dimmed">
+            Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
+          </p>
+        </div>
+
+        <div
+          v-else-if="emptyVariant === 'week-empty'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            No games this week
+          </h2>
+          <p class="text-dimmed">
+            Week {{ week }} has no games in the 2026 schedule. Try another week.
+          </p>
+        </div>
+
+        <div
+          v-else-if="emptyVariant === 'filter-empty'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            No games match this filter
+          </h2>
+          <p class="text-dimmed">
+            {{ filterLabel }} has no games in Week {{ week }}. Clear the filter or pick another week.
+          </p>
+        </div>
+
+        <div
+          v-else
+          class="space-y-8"
+        >
+          <div
+            v-for="group in conferenceGroups"
+            :key="group.conference"
+          >
+            <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
+              {{ group.conference }}
+            </h2>
+            <div
+              class="grid gap-4"
+              style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
+            >
+              <GameCard
+                v-for="game in group.games"
+                :key="game.id"
+                :game="game"
+                :teams-by-id="teamsById"
+                :picks="picks"
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Standings sidebar (D-01). Desktop: pinned right of the slate and
+           independently scrollable. Mobile: collapsed behind a toggle so it
+           never pushes the games out of reach. -->
+      <aside
+        class="w-full lg:w-80 lg:shrink-0 lg:sticky lg:top-6"
+        aria-label="Conference standings"
+      >
+        <UButton
+          class="lg:hidden mb-2 w-full justify-center"
+          variant="subtle"
+          color="neutral"
+          size="sm"
+          :icon="showStandings ? 'lucide:chevron-up' : 'lucide:chevron-down'"
+          :aria-expanded="showStandings"
+          aria-controls="standings-panel"
+          @click="showStandings = !showStandings"
+        >
+          {{ showStandings ? 'Hide standings' : 'Show standings' }}
+        </UButton>
+
+        <div
+          id="standings-panel"
+          class="lg:block lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
+          :class="showStandings ? 'block' : 'hidden'"
+        >
+          <UCard :ui="{ body: 'p-3 sm:p-4' }">
+            <StandingsTable
+              :standings="secStandings"
+              conference-name="SEC"
+            />
+          </UCard>
+        </div>
+      </aside>
     </div>
   </div>
 </template>

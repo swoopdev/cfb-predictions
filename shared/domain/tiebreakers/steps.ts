@@ -303,6 +303,139 @@ function partitionByStepValue(
 }
 
 /**
+ * Evaluates a tied group via the next highest-placed common opponent,
+ * walking down the frozen base ordering and comparing against the
+ * first bucket containing qualifying common opponents.
+ *
+ * When the walk reaches a bucket with 2+ raw-standings-tied teams,
+ * compares each tied team's win percentage against that entire bucket
+ * collectively (summed wins / summed games), not one opponent at a time.
+ *
+ * Per D-05 (revised 2026-08-13): For the Big 12, this collective-bucket
+ * treatment is primary-source-confirmed, verbatim from the tiebreaker PDF:
+ * "use each team's win percentage against the collective tied teams as a
+ * group (prior to that group's own tie-breaking procedure) rather than the
+ * performance against individual tied teams."
+ *
+ * Per D-13 (added 2026-08-13): The SEC and Big Ten's own tiebreaker
+ * documents do not contain this collective-bucket clause. This same
+ * collective-bucket comparison is applied to their analogous step as a
+ * documented extrapolation, per the standing recommendation in PITFALLS.md.
+ * This is not primary-source-confirmed for SEC/Big Ten; it is an explicit
+ * choice to extend the Big 12's documented behavior where those conferences'
+ * own documents are silent on the bucket-collision case.
+ */
+export function evaluateNextHighestPlacedCommonOpponent(
+  tiedTeams: readonly TeamId[],
+  baseOrdering: BaseOrdering,
+  records: ReadonlyMap<TeamId, ConferenceRecord>
+): StepOutcome {
+  // Walk down the baseOrdering (best to worst raw standings)
+  for (const bucket of baseOrdering) {
+    // Find which teams in this bucket are common opponents of all tied teams
+    const qualifyingOpponents = bucket.filter((opponent) =>
+      tiedTeams.every((team) => {
+        const record = records.get(team)
+        return record && record.opponents.has(opponent)
+      })
+    )
+
+    if (qualifyingOpponents.length === 0) {
+      // No qualifying opponents in this bucket; skip and continue
+      continue
+    }
+
+    // Found a bucket with qualifying common opponents
+    // Compute win percentages against this bucket collectively
+    const values: Array<{ teamId: TeamId; value: StepValue }> = []
+    const valuesByTeam = new Map<TeamId, StepValue>()
+
+    for (const teamId of tiedTeams) {
+      const record = records.get(teamId)!
+      // Count wins and games only against qualifying opponents in this bucket
+      const winsAgainstBucket = Array.from(record.beat).filter((opponent) =>
+        qualifyingOpponents.includes(opponent)
+      ).length
+      const gamesAgainstBucket = Array.from(record.opponents).filter((opponent) =>
+        qualifyingOpponents.includes(opponent)
+      ).length
+
+      const value = winPctSafe(winsAgainstBucket, gamesAgainstBucket)
+      valuesByTeam.set(teamId, value)
+      values.push({ teamId, value })
+    }
+
+    const partition = partitionByStepValue(tiedTeams, valuesByTeam)
+    const separated = partition[0].length < tiedTeams.length
+
+    return {
+      step: 'next-highest-placed-common-opponent',
+      values,
+      partition,
+      separated
+    }
+  }
+
+  // No qualifying bucket found in entire baseOrdering
+  const values = tiedTeams.map((teamId) => ({
+    teamId,
+    value: { kind: 'indeterminate' } as StepValue
+  }))
+  return {
+    step: 'next-highest-placed-common-opponent',
+    values,
+    partition: [Array.from(tiedTeams)],
+    separated: false
+  }
+}
+
+/**
+ * Evaluates a tied group via total wins in a 12-game season.
+ *
+ * This is a Big 12-only step that counts overall (non-conference) wins,
+ * with an FCS-win cap (only one win against a non-FBS opponent counts
+ * annually). The `overallWinCounts` argument is pre-computed by
+ * `deriveOverallWinCount` in `records.ts` and already includes the cap.
+ *
+ * Throws if overallWinCounts is undefined (a programmer error — only
+ * the Big 12's CONFERENCE_RULES should ever include this step).
+ */
+export function evaluateTotalWins(
+  tiedTeams: readonly TeamId[],
+  overallWinCounts: ReadonlyMap<TeamId, number> | undefined
+): StepOutcome {
+  if (overallWinCounts === undefined) {
+    throw new Error('total-wins step requires overallWinCounts (Big 12 only)')
+  }
+
+  const values: Array<{ teamId: TeamId; value: StepValue }> = []
+  const valuesByTeam = new Map<TeamId, StepValue>()
+
+  for (const teamId of tiedTeams) {
+    const wins = overallWinCounts.get(teamId) ?? 0
+    // For this step, winPct is repurposed as the raw win count for display consistency
+    const value: StepValue = {
+      kind: 'record',
+      wins,
+      losses: 0,
+      winPct: wins
+    }
+    valuesByTeam.set(teamId, value)
+    values.push({ teamId, value })
+  }
+
+  const partition = partitionByStepValue(tiedTeams, valuesByTeam)
+  const separated = partition[0].length < tiedTeams.length
+
+  return {
+    step: 'total-wins',
+    values,
+    partition,
+    separated
+  }
+}
+
+/**
  * Dispatcher for all tiebreaker step evaluators.
  * Routes to the appropriate function based on stepId.
  *
@@ -324,11 +457,9 @@ export function evaluateStep(
     case 'cumulative-opponent-win-pct':
       return evaluateCumulativeOpponentWinPct(tiedTeams, records)
     case 'next-highest-placed-common-opponent':
-      // Implemented in Task 2
-      throw new Error('next-highest-placed-common-opponent not yet implemented')
+      return evaluateNextHighestPlacedCommonOpponent(tiedTeams, baseOrdering, records)
     case 'total-wins':
-      // Implemented in Task 2
-      throw new Error('total-wins not yet implemented')
+      return evaluateTotalWins(tiedTeams, overallWinCounts)
     default:
       const exhaustive: never = stepId
       throw new Error(`Unknown step ID: ${exhaustive}`)

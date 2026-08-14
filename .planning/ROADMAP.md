@@ -2,7 +2,7 @@
 
 ## Overview
 
-The app is built in the order the data flows: a trustworthy, versioned 2026 dataset first (nothing else can be more than guesswork without it), then the static shell that can browse it, then the two hardest and most independent pieces of domain logic — picking/persistence and conference tiebreakers — built so the highest-risk one (tiebreakers) can proceed in parallel with everything else. Standings surface the ties tiebreakers will resolve; tiebreaker UI wires the two together into the app's actual differentiator (free, step-by-step tiebreaker reasoning). Scenarios and share links are purely additive on top of a working single-scenario app, and are the safe cuts if the milestone needs to tighten.
+The app is built in the order the data flows: a trustworthy, versioned 2026 dataset first (nothing else can be more than guesswork without it), then the static shell that can browse it, then picking/persistence (user interactions), then conference standings with tiebreaker-aware rankings (reusing the Phase 3 tiebreaker engine), then the tiebreaker reasoning UI that shows step-by-step how rankings and championships were determined. Scenarios and share links are purely additive on top of a working single-scenario app, and are the safe cuts if the milestone needs to tighten.
 
 This roadmap adapts research/SUMMARY.md's proposed 8-phase breakdown rather than adopting it verbatim: Foundation (query layer, static-site config) is folded into the Read-Only Slate phase, since on its own it has no user-observable behavior and MVP mode calls for vertical, end-to-end slices wherever possible. The Tiebreaker Engine remains its own phase — a deliberate exception to "vertical slice," because it is pure domain logic with no UI dependency, the project's single highest-risk component, and buildable the moment Phase 1 pins down the `Game`/`Team` shape. It can run in parallel with Phases 2, 4, and 5.
 
@@ -15,7 +15,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-**Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2, 4, and 5, then wired into the UI in Phase 6.
+**Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2 and 4, then wired into standings ranking in Phase 5 and championship reasoning in Phase 6.
 
 - [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
 - [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
@@ -154,16 +154,16 @@ Plans:
 
 ### Phase 5: Standings Engine & UI
 
-**Goal**: Users can see each conference's standings recompute live from their picks, with ties clearly visible before any tiebreaker resolves them.
+**Goal**: Users can see each conference's standings recomputed live from their picks, with tiebreaker procedures applied to resolve computable ties and manual resolution needed for non-computable ties.
 **Mode:** mvp
-**Depends on**: Phase 4
+**Depends on**: Phase 3 (tiebreaker engine), Phase 4 (picks)
 **Requirements**: STAND-01, STAND-02, STAND-03, STAND-04
 **Success Criteria** (what must be TRUE):
 
-  1. User can view standings (rank, team, conference record, overall record) for each of SEC, Big Ten, Big 12, and ACC
+  1. User can view standings (rank, team, conference record, overall record) for each of SEC, Big Ten, Big 12, and ACC, with final rankings reflecting tiebreaker resolution
   2. Standings update immediately, with no perceptible delay, whenever a pick changes
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
-  4. Teams tied on the relevant standings criteria are visually flagged as tied, even before a tiebreaker has been applied
+  4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
 **Plans**: TBD
 **UI hint**: yes

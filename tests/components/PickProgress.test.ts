@@ -102,16 +102,30 @@ describe('PickProgress Component', () => {
     expect(wrapper.text()).toContain('10/100 picked')
   })
 
-  it('should use neutral text color styling', () => {
+  it('should render a progress bar track, proportional fill, and centered label', () => {
     mockProgressOverall.value = { picked: 5, total: 100 }
 
     const wrapper = mount(PickProgress)
-    const div = wrapper.find('div')
 
-    // Check for neutral color classes (slate-700 light, slate-300 dark)
-    const classes = div.classes()
-    expect(classes).toContain('text-sm')
-    expect(classes.some(c => c.includes('text-slate') || c.includes('slate-'))).toBe(true)
+    // Track: muted background at the season bar's 24px height, clipping the fill.
+    const track = wrapper.find('div')
+    const trackClasses = track.classes()
+    expect(trackClasses).toContain('bg-muted')
+    expect(trackClasses).toContain('h-6')
+    expect(trackClasses).toContain('overflow-hidden')
+
+    // Fill: primary colour, width driven by picked/total, animated on change.
+    const fill = wrapper.find('.bg-primary')
+    expect(fill.exists()).toBe(true)
+    expect(fill.attributes('style')).toContain('width: 5%')
+    expect(fill.classes()).toContain('transition-all')
+
+    // Label: white text centered over the fill, not the pre-polish slate text.
+    const label = wrapper.find('span')
+    const labelClasses = label.classes()
+    expect(labelClasses).toContain('text-xs')
+    expect(labelClasses).toContain('text-white')
+    expect(label.text()).toBe('5/100 picked')
   })
 
   it('should render as plain text, not a badge component', () => {

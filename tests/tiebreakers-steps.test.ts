@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { TeamId, StepValue, StepOutcome, BaseOrdering } from '~/shared/domain/tiebreakers/types'
+import type { TeamId, BaseOrdering } from '~/shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '~/shared/domain/tiebreakers/records'
 import {
   winPctSafe,

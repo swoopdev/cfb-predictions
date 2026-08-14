@@ -6,16 +6,14 @@ import type {
   TerminalReason,
   TiebreakerResult,
   ChampionshipResult,
-  ConferenceId
+  ConferenceId,
+  StepOutcome
 } from './types'
 import type { ConferenceRecord } from './records'
 import { deriveConferenceRecords, deriveOverallWinCount } from './records'
 import { computeBaseOrdering } from './baseOrdering'
 import { evaluateStep } from './steps'
 import { CONFERENCE_RULES } from './rules'
-
-// Re-export StepOutcome for use in engine module
-import type { StepOutcome } from './types'
 
 /**
  * Recursively resolves a tied group of teams through a conference's
@@ -79,7 +77,6 @@ export function resolveTiedGroup(
 
   // Run the procedure for this group size
   const steps: StepOutcome[] = []
-  const remaining = tiedTeams
 
   for (const stepId of procedureFor(tiedTeams.length)) {
     const outcome = evaluateStep(stepId, tiedTeams, baseOrdering, records, overallWinCounts)

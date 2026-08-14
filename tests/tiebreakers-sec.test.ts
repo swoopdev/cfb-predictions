@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { TiebreakerResult, TeamId } from '../shared/domain/tiebreakers/types'
+import type { TiebreakerResult } from '../shared/domain/tiebreakers/types'
 import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
 import {
   secTwoWayTie,
@@ -21,16 +21,6 @@ import {
   secNeedsUserInput,
   secCollectiveBucketComparison
 } from './fixtures/tiebreakers/sec.fixtures'
-
-/**
- * Helper: assert that a TiebreakerResult resolved to a specific order.
- */
-function assertResolved(result: TiebreakerResult, expectedOrder: readonly TeamId[], label: string) {
-  expect(result.status, label).toBe('resolved')
-  if (result.status === 'resolved') {
-    expect(result.order, `${label}: order`).toEqual(expectedOrder)
-  }
-}
 
 /**
  * Helper: assert that a TiebreakerResult needs user input with a specific reason code.

@@ -9,10 +9,6 @@ const props = defineProps<{
   picks: Record<number, number>
 }>()
 
-// Detect light/dark mode for contrast validation
-const colorMode = useColorMode()
-const isDark = computed(() => colorMode.preference === 'dark' || (colorMode.preference === 'system' && colorMode.value === 'dark'))
-
 // `homeId` always resolves (0 games have a missing home-team join, per
 // RESEARCH.md Pitfall 5) — no fallback needed on the home side.
 const home = computed(() => props.teamsById.get(props.game.homeId))
@@ -42,10 +38,27 @@ const pickedTeam = computed(() => {
 
 // Contrast validation for team colors
 const homeContrast = computed(() =>
-  validateTeamContrast(home.value?.color ?? '#000000', isDark.value ? 'dark' : 'light')
+  validateTeamContrast(home.value?.color ?? '#000000', 'light')
 )
 const awayContrast = computed(() =>
-  validateTeamContrast(away.value?.color ?? '#000000', isDark.value ? 'dark' : 'light')
+  validateTeamContrast(away.value?.color ?? '#000000', 'light')
+)
+
+// Determine if secondary color is light or dark (for text contrast)
+function getTextColorForBackground(bgColor: string): string {
+  const hex = bgColor.replace('#', '')
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000
+  return brightness > 128 ? '#000000' : '#ffffff'
+}
+
+const homeSecondaryTextColor = computed(() =>
+  getTextColorForBackground(home.value?.alternateColor ?? '#ffffff')
+)
+const awaySecondaryTextColor = computed(() =>
+  getTextColorForBackground(away.value?.alternateColor ?? '#ffffff')
 )
 
 // Toggle pick: sets or clears the pick for this game
@@ -70,22 +83,22 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 
 <template>
   <UCard
-    :ui="isPicked ? {
-      root: 'bg-gray-200 dark:bg-gray-700',
-      body: 'p-3 sm:p-3'
-    } : {
+    :ui="{
+      root: 'bg-slate-500',
       body: 'p-3 sm:p-3'
     }"
   >
     <!-- Away team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none hover:bg-slate-100 dark:hover:bg-slate-800 rounded px-1 py-1 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-2 transition-colors"
       :class="{
-        'border-l-4': pickedTeamId === away.id
+        'border-l-8': pickedTeamId === away.id,
+        'hover:bg-gray-200': pickedTeamId !== away.id
       }"
       :style="{
         ...(pickedTeamId === away.id ? {
           borderColor: away.color,
+          backgroundColor: away.alternateColor,
           ...applyContrastFilter(awayContrast)
         } : {})
       }"
@@ -103,7 +116,8 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         <UIcon
           v-if="pickedTeamId === away.id"
           name="lucide:check"
-          class="w-4 h-4 text-green-600"
+          class="w-4 h-4"
+          :style="{ color: awaySecondaryTextColor }"
         />
         <div v-else class="w-4 h-4" />
       </div>
@@ -116,26 +130,34 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm text-black dark:text-gray-50"
+          class="truncate text-sm"
+          :style="{
+            color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+          }"
+          :class="{
+            'text-black': pickedTeamId !== away.id
+          }"
           :title="away.school"
         >{{ away.school }}</span>
       </div>
     </div>
 
     <!-- @ separator -->
-    <div class="text-center text-dimmed text-sm py-1">
+    <div class="text-center text-dimmed text-sm py-2 px-2">
       @
     </div>
 
     <!-- Home team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none hover:bg-slate-100 dark:hover:bg-slate-800 rounded px-1 py-1 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-2 transition-colors"
       :class="{
-        'border-l-4': pickedTeamId === home?.id
+        'border-l-8': pickedTeamId === home?.id,
+        'hover:bg-gray-200': pickedTeamId !== home?.id
       }"
       :style="{
         ...(pickedTeamId === home?.id ? {
           borderColor: home?.color,
+          backgroundColor: home?.alternateColor,
           ...applyContrastFilter(homeContrast)
         } : {})
       }"
@@ -153,7 +175,8 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         <UIcon
           v-if="pickedTeamId === home?.id"
           name="lucide:check"
-          class="w-4 h-4 text-green-600"
+          class="w-4 h-4"
+          :style="{ color: homeSecondaryTextColor }"
         />
         <div v-else class="w-4 h-4" />
       </div>
@@ -166,7 +189,13 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm text-black dark:text-gray-50"
+          class="truncate text-sm"
+          :style="{
+            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+          }"
+          :class="{
+            'text-black': pickedTeamId !== home?.id
+          }"
           :title="home?.school"
         >{{ home?.school }}</span>
       </div>

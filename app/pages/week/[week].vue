@@ -284,13 +284,6 @@ function confirmClearSeason() {
       v-model="showClearSeasonModal"
       title="Clear all season picks?"
     >
-      <template #default>
-        <div class="p-4">
-          <p class="text-sm text-gray-700 dark:text-gray-300">
-            This will clear all picks across the entire season. This action cannot be undone.
-          </p>
-        </div>
-      </template>
       <template #footer>
         <div class="flex gap-2 justify-end">
           <UButton

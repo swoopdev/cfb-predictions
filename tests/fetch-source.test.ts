@@ -1,3 +1,8 @@
+/**
+ * @vitest-environment node
+ */
+// Reads source files off disk via Node URL APIs (fileURLToPath + import.meta.url),
+// which the project's global happy-dom default breaks by shadowing the file:-schemed URL.
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, it, expect, vi } from 'vitest'

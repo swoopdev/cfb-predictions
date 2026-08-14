@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextTick } from 'vue'
-import { useAutoFilledGames } from '~/app/composables/useAutoFilledGames'
+import { useAutoFilledGames } from '~/composables/useAutoFilledGames'
 import { autoFilledExamples } from '../fixtures/picks.fixtures'
 
 /**

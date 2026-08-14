@@ -1,15 +1,31 @@
 import { defineConfig } from 'vitest/config'
-import { resolve } from 'path'
+import { dirname, resolve } from 'path'
+import { createRequire } from 'node:module'
 import vue from '@vitejs/plugin-vue'
+
+const require = createRequire(__filename)
+
+// `ofetch` is a transitive dependency of `nuxt`, not a direct one, so pnpm's isolated
+// store keeps it out of the top-level `node_modules`. Vite's import analysis therefore
+// fails while transforming `app/utils/fetchSchedule.ts` -- before `vi.mock('ofetch')`
+// ever gets a chance to intercept. Resolving it through `nuxt` points the alias at the
+// exact copy the app already uses at runtime (1.5.1) without adding a direct dependency.
+const ofetchEntry = resolve(
+  dirname(require.resolve('ofetch/package.json', {
+    paths: [dirname(require.resolve('nuxt/package.json'))]
+  })),
+  'dist/index.mjs'
+)
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: {
-      '~': resolve(__dirname, './app'),
-      '#shared': resolve(__dirname, './shared'),
-      '#app': resolve(__dirname, './app')
-    }
+    alias: [
+      { find: /^~\//, replacement: resolve(__dirname, './app') + '/' },
+      { find: /^#shared\//, replacement: resolve(__dirname, './shared') + '/' },
+      { find: /^#app\//, replacement: resolve(__dirname, './app') + '/' },
+      { find: /^ofetch$/, replacement: ofetchEntry }
+    ]
   },
   test: {
     environment: 'happy-dom',

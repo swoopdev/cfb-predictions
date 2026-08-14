@@ -185,7 +185,14 @@ Plans:
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
   4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
-**Plans**: TBD
+**Plans**: 2/2 plans created
+Plans:
+**Wave 1**
+- [ ] 05-01-PLAN.md — Core standings computation (computeStandings) and SEC display with reactive updates from picks
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 05-02-PLAN.md — Multi-conference display, conference filter integration, responsive sidebar collapse, and visual polish
+
 **UI hint**: yes
 
 ### Phase 6: Tiebreaker UI & Championships

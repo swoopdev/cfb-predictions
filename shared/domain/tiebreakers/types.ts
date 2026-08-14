@@ -47,12 +47,12 @@ export type BaseOrdering = readonly TeamId[][]
  * Identifier for a tiebreaker step. All five step types are implemented
  * by `evaluateStep` in `steps.ts`.
  */
-export type TiebreakerStepId =
-  | 'head-to-head'
-  | 'common-opponents'
-  | 'next-highest-placed-common-opponent'
-  | 'cumulative-opponent-win-pct'
-  | 'total-wins'
+export type TiebreakerStepId
+  = | 'head-to-head'
+    | 'common-opponents'
+    | 'next-highest-placed-common-opponent'
+    | 'cumulative-opponent-win-pct'
+    | 'total-wins'
 
 /**
  * The result of evaluating a team at a single tiebreaker step.
@@ -60,10 +60,10 @@ export type TiebreakerStepId =
  * - `{ kind: 'indeterminate' }`: the step does not apply (e.g. zero common opponents)
  * - `{ kind: 'headToHead' }`: the result of a head-to-head comparison (round-robin or non-round-robin)
  */
-export type StepValue =
-  | { kind: 'record'; wins: number; losses: number; winPct: number }
-  | { kind: 'indeterminate' }
-  | { kind: 'headToHead'; result: 'beat-all' | 'lost-to-all' | 'mixed' | 'no-common-games' }
+export type StepValue
+  = | { kind: 'record', wins: number, losses: number, winPct: number }
+    | { kind: 'indeterminate' }
+    | { kind: 'headToHead', result: 'beat-all' | 'lost-to-all' | 'mixed' | 'no-common-games' }
 
 /**
  * The outcome of applying a single tiebreaker step to a tied group.
@@ -73,7 +73,7 @@ export type StepValue =
  */
 export interface StepOutcome {
   step: TiebreakerStepId
-  values: ReadonlyArray<{ teamId: TeamId; value: StepValue }>
+  values: ReadonlyArray<{ teamId: TeamId, value: StepValue }>
   partition: readonly TeamId[][]
   separated: boolean
 }
@@ -95,7 +95,7 @@ export interface TiebreakerCycle {
   tiedTeams: readonly TeamId[]
   steps: readonly StepOutcome[]
   outcome: 'resolved' | 'restart' | 'exhausted'
-  removed: readonly { teamId: TeamId; reason: 'seeded' | 'eliminated'; atStep: TiebreakerStepId }[]
+  removed: readonly { teamId: TeamId, reason: 'seeded' | 'eliminated', atStep: TiebreakerStepId }[]
 }
 
 /**
@@ -121,9 +121,9 @@ export interface TerminalReason {
  * reason, trace). No separate Impossible variant — a human can always pick
  * a winner, even where the official procedure would use a coin-flip draw.
  */
-export type TiebreakerResult =
-  | { status: 'resolved'; order: readonly TeamId[]; trace: readonly TiebreakerCycle[] }
-  | {
+export type TiebreakerResult
+  = | { status: 'resolved', order: readonly TeamId[], trace: readonly TiebreakerCycle[] }
+    | {
       status: 'needsUserInput'
       tiedTeams: readonly TeamId[]
       reason: TerminalReason

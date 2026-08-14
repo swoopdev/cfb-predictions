@@ -85,7 +85,7 @@ function defineBucketTiedTeams(
   // Walk baseOrdering's buckets in order (best to worst)
   for (const bucket of baseOrdering) {
     // Filter this bucket: keep teams not already committed
-    const remaining = bucket.filter((teamId) => !alreadyCommitted.has(teamId))
+    const remaining = bucket.filter(teamId => !alreadyCommitted.has(teamId))
     if (remaining.length > 0) {
       return remaining
     }
@@ -117,7 +117,7 @@ function defineBucketTiedTeams(
  * document or multi-outlet reproduction during Phase 3 research (2026-08-13).
  */
 export const CONFERENCE_RULES: Record<ConferenceId, ConferenceRules> = {
-  SEC: {
+  'SEC': {
     id: 'SEC',
     defineTiedTeams: defineBucketTiedTeams,
     twoTeamSteps: ['head-to-head', 'common-opponents', 'next-highest-placed-common-opponent', 'cumulative-opponent-win-pct'],
@@ -154,7 +154,7 @@ export const CONFERENCE_RULES: Record<ConferenceId, ConferenceRules> = {
     }
   },
 
-  ACC: {
+  'ACC': {
     id: 'ACC',
     // ACC's defineTiedTeams is structurally different (Pitfall 3):
     // it pulls in teams with matching wins/losses on different schedule lengths.

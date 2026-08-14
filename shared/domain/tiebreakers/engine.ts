@@ -9,9 +9,10 @@ import type {
   ConferenceId
 } from './types'
 import type { ConferenceRecord } from './records'
-import { deriveConferenceRecords } from './records'
+import { deriveConferenceRecords, deriveOverallWinCount } from './records'
 import { computeBaseOrdering } from './baseOrdering'
 import { evaluateStep } from './steps'
+import { CONFERENCE_RULES } from './rules'
 
 /**
  * Recursively resolves a tied group of teams through a conference's
@@ -198,6 +199,15 @@ import type { StepOutcome } from './types'
  * Validates that every gameId in `outcomes` corresponds to a real
  * conference game and that every TeamId value is one of that game's
  * two participants (T-03-02 entry validation).
+ *
+ * @param conference the four-letter P4 conference identifier
+ * @param conferenceGames the full list of conference-scoped games (pre-filtered)
+ * @param outcomes a complete map of {gameId -> winnerId} for every game in conferenceGames
+ * @param teamIds the conference's full membership for deriving conference records
+ * @param allSeasonGames optional; all games (conference + non-conference) used for Big 12's
+ *   total-wins step (RESEARCH.md OQ3: the one exception to "all steps are conference-scoped")
+ * @param knownFbsTeamIds optional; the set of FBS team ids (used with allSeasonGames to
+ *   apply the Big 12's FCS-win cap)
  */
 export function resolveConferenceChampionship(
   conference: ConferenceId,
@@ -211,8 +221,7 @@ export function resolveConferenceChampionship(
   for (const [gameId, winnerId] of outcomes.entries()) {
     const game = conferenceGames.find((g) => g.id === gameId)
     if (!game) {
-      // gameId is not in conferenceGames, but this might be okay if it's from allSeasonGames
-      // For now, only validate against conferenceGames
+      // gameId is not in conferenceGames, so skip it (may be from allSeasonGames)
       continue
     }
     if (winnerId !== game.homeId && winnerId !== game.awayId) {
@@ -222,7 +231,71 @@ export function resolveConferenceChampionship(
     }
   }
 
-  // Placeholder: we'll implement this in Task 2
-  // For now, throw to indicate Task 2 is not yet complete
-  throw new Error('resolveConferenceChampionship not yet implemented (Task 2)')
+  // Derive conference records from outcomes
+  const records = deriveConferenceRecords(conferenceGames, outcomes, teamIds)
+
+  // Compute the frozen base ordering (best-to-worst raw win percentage)
+  const baseOrdering = computeBaseOrdering(records)
+
+  // Get the conference rules
+  const rules = CONFERENCE_RULES[conference]
+
+  if (!rules) {
+    throw new Error(`Unknown conference: ${conference}`)
+  }
+
+  // Compute overall win counts if this is the Big 12 (for the total-wins step)
+  const overallWinCounts =
+    conference === 'Big 12' && allSeasonGames && knownFbsTeamIds
+      ? deriveOverallWinCount(allSeasonGames, outcomes, knownFbsTeamIds, 1)
+      : undefined
+
+  /**
+   * Local helper: resolves one championship spot (either #1 or #2).
+   * Determines which teams are in contention, then applies the recursive
+   * tiebreaker engine to either separate them or identify which teams
+   * need manual resolution.
+   */
+  const resolveSlot = (committed: ReadonlySet<TeamId>): TiebreakerResult => {
+    // Get the tied group for this slot (filtered by committed teams)
+    const pool = rules.defineTiedTeams(baseOrdering, records, committed)
+
+    // Single team: no tie to break
+    if (pool.length === 1) {
+      return {
+        status: 'resolved',
+        order: pool,
+        trace: []
+      }
+    }
+
+    // Multiple teams: apply the recursive tiebreaker engine
+    return resolveTiedGroup(
+      pool,
+      rules.defineTiedTeams,
+      (size: number) => (size === 2 ? rules.twoTeamSteps : rules.multiTeamSteps),
+      baseOrdering,
+      records,
+      overallWinCounts,
+      committed,
+      rules.terminalReason
+    )
+  }
+
+  // Resolve seed 1 (championship spot) with no teams already committed
+  const seed1 = resolveSlot(new Set<TeamId>())
+
+  // Resolve seed 2:
+  // - If seed 1 resolved to a single team, add it to committed and resolve seed 2
+  // - If seed 1 needs manual input, seed 2 is the same (both spots blocked)
+  const seed2 =
+    seed1.status === 'resolved'
+      ? resolveSlot(new Set([seed1.order[0]!]))
+      : seed1 // Same result object (both spots blocked on the same decision)
+
+  return {
+    conference,
+    seed1,
+    seed2
+  }
 }

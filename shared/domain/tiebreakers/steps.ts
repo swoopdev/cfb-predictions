@@ -66,7 +66,7 @@ export function evaluateHeadToHead(
 
     // Partition by value (best to worst)
     const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-    const separated = partition[0] && partition[0].length < tiedTeams.length
+    const separated = partition.length > 0 && partition[0]!.length < tiedTeams.length
 
     return {
       step: 'head-to-head',
@@ -162,9 +162,10 @@ export function evaluateCommonOpponents(
       commonOpponents = new Set(record.opponents)
     } else {
       // Intersect
-      commonOpponents = new Set(Array.from(commonOpponents).filter(opp =>
+      const filtered: TeamId[] = Array.from(commonOpponents as Set<TeamId>).filter((opp: TeamId) =>
         record.opponents.has(opp)
-      ))
+      )
+      commonOpponents = new Set(filtered)
     }
   }
 
@@ -201,7 +202,7 @@ export function evaluateCommonOpponents(
   }
 
   const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-  const separated = partition[0].length < tiedTeams.length
+  const separated = partition[0]!.length < tiedTeams.length
 
   return {
     step: 'common-opponents',
@@ -246,7 +247,7 @@ export function evaluateCumulativeOpponentWinPct(
   }
 
   const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-  const separated = partition[0].length < tiedTeams.length
+  const separated = partition[0]!.length < tiedTeams.length
 
   return {
     step: 'cumulative-opponent-win-pct',
@@ -373,7 +374,7 @@ export function evaluateNextHighestPlacedCommonOpponent(
     }
 
     const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-    const separated = partition[0].length < tiedTeams.length
+    const separated = partition[0]!.length < tiedTeams.length
 
     return {
       step: 'next-highest-placed-common-opponent',
@@ -432,7 +433,7 @@ export function evaluateTotalWins(
   }
 
   const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-  const separated = partition[0].length < tiedTeams.length
+  const separated = partition[0]!.length < tiedTeams.length
 
   return {
     step: 'total-wins',

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { LocationQueryRaw } from 'vue-router'
+import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 
@@ -12,6 +13,9 @@ const week = computed(() => Number(route.params.week))
 
 const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
 const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
+
+// Pick state: loaded from localStorage and reactive
+const picks: Ref<Record<number, number>> = usePicksStorage(2026)
 
 // Drives loading/error branching for the ONE-TIME initial data resolution.
 // Subsequent week/filter changes read already-cached data (staleTime:
@@ -163,6 +167,7 @@ const filterLabel = computed(() => {
             :key="game.id"
             :game="game"
             :teams-by-id="teamsById"
+            :picks="picks"
           />
         </div>
       </div>

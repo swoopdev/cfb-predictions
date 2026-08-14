@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 Phase: 05 (standings-engine-ui) — EXECUTING
 Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-08-14 — Phase 05 execution started
+Last activity: 2026-08-14 - Completed quick task 260814-f6z: Repair 45 pre-existing test failures blocking the Phase 5 gate
 
 Progress: [██████████] 100%
 
@@ -96,6 +96,12 @@ None yet.
 ### Blockers/Concerns
 
 - Phase 3 (Tiebreaker Engine) research flagged LOW confidence on exact conference step orders; primary policy PDFs (Big Ten, Big 12, ACC) were retrieved verbatim but should be re-verified at planning/implementation time, and the ACC amended its policy 2026-07-01 and could do so again
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260814-f6z | Repair 45 pre-existing test failures blocking the Phase 5 gate | 2026-08-14 | 1b4ccdc | [260814-f6z-repair-45-pre-existing-test-failures-blo](./quick/260814-f6z-repair-45-pre-existing-test-failures-blo/) |
 
 ## Deferred Items
 

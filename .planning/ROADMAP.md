@@ -18,7 +18,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 **Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2, 4, and 5, then wired into the UI in Phase 6.
 
 - [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
-- [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
+- [x] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team (completed 2026-08-13)
 - [ ] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
 - [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged
@@ -190,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 4/4 | In Progress|  |
+| 2. Foundation & Read-Only Slate | 4/4 | Complete    | 2026-08-13 |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |

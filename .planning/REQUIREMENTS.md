@@ -17,17 +17,17 @@
 
 ### Foundation (FOUND)
 
-- [ ] **FOUND-01**: The app runs as a fully static site with no runtime API key and no server routes
-- [ ] **FOUND-02**: A single query-key factory and set of composables (`useTeams`, `useGames`) provide typed, cached access to the static datasets via TanStack Query
-- [ ] **FOUND-03**: A production build shows zero network fetches for schedule/team data after initial load
+- [x] **FOUND-01**: The app runs as a fully static site with no runtime API key and no server routes
+- [x] **FOUND-02**: A single query-key factory and set of composables (`useTeams`, `useGames`) provide typed, cached access to the static datasets via TanStack Query
+- [x] **FOUND-03**: A production build shows zero network fetches for schedule/team data after initial load
 
 ### Slate & Navigation (SLATE)
 
-- [ ] **SLATE-01**: User can browse the schedule week by week, with a control to move to the next/previous week
-- [ ] **SLATE-02**: User can filter the visible slate down to a single conference (SEC, Big Ten, Big 12, ACC) or "All"
-- [ ] **SLATE-03**: User can filter the visible slate down to a single team's games
-- [ ] **SLATE-04**: Every game in the slate displays both teams' logos and names
-- [ ] **SLATE-05**: Filter selections (week, conference, team) are reflected in the URL so views are linkable and back/forward navigation works
+- [x] **SLATE-01**: User can browse the schedule week by week, with a control to move to the next/previous week
+- [x] **SLATE-02**: User can filter the visible slate down to a single conference (SEC, Big Ten, Big 12, ACC) or "All"
+- [x] **SLATE-03**: User can filter the visible slate down to a single team's games
+- [x] **SLATE-04**: Every game in the slate displays both teams' logos and names
+- [x] **SLATE-05**: Filter selections (week, conference, team) are reflected in the URL so views are linkable and back/forward navigation works
 
 ### Picks & Persistence (PICK)
 

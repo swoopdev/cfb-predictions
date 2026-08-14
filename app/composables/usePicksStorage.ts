@@ -30,7 +30,7 @@ export function usePicksStorage(season = 2026): Ref<Record<number, number>> {
   const key = `cfb_picks_${season}`
   const corruptKey = `${key}_corrupt`
 
-  return useStorage<Record<number, number>>(
+  const picks = useStorage<Record<number, number>>(
     key,
     {},
     localStorage,
@@ -66,4 +66,6 @@ export function usePicksStorage(season = 2026): Ref<Record<number, number>> {
       }
     }
   )
+
+  return picks as Ref<Record<number, number>>
 }

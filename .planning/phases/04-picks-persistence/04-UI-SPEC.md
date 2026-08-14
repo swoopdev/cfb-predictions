@@ -115,12 +115,13 @@ Inherited from Phase 2 for dominant, secondary, and accent. Phase 4 introduces *
 - Icon: a small checkmark glyph (Lucide `check`, 16px) appears to the left of the team name, with `opacity-0` transition to `opacity-100` on hover (preview what will happen when clicked)
 
 **Picked state (active):**
+- Entire game card has a **white background** (elevated from the page background) for clear distinction
 - Picked team row has a **3px left border** using the team's `color` from `teams.json`
 - Contrast filter applied if needed (see Color section)
 - Team name text remains at Body weight/size (14px/400)
 - A small **checkmark icon** (Lucide `check`, 16px, green accent color) appears to the left of team name, always visible when picked
 - Unpicked team row in the same card remains neutral (no border, no checkmark)
-- Clicking a picked team again clears it (PICK-02) — the checkmark disappears, border vanishes, team returns to neutral state
+- Clicking a picked team again clears it (PICK-02) — card background returns to default, checkmark disappears, border vanishes, team returns to neutral state
 
 **Click feedback:**
 - No toast/snackbar notification — the visual checkmark and border are immediate feedback that the pick is recorded (per PROJECT.md "instant" updates)
@@ -138,81 +139,72 @@ Inherited from Phase 2 for dominant, secondary, and accent. Phase 4 introduces *
 
 ## Progress Indicators
 
-### Global Progress Badge
+### Global Progress Bar
 
-**Placement:** Above the week-grid, aligned left, appearing just after the page title or week navigation controls. The exact placement is per Claude's Discretion (sticky navbar vs. inline above first week) — recommend inline above the first week section to avoid layout shift.
-
-**Styling:**
-- Text-based format: "{X}/{Y} picked" (per D-11)
-- Font: Label role (12px/600/1.2)
-- Color: Neutral text on neutral background (no accent needed; this is informational, not actionable)
-- Example: "45/100 picked" in `text-slate-700` light / `text-slate-300` dark
-- Optionally wrapped in a `UBadge` component with `variant="subtle"` for visual grouping, or keep as plain text
-
-**Responsive:** Remains visible and readable on mobile (no special reflow needed)
-
-### Per-Week Progress Badge
-
-**Placement:** Inline with the "Week {n}" heading, immediately after the week text. Layout: `<h2>Week {n} <span class="ml-md">8/10 picked</span> <div class="buttons">Fill Week | Clear Week</div></h2>`
+**Placement:** Above the week-grid, aligned left, appearing just after the page title or week navigation controls.
 
 **Styling:**
-- Text-based format: "{X}/{Y} picked"
-- Font: Label role (12px/600/1.2)
-- Color: Same as global badge (neutral text)
-- Gap: `md` (16px) between "Week N" text and badge
-- Optionally wrapped in `UBadge` with `variant="subtle"` for consistency with global badge
+- Horizontal progress bar showing visual fill (`picked / total * 100%`)
+- Label in the middle of the bar: "{X}/{Y} picked" (e.g., "45/888 picked")
+- Font: Label role (12px/600/1.2), white text centered on the bar
+- Color: Bar fill is Nuxt UI `primary` (green, `#00DC82` light / `#016538` dark); bar background is `bg-muted`
+- Height: ~24px to accommodate centered label
+- Smooth animation on width change (0.3s transition)
 
-**Responsive:** On mobile (<640px), badges may wrap to a new line if week heading + badge + buttons exceeds available width. Preserve the badge text; wrapping is acceptable.
+**Responsive:** Bar scales to available width; label text resizes or abbreviates on mobile if needed (e.g., "45/888" on small screens).
+
+### Per-Week Progress Bar
+
+**Placement:** Inline with the "Week {n}" heading, immediately after the week text, before the Fill/Clear buttons.
+Layout: `<h2>Week {n} <ProgressBar :picked="8" :total="12" /> <div class="buttons">Fill Week | Clear Week</div></h2>`
+
+**Styling:**
+- Horizontal progress bar (same as global, but smaller — ~20px height)
+- Label: "{X}/{Y} picked" (e.g., "8/12 picked")
+- Color: Same as global (green fill, muted background)
+- Gap: `md` (16px) between "Week N" and bar; `md` (16px) between bar and buttons
+
+**Responsive:** On mobile (<640px), bar may wrap to its own line if week heading + bar + buttons exceeds available width. Preserve the full bar; wrapping is acceptable.
 
 ---
 
 ## Bulk Operation Buttons
 
-### Fill Week & Fill Season Buttons
+### Weekly Controls (Fill Week / Clear Week)
 
-**Functionality (per PICK-05):**
+**Placement:** Below the "Week {n}" heading line, in a separate action row.
+Layout: `<div class="week-actions"><button>Fill Week</button> <button>Clear Week</button></div>`
+
+**Functionality (per PICK-05 and PICK-06):**
 - Fill Week: fills all remaining unpicked games in that week with the home team
-- Fill Season: fills all remaining unpicked games in the entire season with the home team
-- Existing picks are never overwritten — only unpicked games are filled
+- Clear Week: clears all picks in that week instantly (no confirmation)
+- Existing picks are never overwritten by Fill Week — only unpicked games are filled
 
 **Styling:**
-- Component: Nuxt UI `UButton` with `size="sm"` and `variant="ghost"` (low-emphasis, doesn't compete with card content)
-- Color: Default Nuxt UI button styling (text: neutral-700 light / neutral-300 dark, `:hover` background: subtle gray)
-- Text: "Fill Week" or "Fill Season"
-- Placement: Inline with week heading (after progress badge), right-aligned in the header row
-- Gap: `md` (16px) before first button, `sm` (8px) between multiple buttons
+- Component: Nuxt UI `UButton` with `size="sm"` and `variant="ghost"` (low-emphasis)
+- Color: Default neutral styling (text: neutral-700 light / neutral-300 dark, `:hover` background: subtle gray)
+- Text: "Fill Week" or "Clear Week"
+- Gap: `sm` (8px) between buttons
+- Disabled state: gray out both buttons when all games in week are picked (Fill) or no picks exist (Clear)
 
-**Hover state:**
-- Standard `UButton` hover (slight background change)
-- No icon (text-only)
+### Season Controls (Fill Season / Clear Season)
 
-**Active/Pressed state:**
-- No persistent pressed state (button is momentary)
-- Click performs the fill, updates the card grid, and clears the button state
+**Placement:** Above the week grid, next to or below the global progress bar.
 
-### Clear Week & Clear Season Buttons
+**Functionality:**
+- Fill Season: fills all remaining unpicked games across entire season with the home team
+- Clear Season: clears all picks in season (requires confirmation modal per D-14)
 
-**Functionality (per PICK-06):**
-- Clear Week: clears all picks in that week (no confirmation)
-- Clear Season: clears all picks in the season (requires confirmation modal)
+**Styling:**
+- Component: Nuxt UI `UButton` with `size="sm"` and `variant="ghost"` (same as weekly)
+- Text: "Fill Season" or "Clear Season"
+- Gap: `sm` (8px) between buttons
+- Disabled state: gray out both buttons when all games are picked (Fill) or no picks exist (Clear)
 
-**Styling (same as Fill buttons):**
-- Component: Nuxt UI `UButton` with `size="sm"` and `variant="ghost"`
-- Color: Default neutral styling (same as Fill buttons)
-- Text: "Clear Week" or "Clear Season"
-- Placement: Inline with week heading, immediately after Fill buttons or in a separate group (both acceptable)
-- Gap: `sm` (8px) between adjacent buttons
-
-**Clear Week Click Behavior:**
-- Clearing happens instantly (no confirmation per D-14)
-- Picks are cleared from localStorage in a batch update (D-15)
-- Card grid updates immediately to show neutral state for all cleared games
-
-**Clear Season Click Behavior (D-14):**
-- Opens a confirmation modal (UModal from Nuxt UI)
-- Modal title: "Clear all season picks?"
-- Modal body text: "This will clear all picks across the entire season. This action cannot be undone."
-- Two buttons: "Cancel" and "Clear All" (destructive red per Nuxt UI error color)
+**Clear Season Modal (D-14):**
+- Title: "Clear all season picks?"
+- Body text: "This will clear all picks across the entire season. This action cannot be undone."
+- Two buttons: "Cancel" (secondary) and "Clear All" (destructive red per Nuxt UI error color)
 - On "Cancel": modal closes, no change
 - On "Clear All": all picks cleared, entire grid updates, modal closes
 
@@ -266,6 +258,27 @@ Inherited from Phase 2 for dominant, secondary, and accent. Phase 4 introduces *
 ### Desktop (>1024px)
 
 - All elements remain as designed; no changes
+
+---
+
+## Conference-Specific Game Grouping
+
+**When viewing a specific conference (via filter):**
+
+Currently, games are grouped by opponent conference (e.g., "Big 12 vs SEC", "Big 12 vs ACC"). This creates confusing sections for out-of-conference games.
+
+**New behavior:**
+- When a conference filter is applied, show ALL games involving that conference in a single section
+- Do NOT group by opponent conference
+- Include conference games, out-of-conference games, and rivalry games all in one flat list
+- Example: "Big 12 Games" section contains: Kansas vs. Iowa State (conference), Missouri vs. Kansas (out-of-conference), Oklahoma vs. TCU (conference), etc.
+
+**Benefits:**
+- Clearer UX: "Show me all Big 12 games" shows exactly that, not split across multiple sections
+- Handles out-of-conference and rivalry games naturally without confusion
+- Matches user mental model: "I want to see what's happening in the Big 12"
+
+**Implementation note:** This is a Phase 5 refinement to the game grouping/filtering logic in the week page.
 
 ---
 

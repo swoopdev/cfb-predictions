@@ -30,8 +30,8 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 
 Phase: 4 — Picks & Persistence
 Plan: Not started
-Status: Context gathered, ready for planning
-Last activity: 2026-08-14 — Phase 04 context gathered, ready for /gsd-plan-phase
+Status: Context & UI design contract complete, ready for planning
+Last activity: 2026-08-15 — Phase 04 UI-SPEC approved (6/6 dimensions), ready for /gsd-plan-phase
 
 Progress: [██████████] 100%
 

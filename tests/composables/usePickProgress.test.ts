@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref, nextTick } from 'vue'
 import type { Game, TeamsEnvelope } from '#shared/types/schedule'
+
+// NOW import the composable and mocked dependencies
+import { usePickProgress } from '~/composables/usePickProgress'
+import { usePicksStorage } from '~/composables/usePicksStorage'
+import { useGames } from '~/composables/useGames'
 
 /**
  * Tests for usePickProgress composable.
@@ -15,11 +21,6 @@ vi.mock('~/composables/usePicksStorage', () => ({
 vi.mock('~/composables/useGames', () => ({
   useGames: vi.fn()
 }))
-
-// NOW import the composable and mocked dependencies
-import { usePickProgress } from '~/composables/usePickProgress'
-import { usePicksStorage } from '~/composables/usePicksStorage'
-import { useGames } from '~/composables/useGames'
 
 /**
  * Create mock game data for testing

@@ -46,7 +46,7 @@ export function usePicksStorage(season = 2026): Ref<Record<number, number>> {
             }
             // Invalid shape (e.g., array or null)
             throw new Error('Invalid picks shape: expected plain object')
-          } catch (err) {
+          } catch {
             // D-07: Preserve corrupted data under _corrupt key
             const alreadyStored = localStorage.getItem(corruptKey)
             if (!alreadyStored) {

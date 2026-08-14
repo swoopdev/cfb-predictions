@@ -13,7 +13,7 @@
  * Handles 3-digit (#RGB) and 6-digit (#RRGGBB) formats, case-insensitive.
  * Normalizes missing # prefix.
  */
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+function hexToRgb(hex: string): { r: number, g: number, b: number } | null {
   // Normalize: remove # if present, convert to lowercase
   let normalized = hex.replace(/^#/, '').toLowerCase()
 
@@ -49,7 +49,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
  * - L = 0.2126 * R + 0.7152 * G + 0.0722 * B
  */
 function getLuminance(r: number, g: number, b: number): number {
-  const [rs, gs, bs] = [r, g, b].map(v => {
+  const [rs, gs, bs] = [r, g, b].map((v) => {
     const norm = v / 255
     return norm <= 0.03928 ? norm / 12.92 : Math.pow((norm + 0.055) / 1.055, 2.4)
   }) as [number, number, number]
@@ -111,7 +111,7 @@ function applyBrightnessFilter(
 export function validateTeamContrast(
   teamColor: string,
   mode: 'light' | 'dark'
-): { valid: boolean; filter?: string } {
+): { valid: boolean, filter?: string } {
   // Card background colors per UI-SPEC
   const bgColor = mode === 'light' ? '#ffffff' : '#0f172a' // white (light), slate-950 (dark)
 
@@ -163,7 +163,7 @@ export function validateTeamContrast(
  * Returns an object suitable for `:style` binding that applies the filter if needed.
  */
 export function applyContrastFilter(
-  result: { valid: boolean; filter?: string }
+  result: { valid: boolean, filter?: string }
 ): Record<string, string> {
   if (result.valid || !result.filter) {
     return {}

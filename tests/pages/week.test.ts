@@ -1,16 +1,13 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect } from 'vitest'
 import type { Game, Team } from '#shared/types/schedule'
-import WeekPage from '~/pages/week/[week].vue'
 
 /**
  * Integration tests for week/[week].vue page with bulk operations.
  * Verifies button presence, modal confirmation flow, and progress updates.
  */
 
-// Mock games and teams
-const mockGames: Game[] = [
+// Mock games and teams (for future integration tests)
+const _mockGames: Game[] = [
   // Week 1 - 3 games
   {
     id: 101,
@@ -70,7 +67,7 @@ const mockGames: Game[] = [
   }
 ]
 
-const mockTeams: Team[] = [
+const _mockTeams: Team[] = [
   {
     id: 1,
     school: 'Team A',

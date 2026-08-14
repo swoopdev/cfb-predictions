@@ -1,4 +1,4 @@
-import { computed, type Computed } from 'vue'
+import { computed } from 'vue'
 import { usePicksStorage } from './usePicksStorage'
 import { useGames } from './useGames'
 

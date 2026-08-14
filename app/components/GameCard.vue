@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 
@@ -29,12 +28,7 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
 } as Team)
 
 // Pick state computations
-const isPicked = computed(() => props.game.id in props.picks)
 const pickedTeamId = computed(() => props.picks[props.game.id])
-const pickedTeam = computed(() => {
-  if (!isPicked.value) return null
-  return pickedTeamId.value === props.game.homeId ? home.value : away.value
-})
 
 // Contrast validation for team colors
 const homeContrast = computed(() =>
@@ -64,10 +58,10 @@ const awaySecondaryTextColor = computed(() =>
 // Toggle pick: sets or clears the pick for this game
 function togglePick(teamId: number) {
   if (pickedTeamId.value === teamId) {
-    // Clear the pick
+    // eslint-disable-next-line vue/no-mutating-props, @typescript-eslint/no-dynamic-delete
     delete props.picks[props.game.id]
   } else {
-    // Set the pick to this team
+    // eslint-disable-next-line vue/no-mutating-props
     props.picks[props.game.id] = teamId
   }
 }
@@ -119,7 +113,10 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           class="w-4 h-4"
           :style="{ color: awaySecondaryTextColor }"
         />
-        <div v-else class="w-4 h-4" />
+        <div
+          v-else
+          class="w-4 h-4"
+        />
       </div>
 
       <!-- Team info -->
@@ -178,7 +175,10 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           class="w-4 h-4"
           :style="{ color: homeSecondaryTextColor }"
         />
-        <div v-else class="w-4 h-4" />
+        <div
+          v-else
+          class="w-4 h-4"
+        />
       </div>
 
       <!-- Team info -->

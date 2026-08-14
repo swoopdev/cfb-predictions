@@ -112,7 +112,7 @@ describe('usePicksStorage', () => {
       const corruptedValue = corruptedJsonExamples.invalidJson
       localStorage.setItem(STORAGE_KEY, corruptedValue)
 
-      const picks = usePicksStorage(SEASON)
+      usePicksStorage(SEASON)
       expect(localStorage.getItem(CORRUPT_KEY)).toBe(corruptedValue)
     })
 

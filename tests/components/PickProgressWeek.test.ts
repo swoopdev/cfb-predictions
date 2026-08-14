@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import PickProgressWeek from '~/components/PickProgressWeek.vue'
+
+import { usePickProgress } from '~/composables/usePickProgress'
 
 /**
  * Tests for PickProgressWeek per-week progress badge component.
@@ -13,8 +16,6 @@ vi.mock('~/composables/usePickProgress', () => ({
   usePickProgress: vi.fn()
 }))
 
-import { usePickProgress } from '~/composables/usePickProgress'
-
 describe('PickProgressWeek Component', () => {
   let mockProgressForWeek: any
 
@@ -22,7 +23,7 @@ describe('PickProgressWeek Component', () => {
     vi.clearAllMocks()
 
     // Create mock function that returns computed values
-    mockProgressForWeek = vi.fn((weekNum: number) =>
+    mockProgressForWeek = vi.fn((_weekNum: number) =>
       ref({ picked: 0, total: 0 })
     )
 

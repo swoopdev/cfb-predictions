@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import PickProgress from '~/components/PickProgress.vue'
+
+import { usePickProgress } from '~/composables/usePickProgress'
 
 /**
  * Tests for PickProgress global progress badge component.
@@ -12,8 +15,6 @@ import PickProgress from '~/components/PickProgress.vue'
 vi.mock('~/composables/usePickProgress', () => ({
   usePickProgress: vi.fn()
 }))
-
-import { usePickProgress } from '~/composables/usePickProgress'
 
 describe('PickProgress Component', () => {
   let mockProgressOverall: any

@@ -144,18 +144,18 @@ function confirmClearSeason() {
     <div class="flex flex-wrap items-center gap-4 mb-6">
       <div class="flex gap-2">
         <UButton
-          @click="handleFillSeason"
           :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
           variant="ghost"
           size="sm"
+          @click="handleFillSeason"
         >
           Fill Season
         </UButton>
         <UButton
-          @click="handleClearSeason"
           :disabled="Object.keys(picks).length === 0"
           variant="ghost"
           size="sm"
+          @click="handleClearSeason"
         >
           Clear Season
         </UButton>
@@ -170,7 +170,10 @@ function confirmClearSeason() {
           Week {{ week }}
         </h1>
         <div class="flex-1 max-w-xs">
-          <PickProgressWeek :week-num="week" :games="filteredGames" />
+          <PickProgressWeek
+            :week-num="week"
+            :games="filteredGames"
+          />
         </div>
       </div>
       <!-- Week navigation -->
@@ -183,18 +186,18 @@ function confirmClearSeason() {
     <!-- Week-level action buttons (repositioned below heading per D-10) -->
     <div class="flex gap-2 mb-6">
       <UButton
-        @click="handleFillWeek"
         :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
         variant="ghost"
         size="sm"
+        @click="handleFillWeek"
       >
         Fill Week
       </UButton>
       <UButton
-        @click="handleClearWeek"
         :disabled="filteredGames.filter(g => g.id in picks).length === 0"
         variant="ghost"
         size="sm"
+        @click="handleClearWeek"
       >
         Clear Week
       </UButton>
@@ -287,14 +290,14 @@ function confirmClearSeason() {
       <template #footer>
         <div class="flex gap-2 justify-end">
           <UButton
-            @click="showClearSeasonModal = false"
             variant="ghost"
+            @click="showClearSeasonModal = false"
           >
             Cancel
           </UButton>
           <UButton
+            color="error"
             @click="confirmClearSeason"
-            color="red"
           >
             Clear All
           </UButton>

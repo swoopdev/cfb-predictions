@@ -50,7 +50,7 @@ export function useAutoFilledGames(season = 2026) {
             }
             // Invalid shape (e.g., object or string)
             throw new Error('Invalid autoFilled shape: expected array')
-          } catch (_err) {
+          } catch {
             // Corruption is less critical for provenance (just bookkeeping).
             // Silently reset to empty array and continue.
             return []
@@ -76,7 +76,7 @@ export function useAutoFilledGames(season = 2026) {
    */
   function markAutoFilled(gameIds: number[]) {
     const current = new Set(autoFilled.value)
-    gameIds.forEach((id) => current.add(id))
+    gameIds.forEach(id => current.add(id))
     autoFilled.value = Array.from(current)
   }
 

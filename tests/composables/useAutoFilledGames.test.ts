@@ -143,7 +143,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should be reactive: reflects changes when autoFilled is updated', () => {
-      const { autoFilled, autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
 
       markAutoFilled([123])
       const set1 = autoFilledSet.value

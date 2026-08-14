@@ -35,6 +35,7 @@ describe('GameCard integration - Pick state logic', () => {
       expect(gameId in picks).toBe(true)
 
       // Second click: clear pick
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete picks[gameId]
       expect(gameId in picks).toBe(false)
     })

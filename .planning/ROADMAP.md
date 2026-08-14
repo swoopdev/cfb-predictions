@@ -71,7 +71,21 @@ Plans:
   4. Week and filter selections are reflected in the URL, so any view is linkable and back/forward navigation works
   5. The production build makes zero network requests for schedule/team data after initial load, with no runtime API key and no server route
 
-**Plans**: TBD
+**Plans**: 4/4 plans executed
+Plans:
+**Wave 1**
+
+- [x] 02-01-PLAN.md — Tracer: query layer (useTeams/useGames), shared types, GameCard, /week/[week] page with conference grouping + loading/error states
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 02-02-PLAN.md — Static build config: ssr:false, prerendered week routes, Cloudflare SPA fallback
+- [x] 02-03-PLAN.md — Conference + team filters with URL round-trip and input sanitization
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [x] 02-04-PLAN.md — Week nav (Prev/Next/picker), distinct empty states, full-slate UAT checkpoint
+
 **UI hint**: yes
 
 ### Phase 3: Tiebreaker Engine

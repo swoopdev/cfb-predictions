@@ -18,7 +18,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 **Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2, 4, and 5, then wired into the UI in Phase 6.
 
 - [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
-- [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
+- [x] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team (completed 2026-08-13)
 - [ ] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
 - [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged
@@ -71,7 +71,21 @@ Plans:
   4. Week and filter selections are reflected in the URL, so any view is linkable and back/forward navigation works
   5. The production build makes zero network requests for schedule/team data after initial load, with no runtime API key and no server route
 
-**Plans**: TBD
+**Plans**: 4/4 plans executed
+Plans:
+**Wave 1**
+
+- [x] 02-01-PLAN.md — Tracer: query layer (useTeams/useGames), shared types, GameCard, /week/[week] page with conference grouping + loading/error states
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 02-02-PLAN.md — Static build config: ssr:false, prerendered week routes, Cloudflare SPA fallback
+- [x] 02-03-PLAN.md — Conference + team filters with URL round-trip and input sanitization
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [x] 02-04-PLAN.md — Week nav (Prev/Next/picker), distinct empty states, full-slate UAT checkpoint
+
 **UI hint**: yes
 
 ### Phase 3: Tiebreaker Engine
@@ -176,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
+| 2. Foundation & Read-Only Slate | 4/4 | Complete    | 2026-08-13 |
 | 3. Tiebreaker Engine | 0/TBD | Not started | - |
 | 4. Picks & Persistence | 0/TBD | Not started | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |

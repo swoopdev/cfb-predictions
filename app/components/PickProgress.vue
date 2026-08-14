@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// `computed` is imported explicitly rather than relying on Nuxt's auto-import,
+// so this component mounts under the plain vitest run (which registers no Nuxt
+// auto-import plugin) — same pattern as StandingsTable.vue.
+import { computed } from 'vue'
 import type { Game } from '#shared/types/schedule'
 import { usePickProgress } from '~/composables/usePickProgress'
 import { usePicksStorage } from '~/composables/usePicksStorage'

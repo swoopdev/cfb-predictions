@@ -152,6 +152,26 @@ Plans:
 
 **UI hint**: yes
 
+### Phase 4.1: Picks & Persistence — UI Polish (INSERTED)
+
+**Goal**: Refine Phase 4 UI for clarity and UX — progress bars instead of badges, white backgrounds for picked cards, improved button positioning, and better game grouping for conference-specific views.
+**Mode:** mvp (UI polish only, no logic changes)
+**Depends on**: Phase 4
+**Requirements**: PICK-01 through PICK-08 (same, no new requirements)
+**Success Criteria** (what must be TRUE):
+
+  1. Progress indicators are horizontal progress bars with label centered in the bar, showing clear visual fill
+  2. All picked game cards have a white background to distinguish them from unpicked cards
+  3. Fill/Clear buttons are positioned below week headings (not inline), with season buttons above the game grid
+  4. When filtering to a specific conference, all games involving that conference appear in a single section (not split by opponent conference), including out-of-conference games
+
+**Plans**: 1 plan (focused UI updates)
+Plans:
+**Single wave**
+- [ ] 04-01-POLISH-PLAN.md — Update GameCard component (white background for picked state), refactor progress components (horizontal bars), reposition bulk operation buttons, update game grouping logic for conference-specific filters
+
+**UI hint**: yes
+
 ### Phase 5: Standings Engine & UI
 
 **Goal**: Users can see each conference's standings recomputed live from their picks, with tiebreaker procedures applied to resolve computable ties and manual resolution needed for non-computable ties.
@@ -222,9 +242,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
-| 2. Foundation & Read-Only Slate | 0/TBD | Not started | - |
+| 2. Foundation & Read-Only Slate | 4/4 | Complete    | 2026-08-13 |
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
-| 4. Picks & Persistence | 0/TBD | Not started | - |
+| 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
+| 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
 | 5. Standings Engine & UI | 0/TBD | Not started | - |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |
 | 7. Named Scenarios | 0/TBD | Not started | - |

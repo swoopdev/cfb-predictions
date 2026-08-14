@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import type { TeamId, StepOutcome, BaseOrdering, TiebreakerResult, TerminalReason } from '../shared/domain/tiebreakers/types'
+import type { TeamId, StepOutcome, BaseOrdering, TiebreakerResult, TerminalReason, TiebreakerCycle } from '../shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '../shared/domain/tiebreakers/records'
 import { resolveTiedGroup, resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
 
@@ -89,7 +89,7 @@ function resolveTiedGroupWithMockEvaluator(
         tiedTeams,
         steps,
         outcome: 'restart',
-        removed: winners.map((teamId) => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
+        removed: winners.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
       })
 
       if (rest.length >= tiedTeams.length) {
@@ -146,8 +146,6 @@ function resolveTiedGroupWithMockEvaluator(
   }
 }
 
-import type { TiebreakerCycle } from '../shared/domain/tiebreakers/types'
-
 const terminalReason: TerminalReason = {
   code: 'ranking-step',
   ruleCitation: 'Highest SportSource Analytics Team Rating Score',
@@ -183,7 +181,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
     const baseOrdering: BaseOrdering = [tiedTeams]
 
     const defineTiedTeams = (_: BaseOrdering, __: ReadonlyMap<TeamId, ConferenceRecord>, alreadyCommitted: ReadonlySet<TeamId>) => {
-      return tiedTeams.filter((t) => !alreadyCommitted.has(t))
+      return tiedTeams.filter(t => !alreadyCommitted.has(t))
     }
     const procedureFor = () => ['step1', 'step2']
 
@@ -192,7 +190,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
       if (stepId === 'step1') {
         return {
           step: 'step1',
-          values: teams.map((t) => ({ teamId: t, value: { kind: 'indeterminate' } })),
+          values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
           partition: [Array.from(teams)],
           separated: false
         }
@@ -200,14 +198,14 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
       if (stepId === 'step2') {
         return {
           step: 'step2',
-          values: teams.map((t) => ({ teamId: t, value: { kind: 'indeterminate' } })),
+          values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
           partition: [[1], [2]],
           separated: true
         }
       }
       return {
         step: stepId as any,
-        values: teams.map((t) => ({ teamId: t, value: { kind: 'indeterminate' } })),
+        values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
         partition: [Array.from(teams)],
         separated: false
       }
@@ -253,7 +251,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
 
     const mockEvaluator = (stepId: string, teams: readonly TeamId[]): StepOutcome => ({
       step: stepId as any,
-      values: teams.map((t) => ({ teamId: t, value: { kind: 'indeterminate' } })),
+      values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
       partition: [[1], [2, 3]],
       separated: true
     })
@@ -281,7 +279,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
 
     const mockEvaluator = (stepId: string, teams: readonly TeamId[]): StepOutcome => ({
       step: stepId as any,
-      values: teams.map((t) => ({ teamId: t, value: { kind: 'indeterminate' } })),
+      values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
       partition: [Array.from(teams)],
       separated: false
     })
@@ -308,7 +306,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
   it('should resolve a clean 1-team #1 (no tie) and a 2-team #2 tie using SEC rules', () => {
     // Fixture: SEC conference with one clear leader and a 2-team tie for #2
     const teamIds = new Set<TeamId>([1, 2, 3])
-    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+    const conferenceGames: { id: number, homeId: TeamId, awayId: TeamId }[] = [
       { id: 1, homeId: 1, awayId: 2 }, // Team 1 beats Team 2
       { id: 2, homeId: 1, awayId: 3 }, // Team 1 beats Team 3
       { id: 3, homeId: 2, awayId: 3 } // Team 2 beats Team 3
@@ -333,7 +331,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
   it('should return needsUserInput for ACC when head-to-head is the only computable step', () => {
     // Fixture: ACC with two tied teams that did not play each other
     const teamIds = new Set<TeamId>([1, 2])
-    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+    const conferenceGames: { id: number, homeId: TeamId, awayId: TeamId }[] = [
       // No game between team 1 and team 2; they're tied on win percentage
     ]
     const outcomes = new Map<number, TeamId>([])
@@ -351,7 +349,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
 
   it('should throw when outcomes maps a gameId to a TeamId not in that game', () => {
     const teamIds = new Set<TeamId>([1, 2, 3])
-    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+    const conferenceGames: { id: number, homeId: TeamId, awayId: TeamId }[] = [
       { id: 1, homeId: 1, awayId: 2 }
     ]
     // Invalid: gameId 1 is between teams 1 and 2, but we say team 3 won
@@ -365,7 +363,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
   it('should properly separate seed 1 from seed 2 with alreadyCommitted', () => {
     // Fixture: Team 1 wins cleanly, teams 2 and 3 tie for #2
     const teamIds = new Set<TeamId>([1, 2, 3, 4])
-    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+    const conferenceGames: { id: number, homeId: TeamId, awayId: TeamId }[] = [
       { id: 1, homeId: 1, awayId: 2 }, // Team 1 beats all
       { id: 2, homeId: 1, awayId: 3 },
       { id: 3, homeId: 1, awayId: 4 },

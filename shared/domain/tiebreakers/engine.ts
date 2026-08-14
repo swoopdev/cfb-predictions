@@ -14,6 +14,9 @@ import { computeBaseOrdering } from './baseOrdering'
 import { evaluateStep } from './steps'
 import { CONFERENCE_RULES } from './rules'
 
+// Re-export StepOutcome for use in engine module
+import type { StepOutcome } from './types'
+
 /**
  * Recursively resolves a tied group of teams through a conference's
  * tiebreaker procedure.
@@ -76,7 +79,7 @@ export function resolveTiedGroup(
 
   // Run the procedure for this group size
   const steps: StepOutcome[] = []
-  let remaining = tiedTeams
+  const remaining = tiedTeams
 
   for (const stepId of procedureFor(tiedTeams.length)) {
     const outcome = evaluateStep(stepId, tiedTeams, baseOrdering, records, overallWinCounts)
@@ -115,7 +118,7 @@ export function resolveTiedGroup(
         tiedTeams,
         steps,
         outcome: 'restart',
-        removed: winners.map((teamId) => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
+        removed: winners.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
       })
 
       // Invariant (a): `rest` must be strictly smaller than `tiedTeams`
@@ -185,9 +188,6 @@ export function resolveTiedGroup(
   }
 }
 
-// Re-export StepOutcome for use in engine module
-import type { StepOutcome } from './types'
-
 /**
  * Resolves the #1 and #2 championship spots for a given conference.
  *
@@ -211,15 +211,15 @@ import type { StepOutcome } from './types'
  */
 export function resolveConferenceChampionship(
   conference: ConferenceId,
-  conferenceGames: readonly { id: number; homeId: TeamId; awayId: TeamId }[],
+  conferenceGames: readonly { id: number, homeId: TeamId, awayId: TeamId }[],
   outcomes: ReadonlyMap<number, TeamId>,
   teamIds: ReadonlySet<TeamId>,
-  allSeasonGames?: readonly { id: number; homeId: TeamId; awayId: TeamId }[],
+  allSeasonGames?: readonly { id: number, homeId: TeamId, awayId: TeamId }[],
   knownFbsTeamIds?: ReadonlySet<TeamId>
 ): ChampionshipResult {
   // Validate entry boundary (T-03-02): every outcome entry must map to a valid game/team pair
   for (const [gameId, winnerId] of outcomes.entries()) {
-    const game = conferenceGames.find((g) => g.id === gameId)
+    const game = conferenceGames.find(g => g.id === gameId)
     if (!game) {
       // gameId is not in conferenceGames, so skip it (may be from allSeasonGames)
       continue
@@ -245,8 +245,8 @@ export function resolveConferenceChampionship(
   }
 
   // Compute overall win counts if this is the Big 12 (for the total-wins step)
-  const overallWinCounts =
-    conference === 'Big 12' && allSeasonGames && knownFbsTeamIds
+  const overallWinCounts
+    = conference === 'Big 12' && allSeasonGames && knownFbsTeamIds
       ? deriveOverallWinCount(allSeasonGames, outcomes, knownFbsTeamIds, 1)
       : undefined
 
@@ -288,8 +288,8 @@ export function resolveConferenceChampionship(
   // Resolve seed 2:
   // - If seed 1 resolved to a single team, add it to committed and resolve seed 2
   // - If seed 1 needs manual input, seed 2 is the same (both spots blocked)
-  const seed2 =
-    seed1.status === 'resolved'
+  const seed2
+    = seed1.status === 'resolved'
       ? resolveSlot(new Set([seed1.order[0]!]))
       : seed1 // Same result object (both spots blocked on the same decision)
 

@@ -39,19 +39,19 @@ export const accTwoWayTie: AccFixture = {
     { id: 101, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson (H2H)
     { id: 102, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
     { id: 103, homeId: 52, awayId: 150, conferenceGame: true }, // FSU vs Duke
-    { id: 104, homeId: 52, awayId: 25, conferenceGame: true },  // FSU vs Cal
+    { id: 104, homeId: 52, awayId: 25, conferenceGame: true }, // FSU vs Cal
     { id: 105, homeId: 228, awayId: 97, conferenceGame: true }, // Clemson vs Louisville
-    { id: 106, homeId: 228, awayId: 152, conferenceGame: true },// Clemson vs NC State
-    { id: 107, homeId: 228, awayId: 24, conferenceGame: true }  // Clemson vs Stanford
+    { id: 106, homeId: 228, awayId: 152, conferenceGame: true }, // Clemson vs NC State
+    { id: 107, homeId: 228, awayId: 24, conferenceGame: true } // Clemson vs Stanford
   ],
   outcomes: new Map([
-    [101, 52],  // FSU beats Clemson (H2H winner)
+    [101, 52], // FSU beats Clemson (H2H winner)
     [102, 103], // BC beats FSU
     [103, 150], // Duke beats FSU
-    [104, 25],  // Cal beats FSU
-    [105, 97],  // Louisville beats Clemson
+    [104, 25], // Cal beats FSU
+    [105, 97], // Louisville beats Clemson
     [106, 152], // NC State beats Clemson
-    [107, 24]   // Stanford beats Clemson
+    [107, 24] // Stanford beats Clemson
   ]),
   teamIds: new Set([52, 228])
 }
@@ -78,30 +78,30 @@ export const accTwoWayTie: AccFixture = {
 export const accThreeWayTie: AccFixture = {
   conferenceGames: [
     // H2H cycle
-    { id: 201, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson
+    { id: 201, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson
     { id: 202, homeId: 228, awayId: 103, conferenceGame: true }, // Clemson vs BC
-    { id: 203, homeId: 103, awayId: 52, conferenceGame: true },  // BC vs FSU
+    { id: 203, homeId: 103, awayId: 52, conferenceGame: true }, // BC vs FSU
 
     // Common opponent 1 (all beat this team)
-    { id: 204, homeId: 25, awayId: 52, conferenceGame: true },   // Cal vs FSU
-    { id: 205, homeId: 25, awayId: 228, conferenceGame: true },  // Cal vs Clemson
-    { id: 206, homeId: 25, awayId: 103, conferenceGame: true },  // Cal vs BC
+    { id: 204, homeId: 25, awayId: 52, conferenceGame: true }, // Cal vs FSU
+    { id: 205, homeId: 25, awayId: 228, conferenceGame: true }, // Cal vs Clemson
+    { id: 206, homeId: 25, awayId: 103, conferenceGame: true }, // Cal vs BC
 
     // Common opponent 2 (all lose to this team)
-    { id: 207, homeId: 24, awayId: 52, conferenceGame: true },   // Stanford vs FSU
-    { id: 208, homeId: 24, awayId: 228, conferenceGame: true },  // Stanford vs Clemson
-    { id: 209, homeId: 24, awayId: 103, conferenceGame: true }   // Stanford vs BC
+    { id: 207, homeId: 24, awayId: 52, conferenceGame: true }, // Stanford vs FSU
+    { id: 208, homeId: 24, awayId: 228, conferenceGame: true }, // Stanford vs Clemson
+    { id: 209, homeId: 24, awayId: 103, conferenceGame: true } // Stanford vs BC
   ],
   outcomes: new Map([
-    [201, 52],  // FSU beats Clemson
+    [201, 52], // FSU beats Clemson
     [202, 228], // Clemson beats BC
     [203, 103], // BC beats FSU
-    [204, 52],  // FSU beats Cal
+    [204, 52], // FSU beats Cal
     [205, 228], // Clemson beats Cal
     [206, 103], // BC beats Cal
-    [207, 24],  // Stanford beats FSU
-    [208, 24],  // Stanford beats Clemson
-    [209, 24]   // Stanford beats BC
+    [207, 24], // Stanford beats FSU
+    [208, 24], // Stanford beats Clemson
+    [209, 24] // Stanford beats BC
   ]),
   teamIds: new Set([52, 228, 103])
 }
@@ -123,26 +123,26 @@ export const accThreeWayTie: AccFixture = {
 export const accFourWayTie: AccFixture = {
   conferenceGames: [
     // H2H partial round-robin
-    { id: 301, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson
+    { id: 301, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson
     { id: 302, homeId: 228, awayId: 103, conferenceGame: true }, // Clemson vs BC
-    { id: 303, homeId: 103, awayId: 59, conferenceGame: true },  // BC vs GT
-    { id: 304, homeId: 59, awayId: 52, conferenceGame: true },   // GT vs FSU
+    { id: 303, homeId: 103, awayId: 59, conferenceGame: true }, // BC vs GT
+    { id: 304, homeId: 59, awayId: 52, conferenceGame: true }, // GT vs FSU
 
     // Common opponents
-    { id: 305, homeId: 25, awayId: 52, conferenceGame: true },   // Cal vs FSU
-    { id: 306, homeId: 25, awayId: 228, conferenceGame: true },  // Cal vs Clemson
-    { id: 307, homeId: 25, awayId: 103, conferenceGame: true },  // Cal vs BC
-    { id: 308, homeId: 25, awayId: 59, conferenceGame: true }    // Cal vs GT
+    { id: 305, homeId: 25, awayId: 52, conferenceGame: true }, // Cal vs FSU
+    { id: 306, homeId: 25, awayId: 228, conferenceGame: true }, // Cal vs Clemson
+    { id: 307, homeId: 25, awayId: 103, conferenceGame: true }, // Cal vs BC
+    { id: 308, homeId: 25, awayId: 59, conferenceGame: true } // Cal vs GT
   ],
   outcomes: new Map([
-    [301, 52],  // FSU beats Clemson
+    [301, 52], // FSU beats Clemson
     [302, 228], // Clemson beats BC
     [303, 103], // BC beats GT
-    [304, 59],  // GT beats FSU
-    [305, 25],  // Cal beats FSU
-    [306, 25],  // Cal beats Clemson
-    [307, 25],  // Cal beats BC
-    [308, 25]   // Cal beats GT
+    [304, 59], // GT beats FSU
+    [305, 25], // Cal beats FSU
+    [306, 25], // Cal beats Clemson
+    [307, 25], // Cal beats BC
+    [308, 25] // Cal beats GT
   ]),
   teamIds: new Set([52, 228, 103, 59])
 }
@@ -159,28 +159,28 @@ export const accFourWayTie: AccFixture = {
 export const accFiveWayTie: AccFixture = {
   conferenceGames: [
     // H2H round-robin (10 games)
-    { id: 401, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson
-    { id: 402, homeId: 52, awayId: 103, conferenceGame: true },  // FSU vs BC
-    { id: 403, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 404, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC
+    { id: 401, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson
+    { id: 402, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
+    { id: 403, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 404, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC
     { id: 405, homeId: 228, awayId: 103, conferenceGame: true }, // Clemson vs BC
-    { id: 406, homeId: 228, awayId: 59, conferenceGame: true },  // Clemson vs GT
+    { id: 406, homeId: 228, awayId: 59, conferenceGame: true }, // Clemson vs GT
     { id: 407, homeId: 228, awayId: 153, conferenceGame: true }, // Clemson vs UNC
-    { id: 408, homeId: 103, awayId: 59, conferenceGame: true },  // BC vs GT
+    { id: 408, homeId: 103, awayId: 59, conferenceGame: true }, // BC vs GT
     { id: 409, homeId: 103, awayId: 153, conferenceGame: true }, // BC vs UNC
-    { id: 410, homeId: 59, awayId: 153, conferenceGame: true }   // GT vs UNC
+    { id: 410, homeId: 59, awayId: 153, conferenceGame: true } // GT vs UNC
   ],
   outcomes: new Map([
-    [401, 52],  // FSU beats Clemson (FSU 1-0)
+    [401, 52], // FSU beats Clemson (FSU 1-0)
     [402, 103], // BC beats FSU (FSU 1-1, BC 1-0)
-    [403, 52],  // FSU beats GT (FSU 2-1)
+    [403, 52], // FSU beats GT (FSU 2-1)
     [404, 153], // UNC beats FSU (FSU 2-2)
     [405, 228], // Clemson beats BC (Clemson 1-0, BC 1-1)
     [406, 228], // Clemson beats GT (Clemson 2-0)
     [407, 153], // UNC beats Clemson (Clemson 2-1)
     [408, 103], // BC beats GT (BC 2-1)
     [409, 103], // BC beats UNC (BC 3-1, UNC 1-3)
-    [410, 59]   // GT beats UNC (GT 1-3, UNC 1-4)
+    [410, 59] // GT beats UNC (GT 1-3, UNC 1-4)
   ]),
   teamIds: new Set([52, 228, 103, 59, 153])
 }
@@ -263,35 +263,35 @@ export const accFiveWayTie: AccFixture = {
 export const accRestartRedefinesTiedGroup: AccFixture = {
   conferenceGames: [
     // FSU (8-game, 3-1) H2H with Clemson
-    { id: 501, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson (H2H)
+    { id: 501, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson (H2H)
     // Clemson (8-game, 3-1) H2H losses and wins
     // FSU vs others to get to 3-1
-    { id: 502, homeId: 52, awayId: 103, conferenceGame: true },  // FSU vs BC
-    { id: 503, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 504, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC (loss)
+    { id: 502, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
+    { id: 503, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 504, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC (loss)
     // Clemson vs others to get to 3-1
     { id: 505, homeId: 228, awayId: 103, conferenceGame: true }, // Clemson vs BC
-    { id: 506, homeId: 228, awayId: 59, conferenceGame: true },  // Clemson vs GT
+    { id: 506, homeId: 228, awayId: 59, conferenceGame: true }, // Clemson vs GT
     { id: 507, homeId: 228, awayId: 153, conferenceGame: true }, // Clemson vs UNC
     // BC (8-game, 2-2)
-    { id: 508, homeId: 103, awayId: 59, conferenceGame: true },  // BC vs GT
+    { id: 508, homeId: 103, awayId: 59, conferenceGame: true }, // BC vs GT
     { id: 509, homeId: 103, awayId: 150, conferenceGame: true }, // BC vs Duke
     // Louisville (9-game, 3-3 = same wins as FSU/Clemson!)
-    { id: 510, homeId: 97, awayId: 150, conferenceGame: true },  // Louisville vs Duke
-    { id: 511, homeId: 97, awayId: 25, conferenceGame: true }    // Louisville vs Cal
+    { id: 510, homeId: 97, awayId: 150, conferenceGame: true }, // Louisville vs Duke
+    { id: 511, homeId: 97, awayId: 25, conferenceGame: true } // Louisville vs Cal
   ],
   outcomes: new Map([
-    [501, 52],  // FSU beats Clemson (FSU 1-0 H2H, will be 3-1 overall)
-    [502, 52],  // FSU beats BC (FSU 2-0)
-    [503, 52],  // FSU beats GT (FSU 3-0)
+    [501, 52], // FSU beats Clemson (FSU 1-0 H2H, will be 3-1 overall)
+    [502, 52], // FSU beats BC (FSU 2-0)
+    [503, 52], // FSU beats GT (FSU 3-0)
     [504, 153], // UNC beats FSU (FSU 3-1 ✓)
     [505, 228], // Clemson beats BC (Clemson 1-0)
     [506, 228], // Clemson beats GT (Clemson 2-0)
     [507, 228], // Clemson beats UNC (Clemson 3-0)
     [508, 103], // BC beats GT (BC 1-0, GT 0-1)
     [509, 150], // Duke beats BC (BC 1-1, Duke 1-0)
-    [510, 97],  // Louisville beats Duke (Louisville 1-0)
-    [511, 25]   // Cal beats Louisville (Louisville 1-1)
+    [510, 97], // Louisville beats Duke (Louisville 1-0)
+    [511, 25] // Cal beats Louisville (Louisville 1-1)
   ]),
   teamIds: new Set([52, 228, 103, 59, 153, 97, 25, 150])
 }
@@ -326,55 +326,55 @@ export const accRestartRedefinesTiedGroup: AccFixture = {
 export const accMixedScheduleTiedTeamDefinition: AccFixture = {
   conferenceGames: [
     // FSU (8-game): 7-1
-    { id: 601, homeId: 52, awayId: 103, conferenceGame: true },  // FSU vs BC
-    { id: 602, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson
-    { id: 603, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 604, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC
-    { id: 605, homeId: 52, awayId: 150, conferenceGame: true },  // FSU vs Duke
-    { id: 606, homeId: 52, awayId: 25, conferenceGame: true },   // FSU vs Cal
-    { id: 607, homeId: 52, awayId: 24, conferenceGame: true },   // FSU vs Stanford
-    { id: 608, homeId: 52, awayId: 258, conferenceGame: true },  // FSU vs Virginia (loss)
+    { id: 601, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
+    { id: 602, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson
+    { id: 603, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 604, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC
+    { id: 605, homeId: 52, awayId: 150, conferenceGame: true }, // FSU vs Duke
+    { id: 606, homeId: 52, awayId: 25, conferenceGame: true }, // FSU vs Cal
+    { id: 607, homeId: 52, awayId: 24, conferenceGame: true }, // FSU vs Stanford
+    { id: 608, homeId: 52, awayId: 258, conferenceGame: true }, // FSU vs Virginia (loss)
 
     // Louisville (9-game): 7-2
-    { id: 609, homeId: 97, awayId: 183, conferenceGame: true },  // Louisville vs Syracuse
-    { id: 610, homeId: 97, awayId: 221, conferenceGame: true },  // Louisville vs Pittsburgh
+    { id: 609, homeId: 97, awayId: 183, conferenceGame: true }, // Louisville vs Syracuse
+    { id: 610, homeId: 97, awayId: 221, conferenceGame: true }, // Louisville vs Pittsburgh
     { id: 611, homeId: 97, awayId: 2567, conferenceGame: true }, // Louisville vs SMU
-    { id: 612, homeId: 97, awayId: 259, conferenceGame: true },  // Louisville vs Virginia Tech
-    { id: 613, homeId: 97, awayId: 154, conferenceGame: true },  // Louisville vs Wake Forest
-    { id: 614, homeId: 97, awayId: 152, conferenceGame: true },  // Louisville vs NC State
+    { id: 612, homeId: 97, awayId: 259, conferenceGame: true }, // Louisville vs Virginia Tech
+    { id: 613, homeId: 97, awayId: 154, conferenceGame: true }, // Louisville vs Wake Forest
+    { id: 614, homeId: 97, awayId: 152, conferenceGame: true }, // Louisville vs NC State
     { id: 615, homeId: 97, awayId: 2390, conferenceGame: true }, // Louisville vs Miami
-    { id: 616, homeId: 97, awayId: 103, conferenceGame: true },  // Louisville vs BC (loss)
-    { id: 617, homeId: 97, awayId: 150, conferenceGame: true },  // Louisville vs Duke (loss)
+    { id: 616, homeId: 97, awayId: 103, conferenceGame: true }, // Louisville vs BC (loss)
+    { id: 617, homeId: 97, awayId: 150, conferenceGame: true }, // Louisville vs Duke (loss)
 
     // Duke (9-game): 7-2 (for comparison, not part of tied group)
     { id: 618, homeId: 150, awayId: 183, conferenceGame: true }, // Duke vs Syracuse
     { id: 619, homeId: 150, awayId: 221, conferenceGame: true }, // Duke vs Pittsburgh
-    { id: 620, homeId: 150, awayId: 2567, conferenceGame: true },// Duke vs SMU
+    { id: 620, homeId: 150, awayId: 2567, conferenceGame: true }, // Duke vs SMU
     { id: 621, homeId: 150, awayId: 259, conferenceGame: true }, // Duke vs Virginia Tech
     { id: 622, homeId: 150, awayId: 154, conferenceGame: true }, // Duke vs Wake Forest
     { id: 623, homeId: 150, awayId: 152, conferenceGame: true }, // Duke vs NC State
-    { id: 624, homeId: 150, awayId: 2390, conferenceGame: true },// Duke vs Miami
-    { id: 625, homeId: 150, awayId: 25, conferenceGame: true }   // Duke vs Cal
+    { id: 624, homeId: 150, awayId: 2390, conferenceGame: true }, // Duke vs Miami
+    { id: 625, homeId: 150, awayId: 25, conferenceGame: true } // Duke vs Cal
   ],
   outcomes: new Map([
     // FSU (8-game): 7-1 (beats all except Virginia)
-    [601, 52],  // FSU beats BC
-    [602, 52],  // FSU beats Clemson
-    [603, 52],  // FSU beats GT
-    [604, 52],  // FSU beats UNC
-    [605, 52],  // FSU beats Duke
-    [606, 52],  // FSU beats Cal
-    [607, 52],  // FSU beats Stanford
+    [601, 52], // FSU beats BC
+    [602, 52], // FSU beats Clemson
+    [603, 52], // FSU beats GT
+    [604, 52], // FSU beats UNC
+    [605, 52], // FSU beats Duke
+    [606, 52], // FSU beats Cal
+    [607, 52], // FSU beats Stanford
     [608, 258], // Virginia beats FSU
 
     // Louisville (9-game): 7-2 (beats 7, loses to BC and Duke)
-    [609, 97],  // Louisville beats Syracuse
-    [610, 97],  // Louisville beats Pittsburgh
-    [611, 97],  // Louisville beats SMU
-    [612, 97],  // Louisville beats Virginia Tech
-    [613, 97],  // Louisville beats Wake Forest
-    [614, 97],  // Louisville beats NC State
-    [615, 97],  // Louisville beats Miami
+    [609, 97], // Louisville beats Syracuse
+    [610, 97], // Louisville beats Pittsburgh
+    [611, 97], // Louisville beats SMU
+    [612, 97], // Louisville beats Virginia Tech
+    [613, 97], // Louisville beats Wake Forest
+    [614, 97], // Louisville beats NC State
+    [615, 97], // Louisville beats Miami
     [616, 103], // BC beats Louisville
     [617, 150], // Duke beats Louisville
 
@@ -385,8 +385,8 @@ export const accMixedScheduleTiedTeamDefinition: AccFixture = {
     [621, 150], // Duke beats Virginia Tech
     [622, 150], // Duke beats Wake Forest
     [623, 152], // NC State beats Duke
-    [624, 2390],// Miami beats Duke
-    [625, 25]   // Cal beats Duke
+    [624, 2390], // Miami beats Duke
+    [625, 25] // Cal beats Duke
   ]),
   teamIds: new Set([52, 97, 150])
 }
@@ -420,32 +420,32 @@ export const accMixedScheduleTiedTeamDefinition: AccFixture = {
 // This demonstrates "not common opponents" and no clear beat-all or lost-to-all.
 export const accPartialHeadToHeadGraph: AccFixture = {
   conferenceGames: [
-    { id: 701, homeId: 52, awayId: 228, conferenceGame: true },  // FSU vs Clemson (FSU wins)
+    { id: 701, homeId: 52, awayId: 228, conferenceGame: true }, // FSU vs Clemson (FSU wins)
     { id: 702, homeId: 228, awayId: 103, conferenceGame: true }, // Clemson vs BC (Clemson wins)
     // FSU vs BC NOT played
 
-    { id: 703, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 704, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC
-    { id: 705, homeId: 52, awayId: 150, conferenceGame: true },  // FSU vs Duke
-    { id: 706, homeId: 52, awayId: 25, conferenceGame: true },   // FSU vs Cal
+    { id: 703, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 704, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC
+    { id: 705, homeId: 52, awayId: 150, conferenceGame: true }, // FSU vs Duke
+    { id: 706, homeId: 52, awayId: 25, conferenceGame: true }, // FSU vs Cal
 
-    { id: 707, homeId: 228, awayId: 59, conferenceGame: true },  // Clemson vs GT
+    { id: 707, homeId: 228, awayId: 59, conferenceGame: true }, // Clemson vs GT
     { id: 708, homeId: 228, awayId: 153, conferenceGame: true }, // Clemson vs UNC
     { id: 709, homeId: 228, awayId: 150, conferenceGame: true }, // Clemson vs Duke
-    { id: 710, homeId: 228, awayId: 25, conferenceGame: true },  // Clemson vs Cal
+    { id: 710, homeId: 228, awayId: 25, conferenceGame: true }, // Clemson vs Cal
 
-    { id: 711, homeId: 103, awayId: 59, conferenceGame: true },  // BC vs GT
+    { id: 711, homeId: 103, awayId: 59, conferenceGame: true }, // BC vs GT
     { id: 712, homeId: 103, awayId: 153, conferenceGame: true }, // BC vs UNC
     { id: 713, homeId: 103, awayId: 150, conferenceGame: true }, // BC vs Duke
-    { id: 714, homeId: 103, awayId: 25, conferenceGame: true }   // BC vs Cal
+    { id: 714, homeId: 103, awayId: 25, conferenceGame: true } // BC vs Cal
   ],
   outcomes: new Map([
-    [701, 52],  // FSU beats Clemson (FSU 1-0 vs Clemson)
+    [701, 52], // FSU beats Clemson (FSU 1-0 vs Clemson)
     [702, 228], // Clemson beats BC (Clemson 1-0 vs BC)
-    [703, 59],  // GT beats FSU
+    [703, 59], // GT beats FSU
     [704, 153], // UNC beats FSU
     [705, 150], // Duke beats FSU
-    [706, 52],  // FSU beats Cal (FSU 2-1 so far vs non-Clemson)
+    [706, 52], // FSU beats Cal (FSU 2-1 so far vs non-Clemson)
     [707, 228], // Clemson beats GT
     [708, 153], // UNC beats Clemson
     [709, 150], // Duke beats Clemson
@@ -453,7 +453,7 @@ export const accPartialHeadToHeadGraph: AccFixture = {
     [711, 103], // BC beats GT
     [712, 153], // UNC beats BC
     [713, 150], // Duke beats BC
-    [714, 25]   // Cal beats BC (BC 1-3 total)
+    [714, 25] // Cal beats BC (BC 1-3 total)
   ]),
   teamIds: new Set([52, 228, 103])
 }
@@ -473,27 +473,27 @@ export const accPartialHeadToHeadGraph: AccFixture = {
 export const accZeroCommonOpponents: AccFixture = {
   conferenceGames: [
     // FSU (4 games): 2-2
-    { id: 801, homeId: 52, awayId: 103, conferenceGame: true },  // FSU vs BC
-    { id: 802, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 803, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC (loss)
-    { id: 804, homeId: 52, awayId: 150, conferenceGame: true },  // FSU vs Duke (loss)
+    { id: 801, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
+    { id: 802, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 803, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC (loss)
+    { id: 804, homeId: 52, awayId: 150, conferenceGame: true }, // FSU vs Duke (loss)
 
     // Clemson (4 games): 2-2, DIFFERENT opponents (no overlap with FSU)
-    { id: 809, homeId: 228, awayId: 97, conferenceGame: true },  // Clemson vs Louisville
+    { id: 809, homeId: 228, awayId: 97, conferenceGame: true }, // Clemson vs Louisville
     { id: 810, homeId: 228, awayId: 183, conferenceGame: true }, // Clemson vs Syracuse
     { id: 811, homeId: 228, awayId: 221, conferenceGame: true }, // Clemson vs Pittsburgh (loss)
-    { id: 812, homeId: 228, awayId: 152, conferenceGame: true }  // Clemson vs NC State (loss)
+    { id: 812, homeId: 228, awayId: 152, conferenceGame: true } // Clemson vs NC State (loss)
   ],
   outcomes: new Map([
-    [801, 52],  // FSU beats BC (FSU 1-0)
-    [802, 52],  // FSU beats GT (FSU 2-0)
+    [801, 52], // FSU beats BC (FSU 1-0)
+    [802, 52], // FSU beats GT (FSU 2-0)
     [803, 153], // UNC beats FSU (FSU 2-1)
     [804, 150], // Duke beats FSU (FSU 2-2 ✓)
 
     [809, 228], // Clemson beats Louisville (Clemson 1-0)
     [810, 228], // Clemson beats Syracuse (Clemson 2-0)
     [811, 221], // Pittsburgh beats Clemson (Clemson 2-1)
-    [812, 152]  // NC State beats Clemson (Clemson 2-2 ✓)
+    [812, 152] // NC State beats Clemson (Clemson 2-2 ✓)
   ]),
   teamIds: new Set([52, 228])
 }
@@ -510,27 +510,27 @@ export const accZeroCommonOpponents: AccFixture = {
 export const accNeedsUserInputTypicalCase: AccFixture = {
   conferenceGames: [
     // FSU (8-game): 3-1
-    { id: 901, homeId: 52, awayId: 103, conferenceGame: true },  // FSU vs BC
-    { id: 902, homeId: 52, awayId: 59, conferenceGame: true },   // FSU vs GT
-    { id: 903, homeId: 52, awayId: 153, conferenceGame: true },  // FSU vs UNC
-    { id: 904, homeId: 52, awayId: 150, conferenceGame: true },  // FSU vs Duke (loss)
+    { id: 901, homeId: 52, awayId: 103, conferenceGame: true }, // FSU vs BC
+    { id: 902, homeId: 52, awayId: 59, conferenceGame: true }, // FSU vs GT
+    { id: 903, homeId: 52, awayId: 153, conferenceGame: true }, // FSU vs UNC
+    { id: 904, homeId: 52, awayId: 150, conferenceGame: true }, // FSU vs Duke (loss)
 
     // Clemson (8-game): 3-1, DIFFERENT opponents (no FSU match)
-    { id: 905, homeId: 228, awayId: 97, conferenceGame: true },  // Clemson vs Louisville
+    { id: 905, homeId: 228, awayId: 97, conferenceGame: true }, // Clemson vs Louisville
     { id: 906, homeId: 228, awayId: 183, conferenceGame: true }, // Clemson vs Syracuse
     { id: 907, homeId: 228, awayId: 221, conferenceGame: true }, // Clemson vs Pittsburgh
-    { id: 908, homeId: 228, awayId: 152, conferenceGame: true }  // Clemson vs NC State (loss)
+    { id: 908, homeId: 228, awayId: 152, conferenceGame: true } // Clemson vs NC State (loss)
   ],
   outcomes: new Map([
-    [901, 52],  // FSU beats BC (FSU 1-0)
-    [902, 52],  // FSU beats GT (FSU 2-0)
-    [903, 52],  // FSU beats UNC (FSU 3-0)
+    [901, 52], // FSU beats BC (FSU 1-0)
+    [902, 52], // FSU beats GT (FSU 2-0)
+    [903, 52], // FSU beats UNC (FSU 3-0)
     [904, 150], // Duke beats FSU (FSU 3-1 ✓)
 
     [905, 228], // Clemson beats Louisville (Clemson 1-0)
     [906, 228], // Clemson beats Syracuse (Clemson 2-0)
     [907, 228], // Clemson beats Pittsburgh (Clemson 3-0)
-    [908, 152]  // NC State beats Clemson (Clemson 3-1 ✓)
+    [908, 152] // NC State beats Clemson (Clemson 3-1 ✓)
   ]),
   teamIds: new Set([52, 228])
 }

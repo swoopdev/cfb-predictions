@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { TeamId, StepValue, StepOutcome } from '~/shared/domain/tiebreakers/types'
+import type { TeamId, StepValue, StepOutcome, BaseOrdering } from '~/shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '~/shared/domain/tiebreakers/records'
 import {
   winPctSafe,
@@ -10,7 +10,6 @@ import {
   evaluateTotalWins,
   evaluateStep
 } from '~/shared/domain/tiebreakers/steps'
-import type { BaseOrdering } from '~/shared/domain/tiebreakers/types'
 
 describe('winPctSafe', () => {
   it('returns { kind: "indeterminate" } when gamesPlayed is 0', () => {

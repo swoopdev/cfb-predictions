@@ -83,7 +83,7 @@ export function defineAccTiedTeams(
 
   for (const record of records.values()) {
     if (alreadyCommitted.has(record.teamId)) continue // Skip already-committed
-    if (bestPctGroup.some((r) => r.teamId === record.teamId)) continue // Skip bestPctGroup members
+    if (bestPctGroup.some(r => r.teamId === record.teamId)) continue // Skip bestPctGroup members
 
     // Must have played a different number of conference games
     if (record.gamesPlayed === bestGamesPlayed) continue
@@ -96,6 +96,6 @@ export function defineAccTiedTeams(
 
   // Return the combined group: best-pct teams + extra teams matching the criteria
   // Both are already TeamIds, so extract and return
-  const result = [...bestPctGroup.map((r) => r.teamId), ...extra.map((r) => r.teamId)]
+  const result = [...bestPctGroup.map(r => r.teamId), ...extra.map(r => r.teamId)]
   return result
 }

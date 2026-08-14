@@ -46,16 +46,16 @@ export function evaluateHeadToHead(
 
   if (isRoundRobin) {
     // Compute win/loss records restricted to games among tied teams
-    const values: Array<{ teamId: TeamId; value: StepValue }> = []
+    const values: Array<{ teamId: TeamId, value: StepValue }> = []
     const valuesByTeam = new Map<TeamId, StepValue>()
 
     for (const teamId of tiedTeams) {
       const record = records.get(teamId)!
       // Count wins and games only against other tied teams
-      const winsAgainstTied = Array.from(record.beat).filter((opponent) =>
+      const winsAgainstTied = Array.from(record.beat).filter(opponent =>
         tiedTeams.includes(opponent)
       ).length
-      const gamesAgainstTied = Array.from(record.opponents).filter((opponent) =>
+      const gamesAgainstTied = Array.from(record.opponents).filter(opponent =>
         tiedTeams.includes(opponent)
       ).length
 
@@ -76,21 +76,21 @@ export function evaluateHeadToHead(
     }
   } else {
     // Non-round-robin: check for beatAllOthers and lostToAllOthers
-    const values: Array<{ teamId: TeamId; value: StepValue }> = []
+    const values: Array<{ teamId: TeamId, value: StepValue }> = []
     let beatAllOthersTeam: TeamId | null = null
     let lostToAllOthersTeam: TeamId | null = null
 
     for (const teamId of tiedTeams) {
       const record = records.get(teamId)!
-      const otherTeams = tiedTeams.filter((t) => t !== teamId)
+      const otherTeams = tiedTeams.filter(t => t !== teamId)
 
       // Check if this team beat all other tied teams
-      const beatAllOthers =
-        otherTeams.length > 0 && otherTeams.every((other) => record.beat.has(other))
+      const beatAllOthers
+        = otherTeams.length > 0 && otherTeams.every(other => record.beat.has(other))
 
       // Check if this team lost to all other tied teams
-      const lostToAllOthers =
-        otherTeams.length > 0 && otherTeams.every((other) => record.lostTo.has(other))
+      const lostToAllOthers
+        = otherTeams.length > 0 && otherTeams.every(other => record.lostTo.has(other))
 
       if (beatAllOthers) {
         beatAllOthersTeam = teamId
@@ -119,8 +119,8 @@ export function evaluateHeadToHead(
 
     // Partition: if exactly one team beat all others, separate it
     if (beatAllOthersTeam !== null) {
-      const partition = tiedTeams.map((t) => (t === beatAllOthersTeam ? [t] : [])).filter((b) => b.length > 0)
-      const rest = tiedTeams.filter((t) => t !== beatAllOthersTeam)
+      const partition = tiedTeams.map(t => (t === beatAllOthersTeam ? [t] : [])).filter(b => b.length > 0)
+      const rest = tiedTeams.filter(t => t !== beatAllOthersTeam)
       if (rest.length > 0) {
         partition.push(rest)
       }
@@ -162,7 +162,7 @@ export function evaluateCommonOpponents(
       commonOpponents = new Set(record.opponents)
     } else {
       // Intersect
-      commonOpponents = new Set(Array.from(commonOpponents).filter((opp) =>
+      commonOpponents = new Set(Array.from(commonOpponents).filter(opp =>
         record.opponents.has(opp)
       ))
     }
@@ -170,7 +170,7 @@ export function evaluateCommonOpponents(
 
   if (!commonOpponents || commonOpponents.size === 0) {
     // No common opponents: return indeterminate for everyone
-    const values = tiedTeams.map((teamId) => ({
+    const values = tiedTeams.map(teamId => ({
       teamId,
       value: { kind: 'indeterminate' } as StepValue
     }))
@@ -183,15 +183,15 @@ export function evaluateCommonOpponents(
   }
 
   // Compute win percentages against common opponents only
-  const values: Array<{ teamId: TeamId; value: StepValue }> = []
+  const values: Array<{ teamId: TeamId, value: StepValue }> = []
   const valuesByTeam = new Map<TeamId, StepValue>()
 
   for (const teamId of tiedTeams) {
     const record = records.get(teamId)!
-    const winsAgainstCommon = Array.from(record.beat).filter((opp) =>
+    const winsAgainstCommon = Array.from(record.beat).filter(opp =>
       commonOpponents.has(opp)
     ).length
-    const gamesAgainstCommon = Array.from(record.opponents).filter((opp) =>
+    const gamesAgainstCommon = Array.from(record.opponents).filter(opp =>
       commonOpponents.has(opp)
     ).length
 
@@ -223,7 +223,7 @@ export function evaluateCumulativeOpponentWinPct(
   tiedTeams: readonly TeamId[],
   records: ReadonlyMap<TeamId, ConferenceRecord>
 ): StepOutcome {
-  const values: Array<{ teamId: TeamId; value: StepValue }> = []
+  const values: Array<{ teamId: TeamId, value: StepValue }> = []
   const valuesByTeam = new Map<TeamId, StepValue>()
 
   for (const teamId of tiedTeams) {
@@ -295,7 +295,7 @@ function partitionByStepValue(
     .map(([, teamIds]) => teamIds.sort((a, b) => a - b))
 
   // Non-comparable buckets come after all comparable buckets (worst)
-  const nonComparableBucketArrays = Array.from(nonComparableBuckets.values()).map((teamIds) =>
+  const nonComparableBucketArrays = Array.from(nonComparableBuckets.values()).map(teamIds =>
     teamIds.sort((a, b) => a - b)
   )
 
@@ -340,7 +340,7 @@ export function evaluateNextHighestPlacedCommonOpponent(
   // Walk down the baseOrdering (best to worst raw standings)
   for (const bucket of baseOrdering) {
     // Find which teams in this bucket are common opponents of all tied teams
-    const qualifyingOpponents = bucket.filter((opponent) =>
+    const qualifyingOpponents = bucket.filter(opponent =>
       tiedTeams.every((team) => {
         const record = records.get(team)
         return record && record.opponents.has(opponent)
@@ -354,16 +354,16 @@ export function evaluateNextHighestPlacedCommonOpponent(
 
     // Found a bucket with qualifying common opponents
     // Compute win percentages against this bucket collectively
-    const values: Array<{ teamId: TeamId; value: StepValue }> = []
+    const values: Array<{ teamId: TeamId, value: StepValue }> = []
     const valuesByTeam = new Map<TeamId, StepValue>()
 
     for (const teamId of tiedTeams) {
       const record = records.get(teamId)!
       // Count wins and games only against qualifying opponents in this bucket
-      const winsAgainstBucket = Array.from(record.beat).filter((opponent) =>
+      const winsAgainstBucket = Array.from(record.beat).filter(opponent =>
         qualifyingOpponents.includes(opponent)
       ).length
-      const gamesAgainstBucket = Array.from(record.opponents).filter((opponent) =>
+      const gamesAgainstBucket = Array.from(record.opponents).filter(opponent =>
         qualifyingOpponents.includes(opponent)
       ).length
 
@@ -384,7 +384,7 @@ export function evaluateNextHighestPlacedCommonOpponent(
   }
 
   // No qualifying bucket found in entire baseOrdering
-  const values = tiedTeams.map((teamId) => ({
+  const values = tiedTeams.map(teamId => ({
     teamId,
     value: { kind: 'indeterminate' } as StepValue
   }))
@@ -415,7 +415,7 @@ export function evaluateTotalWins(
     throw new Error('total-wins step requires overallWinCounts (Big 12 only)')
   }
 
-  const values: Array<{ teamId: TeamId; value: StepValue }> = []
+  const values: Array<{ teamId: TeamId, value: StepValue }> = []
   const valuesByTeam = new Map<TeamId, StepValue>()
 
   for (const teamId of tiedTeams) {

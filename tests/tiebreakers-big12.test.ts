@@ -162,11 +162,11 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
       // Verify no NaN in results
       if (result.seed1.status === 'resolved') {
         expect(result.seed1.order).toBeTruthy()
-        expect(result.seed1.order.every((t) => typeof t === 'number')).toBe(true)
+        expect(result.seed1.order.every(t => typeof t === 'number')).toBe(true)
       }
       if (result.seed2.status === 'resolved') {
         expect(result.seed2.order).toBeTruthy()
-        expect(result.seed2.order.every((t) => typeof t === 'number')).toBe(true)
+        expect(result.seed2.order.every(t => typeof t === 'number')).toBe(true)
       }
     })
   })

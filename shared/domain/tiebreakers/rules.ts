@@ -74,9 +74,12 @@ export interface ConferenceRules {
  * both the #1 pool when `alreadyCommitted` is empty and the #2 pool once the
  * #1 winner is added — including the case where 3+ teams were originally tied
  * for #1 and 2 of them remain in contention for #2.
+ *
+ * @param records conference records (accepted for interface compliance; not used by this strategy)
  */
 function defineBucketTiedTeams(
   baseOrdering: BaseOrdering,
+  records: ReadonlyMap<number, ConferenceRecord>,
   alreadyCommitted: ReadonlySet<number>
 ): readonly number[] {
   // Walk baseOrdering's buckets in order (best to worst)

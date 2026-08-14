@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import type { TeamId, StepOutcome, BaseOrdering, TiebreakerResult, TerminalReason } from '../shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '../shared/domain/tiebreakers/records'
-import { resolveTiedGroup } from '../shared/domain/tiebreakers/engine'
+import { resolveTiedGroup, resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
 
 /**
  * Fixture builder for synthetic tiebreaker test cases.
@@ -301,5 +301,99 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
     expect(result.reason).toEqual(terminalReason) // D-04: terminalReason verbatim
     expect(result.trace).toHaveLength(1)
     expect(result.trace[0]!.outcome).toBe('exhausted')
+  })
+})
+
+describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
+  it('should resolve a clean 1-team #1 (no tie) and a 2-team #2 tie using SEC rules', () => {
+    // Fixture: SEC conference with one clear leader and a 2-team tie for #2
+    const teamIds = new Set<TeamId>([1, 2, 3])
+    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+      { id: 1, homeId: 1, awayId: 2 }, // Team 1 beats Team 2
+      { id: 2, homeId: 1, awayId: 3 }, // Team 1 beats Team 3
+      { id: 3, homeId: 2, awayId: 3 } // Team 2 beats Team 3
+    ]
+    const outcomes = new Map<number, TeamId>([
+      [1, 1],
+      [2, 1],
+      [3, 2]
+    ])
+
+    const result = resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+
+    // Seed 1: Team 1 (2-0) is clear leader
+    expect(result.seed1.status).toBe('resolved')
+    expect(result.seed1.order[0]).toBe(1)
+
+    // Seed 2: Teams 2 and 3 tie at 1-1, resolved by head-to-head (team 2 beat team 3)
+    expect(result.seed2.status).toBe('resolved')
+    expect(result.seed2.order[0]).toBe(2)
+  })
+
+  it('should return needsUserInput for ACC when head-to-head is the only computable step', () => {
+    // Fixture: ACC with two tied teams that did not play each other
+    const teamIds = new Set<TeamId>([1, 2])
+    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+      // No game between team 1 and team 2; they're tied on win percentage
+    ]
+    const outcomes = new Map<number, TeamId>([])
+
+    const result = resolveConferenceChampionship('ACC', conferenceGames, outcomes, teamIds)
+
+    // Seed 1: both teams tied, no head-to-head -> needsUserInput
+    expect(result.seed1.status).toBe('needsUserInput')
+    expect(result.seed1.reason.code).toBe('ranking-step')
+    expect(result.seed1.tiedTeams).toEqual([1, 2])
+
+    // Seed 2: same result (both spots blocked)
+    expect(result.seed2).toBe(result.seed1)
+  })
+
+  it('should throw when outcomes maps a gameId to a TeamId not in that game', () => {
+    const teamIds = new Set<TeamId>([1, 2, 3])
+    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+      { id: 1, homeId: 1, awayId: 2 }
+    ]
+    // Invalid: gameId 1 is between teams 1 and 2, but we say team 3 won
+    const outcomes = new Map<number, TeamId>([[1, 3]])
+
+    expect(() => {
+      resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+    }).toThrow(/not a participant/)
+  })
+
+  it('should properly separate seed 1 from seed 2 with alreadyCommitted', () => {
+    // Fixture: Team 1 wins cleanly, teams 2 and 3 tie for #2
+    const teamIds = new Set<TeamId>([1, 2, 3, 4])
+    const conferenceGames: { id: number; homeId: TeamId; awayId: TeamId }[] = [
+      { id: 1, homeId: 1, awayId: 2 }, // Team 1 beats all
+      { id: 2, homeId: 1, awayId: 3 },
+      { id: 3, homeId: 1, awayId: 4 },
+      { id: 4, homeId: 2, awayId: 3 }, // Teams 2 and 3 tie
+      { id: 5, homeId: 2, awayId: 4 },
+      { id: 6, homeId: 3, awayId: 4 }
+    ]
+    const outcomes = new Map<number, TeamId>([
+      [1, 1],
+      [2, 1],
+      [3, 1],
+      [4, 2], // Team 2 beats team 3
+      [5, 2],
+      [6, 3]
+    ])
+
+    const result = resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+
+    // Seed 1: Team 1 (3-0) is clear
+    expect(result.seed1.status).toBe('resolved')
+    expect(result.seed1.order[0]).toBe(1)
+
+    // Seed 2: Teams 2 and 3 (1-1 and 1-1), resolved by head-to-head
+    // Team 2 beat team 3, so team 2 is seed 2
+    expect(result.seed2.status).toBe('resolved')
+    expect(result.seed2.order[0]).toBe(2)
+
+    // Seed 1 and Seed 2 should not both be team 1
+    expect(result.seed2.order[0]).not.toBe(result.seed1.order[0])
   })
 })

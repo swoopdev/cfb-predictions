@@ -66,7 +66,7 @@ export function evaluateHeadToHead(
 
     // Partition by value (best to worst)
     const partition = partitionByStepValue(tiedTeams, valuesByTeam)
-    const separated = partition[0].length < tiedTeams.length
+    const separated = partition[0] && partition[0].length < tiedTeams.length
 
     return {
       step: 'head-to-head',
@@ -299,7 +299,14 @@ function partitionByStepValue(
     teamIds.sort((a, b) => a - b)
   )
 
-  return [...recordBuckets, ...nonComparableBucketArrays]
+  const result = [...recordBuckets, ...nonComparableBucketArrays]
+
+  // Fallback: if no buckets were populated, return all teams as one tied group
+  if (result.length === 0) {
+    return [Array.from(teams).sort((a, b) => a - b)]
+  }
+
+  return result
 }
 
 /**

@@ -69,7 +69,12 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 </script>
 
 <template>
-  <UCard :ui="{ body: 'p-3 sm:p-3' }">
+  <UCard
+    :ui="{ body: 'p-3 sm:p-3' }"
+    :class="{
+      'bg-white dark:bg-slate-900': isPicked
+    }"
+  >
     <!-- Away team row (clickable for picking) -->
     <div
       class="flex items-center gap-2 cursor-pointer user-select-none hover:bg-slate-100 dark:hover:bg-slate-800 rounded px-1 py-1 transition-colors"

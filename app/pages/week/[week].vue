@@ -112,14 +112,10 @@ const standings = computed<StandingsResult>(() => {
   return computeStandings(slate, teams.value, picks.value, resolvedTiebreakers.value)
 })
 
-// Plan 05-01 ships the SEC only; Plan 05-02 adds the StandingsSidebar wrapper
-// that renders all four P4 conferences (or one, when a conference filter is
-// active per D-02). `computeStandings` already returns all four.
-const secStandings = computed(() => standings.value.SEC ?? [])
-
-// Ephemeral per-session sidebar visibility on narrow viewports (D-01). Never
-// persisted — Plan 05-02 replaces this with the full drawer treatment.
-const showStandings = ref(false)
+// D-02: which conferences the sidebar shows is StandingsSidebar's decision,
+// driven by the same `conf` filter the slate uses. The page passes the full
+// four-conference result through unfiltered — filtering is display-only, so
+// `computeStandings` stays pure and reusable for Phase 6.
 
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
@@ -307,39 +303,15 @@ function handleClearSeason() {
         </div>
       </div>
 
-      <!-- Standings sidebar (D-01). Desktop: pinned right of the slate and
-           independently scrollable. Mobile: collapsed behind a toggle so it
-           never pushes the games out of reach. -->
-      <aside
-        class="w-full lg:w-80 lg:shrink-0 lg:sticky lg:top-6"
-        aria-label="Conference standings"
-      >
-        <UButton
-          class="lg:hidden mb-2 w-full justify-center"
-          variant="subtle"
-          color="neutral"
-          size="sm"
-          :icon="showStandings ? 'lucide:chevron-up' : 'lucide:chevron-down'"
-          :aria-expanded="showStandings"
-          aria-controls="standings-panel"
-          @click="showStandings = !showStandings"
-        >
-          {{ showStandings ? 'Hide standings' : 'Show standings' }}
-        </UButton>
-
-        <div
-          id="standings-panel"
-          class="lg:block lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
-          :class="showStandings ? 'block' : 'hidden'"
-        >
-          <UCard :ui="{ body: 'p-3 sm:p-4' }">
-            <StandingsTable
-              :standings="secStandings"
-              conference-name="SEC"
-            />
-          </UCard>
-        </div>
-      </aside>
+      <!-- Standings sidebar (D-01/D-02). Desktop: pinned right of the slate
+           and independently scrollable. Mobile: collapsed behind a toggle so
+           it never pushes the games out of reach. The sidebar owns the
+           all-four-vs-single-conference branching; the week view only hands it
+           the full result and the active filter. -->
+      <StandingsSidebar
+        :standings="standings"
+        :active-conference="conf"
+      />
     </div>
   </div>
 </template>

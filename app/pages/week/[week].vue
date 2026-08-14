@@ -19,9 +19,6 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 const picks: Ref<Record<number, number>> = usePicksStorage(2026)
 const { autoFilled, markAutoFilled } = useAutoFilledGames(2026)
 
-// Clear Season confirmation modal state
-const showClearSeasonModal = ref(false)
-
 // Drives loading/error branching for the ONE-TIME initial data resolution.
 // Subsequent week/filter changes read already-cached data (staleTime:
 // Infinity) and never re-enter 'loading'.
@@ -123,13 +120,8 @@ function handleClearWeek() {
 }
 
 function handleClearSeason() {
-  showClearSeasonModal.value = true
-}
-
-function confirmClearSeason() {
   picks.value = clearSeason()
-  autoFilled.value = [] // Also clear provenance tracking
-  showClearSeasonModal.value = false
+  autoFilled.value.splice(0) // Also clear provenance tracking
 }
 </script>
 
@@ -282,27 +274,5 @@ function confirmClearSeason() {
       </div>
     </div>
 
-    <!-- Clear Season Confirmation Modal (D-14) -->
-    <UModal
-      v-model="showClearSeasonModal"
-      title="Clear all season picks?"
-    >
-      <template #footer>
-        <div class="flex gap-2 justify-end">
-          <UButton
-            variant="ghost"
-            @click="showClearSeasonModal = false"
-          >
-            Cancel
-          </UButton>
-          <UButton
-            color="error"
-            @click="confirmClearSeason"
-          >
-            Clear All
-          </UButton>
-        </div>
-      </template>
-    </UModal>
   </div>
 </template>

@@ -9,7 +9,7 @@ export default defineConfig({
     }
   },
   test: {
-    environment: 'node',
+    environment: 'happy-dom',
     include: ['tests/**/*.test.ts'],
     passWithNoTests: true,
     // D-11: Per-directory coverage threshold for tiebreaker logic (shared/domain/tiebreakers/**).

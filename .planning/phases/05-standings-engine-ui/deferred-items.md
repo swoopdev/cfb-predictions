@@ -42,6 +42,39 @@ as an ordered sequence (return the bucket as a group), or resolve seed 1's tail
 with the same per-slot procedure seed 2 uses. Both change `TiebreakerResult`'s
 contract, which is why it is deferred rather than folded into a Phase 5 gap fix.
 
+## OPEN (measured post-05-03) — the ACC trips the engine's infinite-recursion guard on ~4% of real seasons
+
+**Owner: Phase 3.** Pre-existing; made *visible* by 05-03's WR-03 fix, which replaced
+the bare `catch {}` with a logging fallback. Before that it was completely silent.
+
+`defineAccTiedTeams` can fail to strictly shrink the tied group on restart, tripping
+`resolveTiedGroup`'s recursion guard at `shared/domain/tiebreakers/engine.ts:137`:
+
+```
+[standings] tiebreaker resolution failed for ACC; falling back to record order.
+Error: resolveTiedGroup: defineTiedTeams did not strictly shrink the tied group
+on restart -- infinite recursion guard tripped
+```
+
+**Measured over 300 fully-picked generated seasons of the committed 2026 slate:
+12 trips out of 1,200 conference resolutions — 100% of them ACC, i.e. ~4% of ACC
+resolutions.** Reproduce by counting `console.warn` calls out of
+`resolveAllConferences` across seeded random pick sets.
+
+**Consequence:** in those seasons the ACC championship order is decided by plain
+record ordering, NOT by the ACC's published tiebreaker procedure. The throw is
+correctly isolated per-conference (the other three still resolve) and nothing
+crashes, so this is silent-wrong rather than loud-wrong — the failure mode the
+project's core value cares most about.
+
+**Likely same root cause as the restart re-anchoring the 05-03 plan-checker
+identified:** `defineAccTiedTeams` re-anchors `bestGamesPlayed` on a new
+`bestPctGroup[0]` each restart (`acc.ts:53-89`), so the pool can fail to shrink —
+or can shrink by dropping a team rather than committing one. Worth fixing together.
+
+Relates to the existing STATE.md blocker about LOW research confidence on ACC step
+order, and to the seed1/seed2 contradiction logged above.
+
 ## OPEN (pre-existing, confirmed during 05-03) — `shared/domain/tiebreakers/**` misses its 90% branch-coverage threshold
 
 `pnpm exec vitest run --coverage` reports

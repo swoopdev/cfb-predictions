@@ -21,7 +21,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
 - [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
-- [x] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (completed 2026-08-14)
+- [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (executed 2026-08-14; awaiting UAT — 05-VERIFICATION.md is `human_needed`, 4 items pending in 05-UAT.md)
 - [ ] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties
 - [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
 - [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks

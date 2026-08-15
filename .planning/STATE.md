@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 05
 current_phase_name: standings-engine-ui
 status: verifying
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-08-14T17:34:04.489Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-08-15T02:17:13.253Z"
 last_activity: 2026-08-14
-last_activity_desc: "Completed 05-02-PLAN.md: multi-conference standings sidebar"
+last_activity_desc: "Completed 05-03-PLAN.md: CR-01 gap closure — standings and the tiebreaker engine share one tie definition"
 progress:
   total_phases: 9
   completed_phases: 5
-  total_plans: 20
-  completed_plans: 20
+  total_plans: 21
+  completed_plans: 21
   percent: 56
 ---
 
@@ -29,9 +29,9 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 ## Current Position
 
 Phase: 05 (standings-engine-ui) — EXECUTING
-Plan: 2 of 2
+Plan: 3 of 3
 Status: Phase complete — ready for verification
-Last activity: 2026-08-14 - Completed 05-02-PLAN.md: filter-aware multi-conference standings sidebar
+Last activity: 2026-08-14 - Completed 05-03-PLAN.md: CR-01 gap closure — standings and the tiebreaker engine now share one tie definition
 
 Progress: [██████████] 100%
 
@@ -65,6 +65,7 @@ Progress: [██████████] 100%
 | Phase 03 P07 | 25min | 2 tasks | 2 files |
 | Phase 05 P01 | 50 min | 3 tasks | 11 files |
 | Phase 05 P02 | 25min | 2 tasks | 4 files |
+| Phase 05 P03 | 35min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,10 @@ Recent decisions affecting current work:
 - [Phase 5]: sidebar collapse breakpoint stays lg (1024px), not the plan's md (768px) — a 320px sidebar leaves the 280px-min game grid a single cramped column below 1024px
 - [Phase 5]: components needing render tests avoid Nuxt UI components and Nuxt auto-imports entirely (plain button over UButton), since the vitest project registers no auto-import plugin
 - [Phase 5]: responsive styling lives in components as Tailwind lg: variants; app/app.css was never created (it does not exist and is not in nuxt.config's css array)
+- [Phase 05]: the standings layer's ONLY tie definition is the engine's OUTPUT (ChampionshipResult.seed1.order / seed2.order) — it imports, re-derives and approximates no tie-defining predicate (CR-01)
+- [Phase 05]: standings rank grouping is the equivalence CLOSURE of 'shares a resolved seed group' (D-11) and 'identical conference wins and losses' (D-04) — seed membership alone would split a team the engine's restart redefinition dropped from its identical-record twin
+- [Phase 05]: standings row order is built constructively (rank components, component sort, within-component sort, concatenate), never with a comparator — a comparator cannot express the closure without risking non-transitivity
+- [Phase 05]: where seed1.order and seed2.order contradict each other (7 of 649 resolved conferences on the 2026 slate), standings follow seed1.order; the conflict is an engine artefact deferred to Phase 3/6
 
 ### Pending Todos
 
@@ -101,6 +106,7 @@ None yet.
 ### Blockers/Concerns
 
 - Phase 3 (Tiebreaker Engine) research flagged LOW confidence on exact conference step orders; primary policy PDFs (Big Ten, Big 12, ACC) were retrieved verbatim but should be re-verified at planning/implementation time, and the ACC amended its policy 2026-07-01 and could do so again
+- [Found 05-03] The tiebreaker engine can contradict itself between seed 1 and seed 2. `resolveTiedGroup` returns `[...winners, ...restResult.order]`; when a step's top bucket holds more than one team their internal order is `partitionByStepValue`'s raw team-id sort, not a resolution, and seed 2 re-running the same procedure over a smaller pool can reach the opposite answer. Measured at 7 of 649 resolved conferences over 200 generated seasons of the 2026 slate. No standings row order satisfies both seeds; 05-03 follows `seed1.order` and the whole disputed group shares one rank, so it is not user-visible today — but Phase 6's championship matchup display must read `seed1.order[0]`/`seed2.order[0]` from the engine, never infer the matchup from row order. Full detail and both candidate repairs in `.planning/phases/05-standings-engine-ui/deferred-items.md`
 
 ### Quick Tasks Completed
 
@@ -118,6 +124,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-14T17:34:04.480Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-08-15T02:17:13.245Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None

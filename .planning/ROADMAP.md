@@ -188,7 +188,7 @@ Plans:
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
   4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
-**Plans**: 2/3 plans complete
+**Plans**: 3/3 plans complete
 Plans:
 **Wave 1**
 
@@ -200,7 +200,7 @@ Plans:
 
 **Wave 3** *(gap closure from 05-REVIEW.md; blocked on Wave 2 completion)*
 
-- [ ] 05-03-PLAN.md — CR-01 blocker: unify the standings tie definition with the tiebreaker engine's resolved seed order, plus the WR-02 duplicate winPct, the WR-07 regression-test gap, and the WR-01/WR-03 silent failures
+- [x] 05-03-PLAN.md — CR-01 blocker: unify the standings tie definition with the tiebreaker engine's resolved seed order, plus the WR-02 duplicate winPct, the WR-07 regression-test gap, and the WR-01/WR-03 silent failures
 
 **UI hint**: yes
 
@@ -262,7 +262,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
-| 5. Standings Engine & UI | 2/2 | Complete   | 2026-08-14 |
+| 5. Standings Engine & UI | 3/3 | Complete   | 2026-08-14 |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

@@ -13,6 +13,7 @@
  */
 
 import type { Game, Team } from '../../shared/types/schedule'
+import type { ChampionshipResult, ConferenceId } from '../../shared/domain/tiebreakers/types'
 
 // ---------------------------------------------------------------------------
 // Team ids
@@ -191,3 +192,210 @@ export const singleFcsGame: Game[] = [game(501, ALABAMA, FCS_OPPONENT, false)]
  * membership — has to be what decides conference-record credit.
  */
 export const unflaggedSameConferenceGame: Game[] = [game(601, ALABAMA, FLORIDA, false)]
+
+// ---------------------------------------------------------------------------
+// Phase 05-03 (CR-01 / WR-07): fixtures the pre-existing set is blind to
+// ---------------------------------------------------------------------------
+//
+// Everything above this line is asserted verbatim by the 05-01 tests (exact
+// per-conference member counts included), so these are strictly APPENDED —
+// no existing export is modified or reordered. Game id blocks 101-110,
+// 201-206, 301, 401, 501, 601 are taken above and 701-702 are built inline by
+// `computeStandings.test.ts`, so the 800 block is free.
+
+// ---------------------------------------------------------------------------
+// Fixture A: ACC, mixed conference-schedule lengths
+// ---------------------------------------------------------------------------
+
+/**
+ * A standalone six-team ACC roster, deliberately kept OUT of `allTeams` and
+ * never merged with it: `computeStandings` returns all four P4 keys regardless
+ * of roster coverage, so a single-conference roster is legal input, and the
+ * nine 05-01 tests that assert `allTeams`' exact conference membership counts
+ * must keep passing untouched.
+ *
+ * Ids 61-66 collide with nothing in `allTeams` (1-5, 11-12, 21-22, 31-32, 41).
+ */
+export const BOSTON_COLLEGE = 61
+export const LOUISVILLE = 62
+export const MIAMI = 63
+export const VIRGINIA = 64
+export const SYRACUSE = 65
+export const WAKE_FOREST = 66
+
+export const accMixedScheduleTeams: Team[] = [
+  team(BOSTON_COLLEGE, 'Boston College', 'ACC'),
+  team(LOUISVILLE, 'Louisville', 'ACC'),
+  team(MIAMI, 'Miami', 'ACC'),
+  team(VIRGINIA, 'Virginia', 'ACC'),
+  team(SYRACUSE, 'Syracuse', 'ACC'),
+  team(WAKE_FOREST, 'Wake Forest', 'ACC')
+]
+
+const accSchoolById = new Map(accMixedScheduleTeams.map(t => [t.id, t.school]))
+
+function accGame(id: number, homeId: number, awayId: number): Game {
+  return {
+    id,
+    week: 1,
+    seasonType: 'regular',
+    homeId,
+    homeTeam: accSchoolById.get(homeId) ?? `Team ${homeId}`,
+    awayId,
+    awayTeam: accSchoolById.get(awayId) ?? `Team ${awayId}`,
+    conferenceGame: true,
+    neutralSite: false
+  }
+}
+
+/**
+ * Ten ACC conference games which, with `accMixedSchedulePicks`, produce
+ * deliberately uneven conference-schedule lengths — the precondition for
+ * CR-01 that `secRoundRobinGames` structurally cannot express (every SEC team
+ * there plays exactly four conference games):
+ *
+ * | team           | conf record | conf games | win pct |
+ * |----------------|-------------|------------|---------|
+ * | Miami          | 3-1         | 4          | .750    |
+ * | Boston College | 2-1         | 3          | .667    |
+ * | Louisville     | 2-2         | 4          | .500    |
+ * | Virginia       | 2-2         | 4          | .500    |
+ * | Wake Forest    | 1-2         | 3          | .333    |
+ * | Syracuse       | 0-2         | 2          | .000    |
+ *
+ * Engine behaviour this shape is built to trigger (`defineAccTiedTeams`):
+ * Miami is the best-win-pct team (step 1a); Boston College played an
+ * ALTERNATE number of conference games (3, not 4) and carries the SAME number
+ * of conference losses (1), so step 1b pulls it into the tie. Nobody else
+ * qualifies — Louisville and Virginia played the anchor's 4 games, Wake Forest
+ * and Syracuse match neither the win nor the loss count.
+ *
+ * Boston College beat Miami head to head (game 801), and head-to-head is the
+ * ACC's only executable step, so `seed1` resolves to
+ * [Boston College, Miami] — the .667 team AHEAD of the .750 team. Any
+ * standings layer that orders on win percentage puts Miami on top and
+ * contradicts the engine outright.
+ */
+export const accMixedScheduleGames: Game[] = [
+  accGame(801, BOSTON_COLLEGE, MIAMI),
+  accGame(802, BOSTON_COLLEGE, WAKE_FOREST),
+  accGame(803, BOSTON_COLLEGE, LOUISVILLE),
+  accGame(804, MIAMI, LOUISVILLE),
+  accGame(805, MIAMI, VIRGINIA),
+  accGame(806, MIAMI, SYRACUSE),
+  accGame(807, LOUISVILLE, VIRGINIA),
+  accGame(808, LOUISVILLE, WAKE_FOREST),
+  accGame(809, VIRGINIA, SYRACUSE),
+  accGame(810, VIRGINIA, WAKE_FOREST)
+]
+
+export const accMixedSchedulePicks: Record<number, number> = {
+  801: BOSTON_COLLEGE,
+  802: BOSTON_COLLEGE,
+  803: LOUISVILLE,
+  804: MIAMI,
+  805: MIAMI,
+  806: MIAMI,
+  807: LOUISVILLE,
+  808: WAKE_FOREST,
+  809: VIRGINIA,
+  810: VIRGINIA
+}
+
+// ---------------------------------------------------------------------------
+// Fixture B: equal win percentage, unequal conference record
+// ---------------------------------------------------------------------------
+
+/**
+ * The partial-pick shape that dominates real usage: two undefeated teams on
+ * different numbers of conference games. Alabama finishes 2-0 and Georgia 3-0,
+ * so both sit at a 1.000 win percentage — the engine's tie definition for the
+ * SEC — while their raw W-L differ, which is exactly the pair the old
+ * standings sort never let reach the resolved-order comparison.
+ *
+ * Alabama and Georgia deliberately never play each other here.
+ */
+export const equalPctUnequalRecordGames: Game[] = [
+  game(811, ALABAMA, FLORIDA, true),
+  game(812, ALABAMA, OLE_MISS, true),
+  game(813, GEORGIA, FLORIDA, true),
+  game(814, GEORGIA, LSU, true),
+  game(815, GEORGIA, OLE_MISS, true)
+]
+
+export const equalPctUnequalRecordPicks: Record<number, number> = {
+  811: ALABAMA,
+  812: ALABAMA,
+  813: GEORGIA,
+  814: GEORGIA,
+  815: GEORGIA
+}
+
+/**
+ * Hand-built rather than engine-derived, because the contract under test is
+ * what `computeStandings` does with a GIVEN `ChampionshipResult` — which is
+ * precisely the argument Phase 6 will supply by hand (D-11/D-14).
+ */
+export const equalPctUnequalRecordResolved: Partial<Record<ConferenceId, ChampionshipResult>> = {
+  SEC: {
+    conference: 'SEC',
+    seed1: { status: 'resolved', order: [ALABAMA, GEORGIA], trace: [] },
+    seed2: { status: 'resolved', order: [GEORGIA], trace: [] }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Fixture C: a team dropped by the restart redefinition (the D-04 hazard)
+// ---------------------------------------------------------------------------
+
+/**
+ * Alabama 3-0, Georgia 2-1, LSU 2-1 — Georgia and LSU hold an IDENTICAL
+ * conference record.
+ *
+ * Paired with `droppedTiedTeamResolved`, whose `seed1.order` places Georgia
+ * and omits LSU entirely. That omission is not contrived: `engine.ts:133`
+ * recurses on a fully REDEFINED pool rather than on the partition's remainder,
+ * and for the ACC `defineAccTiedTeams` re-anchors `bestGamesPlayed` on a new
+ * best-win-pct team, so a team pulled in against the old anchor can fail
+ * against the new one and never appear in `order` at all. Phase 6 produces the
+ * same shape whenever a manual resolution names only part of the pool.
+ *
+ * A hand-built result is used rather than a natural ACC slate deliberately:
+ * the natural drop needs a four-way round-robin pool splitting 2/2 on
+ * intra-group head-to-head PLUS a higher-win-percentage team positioned to
+ * re-anchor `bestGamesPlayed`, which is fragile to construct and fragile to
+ * keep true. Test 4's identical-record invariant covers the natural
+ * occurrence across 200 generated seasons of the committed 2026 slate.
+ */
+export const droppedTiedTeamGames: Game[] = [
+  game(821, ALABAMA, FLORIDA, true),
+  game(822, ALABAMA, OLE_MISS, true),
+  game(823, ALABAMA, GEORGIA, true),
+  game(824, GEORGIA, FLORIDA, true),
+  game(825, GEORGIA, LSU, true),
+  game(826, LSU, FLORIDA, true),
+  game(827, LSU, OLE_MISS, true)
+]
+
+export const droppedTiedTeamPicks: Record<number, number> = {
+  821: ALABAMA,
+  822: ALABAMA,
+  823: ALABAMA,
+  824: GEORGIA,
+  825: GEORGIA,
+  826: LSU,
+  827: LSU
+}
+
+export const droppedTiedTeamResolved: Partial<Record<ConferenceId, ChampionshipResult>> = {
+  SEC: {
+    conference: 'SEC',
+    seed1: { status: 'resolved', order: [ALABAMA, GEORGIA], trace: [] },
+    seed2: {
+      status: 'needsUserInput',
+      tiedTeams: [GEORGIA, LSU],
+      reason: { code: 'needs-scores', ruleCitation: '', sourceName: '' },
+      trace: []
+    }
+  }
+}

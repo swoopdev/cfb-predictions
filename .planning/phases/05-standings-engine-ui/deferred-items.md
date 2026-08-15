@@ -3,6 +3,68 @@
 Out-of-scope discoveries logged during execution. Not fixed here (SCOPE
 BOUNDARY: only issues caused by this plan's own changes are auto-fixed).
 
+## OPEN (found during 05-03) — The tiebreaker engine can contradict itself between seed 1 and seed 2
+
+**Owner: Phase 3 / Phase 6, not Phase 5.** Found while making 05-03's
+real-slate property test pass; it is not reachable from the standings layer.
+
+`resolveTiedGroup` returns `[...winners, ...restResult.order]`
+(`shared/domain/tiebreakers/engine.ts:159`). When a step's top bucket holds
+**more than one team**, every one of them is recorded as `seeded` and their
+internal order comes from `partitionByStepValue`'s `sort((a, b) => a - b)` —
+a raw **team-id sort**, not a resolution. Seed 2 then re-runs the same
+procedure over a smaller pool (a different common-opponent set, for instance)
+and can legitimately reach the **opposite** relative order for those same two
+teams.
+
+Measured over 200 generated seasons of the committed 2026 slate (100
+fully-picked, 100 weeks-1-7): **7 of 649** conferences with both seeds resolved
+show this contradiction, and in **all 7** the contradicted pair sits inside a
+multi-team bucket the engine never separated. Example (fully-picked PRNG seed
+1, Big 12):
+
+```
+seed1 = [Oklahoma State, West Virginia, UCF]   <- WVU/UCF order is an id sort
+seed2 = [UCF, West Virginia]                   <- the actually-computed answer
+```
+
+**Consequence:** no standings row order can satisfy both seeds. 05-03 follows
+`seed1.order` (the sequence that also carries the champion), which is safe —
+the whole disputed group shares one rank number, so a user never sees differing
+ranks, and the championship matchup display (TIE-07) reads `seed1.order[0]` /
+`seed2.order[0]` from the engine directly rather than from row order. Pinned by
+`tests/domain/standings/standings-tiebreaker-agreement.test.ts` →
+`when the engine contradicts itself between seed 1 and seed 2`, so the shape
+cannot change silently.
+
+**The real repair is engine-side:** either do not present an unseparated bucket
+as an ordered sequence (return the bucket as a group), or resolve seed 1's tail
+with the same per-slot procedure seed 2 uses. Both change `TiebreakerResult`'s
+contract, which is why it is deferred rather than folded into a Phase 5 gap fix.
+
+## OPEN (pre-existing, confirmed during 05-03) — `shared/domain/tiebreakers/**` misses its 90% branch-coverage threshold
+
+`pnpm exec vitest run --coverage` reports
+`Coverage for branches (87.87%) does not meet "shared/domain/tiebreakers/**"
+threshold (90%)`.
+
+**Not caused by 05-03 — improved by it.** Re-running coverage with 05-03's two
+new test files excluded gives **80%**; with them it is **87.87%**. The gate was
+already failing before this plan and moved ~8 points closer to passing.
+
+Not in any of the four gates this project actually runs (`pnpm test` is
+`vitest run`, with no `--coverage`), and `shared/domain/standings/**` — the
+directory 05-03 touches — passes its own 85% gate comfortably at
+**97.41 / 90.66 / 100 / 96.8**. Closing the remaining 2.13 points belongs with
+whoever next works in `shared/domain/tiebreakers/`.
+
+## DEFERRED BY PLAN 05-03 (recorded so they do not drop silently)
+
+| Finding | Why deferred | Carry to |
+|---|---|---|
+| **WR-06** — `StandingsResult`'s loose string index signature does not express "every P4 conference is always present" | Tightening to `Readonly<Record<ConferenceId, readonly StandingsTeam[]>>` ripples into `StandingsSidebar`'s prop type, `StandingsTable`, and the page's `{}` not-computed-yet sentinel (which the new type makes illegal). 05-03's brief forbids changing the sidebar's props shape for anything CR-01 does not require. The *behaviour* WR-06 enabled is closed by 05-03's `loadState` gate. | Phase 6, where `StandingsResult` is already being extended |
+| **IN-02** — `toOutcomes` is derived twice per recompute; two page computeds repeat the readiness guard with different sentinels | A refactor of two page computeds, not a correctness fix, and it would put a new app-layer seam directly in front of the code 05-03 changes. Phase 6 needs a `useStandings()` composable anyway (it must read outcomes, resolution and standings together). | Phase 6, built once with the full consumer set |
+
 ## RESOLVED (quick task `260814-f6z`, 2026-08-14) — Pre-existing test suite failures
 
 Discovered during 05-01; repaired by quick task `260814-f6z` in four atomic

@@ -108,7 +108,14 @@ describe('StandingsSidebar', () => {
     expect(filtered.text()).not.toContain('Standings cover the four power conferences.')
   })
 
-  it('renders every conference section even when the standings object is missing keys', () => {
+  // This covers a conference with GENUINELY no members — not "the schedule has
+  // not loaded yet". Reading it as the latter is what let WR-01 through: the
+  // sidebar used to mount outside the page's `loadState` branch, so a missing
+  // key during loading rendered four empty tables beside the skeletons. The
+  // not-loaded-yet case is now handled by the `loadState === 'ready'` gate on
+  // `<StandingsSidebar>` in `app/pages/week/[week].vue`, which this component
+  // deliberately knows nothing about.
+  it('renders every conference section even when a conference has no members', () => {
     const wrapper = mount(StandingsSidebar, {
       props: { standings: { SEC: standings.SEC! } }
     })

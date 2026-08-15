@@ -30,6 +30,15 @@ export type ResolvedTiebreakers = Partial<Record<ConferenceId, ChampionshipResul
  * one conference's bad state can never blank out the other three's standings.
  * `computeStandings` degrades to record-order ranking for the missing entry.
  *
+ * **The failure is logged, not swallowed (WR-03).** The two errors actually
+ * reachable here are `resolveTiedGroup`'s recursion guards, which signal an
+ * ENGINE BUG rather than bad user input — `toOutcomes` already drops every
+ * class of malformed pick before it gets this far. Discarding them silently
+ * meant a wrong tiebreaker resolution degraded to alphabetical-within-tie
+ * ordering with no signal anywhere, which is the worst failure mode this
+ * project has. `usePicksStorage`'s corruption-recovery `console.debug` is the
+ * existing precedent for a non-user-facing diagnostic.
+ *
  * @param games every game in the season (the full committed slate)
  * @param teams every FBS team
  * @param picks `{ gameId: winningTeamId }`, untrusted — validated by `toOutcomes`
@@ -62,8 +71,14 @@ export function resolveAllConferences(
         games,
         knownFbsTeamIds
       )
-    } catch {
+    } catch (error) {
       // Omit this conference; standings fall back to pure record ordering.
+      // Only the conference name and the error object are logged — never the
+      // picks, the storage key or a share code (T-05-03-03).
+      console.warn(
+        `[standings] tiebreaker resolution failed for ${conference}; falling back to record order.`,
+        error
+      )
     }
   }
 

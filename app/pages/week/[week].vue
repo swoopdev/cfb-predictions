@@ -112,11 +112,6 @@ const standings = computed<StandingsResult>(() => {
   return computeStandings(slate, teams.value, picks.value, resolvedTiebreakers.value)
 })
 
-// D-02: which conferences the sidebar shows is StandingsSidebar's decision,
-// driven by the same `conf` filter the slate uses. The page passes the full
-// four-conference result through unfiltered — filtering is display-only, so
-// `computeStandings` stays pure and reusable for Phase 6.
-
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
   if (conf.value !== undefined) return conf.value
@@ -307,11 +302,33 @@ function handleClearSeason() {
            and independently scrollable. Mobile: collapsed behind a toggle so
            it never pushes the games out of reach. The sidebar owns the
            all-four-vs-single-conference branching; the week view only hands it
-           the full result and the active filter. -->
+           the full result and the active filter.
+
+           WR-01: gated on `loadState` exactly like the main column. `standings`
+           is `{}` until games and teams resolve, and the sidebar renders a
+           section heading plus "No teams to show for ..." for every missing
+           key — so without this gate four fully-formed empty tables sat beside
+           the skeletons while loading, and again on the error branch after the
+           page had already said the schedule failed. The gate lives here
+           rather than in a `pending` prop because `StandingsSidebar`'s props
+           shape is out of scope for this repair.
+
+           The loading branch carries the sidebar's own outer width classes
+           (`w-full lg:w-80 lg:shrink-0`) so the two-column layout does not
+           jump when the real panel replaces the skeleton. The error branch
+           renders nothing at all — the main column has already explained the
+           failure. -->
       <StandingsSidebar
+        v-if="loadState === 'ready'"
         :standings="standings"
         :active-conference="conf"
       />
+      <div
+        v-else-if="loadState === 'loading'"
+        class="w-full lg:w-80 lg:shrink-0"
+      >
+        <USkeleton class="h-96 w-full rounded-lg" />
+      </div>
     </div>
   </div>
 </template>

@@ -15,16 +15,33 @@ created: 2026-08-15
 
 ---
 
-## PENDING DECISIONS — 2 items block their marked sections
+## 0. Decision Layer — read before planning
 
-The executor **must not implement** the two sections marked `PENDING` until the orchestrator returns an answer. Everything else in this document is implementable now.
+No pending decisions. Both open items were answered by the user on **2026-08-15**; every section of this document is implementable.
 
-| # | Decision | Section | Blocks |
-|---|----------|---------|--------|
-| **P-1** | D-09 blast radius: silent discard / warn-before-destroy / preserve-and-suspend | §9 | `useManualTiebreakers` discard path + any confirm UI |
-| **P-2** | Championship card candidate overflow rule (name first *k*, `+N more`) | §5.4 | `ChampionshipCard` seed block only |
+| # | Decision | Answer | Section |
+|---|----------|--------|---------|
+| **P-1** | D-09 blast radius | **Option C — preserve and suspend.** Supersedes D-09's literal wording; see §0.1 | §9 |
+| **P-2** | Championship card candidate overflow | **Presentational, accepted exactly as specced.** D-13 stands unamended; the detail lives here | §5.4 |
 
-A provisional default is recorded for each so the planner can size the work. The default is **not** consent.
+### 0.1 D-09 SUPERSEDED — preserve and suspend, do not discard
+
+> **This entry overrides `06-CONTEXT.md` D-09. Planners and the decision-coverage gate must read D-09 as amended here, not as originally written.**
+
+**Original text (`06-CONTEXT.md` D-09):**
+
+> *"if a conference's slate stops being complete (the user clears or changes a conference pick), that conference's stored manual decisions are **discarded**, not suspended. Re-completing the slate re-prompts from scratch."*
+
+**Adopted behaviour (user, 2026-08-15):**
+
+A manual decision is **retained in storage** when the conference slate stops being complete. It is **not applied** while the slate is incomplete. It is **re-applied only when the slate is complete again AND D-08's hash still matches the live group.** A stored decision whose hash no longer matches is deleted on read and the group re-prompts.
+
+**Rationale.** D-09's stated purpose was that *"a hand-chosen rank is never displayed under conditions the user did not approve."* Option C satisfies that **literally and exactly** — a suspended decision is not applied, therefore not displayed. The rejected "third state" is confined to **storage**, where the user never sees it; the rendered UI stays two-valued. D-09 chose discard on an assumption of ~1 decision per conference, which the N-seed measurement falsified for the ACC (**3.84 per fully-picked season, p90 = 5, 0% of seasons needing zero**). Option A pays that cost for nothing; option B pays a confirmation dialog on the app's most-used interaction; option C pays neither, because D-08's hash already supplies the re-application mechanism.
+
+**Two consequences the planner must not miss:**
+
+1. **No new UI state exists.** A suspended decision renders **identically to a discarded one** — nothing. No badge, no count, no "you have suspended decisions" affordance, no dimmed row, no tooltip, anywhere in the app. See §11.
+2. **`Clear Week` / `Clear Season` need no new confirmation.** Under C, clearing picks is no longer destructive to manual decisions, so **Phase 6 introduces no reason to add a confirm dialog** to `app/pages/week/[week].vue:136-144`. Do not add one out of caution. (PICK-03's separate requirement that *season-wide* clear be confirmed is Phase 4 scope and is unaffected either way.)
 
 ---
 
@@ -106,7 +123,7 @@ Nuxt UI semantic tokens only. Zero hex literals, zero raw palette classes, in ev
 | Secondary (30%) | `bg-elevated`, `bg-muted`, `bg-accented` | Championship card surface (`bg-elevated`); reasoning panel (`bg-muted`); rank chip fill and shared-rank row band (`bg-accented`); hairlines via `border-default` / `divide-default` / `ring-accented` |
 | Accent (10%) | `primary` (green) | **Focus rings only** — `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary` |
 | High-contrast neutral | `bg-inverted` / `text-inverted` / `border-inverted` | Marker (b) pill and shared-rank group rule. A token **pair** guaranteed contrasting by construction |
-| Destructive | `error` | Only if P-1 resolves to option B (warn-before-destroy). Otherwise unused in this phase |
+| Destructive | `error` | **Unused in this phase.** P-1 = C means nothing this phase builds destroys user work, so there is no destructive action to color. Any `error`-colored element appearing in Phase 6 output is out of contract |
 
 **Accent reserved for — explicit list:**
 
@@ -170,17 +187,17 @@ Read **`ranking.groups[0]` and `ranking.groups[1]` directly** (D-12). Never `sta
 
 **D-14 compliance:** a pending seed renders **exactly one presentation** regardless of `TerminalReason` — no badge, no icon, no reason string, no "needs your decision", no distinction between `ranking-step`, `needs-scores`, `draw`, or mid-season incompleteness. The card is a statement of fact, never a call to action. `TerminalReason.ruleCitation` appears **only** inside the reasoning block (§7.4), which is TIE-05's territory and out of D-14's scope.
 
-### 5.4 Candidate overflow — **PENDING (P-2)**
+### 5.4 Candidate overflow — RESOLVED (P-2)
+
+**Status: confirmed by the user 2026-08-15 as discretionary layout.** This is a presentational overflow rule, **not** an amendment to D-13 — candidates are named rather than replaced by a placeholder, so D-13 stands unamended and this document carries the detail.
 
 Measured group sizes at seed 2: **mean 3.7, max 10 fully picked, max 13 mid-season** (`06-RESEARCH.md` Pitfall 6). `Syracuse vs. one of: Boston College / California / Clemson / Duke / Florida State / Georgia Tech / Louisville / Miami / NC State / Wake Forest` is a paragraph, not a card.
 
-**Provisional default — name the first 3, then `+N more`:**
+**Rule — name the first 3, then `+N more`:**
 
 - **Candidates are ordered alphabetically by school**, and a line of 12px/400 `text-dimmed` copy states `Listed alphabetically.` **This is load-bearing:** an unresolved group has *no meaningful internal order* (per Pitfall 1, `teams` order can be a raw team-id sort), so any other ordering would imply a ranking the engine never computed. Truncating an implied ranking would be a false claim of the same class as Pitfall 1.
 - `+7 more` is a plain `<button>` that expands the **full list in place within the card** (a local disclosure), toggling to `Show fewer`.
 - In-place rather than routing to the D-15 table expansion **[DISCRETION]**: cross-component scroll-and-expand coupling is fragile, untestable in the plain vitest project, and a routing affordance risks reading as the "act now" announcement D-17 declined. In-place is purely presentational and D-14-safe.
-
-**Awaiting confirmation that this is presentational (inside discretion on layout) rather than an amendment to D-13.** If the user judges it an amendment, the alternative is to render all *k* names unconditionally and accept a tall card in the ACC.
 
 ---
 
@@ -357,50 +374,70 @@ At the measured worst case (10 fully picked, 13 mid-season) the control is a ver
 
 ---
 
-## 9. D-09 lifecycle presentation — **PENDING (P-1)**
+## 9. Manual-decision lifecycle — preserve and suspend (P-1 = C, supersedes D-09)
+
+See **§0.1** for the superseding note and rationale. This section is the observable contract.
 
 ### 9.1 The precise mechanism
 
-Two distinct invalidation paths exist. **D-08 is settled and is not in question here.**
+Two distinct paths exist, and C changes only the second.
 
-| Mechanism | Trigger | Scope | Status |
+| Mechanism | Trigger | Scope | Effect |
 |-----------|---------|-------|--------|
-| **D-08** hash | Group membership, terminal step, or any team's value at that step drifts | Per decision | **Settled.** Recompute on read; a stale entry simply never matches |
-| **D-09** discard | The conference slate stops being complete | **All** decisions for that conference | **PENDING (P-1)** |
+| **D-08** hash | Group membership, terminal step, or any team's value at that step drifts | Per decision | **Settled and unchanged.** Recompute on read; a stale entry never matches, so it is never applied |
+| **D-09 as amended** | The conference slate stops being complete | **All** decisions for that conference | **Suspended, not deleted.** Not applied while incomplete; eligible for re-application on return |
 
-**Sharpened:** flipping a pick's winner does *not* trip D-09 — the game is still picked, so the slate is still complete. Only **clearing** a conference pick does. The realistic ways a user clears one are `Clear Week` and `Clear Season` (`app/pages/week/[week].vue:136-144`) — bulk operations that today fire with no confirmation and no awareness that tiebreaker decisions exist.
+**Sharpened:** flipping a pick's winner does *not* affect slate completeness — the game is still picked. Only **clearing** a conference pick does. The realistic ways a user clears one are `Clear Week` and `Clear Season` (`app/pages/week/[week].vue:136-144`). Under C these are no longer destructive to manual decisions, so **no confirmation dialog is added for this reason** (§0.1, consequence 2).
 
-### 9.2 The measured blast radius
+### 9.2 Application predicate — two independent gates
 
-- **ACC, fully picked:** ~3.84 orderings (p90 = 5) covering ~14 of 17 teams. **0% of seasons need zero.**
-- Clearing one ACC conference pick — or running `Clear Week` on any week containing an ACC conference game — discards **all of them**.
-- The table silently reverts from 17 distinct ranks to **6.5 distinct ranks across 17 teams (85% sharing a rank)**.
-- D-17 provides **no announcement**, so nothing tells the user this happened or why.
-- SEC 0.10 / Big Ten 0.19 / Big 12 0.01 — in the other three conferences this costs essentially nothing, in 83–99% of seasons.
+A stored decision is applied **iff both** hold:
 
-### 9.3 The three options
+```
+slateComplete[conference] === true          // D-07 predicate — gate 1
+&& stored[conference][decisionHash(group)]  // D-08 hash match — gate 2
+   exists and its id set EQUALS group.teams // Pitfall 8 set-equality validation
+```
 
-| | Behaviour | Cost | Keeps D-09's stated guarantee? |
-|---|---|---|---|
-| **A — Silent discard** *(D-09 as decided)* | Slate goes incomplete → conference's decisions deleted from storage. No notice. | ~4 ACC orderings destroyed with zero feedback; the ACC table visibly degrades with no explanation. UAT signal: *"my ACC standings keep resetting."* | Yes |
-| **B — Warn before destroying** | Clearing a pick that would make a complete slate incomplete, for a conference holding decisions, prompts first. Confirm → discard (identical to A). Cancel → pick unchanged. | Adds a confirm dialog to the app's single most-used interaction. In practice fires only on ACC picks. `Clear Week` / `Clear Season` must aggregate across conferences into one prompt. Costs a destructive-confirm UI (~1 new component). | Yes |
-| **C — Preserve and suspend** | Decisions stay in storage but are **not applied** while the slate is incomplete. On re-completion they re-apply only where the D-08 hash still matches; non-matching entries are dropped. | Adds a third *storage* state. **But not a third UI state** — a suspended decision renders exactly as a discarded one (nothing), so the display is still two-valued. D-08's hash already provides the re-application mechanism at no extra cost. Needs a storage cap (Pitfall 8). | **Yes — identically.** Nothing hand-chosen is ever *displayed* under unapproved conditions; only storage retention differs |
+The gates are independent and **both** are required. Gate 1 alone is what makes suspension work; gate 2 alone is what makes invalidation work. Never collapse them into one check.
 
-**Recommendation: C.** D-09's rationale was "a hand-chosen rank is never displayed under conditions the user did not approve." C satisfies that literally and exactly — a suspended decision is not applied, so it is not displayed. The rejected "third state" is confined to storage, where the user never sees it, while the destructive consequence D-09 accepted on a ~1-decision assumption is eliminated at the 3.84-decision reality. B is the fallback if the two-state storage machine is judged worth protecting; A is only defensible if the ACC number is expected to drop sharply after the fourth engine repair (the missing "lost to all others" elimination), which is **currently unmeasured**.
+**Storage shape is unchanged:** `{ [conference]: { [hash]: orderedTeamIds } }` — flat, hash-keyed, recomputed on read (`06-RESEARCH.md` Pattern 4). Suspension needs **no new field, no `suspended` flag, no timestamp**. A suspended decision is simply a stored entry whose gate 1 is false. This is why C costs nothing structurally.
 
-**Provisional default recorded for planning:** C. **Not consent.**
+**Storage hygiene (Pitfall 8 / ASVS V5):** cap the stored object at a bounded number of entries per conference and a bounded group size; validate id-set equality on read; drop silently on mismatch, exactly as `toOutcomes` does for picks.
 
-### 9.4 If B is chosen — destructive-confirm contract
+### 9.3 The re-application moment — silent restoration, no announcement
 
-Only this option adds UI. Copy:
+**Call: the ordering reappears silently. No announcement, no toast, no banner, no live-region message, at any point.**
 
-> **Clear 4 tiebreaker decisions?**
-> Clearing this pick makes the ACC slate incomplete, which clears the 4 tiebreaker orderings you set for it. You'll be asked again once the slate is complete.
-> `[Clear pick and decisions]` (`error`) · `[Keep pick]` (neutral, default focus)
+Rationale — this is *not* the one place an announcement is warranted despite D-17:
 
-Counts are live, never hard-coded. For `Clear Week` / `Clear Season`, one prompt aggregating all affected conferences — never one prompt per conference.
+- D-17's no-announcement rule exists to avoid nagging the user about a decision they **owe**. Restoration is the opposite: it is the table returning to a state the user **already approved**.
+- Gate 2 guarantees the group membership, the terminal step, and **every team's value at that step** are identical to the moment of approval. The approval is exactly as valid as when it was given; there is nothing new to consent to.
+- The observable is the table itself, and it is loud: the group's round `bg-inverted` pills, `bg-muted` band and left rule are replaced by *k* distinct square chips, and the expansion reads `DECIDED BY YOU` (§7.5). That is more legible than any toast.
+- **Consistency with STAND-02:** every pick in this app already recomputes standings silently. Restoration is one more pick-driven recompute and must be announced exactly as much as the rest — which is not at all.
 
-**Do not hard-code "~4"** anywhere in copy or layout (`06-RESEARCH.md` planning implication 2): a pending engine repair may lower it.
+**Checkable acceptance criterion for the planner:**
+
+> Given a conference with a committed manual ordering and a complete slate, when a conference pick is cleared and then re-picked to the same winner, then: (a) no dialog, toast, banner, badge, count, or `aria-live` message fires at any point in the sequence; (b) the ranks rendered after are identical to the ranks rendered before; (c) the group's expansion reads `DECIDED BY YOU` both before and after; (d) at no point does any DOM node contain the words *suspended*, *restored*, *paused*, or *recovered*.
+
+Correspondingly, when the slate goes incomplete, the group reverts to the shared-rank presentation (marker (b)) with **no** notice — identical in every observable respect to what discard would have produced. That equivalence is the whole point of C.
+
+### 9.4 The hash-mismatch path — this is the real discard, and it stays visible
+
+If the tied group changed while the slate was incomplete, the stored decision's hash no longer matches on return. **This is the genuine invalidation, and criterion 3's *"clearly invalidated, not silently misapplied"* applies to it.**
+
+| Step | Behaviour |
+|------|-----------|
+| Detection | `decisionHash(liveGroup)` finds no matching entry (or the entry's id set differs) |
+| Application | **Never applied.** Non-application is structural — a lookup miss, not a comparison someone could forget |
+| Storage | The non-matching entry is **deleted on read**, so stale entries cannot accumulate across a season |
+| Presentation | The group renders as unresolved: marker (b) pill, band and rule. Because the slate is complete, the D-17 ordering interaction is offered afresh inside its expansion |
+
+**"Clearly invalidated" is satisfied by the re-prompt itself, not by an added notice.** The group is visibly tied again and the user is visibly asked to order it again — the same surface D-08 already produces routinely, since D-08 makes re-prompting the normal case rather than the exception. Adding a notice here would be exactly the announcement D-17 declined, and would fire on the ordinary D-08 path too.
+
+**Non-negotiable invariant:** a hash-mismatched decision behaves **identically** whether it was suspended or continuously active. C introduces **no new invalidation semantics** — it changes only whether storage retains an entry across the incomplete window. If a test can distinguish the two, the implementation is wrong.
+
+**Do not hard-code "~4"** anywhere in copy or layout (`06-RESEARCH.md` planning implication 2): the number is conference-dependent and a pending engine repair may lower it.
 
 ---
 
@@ -431,6 +468,7 @@ Prompting is gated on slate completion (D-07), and ties resolve *less* early in 
 Required behaviour:
 
 - **No nagging.** No badge, no count, no "N ties unresolved", no dot, no pulsing affordance, anywhere — in the card, the table, the sidebar, or the page.
+- **No suspended-decision affordance** (§0.1, §9.3). A conference holding suspended decisions is visually indistinguishable from one holding none. No "saved for later", no dimmed ghost ordering, no restore button, no count. Storage state is invisible by contract.
 - **Marker (b) is a statement, not a warning.** `bg-inverted` neutral pill and `bg-muted` band — no `error`/`warning` color, no alert icon, no `role="alert"`.
 - **The reasoning block is always available**, mid-season included. It ends at §7.4's terminal reason with no prompt — which reads as "here is why these are level right now," not "you owe us something."
 - **Nothing in the phase says "incomplete", "unfinished", "missing", or "needs".** The word to reach for is **tied**.
@@ -508,13 +546,15 @@ Marker semantics reach assistive tech through the **accessible name**, not throu
 | Reasoning manual header | `DECIDED BY YOU` |
 | Reasoning manual body | `You ranked these teams in this order. It applies while this conference's slate is complete and its picks are unchanged.` |
 | Rank chip a11y names | `Rank {n}, decided by tiebreaker. Show reasoning.` / `Rank {n}, decided by your choice. Show reasoning.` / `Rank {n}, tied with {k−1} other teams. Show reasoning.` |
-| Destructive confirmation (only if P-1 = B) | `Clear {n} tiebreaker decisions?` / `Clearing this pick makes the {Conference} slate incomplete, which clears the {n} tiebreaker orderings you set for it. You'll be asked again once the slate is complete.` / `[Clear pick and decisions]` · `[Keep pick]` |
+| Destructive confirmation | **None.** P-1 = C means this phase has no destructive action. No confirmation copy exists, and none is to be written (§0.1) |
+| Suspension / restoration copy | **None.** There is no user-visible string for suspending, restoring, pausing, or recovering a decision anywhere in the app (§9.3) |
 
 **Tone rules for this phase:**
 
 - Sentence case for all body copy; UPPERCASE only for the 12px eyebrow/label role
 - No exclamation marks. No "Oops". No "Sorry"
-- **Never** the words `incomplete`, `unfinished`, `missing`, `pending`, or `needs` in user-visible standings copy — say **tied**. (`incomplete` appears once, in the P-1 = B destructive confirmation, where it is literally accurate and the user is mid-action)
+- **Never** the words `incomplete`, `unfinished`, `missing`, `pending`, or `needs` in user-visible standings copy — say **tied**. With P-1 = C there is now **zero** user-visible copy in this phase using any of them; a grep for these words over Phase 6 template strings must return nothing.
+- **Never** the words `suspended`, `restored`, `paused`, or `recovered` — storage lifecycle is invisible (§9.3)
 - Never state or imply a count of outstanding decisions anywhere outside an expanded group (D-17 declined the call-out)
 - **Never hard-code "~4"**, "a few", or "one last tie" — the number is measured, conference-dependent, and a pending engine repair may move it
 - Team names always render as `school` — never abbreviation, never mascot
@@ -537,7 +577,9 @@ No component registry is in use. **Zero new runtime or dev dependencies** are in
 | Requirement / Decision | Satisfied by |
 |---|---|
 | TIE-05 (tied group, step, per-team values, restart events) | §7.2, §7.3 — all four elements, restarts non-collapsible |
-| TIE-06 (selection tied to group + step; invalidated not misapplied) | §7.5 visible statement; §9.1 mechanism table; §9.3 P-1 |
+| TIE-06 (selection tied to group + step; invalidated not misapplied) | §7.5 visible statement; §9.1 mechanism table; §9.2 two-gate predicate; §9.4 invalidation path |
+| Criterion 3 (selection stays valid while the group is unchanged; clearly invalidated if it changes) | §9.2 gate 2 + set-equality; §9.3 silent restoration on match; §9.4 delete-on-read + visible re-prompt on mismatch |
+| D-09 **as superseded** (preserve and suspend) | §0.1 decision-layer note; §9.1–§9.4; §11 no-affordance rule |
 | TIE-07 (dedicated prominent element above each table) | §5.1, §5.2 |
 | TIE-08 (1..N; unresolvable share a rank; prompt when slate complete) | §6 three-state rank cell; §8.1 gate |
 | Criterion 6 (rank gap never mistaken for record gap) | §6 — chip present ⇔ not record-earned; §6.2 covers manual |
@@ -563,4 +605,4 @@ No component registry is in use. **Zero new runtime or dev dependencies** are in
 - [ ] Dimension 5 Spacing: PASS
 - [ ] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending — blocked on P-1 and P-2
+**Approval:** pending checker verification — **no open decisions** (P-1 and P-2 answered by the user 2026-08-15)

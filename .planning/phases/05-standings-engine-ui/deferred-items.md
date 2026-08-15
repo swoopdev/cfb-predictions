@@ -42,6 +42,39 @@ as an ordered sequence (return the bucket as a group), or resolve seed 1's tail
 with the same per-slot procedure seed 2 uses. Both change `TiebreakerResult`'s
 contract, which is why it is deferred rather than folded into a Phase 5 gap fix.
 
+## OPEN (UAT) — per-pair WCAG contrast in the standings sidebar is unverified
+
+**Owner: UAT / Phase 5 closeout.** Declared honestly by 05-02 but, until now, recorded
+ONLY in `05-02-SUMMARY.md` prose — not here and not in STATE.md. The 05 verifier flagged
+it as the one open item at risk of being lost at milestone close. Logged properly now.
+
+Nuxt UI injects the `--ui-color-neutral-*` ramp at runtime rather than into `entry.css`,
+so a static numeric audit is not feasible without a live browser; an attempt produced an
+obviously bogus 13.89:1 for slate-500-on-white and was correctly discarded.
+
+**What IS verified:** zero hard-coded colors (grep), every utility bound to a real
+`--ui-*` semantic token, and the one plainly risky pair already fixed (10px `text-dimmed`
+column headers → 12px `text-muted`).
+
+**What needs a human:** sample rank number, team name, Overall Record, Conf Record, and
+column headers against the sidebar surface in BOTH light and dark themes with a contrast
+checker. Target WCAG AA — 4.5:1 for the ≤12px header and record text, 3:1 for large text.
+
+## OPEN (found during 05 verification) — the entire page-level integration suite is skipped
+
+**Owner: Phase 5 closeout or Phase 6.** `tests/pages/week.test.ts` is wrapped in a single
+`describe.skip` covering 6 inner describes — **all 18 "skipped" tests in the suite are this
+one file.** The green 385/18/0 result therefore contains zero executing page-level tests.
+
+**Consequence:** the pick → `picks` ref → `computed` → sidebar DOM chain is unexercised.
+STAND-02's computation half is measured (median 0.88ms, p95 2.69ms over 240 generated
+seasons of the full 888-game slate), but nothing proves the DOM actually updates. This is
+why STAND-02 lands in UAT rather than passing automatically.
+
+Un-skipping likely needs the `nuxt`-environment vitest project via `@nuxt/test-utils`
+`defineVitestProject` — the same underlying gap that forced `PickProgress` and
+`StandingsTable`/`StandingsSidebar` to use explicit imports instead of Nuxt auto-imports.
+
 ## OPEN (measured post-05-03) — the ACC trips the engine's infinite-recursion guard on ~4% of real seasons
 
 **Owner: Phase 3.** Pre-existing; made *visible* by 05-03's WR-03 fix, which replaced

@@ -101,7 +101,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- **[Phase 6, resolves_phase: 6] Full 1..N conference ranking (TIE-08).** User decision 2026-08-14 reversing Phase 5's D-04 (shared ranks) and D-05 (no tie badge). Standings must show distinct ranks 1..N by iteratively applying the tiebreaker procedure; unresolvable teams share a rank and are prompted for manual resolution only once that conference's slate is fully picked. Requires extending `ChampionshipResult` past `seed1`/`seed2`, and fixing the ACC recursion-guard trip and the seed1/seed2 contradiction as part of that work. **Locked decisions and the five open questions are in `.planning/phases/06-tiebreaker-ui-championships/06-CONTEXT.md` — read it before planning Phase 6.** Open question #1 is load-bearing: the "1-2 manual decisions per conference per season" target is unvalidated at N seeds and must be measured before the UX is committed to.
 
 ### Blockers/Concerns
 

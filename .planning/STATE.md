@@ -6,14 +6,14 @@ current_phase: 05
 current_phase_name: standings-engine-ui
 status: verifying
 stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-08-15T02:17:13.253Z"
+last_updated: "2026-08-15T03:46:31.343Z"
 last_activity: 2026-08-14
-last_activity_desc: "Completed 05-03-PLAN.md: CR-01 gap closure — standings and the tiebreaker engine share one tie definition"
+last_activity_desc: "Completed 05-03-PLAN.md: CR-01 gap closure — standings and the tiebreaker engine now share one tie definition"
 progress:
   total_phases: 9
   completed_phases: 5
-  total_plans: 21
-  completed_plans: 21
+  total_plans: 24
+  completed_plans: 24
   percent: 56
 ---
 
@@ -116,6 +116,10 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260814-f6z | Repair 45 pre-existing test failures blocking the Phase 5 gate | 2026-08-14 | 1b4ccdc | [260814-f6z-repair-45-pre-existing-test-failures-blo](./quick/260814-f6z-repair-45-pre-existing-test-failures-blo/) |
+
+### Roadmap Evolution
+
+- Phase 6 edited: widened scope: full 1..N conference ranking (TIE-08), reverses Phase 5 D-04/D-05
 
 ## Deferred Items
 

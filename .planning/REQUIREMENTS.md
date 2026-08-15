@@ -42,10 +42,10 @@
 
 ### Standings (STAND)
 
-- [ ] **STAND-01**: Conference standings display rank, team, conference record (W-L), and overall record (W-L) for each of SEC, Big Ten, Big 12, and ACC
-- [ ] **STAND-02**: Standings recompute immediately when any pick changes, with no perceptible delay
-- [ ] **STAND-03**: Conference win/loss/games-played are tracked as separate values, never collapsed to a single win percentage, so unbalanced conference schedules remain comparable
-- [ ] **STAND-04**: Teams tied on the relevant standings criteria are visually indicated as tied, before any tiebreaker is applied
+- [x] **STAND-01**: Conference standings display rank, team, conference record (W-L), and overall record (W-L) for each of SEC, Big Ten, Big 12, and ACC
+- [x] **STAND-02**: Standings recompute immediately when any pick changes, with no perceptible delay
+- [x] **STAND-03**: Conference win/loss/games-played are tracked as separate values, never collapsed to a single win percentage, so unbalanced conference schedules remain comparable
+- [x] **STAND-04**: Teams tied on the relevant standings criteria are visually indicated as tied, before any tiebreaker is applied
 
 ### Tiebreakers (TIE)
 
@@ -56,6 +56,7 @@
 - [ ] **TIE-05**: The resolution UI shows the step-by-step reasoning that produced the result — the tied group, the step applied, each team's value at that step, and any restart events — not just the final answer
 - [ ] **TIE-06**: A manual tiebreaker selection is tied to the specific tied group and step it resolved, so it stays valid if picks are unchanged and is invalidated (not silently misapplied) if the tied group changes
 - [ ] **TIE-07**: The resolved conference championship matchup (or the pending tie) is displayed as a dedicated, prominent element above each conference's standings table
+- [ ] **TIE-08**: Each conference's standings are ranked 1..N by iteratively applying the published tiebreaker procedure — resolve the top team, commit it, re-run on the remainder — rather than stopping after the two championship participants; teams the procedure genuinely cannot separate share a rank and are surfaced for manual resolution once that conference's slate is fully picked
 
 ### Scenarios (SCEN)
 
@@ -144,13 +145,14 @@ Deferred to future release. Tracked but not in current roadmap.
 | PICK-06 | Phase 4 | Pending |
 | PICK-07 | Phase 4 | Pending |
 | PICK-08 | Phase 4 | Pending |
-| STAND-01 | Phase 5 | Pending |
-| STAND-02 | Phase 5 | Pending |
-| STAND-03 | Phase 5 | Pending |
-| STAND-04 | Phase 5 | Pending |
+| STAND-01 | Phase 5 | Complete |
+| STAND-02 | Phase 5 | Complete |
+| STAND-03 | Phase 5 | Complete |
+| STAND-04 | Phase 5 | Complete |
 | TIE-05 | Phase 6 | Pending |
 | TIE-06 | Phase 6 | Pending |
 | TIE-07 | Phase 6 | Pending |
+| TIE-08 | Phase 6 | Pending |
 | SCEN-01 | Phase 7 | Pending |
 | SCEN-02 | Phase 7 | Pending |
 | SCEN-03 | Phase 7 | Pending |
@@ -163,7 +165,7 @@ Deferred to future release. Tracked but not in current roadmap.
 
 **Coverage:**
 
-- v1 requirements: 43 total
+- v1 requirements: 44 total (43 original + TIE-08, added 2026-08-14)
 - Mapped to phases: 43
 - Unmapped: 0 ✓
 

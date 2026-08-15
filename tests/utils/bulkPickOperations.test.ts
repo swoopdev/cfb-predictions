@@ -77,7 +77,7 @@ const mockGames: Game[] = [
 describe('bulkPickOperations', () => {
   describe('fillWeekRemaining', () => {
     it('should fill unpicked games in a week with home team', () => {
-      const _currentPicks = { 101: 2 } // game 101 already picked for team 2
+      const currentPicks = { 101: 2 } // game 101 already picked for team 2
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       expect(result.newPicks[101]).toBe(2) // Existing pick unchanged
@@ -86,7 +86,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should return new object without mutating input', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const originalPicks = { ...currentPicks }
 
       fillWeekRemaining(mockGames, 1, currentPicks)
@@ -95,7 +95,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should track auto-filled game IDs', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       expect(result.autoFilledIds).toContain(102)
@@ -104,7 +104,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should return empty auto-filled list if all games already picked', () => {
-      const _currentPicks = { 101: 2, 102: 3, 103: 5 }
+      const currentPicks = { 101: 2, 102: 3, 103: 5 }
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       expect(result.autoFilledIds).toEqual([])
@@ -112,7 +112,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should handle empty picks', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       expect(result.newPicks[101]).toBe(1)
@@ -122,7 +122,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should only fill games in the specified week', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillWeekRemaining(mockGames, 2, currentPicks)
 
       expect(result.newPicks[101]).toBeUndefined()
@@ -133,7 +133,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should preserve existing picks when filling', () => {
-      const _currentPicks = { 101: 99, 103: 99 } // 101 and 103 already have picks
+      const currentPicks = { 101: 99, 103: 99 } // 101 and 103 already have picks
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       expect(result.newPicks[101]).toBe(99) // Preserved
@@ -144,7 +144,7 @@ describe('bulkPickOperations', () => {
 
   describe('fillSeasonRemaining', () => {
     it('should fill all unpicked games in season with home team', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const result = fillSeasonRemaining(mockGames, currentPicks)
 
       expect(result.newPicks[101]).toBe(2) // Existing pick unchanged
@@ -155,7 +155,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should return new object without mutating input', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const originalPicks = { ...currentPicks }
 
       fillSeasonRemaining(mockGames, currentPicks)
@@ -164,7 +164,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should track auto-filled game IDs for entire season', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillSeasonRemaining(mockGames, currentPicks)
 
       expect(result.autoFilledIds).toContain(101)
@@ -176,7 +176,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should handle empty picks', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillSeasonRemaining(mockGames, currentPicks)
 
       expect(Object.keys(result.newPicks).length).toBe(mockGames.length)
@@ -184,7 +184,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should preserve all existing picks', () => {
-      const _currentPicks = {
+      const currentPicks = {
         101: 99,
         102: 88,
         201: 77
@@ -201,7 +201,7 @@ describe('bulkPickOperations', () => {
 
   describe('clearWeek', () => {
     it('should clear all picks in a week', () => {
-      const _currentPicks = { 101: 2, 102: 3, 103: 5, 201: 2, 202: 4 }
+      const currentPicks = { 101: 2, 102: 3, 103: 5, 201: 2, 202: 4 }
       const result = clearWeek(mockGames, 1, currentPicks)
 
       expect(result[101]).toBeUndefined()
@@ -212,7 +212,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('should return new object without mutating input', () => {
-      const _currentPicks = { 101: 2, 102: 3, 201: 2 }
+      const currentPicks = { 101: 2, 102: 3, 201: 2 }
       const originalPicks = { ...currentPicks }
 
       clearWeek(mockGames, 1, currentPicks)
@@ -221,21 +221,21 @@ describe('bulkPickOperations', () => {
     })
 
     it('should handle clearing empty week', () => {
-      const _currentPicks = { 201: 2, 202: 4 }
+      const currentPicks = { 201: 2, 202: 4 }
       const result = clearWeek(mockGames, 1, currentPicks)
 
       expect(result).toEqual(currentPicks)
     })
 
     it('should handle clearing week with all picks', () => {
-      const _currentPicks = { 101: 2, 102: 3, 103: 5 }
+      const currentPicks = { 101: 2, 102: 3, 103: 5 }
       const result = clearWeek(mockGames, 1, currentPicks)
 
       expect(Object.keys(result).length).toBe(0)
     })
 
     it('should handle partial picks in week', () => {
-      const _currentPicks = { 101: 2, 103: 5 }
+      const currentPicks = { 101: 2, 103: 5 }
       const result = clearWeek(mockGames, 1, currentPicks)
 
       expect(result[101]).toBeUndefined()
@@ -245,7 +245,6 @@ describe('bulkPickOperations', () => {
 
   describe('clearSeason', () => {
     it('should return empty object', () => {
-      const _currentPicks = { 101: 2, 102: 3, 201: 2 }
       const result = clearSeason()
 
       expect(result).toEqual({})
@@ -260,7 +259,7 @@ describe('bulkPickOperations', () => {
 
   describe('Pure Function Contract', () => {
     it('fillWeekRemaining should not have side effects', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const originalPicks = JSON.parse(JSON.stringify(currentPicks))
 
       const result1 = fillWeekRemaining(mockGames, 1, currentPicks)
@@ -271,7 +270,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('fillSeasonRemaining should not have side effects', () => {
-      const _currentPicks = { 101: 2 }
+      const currentPicks = { 101: 2 }
       const originalPicks = JSON.parse(JSON.stringify(currentPicks))
 
       const result1 = fillSeasonRemaining(mockGames, currentPicks)
@@ -282,7 +281,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('clearWeek should not have side effects', () => {
-      const _currentPicks = { 101: 2, 102: 3, 201: 2 }
+      const currentPicks = { 101: 2, 102: 3, 201: 2 }
       const originalPicks = JSON.parse(JSON.stringify(currentPicks))
 
       const result1 = clearWeek(mockGames, 1, currentPicks)
@@ -295,7 +294,7 @@ describe('bulkPickOperations', () => {
 
   describe('Batch Update Pattern', () => {
     it('fillWeekRemaining returns single object for atomic update', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillWeekRemaining(mockGames, 1, currentPicks)
 
       // Caller should do: picks.value = result.newPicks
@@ -305,7 +304,7 @@ describe('bulkPickOperations', () => {
     })
 
     it('fillSeasonRemaining returns single object for atomic update', () => {
-      const _currentPicks = {}
+      const currentPicks = {}
       const result = fillSeasonRemaining(mockGames, currentPicks)
 
       expect(typeof result.newPicks).toBe('object')

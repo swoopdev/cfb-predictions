@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { usePicksStorage } from '~/app/composables/usePicksStorage'
+import { usePicksStorage } from '~/composables/usePicksStorage'
 import {
   emptyPicks,
   partialPicks,

@@ -2,6 +2,8 @@
 import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
+import type { StandingsResult } from '#shared/types/standings'
+import { computeStandings, resolveAllConferences } from '#shared/domain/standings'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
@@ -93,6 +95,23 @@ const conferenceGroups = computed(() => {
 // not just whether the grid is empty.
 const emptyVariant = computed(() => determineEmptyStateVariant(rawWeekGames.value, filteredGames.value))
 
+// D-13/STAND-02: standings are a plain `computed` over (games, teams, picks)
+// — no watcher, no debounce. Vue invalidates it the instant `picks` mutates,
+// so a pick and its standings consequence land in the same render. Measured
+// at ~7ms for the full 888-game slate across all four conferences, which is
+// well under a frame and is why no debounce is warranted.
+const resolvedTiebreakers = computed(() => {
+  const slate = games.value?.games
+  if (!slate || !teams.value) return undefined
+  return resolveAllConferences(slate, teams.value, picks.value)
+})
+
+const standings = computed<StandingsResult>(() => {
+  const slate = games.value?.games
+  if (!slate || !teams.value) return {}
+  return computeStandings(slate, teams.value, picks.value, resolvedTiebreakers.value)
+})
+
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
   if (conf.value !== undefined) return conf.value
@@ -127,150 +146,188 @@ function handleClearSeason() {
 
 <template>
   <div class="px-6 lg:px-8 py-6">
-    <!-- Global Progress Badge (D-09): displays overall season progress -->
-    <div class="mb-4">
-      <PickProgress :games="allFilteredGames" />
-    </div>
+    <!-- D-01: games slate and standings share one page, side by side on
+         desktop; the sidebar stacks below the slate on narrow viewports. -->
+    <div class="flex flex-col lg:flex-row lg:items-start gap-6">
+      <div class="min-w-0 flex-1">
+        <!-- Global Progress Badge (D-09): displays overall season progress -->
+        <div class="mb-4">
+          <PickProgress :games="allFilteredGames" />
+        </div>
 
-    <!-- Season Controls (D-11: positioned above game grid) -->
-    <div class="flex flex-wrap items-center gap-4 mb-6">
-      <div class="flex gap-2">
-        <UButton
-          :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
-          variant="ghost"
-          size="sm"
-          @click="handleFillSeason"
-        >
-          Fill Season
-        </UButton>
-        <UButton
-          :disabled="Object.keys(picks).length === 0"
-          variant="ghost"
-          size="sm"
-          @click="handleClearSeason"
-        >
-          Clear Season
-        </UButton>
-      </div>
-    </div>
+        <!-- Season Controls (D-11: positioned above game grid) -->
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <div class="flex gap-2">
+            <UButton
+              :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
+              variant="ghost"
+              size="sm"
+              @click="handleFillSeason"
+            >
+              Fill Season
+            </UButton>
+            <UButton
+              :disabled="Object.keys(picks).length === 0"
+              variant="ghost"
+              size="sm"
+              @click="handleClearSeason"
+            >
+              Clear Season
+            </UButton>
+          </div>
+        </div>
 
-    <!-- Week heading with per-week progress bar and navigation -->
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-      <!-- Week heading with per-week progress bar (D-10, D-02) -->
-      <div class="flex items-center gap-4 flex-1">
-        <h1 class="text-xl font-semibold">
-          Week {{ week }}
-        </h1>
-        <div class="flex-1 max-w-xs">
-          <PickProgressWeek
-            :week-num="week"
-            :games="filteredGames"
+        <!-- Week heading with per-week progress bar and navigation -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+          <!-- Week heading with per-week progress bar (D-10, D-02) -->
+          <div class="flex items-center gap-4 flex-1">
+            <h1 class="text-xl font-semibold">
+              Week {{ week }}
+            </h1>
+            <div class="flex-1 max-w-xs">
+              <PickProgressWeek
+                :week-num="week"
+                :games="filteredGames"
+              />
+            </div>
+          </div>
+          <!-- Week navigation -->
+          <WeekNav
+            :week="week"
+            @navigate="goToWeek"
           />
         </div>
-      </div>
-      <!-- Week navigation -->
-      <WeekNav
-        :week="week"
-        @navigate="goToWeek"
-      />
-    </div>
 
-    <!-- Week-level action buttons (repositioned below heading per D-10) -->
-    <div class="flex gap-2 mb-6">
-      <UButton
-        :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
-        variant="ghost"
-        size="sm"
-        @click="handleFillWeek"
-      >
-        Fill Week
-      </UButton>
-      <UButton
-        :disabled="filteredGames.filter(g => g.id in picks).length === 0"
-        variant="ghost"
-        size="sm"
-        @click="handleClearWeek"
-      >
-        Clear Week
-      </UButton>
-    </div>
+        <!-- Week-level action buttons (repositioned below heading per D-10) -->
+        <div class="flex gap-2 mb-6">
+          <UButton
+            :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
+            variant="ghost"
+            size="sm"
+            @click="handleFillWeek"
+          >
+            Fill Week
+          </UButton>
+          <UButton
+            :disabled="filteredGames.filter(g => g.id in picks).length === 0"
+            variant="ghost"
+            size="sm"
+            @click="handleClearWeek"
+          >
+            Clear Week
+          </UButton>
+        </div>
 
-    <div class="flex flex-wrap items-center gap-4 mb-6">
-      <ConferenceFilter v-model="conf" />
-      <TeamFilter v-model="teamId" />
-    </div>
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <ConferenceFilter v-model="conf" />
+          <TeamFilter v-model="teamId" />
+        </div>
 
-    <div
-      v-if="loadState === 'loading'"
-      class="grid gap-4"
-      style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
-    >
-      <USkeleton
-        v-for="n in 6"
-        :key="n"
-        class="h-20 w-full rounded-lg"
-      />
-    </div>
-
-    <div
-      v-else-if="loadState === 'error'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        Couldn't load the schedule.
-      </h2>
-      <p class="text-dimmed">
-        Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
-      </p>
-    </div>
-
-    <div
-      v-else-if="emptyVariant === 'week-empty'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        No games this week
-      </h2>
-      <p class="text-dimmed">
-        Week {{ week }} has no games in the 2026 schedule. Try another week.
-      </p>
-    </div>
-
-    <div
-      v-else-if="emptyVariant === 'filter-empty'"
-      class="py-12 text-center"
-    >
-      <h2 class="text-2xl font-semibold mb-2">
-        No games match this filter
-      </h2>
-      <p class="text-dimmed">
-        {{ filterLabel }} has no games in Week {{ week }}. Clear the filter or pick another week.
-      </p>
-    </div>
-
-    <div
-      v-else
-      class="space-y-8"
-    >
-      <div
-        v-for="group in conferenceGroups"
-        :key="group.conference"
-      >
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
-          {{ group.conference }}
-        </h2>
         <div
+          v-if="loadState === 'loading'"
           class="grid gap-4"
           style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
         >
-          <GameCard
-            v-for="game in group.games"
-            :key="game.id"
-            :game="game"
-            :teams-by-id="teamsById"
-            :picks="picks"
+          <USkeleton
+            v-for="n in 6"
+            :key="n"
+            class="h-20 w-full rounded-lg"
           />
         </div>
+
+        <div
+          v-else-if="loadState === 'error'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            Couldn't load the schedule.
+          </h2>
+          <p class="text-dimmed">
+            Something went wrong loading this season's data. Refresh the page — if the problem continues, the schedule data may be missing from this deploy.
+          </p>
+        </div>
+
+        <div
+          v-else-if="emptyVariant === 'week-empty'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            No games this week
+          </h2>
+          <p class="text-dimmed">
+            Week {{ week }} has no games in the 2026 schedule. Try another week.
+          </p>
+        </div>
+
+        <div
+          v-else-if="emptyVariant === 'filter-empty'"
+          class="py-12 text-center"
+        >
+          <h2 class="text-2xl font-semibold mb-2">
+            No games match this filter
+          </h2>
+          <p class="text-dimmed">
+            {{ filterLabel }} has no games in Week {{ week }}. Clear the filter or pick another week.
+          </p>
+        </div>
+
+        <div
+          v-else
+          class="space-y-8"
+        >
+          <div
+            v-for="group in conferenceGroups"
+            :key="group.conference"
+          >
+            <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
+              {{ group.conference }}
+            </h2>
+            <div
+              class="grid gap-4"
+              style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
+            >
+              <GameCard
+                v-for="game in group.games"
+                :key="game.id"
+                :game="game"
+                :teams-by-id="teamsById"
+                :picks="picks"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Standings sidebar (D-01/D-02). Desktop: pinned right of the slate
+           and independently scrollable. Mobile: collapsed behind a toggle so
+           it never pushes the games out of reach. The sidebar owns the
+           all-four-vs-single-conference branching; the week view only hands it
+           the full result and the active filter.
+
+           WR-01: gated on `loadState` exactly like the main column. `standings`
+           is `{}` until games and teams resolve, and the sidebar renders a
+           section heading plus "No teams to show for ..." for every missing
+           key — so without this gate four fully-formed empty tables sat beside
+           the skeletons while loading, and again on the error branch after the
+           page had already said the schedule failed. The gate lives here
+           rather than in a `pending` prop because `StandingsSidebar`'s props
+           shape is out of scope for this repair.
+
+           The loading branch carries the sidebar's own outer width classes
+           (`w-full lg:w-80 lg:shrink-0`) so the two-column layout does not
+           jump when the real panel replaces the skeleton. The error branch
+           renders nothing at all — the main column has already explained the
+           failure. -->
+      <StandingsSidebar
+        v-if="loadState === 'ready'"
+        :standings="standings"
+        :active-conference="conf"
+      />
+      <div
+        v-else-if="loadState === 'loading'"
+        class="w-full lg:w-80 lg:shrink-0"
+      >
+        <USkeleton class="h-96 w-full rounded-lg" />
       </div>
     </div>
   </div>

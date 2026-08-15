@@ -134,18 +134,35 @@ describe('PickProgressWeek Component', () => {
     expect(wrapper.text()).toContain('8/14 picked')
   })
 
-  it('should use neutral text color styling', () => {
+  it('should render a progress bar track, proportional fill, and centered label', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 5, total: 10 }))
 
     const wrapper = mount(PickProgressWeek, {
       props: { weekNum: 1 }
     })
 
-    const div = wrapper.find('div')
-    const classes = div.classes()
+    // Track: muted background, clipping the fill. The week bar is deliberately
+    // shorter than the season bar (20px vs 24px) and must not be squeezed by
+    // the flex row it sits in.
+    const track = wrapper.find('div')
+    const trackClasses = track.classes()
+    expect(trackClasses).toContain('bg-muted')
+    expect(trackClasses).toContain('h-5')
+    expect(trackClasses).toContain('overflow-hidden')
+    expect(trackClasses).toContain('shrink-0')
 
-    expect(classes).toContain('text-sm')
-    expect(classes.some(c => c.includes('text-slate') || c.includes('slate-'))).toBe(true)
+    // Fill: primary colour, width driven by picked/total, animated on change.
+    const fill = wrapper.find('.bg-primary')
+    expect(fill.exists()).toBe(true)
+    expect(fill.attributes('style')).toContain('width: 50%')
+    expect(fill.classes()).toContain('transition-all')
+
+    // Label: white text centered over the fill, not the pre-polish slate text.
+    const label = wrapper.find('span')
+    const labelClasses = label.classes()
+    expect(labelClasses).toContain('text-xs')
+    expect(labelClasses).toContain('text-white')
+    expect(label.text()).toBe('5/10 picked')
   })
 
   it('should display correctly for different weeks', () => {

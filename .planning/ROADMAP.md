@@ -21,7 +21,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
 - [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
-- [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged
+- [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (executed 2026-08-14; awaiting UAT — 05-VERIFICATION.md is `human_needed`, 4 items pending in 05-UAT.md)
 - [ ] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties
 - [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
 - [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks
@@ -143,10 +143,12 @@ Plans:
 **Plans**: 4/4 plans
 Plans:
 **Wave 0**
+
 - [ ] 04-01-PLAN.md — Install @vueuse/nuxt, author usePicksStorage + useAutoFilledGames composables with corruption recovery and test fixtures
 - [ ] 04-02-PLAN.md — Extend GameCard.vue with click-to-pick interaction, visual feedback (border + checkmark), keyboard/accessibility support
 
 **Wave 1** *(blocked on Wave 0 completion)*
+
 - [ ] 04-03-PLAN.md — Create progress badge components (global + per-week), integrate into week page layout, author usePickProgress composable
 - [ ] 04-04-PLAN.md — Implement bulk fill/clear operations, confirmation modal for Clear Season, integrate buttons into week page, manual UAT verification
 
@@ -168,6 +170,7 @@ Plans:
 **Plans**: 1/1 plan created
 Plans:
 **Wave 1**
+
 - [ ] 04-01-POLISH-PLAN.md — Refactor progress components to horizontal bars, add white background to picked cards, reposition bulk operation buttons, update game grouping for conference filters
 
 **UI hint**: yes
@@ -185,20 +188,42 @@ Plans:
   3. Conference wins, losses, and games played are shown as separate values (never collapsed to a single percentage), so an 8-game and a 9-game conference schedule remain honestly comparable
   4. Teams with identical records are ranked by applying tiebreaker procedures (using Phase 3's engine); unresolved ties (steps requiring manual input or ranking data) are visually flagged as requiring manual resolution
 
-**Plans**: TBD
+**Plans**: 3/3 plans complete
+Plans:
+**Wave 1**
+
+- [x] 05-01-PLAN.md — Core standings computation (computeStandings) and SEC display with reactive updates from picks
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 05-02-PLAN.md — Multi-conference display, conference filter integration, responsive sidebar collapse, and visual polish
+
+**Wave 3** *(gap closure from 05-REVIEW.md; blocked on Wave 2 completion)*
+
+- [x] 05-03-PLAN.md — CR-01 blocker: unify the standings tie definition with the tiebreaker engine's resolved seed order, plus the WR-02 duplicate winPct, the WR-07 regression-test gap, and the WR-01/WR-03 silent failures
+
 **UI hint**: yes
 
 ### Phase 6: Tiebreaker UI & Championships
 
-**Goal**: Users can see exactly how each conference's championship matchup was determined, and resolve any tie the engine can't settle on its own.
+**Goal**: Users can see exactly how each conference's championship matchup was determined, see a fully ranked 1..N conference table wherever the tiebreaker procedure can determine an order, and resolve any tie the engine can't settle on its own.
 **Mode:** mvp
 **Depends on**: Phase 3, Phase 5
-**Requirements**: TIE-05, TIE-06, TIE-07
+**Requirements**: TIE-05, TIE-06, TIE-07, TIE-08
 **Success Criteria** (what must be TRUE):
 
   1. Each conference's resolved (or still-pending) championship matchup is displayed as a dedicated, prominent element above that conference's standings table
   2. User can see the step-by-step reasoning behind a resolved tiebreaker — the tied group, the step applied, each team's value at that step, and any restart events — not just the final answer
   3. When a tie can't be auto-resolved, the user selects who advances, and that selection stays valid as long as the tied group is unchanged, and is clearly invalidated (not silently misapplied) if the tied group changes
+  4. Conference standings show distinct ranks 1..N wherever the tiebreaker procedure can determine an order, rather than teams sharing a rank number
+  5. Teams that remain genuinely unresolvable share a rank and are visually marked as tied, and the user is prompted to resolve them manually only once that conference's slate is fully picked
+  6. Teams separated only by a tiebreaker (not by record) are visually distinguishable from teams separated by record, so a rank gap is never mistaken for a record gap
+
+**Supersedes Phase 5 decisions** (added 2026-08-14): D-04 (teams tied on record share a rank number) and D-05 (no tie badge; matching rank + matching W-L deemed sufficient) are both REVERSED here. Phase 5 verification found D-05's rationale falsified on ~1% of tables — ACC teams share a rank with *different* records, e.g. `1 Boston College 6-2` above `1 Duke 7-2`. The code this changes is `computeStandings`' rank grouping, currently a union-find over the equivalence closure of "same seed group" and "identical conference W-L".
+
+**Engine work required**: `ChampionshipResult` (shared/domain/tiebreakers/types.ts) exposes only `seed1` and `seed2` — nothing resolves below seed 2. Full 1..N needs the commit-and-restart loop extended past two slots; the `alreadyCommitted` mechanism already exists, so this is an extension rather than a rewrite. Fix the two logged engine bugs as part of this work rather than building on them: the ACC infinite-recursion guard trip (`engine.ts:137`, 12 of 1,200 conference resolutions ≈ 4% of ACC resolutions) and the seed1/seed2 self-contradiction (7 of 649 resolved conferences, caused by an unseparated multi-team bucket being emitted in raw team-id order). Both detailed in `.planning/phases/05-standings-engine-ui/deferred-items.md`.
+
+**Measured constraints** (carry into planning — these bound what is achievable): over 200 generated seasons of the committed 2026 slate, at seeds 1-2 only, 82.9% of seed slots resolve when fully picked and 73.0% at weeks 1-7; nearly every failure is `ranking-step` (270/271 fully-picked, 421/430 partial). `ranking-step` and `needs-scores` are PERMANENTLY uncomputable in this app — there is no rankings data in a static build, and users pick winners rather than scores — so those ties are resolvable only by a human choosing. There are ~4.3 shared-rank groups per conference table (3,433 groups over 800 tables, ~11,391 teams), all of which the engine never evaluates today. Ties resolve *less* earlier in a season, so mid-season tables will show many shared ranks and converge toward clean 1..N as the slate fills — "1..N everywhere" is an end-of-season experience. **The "at most 1-2 manual decisions per conference per season" target is PLAUSIBLE BUT UNVALIDATED**: extrapolating 17% unresolvable across ~4.3 groups gives ~0.7 per conference, but that 17% was measured only at seeds 1-2, where separation is easiest. Planning MUST measure the real figure at N seeds before committing to the UX, because the design's ergonomics depend on it.
 
 **Plans**: TBD
 **UI hint**: yes
@@ -246,7 +271,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
-| 5. Standings Engine & UI | 0/TBD | Not started | - |
+| 5. Standings Engine & UI | 3/3 | Complete   | 2026-08-14 |
 | 6. Tiebreaker UI & Championships | 0/TBD | Not started | - |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

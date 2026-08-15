@@ -60,20 +60,32 @@ column headers → 12px `text-muted`).
 column headers against the sidebar surface in BOTH light and dark themes with a contrast
 checker. Target WCAG AA — 4.5:1 for the ≤12px header and record text, 3:1 for large text.
 
-## OPEN (found during 05 verification) — the entire page-level integration suite is skipped
+## RESOLVED (2026-08-14) — the 18 "skipped" page tests were empty stubs, now deleted
 
-**Owner: Phase 5 closeout or Phase 6.** `tests/pages/week.test.ts` is wrapped in a single
-`describe.skip` covering 6 inner describes — **all 18 "skipped" tests in the suite are this
-one file.** The green 385/18/0 result therefore contains zero executing page-level tests.
+**They were never deferred tests.** `tests/pages/week.test.ts` held 17 test bodies that
+were COMPLETELY EMPTY (comment-only) plus 1 tautology (`expect(true).toBe(true)`) — zero
+real assertions — inside a single `describe.skip`. Those 18 were the entire "18 skipped"
+count the suite reported, which read as coverage that did not exist. Removing `.skip`
+would have been strictly worse: empty tests PASS in vitest, so it would have converted 18
+honest skips into 18 green phantom tests.
 
-**Consequence:** the pick → `picks` ref → `computed` → sidebar DOM chain is unexercised.
-STAND-02's computation half is measured (median 0.88ms, p95 2.69ms over 240 generated
-seasons of the full 888-game slate), but nothing proves the DOM actually updates. This is
-why STAND-02 lands in UAT rather than passing automatically.
+**Decision: deleted rather than written.** The underlying bulk-pick logic keeps its 22 real
+unit tests in `tests/utils/bulkPickOperations.test.ts`. The stubs described Phase 4 bulk
+operations (Fill/Clear Week, Fill/Clear Season, progress badges, mobile), not Phase 5
+standings, so writing them would not have closed any open Phase 5 UAT item. Two of them
+("mobile responsive") are not meaningfully testable in happy-dom without real layout, and
+at least one (the Clear Season modal) describes behaviour commit `0314427` removed.
 
-Un-skipping likely needs the `nuxt`-environment vitest project via `@nuxt/test-utils`
-`defineVitestProject` — the same underlying gap that forced `PickProgress` and
-`StandingsTable`/`StandingsSidebar` to use explicit imports instead of Nuxt auto-imports.
+**The 14-step manual checklist the file carried was preserved**, not lost — it now lives at
+`.planning/phases/04-picks-persistence/04-UAT.md`, with the Clear-Season-modal steps
+explicitly flagged as needing confirmation against the shipped page.
+
+**Still deliberately uncovered:** page-level integration. The pick → `picks` ref →
+`computed` → sidebar DOM chain has no executing test, which is why STAND-02 stays a manual
+UAT item (its computation half IS measured: median 0.88ms, p95 2.69ms over 240 generated
+seasons of the full 888-game slate). Closing it properly needs a `nuxt`-environment vitest
+project via `@nuxt/test-utils` `defineVitestProject`, or an E2E harness — the original
+file's own stated preference. Deliberate gap, not an accident.
 
 ## OPEN (measured post-05-03) — the ACC trips the engine's infinite-recursion guard on ~4% of real seasons
 

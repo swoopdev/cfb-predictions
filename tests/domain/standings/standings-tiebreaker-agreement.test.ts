@@ -254,6 +254,17 @@ describe('the committed 2026 slate never contradicts a resolved seed order', () 
    * (iii) two rows in the same conference with identical conference W-L but
    *       different rank numbers — the D-04 invariant, which catches the
    *       natural restart-redefinition drop wherever it occurs.
+   *
+   * **Why seed 2's ordering check is scoped to the teams seed 1 did not
+   * place.** `seed1.order` and `seed2.order` can genuinely disagree about the
+   * relative order of two teams, in which case NO row order satisfies both and
+   * the standings layer must pick one. This plan's design picks seed 1 (it is
+   * the sequence that also carries the champion), so seed 2 is authoritative
+   * exactly over its group-1 membership — the ids a resolved `seed1.order` did
+   * not already claim. The disagreement is an engine-side artefact and is
+   * pinned by its own describe block below; scoping here is not a relaxation
+   * of what this suite can detect, because the excluded pairs are checked at
+   * full strength against `seed1.order` in clause (i).
    */
   function violationsFor(label: string, picks: Record<number, number>): string[] {
     const violations: string[] = []
@@ -265,28 +276,35 @@ describe('the committed 2026 slate never contradicts a resolved seed order', () 
       const schoolById = new Map(rows.map(r => [r.id, r.school]))
       const displayed = rows.map(r => `${r.school} ${r.confRecord.wins}-${r.confRecord.losses} #${r.rank}`)
 
+      const seed1 = championship.seed1
+      const claimedBySeed1 = new Set<number>(seed1.status === 'resolved' ? seed1.order : [])
+
       for (const seedName of ['seed1', 'seed2'] as const) {
         const seed = championship[seedName]
         if (seed.status !== 'resolved') continue
 
-        const indices = displayIndices(seed.order, rows)
         const engineOrder = seed.order
           .map(id => schoolById.get(id) ?? `unknown id ${id}`)
           .join(' > ')
 
-        // (ii) missing rows first — an absent id must not be smuggled past
-        // the ordering check as a `-1` that happens to sort ascending.
-        seed.order.forEach((id, position) => {
-          if (indices[position] === -1) {
+        // (ii) missing rows first, over the FULL order — an absent id must not
+        // be smuggled past the ordering check as a `-1` that happens to sort
+        // ascending.
+        displayIndices(seed.order, rows).forEach((index, position) => {
+          if (index === -1) {
             violations.push(
-              `[missing-row] ${label} ${conference} ${seedName}: id ${id} is in the resolved order but has no standings row`
+              `[missing-row] ${label} ${conference} ${seedName}: id ${seed.order[position]} is in the resolved order but has no standings row`
               + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
             )
           }
         })
 
         // (i) ordering
-        const present = indices.filter(index => index !== -1)
+        const governed = seedName === 'seed1'
+          ? seed.order
+          : seed.order.filter(id => !claimedBySeed1.has(id))
+        const present = displayIndices(governed, rows).filter(index => index !== -1)
+
         if (!isStrictlyAscending(present)) {
           violations.push(
             `[order] ${label} ${conference} ${seedName}: displayed order contradicts the engine`
@@ -344,5 +362,72 @@ describe('the committed 2026 slate never contradicts a resolved seed order', () 
 
     expect(violations.slice(0, 10)).toEqual([])
     expect(violations).toHaveLength(0)
+  })
+
+  /**
+   * Found while making the property test above pass, and pinned here so it
+   * cannot silently change: `seed1.order` and `seed2.order` can contradict
+   * each other, and when they do NO row order satisfies both.
+   *
+   * Measured over the same 200 generated seasons: 7 of 649 conferences with
+   * both seeds resolved, and in ALL SEVEN the contradicted pair sits inside a
+   * bucket the engine never actually separated. `resolveTiedGroup` emits
+   * `[...winners, ...restResult.order]` (`engine.ts:159`), and when a step's
+   * top bucket holds more than one team every one of them is recorded as
+   * `seeded` with their internal order coming from `partitionByStepValue`'s
+   * `sort((a, b) => a - b)` — a raw TEAM ID sort, not a resolution. Seed 2
+   * then re-runs the same step over a smaller pool (a different common-opponent
+   * set, say) and legitimately reaches the opposite answer.
+   *
+   * So `seed1.order` is authoritative at position 0 always, and beyond that
+   * only where the engine genuinely separated teams. This standings layer
+   * follows `seed1.order` where the two disagree — the sequence that carries
+   * the champion wins — and the assertions below fix what the user actually
+   * sees in that case: one shared rank number across the whole disputed
+   * group, so the disagreement never surfaces as differing ranks.
+   *
+   * The real repair belongs in Phase 3/6 (the engine should not present an
+   * unseparated bucket as an ordered sequence); logged in
+   * `.planning/phases/05-standings-engine-ui/deferred-items.md`.
+   */
+  describe('when the engine contradicts itself between seed 1 and seed 2', () => {
+    // Fully-picked PRNG seed 1, Big 12: seed1 = [Oklahoma State, West
+    // Virginia, UCF] but seed2 = [UCF, West Virginia].
+    const picks = generatePicks(games, mulberry32(1))
+    const resolved = resolveAllConferences(games, teams, picks)
+    const standings = computeStandings(games, teams, picks, resolved)
+    const rows = standings['Big 12']!
+    const championship = resolved['Big 12']!
+
+    it('still produces the contradiction this block exists to cover', () => {
+      expect(championship.seed1.status).toBe('resolved')
+      expect(championship.seed2.status).toBe('resolved')
+      if (championship.seed1.status !== 'resolved') return
+      if (championship.seed2.status !== 'resolved') return
+
+      const positionInSeed1 = new Map(championship.seed1.order.map((id, index) => [id, index]))
+      const seed2AsSeed1Positions = championship.seed2.order.map(id => positionInSeed1.get(id))
+
+      // Both of seed 2's teams are inside seed 1's order, in the OPPOSITE
+      // relative order — the unsatisfiable shape.
+      expect(seed2AsSeed1Positions).toEqual([2, 1])
+    })
+
+    it('follows seed 1, so the resolved champion is still row 0', () => {
+      if (championship.seed1.status !== 'resolved') return
+
+      expect(rows[0]!.id).toBe(championship.seed1.order[0])
+      expect(isStrictlyAscending(displayIndices(championship.seed1.order, rows))).toBe(true)
+    })
+
+    it('puts the whole disputed group on one rank number, so no user can see the disagreement', () => {
+      if (championship.seed1.status !== 'resolved') return
+
+      const disputed = championship.seed1.order.map(id => rows.find(r => r.id === id)!)
+      const ranks = new Set(disputed.map(r => r.rank))
+
+      expect(ranks.size).toBe(1)
+      expect(disputed.every(r => r.isTied)).toBe(true)
+    })
   })
 })

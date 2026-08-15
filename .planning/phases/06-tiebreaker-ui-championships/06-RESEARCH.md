@@ -311,6 +311,70 @@ know the hole it patches is far smaller than CONTEXT.md assumed, and should not 
 disproportionate effort there. **The ACC — source of ~95% of all prompts — reads nothing
 outside conference games and is completely immune to the D-07 exposure.**
 
+## ACC policy re-verification — closes Open Question 2 (added 2026-08-15, post-research)
+
+> Performed by the orchestrator after this research was committed, in response to Open Question 2
+> and STATE.md:108's standing LOW-confidence blocker on conference step orders.
+
+### Verdict: the step list is CORRECT. The ACC problem does not collapse.
+
+Head-to-head genuinely is the ACC's only computable step. Two independent verbatim reproductions
+of the July 2026 policy agree, and ESPN supplies the confirming detail: the **old** system's fifth
+step, *conference opponent win percentage* — the one that separated Duke and Miami — **is no longer
+in the new hierarchy**. `CONFERENCE_RULES.ACC` omitting it is faithful to the amended policy, not a
+Phase 3 transcription error.
+
+The tied-team definition also matches `defineAccTiedTeams`. Policy verbatim: *"Identify team(s)
+with the best Conference win percentage. Add any team(s) that played an alternate number of games
+and match the wins or losses of the above team(s). No other teams are included."*
+
+**The measured 3.84 decisions/season for the ACC stands. Plan the UX for it.**
+
+### But re-verification surfaced a THIRD engine defect
+
+The ACC's multi-team procedure has two branches. Verbatim (fbschedules; CBS states the same rule):
+
+> **If tied teams are not all common opponents:**
+> 1. *"The team that defeated every other Tied Team advances to the Championship Game and is removed from the tie."*
+> 2. *"The team that lost to every other Tied Team is eliminated."*
+
+`evaluateHeadToHead` (`shared/domain/tiebreakers/steps.ts`) implements step 1 and **drops step 2**.
+It declares `_lostToAllOthersTeam` at `steps.ts:81`, assigns it at `steps.ts:99`, and **never reads
+it** — the underscore prefix is a deliberately silenced unused-variable warning. When no team swept
+the group, `steps.ts:136` returns `separated: false` and the whole group stays tied, even when one
+team was swept by all the others and the policy says it must drop.
+`[VERIFIED: read steps.ts:34-143; grepped — the identifier has exactly two occurrences, both writes]`
+
+The round-robin branch is correct: partitioning by win pct among tied teams is exactly the policy's
+*"Best record among the Tied Teams."*
+
+**Why Phase 5 could not see this.** At seeds 1–2 you only need the *top* team, so failing to push a
+swept team downward costs almost nothing. At N seeds, eliminating the swept team **is** a separation
+and directly produces rank order. This is a third defect in the same class as the two already logged
+in `deferred-items.md`, and it lands on the conference driving ~95% of all manual prompts.
+
+**Magnitude is UNMEASURED.** It should recover some of the ACC's 3.84, but it cannot approach the
+SEC's 0.10 — one computable step is still one step. Quantifying the delta belongs in the Wave 0
+harness this document already specifies (`n-seed-decision-rate.test.ts`).
+
+### Planning implications
+
+1. Treat the missing lost-to-all elimination as a **fourth engine task**, alongside the recursion
+   guard, the seed1/seed2 contradiction, and the 19.2% team-id ordering defect. Fix it in the same
+   engine-first gate, with the measurement committed as a test.
+2. Because the fix may lower the ACC rate, **do not hard-code "~4 decisions"** into copy or layout
+   that would break if it drops to 2.
+3. D-09's discard-on-incompletion gets *worse*, not better, at 3.84 — press hardest on it in the
+   UI spec.
+
+### Restart language confirmed verbatim — independently validates the Pitfall 2 repair
+
+> *"If still tied after any step, restart the entire tiebreaker (including re-defining tied teams)."*
+
+The recursion guard demands the tied group strictly shrink; the policy explicitly permits
+redefinition to produce a **different** set. The 44/400 → 0/400 repair measured above is therefore
+consistent with the actual published rule, not merely with suppressing a symptom.
+
 ## Architectural Responsibility Map
 
 | Capability | Primary Tier | Secondary Tier | Rationale |
@@ -1165,10 +1229,7 @@ work cheap. Not this phase's requirement — just do not design something hostil
    - *Unclear:* whether closing that integration gap is worth a second project inside a phase whose real risk is the ranking math.
    - *Recommendation:* **keep the single plain project** for the new components (explicit imports, plain HTML — the D-15/D-17 controls do not need Nuxt UI). Cover D-08/D-09 at the **composable** level, where the logic actually lives and where a plain test reaches it, rather than through the DOM. Leave the page-level gap open and honestly recorded, as Phase 5 did. Planning must state this choice explicitly either way — CONTEXT.md `<code_context>` asks for it.
 
-2. **Should the ACC step list be re-verified before these numbers are trusted?**
-   - *Known:* Phase 3 re-fetched and read the ACC PDF verbatim on 2026-08-13 with zero drift, and secondary reporting of the July 2026 amendment matches the one-computable-step implementation. But STATE.md still carries an open blocker: *"LOW confidence on exact conference step orders… should be re-verified at planning/implementation time."*
-   - *Unclear:* whether the PDF contains an intermediate computable step (e.g. record vs common opponents) that Phase 3's extraction collapsed.
-   - *Recommendation:* one targeted re-read of the ACC PDF as an early planning task. It is cheap, and it is the single input that could move the ACC from "4 decisions every season" to "comparable to the others." Everything else in this phase's UX escalation depends on it.
+2. ~~**Should the ACC step list be re-verified before these numbers are trusted?**~~ — **RESOLVED 2026-08-15.** See *"ACC policy re-verification"* above. The step list is correct and the 3.84 figure stands; ESPN independently confirms the old conference-opponent-win-pct step was removed by the July 2026 amendment. Re-verification did, however, surface a **third engine defect** — the multi-team non-round-robin branch drops the policy's *"the team that lost to every other Tied Team is eliminated"* — which planning must treat as a fourth engine task. STATE.md:108's LOW-confidence blocker is discharged **for the ACC only**; SEC / Big Ten / Big 12 step orders remain re-verified only as of Phase 3 (2026-08-13).
 
 3. **Is D-13's candidate-set copy amended, or is Pitfall 6's overflow rule within Claude's discretion on layout?**
    - *Known:* measured mean group size 3.7, max 10 (13 mid-season). D-14 forbids the placeholder fallback.
@@ -1194,6 +1255,7 @@ work cheap. Not this phase's requirement — just do not design something hostil
 ### Secondary (MEDIUM confidence)
 
 - ACC July 2026 tiebreaker amendment — `theacc.com/news/2026/7/15/acc-announces-new-football-championship-tiebreaker-policy.aspx` and `espn.com/college-football/story/_/id/49366844` — corroborate head-to-head → Team Success Ranking → commissioner's draw
+- **Re-verification 2026-08-15** (see *"ACC policy re-verification"* section) — `fbschedules.com/acc-announces-new-football-tiebreaking-procedures/` and `cbssports.com/college-football/news/acc-new-tiebreaker-rules-disaster-scenario/` carry the **verbatim two-team and both multi-team branches**, the tied-team definition, and the restart clause. Two independent reproductions agree with each other. ESPN additionally confirms the *removal* of the old conference-opponent-win-pct fifth step. The primary PDF (`ACC_Football_Tiebreaker_Policy_Jully_2026.pdf`, sic) is linked from theacc.com but its body was not machine-readable through WebFetch — these reproductions are the best available source, hence MEDIUM rather than HIGH.
 - `.planning/phases/03-tiebreaker-engine/03-RESEARCH.md` — Phase 3's primary-PDF re-verification (2026-08-13), ACC 8/9-game split confirmation, conference sizes
 
 ### Tertiary (LOW confidence)

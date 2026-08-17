@@ -1,10 +1,11 @@
 ---
 phase: 6
 slug: tiebreaker-ui-championships
-status: draft
-nyquist_compliant: false
+status: ready
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-08-15
+task_map_filled: 2026-08-17
 ---
 
 # Phase 6 — Validation Strategy
@@ -70,13 +71,41 @@ directory heavily, and `deferred-items.md` explicitly assigns the debt to "whoev
 
 ## Per-Task Verification Map
 
-> **Planner fills this in.** One row per task, mapped to the requirement and command above.
+> Filled in by the planner 2026-08-17 against the seven plans in this directory.
+> "File Exists ❌ W0" means the test file is created by the task itself (Wave 0 gap closed in-task, test-first).
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 6-01-01 | 01 | 1 | TIE-08 | — | N/A | unit | `pnpm exec vitest run tests/domain/` | ❌ W0 | ⬜ pending |
+| 6-01-01 | 01 | 1 | TIE-08 | T-06-SC | No second PRNG; harness installs nothing | unit | `pnpm exec vitest run tests/domain/standings/standings-tiebreaker-agreement.test.ts` | ❌ W0 | ⬜ pending |
+| 6-01-02 | 01 | 1 | TIE-08 | T-06-04 | Termination via monotonic committed set + depth cap; per-conference throw isolation retained | property | `pnpm exec vitest run tests/domain/tiebreakers/acc-guard-and-elimination.test.ts tests/tiebreakers-engine.test.ts tests/tiebreakers-acc.test.ts` | ❌ W0 | ⬜ pending |
+| 6-01-03 | 01 | 1 | TIE-08 | T-06-04 | Elimination branch bounded by group size; no new recursion path | unit + property | `pnpm test` | ⚠️ extend | ⬜ pending |
+| 6-02-01 | 02 | 2 | TIE-08, TIE-05 | — | N/A (RED contract only) | property | `pnpm exec vitest run tests/domain/tiebreakers/n-seed-ranking.test.ts tests/domain/tiebreakers/trace-isolation.test.ts` | ❌ W0 | ⬜ pending |
+| 6-02-02 | 02 | 2 | TIE-08 | T-06-05, T-06-04 | No rank presented as procedure-derived when decided by database id; iteration + depth caps | property | `pnpm test` | ❌ W0 | ⬜ pending |
+| 6-02-03 | 02 | 2 | TIE-08 | T-06-05 | Zero unseparated-top-bucket emissions pinned across 400 conference-seasons | property | `pnpm exec vitest run tests/domain/tiebreakers/` | ❌ W0 | ⬜ pending |
+| 6-03-01 | 03 | 3 | TIE-08 | T-06-04 | Per-conference try/catch preserved; degraded path still yields a complete rank sequence | unit | `pnpm exec vitest run tests/domain/ && pnpm typecheck` | ⚠️ exists | ⬜ pending |
+| 6-03-02 | 03 | 3 | TIE-08 | — | N/A | unit | `pnpm exec vitest run tests/domain/standings/` | ⚠️ rewrite | ⬜ pending |
+| 6-03-03 | 03 | 3 | TIE-08 | T-06-07, T-06-03 | `?conf=` narrowed against `P4_CONFERENCES`; logging stays conference-name-only | unit | `pnpm test && pnpm lint && pnpm typecheck` | ⚠️ extend | ⬜ pending |
+| 6-04-01 | 04 | 4 | TIE-07 | — | N/A (RED contract only) | component | `pnpm exec vitest run tests/components/ChampionshipCard.test.ts` | ❌ W0 | ⬜ pending |
+| 6-04-02 | 04 | 4 | TIE-07 | T-06-06, T-06-08 | Text interpolation only, no `v-html`; never renders the caught exception | component | `pnpm exec vitest run tests/components/ChampionshipCard.test.ts` | ❌ W0 | ⬜ pending |
+| 6-04-03 | 04 | 4 | TIE-07 | T-06-05 | Matchup read only via `championshipFor`; no row-order fallback path exists | component | `pnpm test && pnpm lint && pnpm typecheck` | ⚠️ extend | ⬜ pending |
+| 6-05-01 | 05 | 4 | TIE-06 | — | Completion counts membership only; validity stays `toOutcomes`' sole responsibility | unit | `pnpm exec vitest run tests/domain/standings/` | ❌ W0 | ⬜ pending |
+| 6-05-02 | 05 | 4 | TIE-06 | T-06-01, T-06-05, T-06-09 | Set-equality before application; synchronous FNV-1a key; versioned canonical string | unit | `pnpm exec vitest run tests/domain/tiebreakers/` | ❌ W0 | ⬜ pending |
+| 6-05-03 | 05 | 4 | TIE-06 | T-06-01, T-06-02, T-06-03 | Untrusted storage validated on read; entry and group-size caps; silent drop; no logging | unit (composable) | `pnpm test` | ❌ W0 | ⬜ pending |
+| 6-06-01 | 06 | 3 | TIE-05 | — | N/A (RED contract only) | component | `pnpm exec vitest run tests/components/TiebreakerReasoning.test.ts` | ❌ W0 | ⬜ pending |
+| 6-06-02 | 06 | 3 | TIE-05, TIE-06 | T-06-06, T-06-01, T-06-10 | Escaped interpolation; ordering built only from the group's own ids; manual provenance stated | component | `pnpm exec vitest run tests/components/` | ❌ W0 | ⬜ pending |
+| 6-07-01 | 07 | 5 | TIE-08, TIE-05 | T-06-06, T-06-04, T-06-10 | Markers derived from engine output only; degraded path renders no marker; distinct accessible names | component | `pnpm exec vitest run tests/components/` | ⚠️ rewrite | ⬜ pending |
+| 6-07-02 | 07 | 5 | TIE-06 | T-06-01, T-06-05, T-06-03 | Two independent gates preserved end to end; stale key is a lookup miss; silent restoration | unit (composable) | `pnpm test && pnpm lint && pnpm typecheck` | ❌ W0 | ⬜ pending |
+| 6-07-03 | 07 | 5 | TIE-05, TIE-06, TIE-08 | T-06-04, T-06-02 | Defensive branches (pool break, iteration cap, depth cap, malformed payloads) reached by real inputs | coverage | `pnpm exec vitest run --coverage` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+
+### Sampling continuity check
+
+No three consecutive tasks lack an automated verify — every one of the 20 tasks carries an `<automated>` command. No watch-mode flags are used. The per-task quick command (`pnpm exec vitest run tests/domain/`) is sub-second, well inside the 5-second latency budget; the four tasks that run the full `pnpm test` are wave-boundary tasks where the slower gate is the correct one.
+
+### Wave-0 gap closure model
+
+This phase closes every Wave-0 gap **inside the task that needs it**, test-first, rather than in a separate scaffolding plan. Tasks 6-02-01, 6-04-01 and 6-06-01 exist purely to create failing contracts before their implementation tasks; that is the RED half of the cycle, and each is required to record its failure reason in its commit message so the RED state is auditable after the fact.
 
 ---
 
@@ -111,12 +140,23 @@ directory heavily, and `deferred-items.md` explicitly assigns the debt to "whoev
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] Pre-existing `shared/domain/tiebreakers/**` branch-coverage gap closed (87.87% → 90%)
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies — all 20 tasks carry an `<automated>` command
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references — each gap is closed test-first inside the task that needs it (see the gap-closure model above)
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s for the per-task quick command
+- [x] Pre-existing `shared/domain/tiebreakers/**` branch-coverage gap assigned — task **6-07-03** owns closing 87.87% → 90%, with thresholds explicitly forbidden from being lowered
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Manual-only items carried to phase-end verification** (`workflow.human_verify_mode` is `end-of-phase`, so these are `<verify><human-check>` blocks in the plans rather than blocking checkpoint tasks):
+
+| Behavior | Requirement | Owning plan |
+|---|---|---|
+| Marker contrast, both markers × both themes, WCAG AA at rendered size | D-10 / D-11 | 07 |
+| Full-flow walkthrough: expand, read reasoning, order by keyboard, commit, clear, restore | TIE-05 / TIE-06 | 07 |
+| Mid-season shared ranks read as intentional, not as an unfinished state | TIE-08 | 07 |
+| Championship card at a 10-team candidate set in a 320px sidebar | TIE-07 | 04 |
+| Touch-target size trade on the ordering buttons (26px, accepted) | TIE-06 | 06 |
+| Pick → recompute → DOM chain | TIE-08 | deliberately uncovered — `.planning/phases/04-picks-persistence/04-UAT.md` |
+
+**Approval:** ready for execution (planner, 2026-08-17)

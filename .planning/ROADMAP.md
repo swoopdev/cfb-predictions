@@ -225,7 +225,17 @@ Plans:
 
 **Measured constraints** (carry into planning — these bound what is achievable): over 200 generated seasons of the committed 2026 slate, at seeds 1-2 only, 82.9% of seed slots resolve when fully picked and 73.0% at weeks 1-7; nearly every failure is `ranking-step` (270/271 fully-picked, 421/430 partial). `ranking-step` and `needs-scores` are PERMANENTLY uncomputable in this app — there is no rankings data in a static build, and users pick winners rather than scores — so those ties are resolvable only by a human choosing. There are ~4.3 shared-rank groups per conference table (3,433 groups over 800 tables, ~11,391 teams), all of which the engine never evaluates today. Ties resolve *less* earlier in a season, so mid-season tables will show many shared ranks and converge toward clean 1..N as the slate fills — "1..N everywhere" is an end-of-season experience. **The "at most 1-2 manual decisions per conference per season" target is PLAUSIBLE BUT UNVALIDATED**: extrapolating 17% unresolvable across ~4.3 groups gives ~0.7 per conference, but that 17% was measured only at seeds 1-2, where separation is easiest. Planning MUST measure the real figure at N seeds before committing to the UX, because the design's ergonomics depend on it.
 
-**Plans**: TBD
+**Measurement obligation: DISCHARGED** (2026-08-15, in `06-RESEARCH.md` §The Measurement). The N-seed figure was measured against the committed slate over 200 generated seasons with both engine repairs applied. Answer: the 1-2 target holds for the SEC (0.10), Big Ten (0.19) and Big 12 (0.01) and fails for the ACC by roughly 4x (3.84 per fully-picked season, p90 5, 0% of seasons needing zero) — structural, because the ACC's amended policy has exactly one computable step. The measurement also exposed a **third** engine defect (the dropped lost-to-all elimination in `evaluateHeadToHead`) and quantified the seed1/seed2 root cause at **19.2% of contested slots** resolving by raw team id. All three defects are planned. Interaction model B (order the whole group in one interaction) is adopted, halving the ACC figure from 9.23. The ACC number was escalated to the user, who reaffirmed D-17's no-call-out design and superseded D-09 with preserve-and-suspend (`06-UI-SPEC.md` §0.1).
+
+**Plans**: 7 plans across 5 waves
+- [ ] 06-01-PLAN.md — wave 1 — engine defect repairs: delete the false ACC recursion guard, execute the dropped lost-to-all elimination, extract the shared generated-season harness
+- [ ] 06-02-PLAN.md — wave 2 — the N-seed commit-and-restart loop, `RankGroup`/`ConferenceRanking`, and the unseparated-top-bucket repair that removes the seed1/seed2 contradiction
+- [ ] 06-03-PLAN.md — wave 3 — `computeStandings` ranks from the engine's partition (union-find deleted), `StandingsResult` tightened (WR-06), `useStandings` composable extracted (IN-02)
+- [ ] 06-06-PLAN.md — wave 3 — `TiebreakerReasoning.vue`: step-by-step reasoning, decisive step first, and the model-B ordering terminus
+- [ ] 06-04-PLAN.md — wave 4 — `ChampionshipCard.vue` above every conference table, read from `championshipFor`
+- [ ] 06-05-PLAN.md — wave 4 — manual-resolution lifecycle: the D-07 completion predicate, the D-08 invalidation key, and the preserve-and-suspend storage composable
+- [ ] 06-07-PLAN.md — wave 5 — integration: three-state rank cell markers, reasoning mounted per group, manual decisions wired end to end, and the pre-Phase-5 coverage gate closed
+
 **UI hint**: yes
 
 ### Phase 7: Named Scenarios

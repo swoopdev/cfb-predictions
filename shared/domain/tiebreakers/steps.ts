@@ -75,10 +75,16 @@ export function evaluateHeadToHead(
       separated
     }
   } else {
-    // Non-round-robin: check for beatAllOthers and lostToAllOthers
+    // Non-round-robin: check for beatAllOthers and lostToAllOthers.
+    //
+    // The ACC's published multi-team, non-common-opponent procedure has two
+    // branches: "The team that defeated every other Tied Team advances to the
+    // Championship Game and is removed from the tie" (beat-all) and "The team
+    // that lost to every other Tied Team is eliminated" (lost-to-all). By
+    // construction at most one team can satisfy each predicate.
     const values: Array<{ teamId: TeamId, value: StepValue }> = []
     let beatAllOthersTeam: TeamId | null = null
-    let _lostToAllOthersTeam: TeamId | null = null
+    let lostToAllOthersTeam: TeamId | null = null
 
     for (const teamId of tiedTeams) {
       const record = records.get(teamId)!
@@ -96,7 +102,7 @@ export function evaluateHeadToHead(
         beatAllOthersTeam = teamId
       }
       if (lostToAllOthers) {
-        _lostToAllOthersTeam = teamId
+        lostToAllOthersTeam = teamId
       }
 
       // Determine result code
@@ -117,22 +123,41 @@ export function evaluateHeadToHead(
       })
     }
 
-    // Partition: if exactly one team beat all others, separate it
-    if (beatAllOthersTeam !== null) {
-      const partition = tiedTeams.map(t => (t === beatAllOthersTeam ? [t] : [])).filter(b => b.length > 0)
-      const rest = tiedTeams.filter(t => t !== beatAllOthersTeam)
-      if (rest.length > 0) {
-        partition.push(rest)
+    // Build up to three ordered buckets, dropping empties, preserving
+    // tiedTeams order inside each bucket so nothing new is introduced
+    // that depends on team-id order:
+    //   bucket 1: [beatAllOthersTeam] when non-null
+    //   bucket 2: every team that is neither beatAllOthersTeam nor lostToAllOthersTeam
+    //   bucket 3: [lostToAllOthersTeam] when non-null
+    if (beatAllOthersTeam !== null || lostToAllOthersTeam !== null) {
+      const partition: TeamId[][] = []
+
+      if (beatAllOthersTeam !== null) {
+        partition.push([beatAllOthersTeam])
       }
+
+      const middle = tiedTeams.filter(
+        t => t !== beatAllOthersTeam && t !== lostToAllOthersTeam
+      )
+      if (middle.length > 0) {
+        partition.push(middle)
+      }
+
+      if (lostToAllOthersTeam !== null) {
+        partition.push([lostToAllOthersTeam])
+      }
+
+      const separated = partition[0]!.length < tiedTeams.length
+
       return {
         step: 'head-to-head',
         values,
-        partition: partition.length > 0 ? partition : [tiedTeams as unknown as TeamId[]],
-        separated: partition[0]?.length === 1 && partition[0][0] === beatAllOthersTeam
+        partition,
+        separated
       }
     }
 
-    // If no beatAllOthers team, everyone stays tied
+    // Neither a beat-all nor a lost-to-all team: everyone stays tied
     return {
       step: 'head-to-head',
       values,

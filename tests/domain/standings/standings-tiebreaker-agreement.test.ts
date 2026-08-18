@@ -25,7 +25,7 @@
 import { describe, it, expect } from 'vitest'
 import { computeStandings, resolveAllConferences } from '../../../shared/domain/standings'
 import type { StandingsTeam } from '../../../shared/types/standings'
-import type { Game, Team } from '../../../shared/types/schedule'
+import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 import {
   allTeams,
   BOSTON_COLLEGE,
@@ -203,8 +203,6 @@ describe('a team the resolved order dropped but whose record is shared (D-04)', 
 // ---------------------------------------------------------------------------
 // Test 4 — the committed 2026 slate (the reviewer's reproduction, automated)
 // ---------------------------------------------------------------------------
-
-import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 
 describe('the committed 2026 slate never contradicts a resolved seed order', () => {
   const { games, teams } = readSlate()

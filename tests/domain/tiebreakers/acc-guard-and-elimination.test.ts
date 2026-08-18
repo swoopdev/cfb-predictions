@@ -20,6 +20,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import { resolveAllConferences } from '../../../shared/domain/standings'
+import type { ChampionshipResult } from '../../../shared/domain/tiebreakers/types'
 import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 
 describe('ACC recursion-guard trip across 200 generated seasons', () => {
@@ -86,6 +87,71 @@ describe('ACC recursion-guard trip across 200 generated seasons', () => {
           generatePicks(games, random, 7)
         )
       )
+    }
+
+    expect(violations.slice(0, 10)).toEqual([])
+    expect(violations).toHaveLength(0)
+  })
+})
+
+describe('lost-to-all elimination property across 200 generated seasons', () => {
+  const { games, teams } = readSlate()
+
+  /**
+   * Whenever a StepOutcome for head-to-head contains a value with
+   * result: 'lost-to-all' and no value with result: 'beat-all', that
+   * outcome's separated must be true — the swept team forms a bucket
+   * by itself, separating the group.
+   */
+  it('a lost-to-all outcome with no beat-all is always separated', () => {
+    const violations: string[] = []
+
+    function checkResolved(
+      label: string,
+      championship: ChampionshipResult
+    ): void {
+      for (const seedName of ['seed1', 'seed2'] as const) {
+        const seed = championship[seedName]
+        if (seed.status !== 'resolved') continue
+
+        for (const cycle of seed.trace) {
+          for (const step of cycle.steps) {
+            if (step.step !== 'head-to-head') continue
+
+            const hasLostToAll = step.values.some(
+              v => v.value.kind === 'headToHead' && v.value.result === 'lost-to-all'
+            )
+            const hasBeatAll = step.values.some(
+              v => v.value.kind === 'headToHead' && v.value.result === 'beat-all'
+            )
+
+            if (hasLostToAll && !hasBeatAll && !step.separated) {
+              violations.push(
+                `[lost-to-all-not-separated] ${label} ${championship.conference} ${seedName}: `
+                + `head-to-head has lost-to-all without beat-all but separated is false`
+              )
+            }
+          }
+        }
+      }
+    }
+
+    for (let seed = 1; seed <= 100; seed++) {
+      const random = mulberry32(seed)
+      const picks = generatePicks(games, random)
+      const resolved = resolveAllConferences(games, teams, picks)
+      for (const championship of Object.values(resolved)) {
+        checkResolved(`fully-picked seed ${seed}`, championship as ChampionshipResult)
+      }
+    }
+
+    for (let seed = 1001; seed <= 1100; seed++) {
+      const random = mulberry32(seed)
+      const picks = generatePicks(games, random, 7)
+      const resolved = resolveAllConferences(games, teams, picks)
+      for (const championship of Object.values(resolved)) {
+        checkResolved(`weeks 1-7 seed ${seed}`, championship as ChampionshipResult)
+      }
     }
 
     expect(violations.slice(0, 10)).toEqual([])

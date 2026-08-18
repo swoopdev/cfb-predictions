@@ -6,14 +6,14 @@ current_phase: 06
 current_phase_name: tiebreaker-ui-championships
 status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-08-18T20:16:58.084Z"
+last_updated: "2026-08-18T20:49:29.292Z"
 last_activity: 2026-08-18
 last_activity_desc: Phase 06 execution started
 progress:
   total_phases: 9
   completed_phases: 5
   total_plans: 31
-  completed_plans: 25
+  completed_plans: 26
   percent: 56
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-08-12)
 ## Current Position
 
 Phase: 06 (tiebreaker-ui-championships) — EXECUTING
-Plan: 2 of 7
+Plan: 3 of 7
 Status: Ready to execute
 Last activity: 2026-08-18 — Phase 06 execution started
 
@@ -67,6 +67,7 @@ Progress: [██████████] 100%
 | Phase 05 P02 | 25min | 2 tasks | 4 files |
 | Phase 05 P03 | 35min | 3 tasks | 9 files |
 | Phase 06 P01 | 10min | 3 tasks | 7 files |
+| Phase 06 P02 | 24min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase 05]: standings rank grouping is the equivalence CLOSURE of 'shares a resolved seed group' (D-11) and 'identical conference wins and losses' (D-04) — seed membership alone would split a team the engine's restart redefinition dropped from its identical-record twin
 - [Phase 05]: standings row order is built constructively (rank components, component sort, within-component sort, concatenate), never with a comparator — a comparator cannot express the closure without risking non-transitivity
 - [Phase 05]: where seed1.order and seed2.order contradict each other (7 of 649 resolved conferences on the 2026 slate), standings follow seed1.order; the conflict is an engine artefact deferred to Phase 3/6
+- [Phase ?]: [Phase 06-02] RankGroup.contestedWith is the union of a slot's initial pool and every trace cycle's tiedTeams, not the bare initial pool -- required for the ACC's restart redefinition to satisfy the plan's own trace-isolation invariant
+- [Phase ?]: [Phase 06-02] resolveConferenceChampionship/ChampionshipResult are now a thin deprecated derived view over resolveConferenceRanking, kept only until Plan 06-03 deletes them
 
 ### Pending Todos
 
@@ -132,6 +135,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-15T20:36:40.510Z
+Last session: 2026-08-18T20:46:06.020Z
 Stopped at: Phase 6 context gathered
 Resume file: .planning/phases/06-tiebreaker-ui-championships/06-CONTEXT.md

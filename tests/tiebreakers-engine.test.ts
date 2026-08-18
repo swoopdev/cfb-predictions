@@ -44,7 +44,8 @@ function resolveTiedGroupWithMockEvaluator(
   records: ReadonlyMap<TeamId, ConferenceRecord>,
   terminalReason: TerminalReason,
   cycles: TiebreakerCycle[] = [],
-  alreadyCommitted: ReadonlySet<TeamId> = new Set()
+  alreadyCommitted: ReadonlySet<TeamId> = new Set(),
+  depth: number = 0
 ): TiebreakerResult {
   // This is a minimal implementation just for testing
   // It manually implements the resolveTiedGroup logic but uses mockEvaluator
@@ -55,6 +56,11 @@ function resolveTiedGroupWithMockEvaluator(
       order: [...tiedTeams],
       trace: cycles
     }
+  }
+
+  // Defensive depth cap (mirrors the real engine's backstop)
+  if (depth > 128) {
+    throw new Error('resolveTiedGroup: recursion depth cap exceeded')
   }
 
   const steps: StepOutcome[] = []
@@ -92,6 +98,7 @@ function resolveTiedGroupWithMockEvaluator(
         removed: winners.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
       })
 
+      // Invariant: rest must be strictly smaller than tiedTeams
       if (rest.length >= tiedTeams.length) {
         throw new Error(
           'resolveTiedGroup: restart did not strictly shrink the tied group -- infinite recursion guard tripped'
@@ -100,12 +107,6 @@ function resolveTiedGroupWithMockEvaluator(
 
       const nextAlreadyCommitted = new Set([...alreadyCommitted, ...winners])
       const nextTiedTeams = defineTiedTeams(baseOrdering, records, nextAlreadyCommitted)
-
-      if (nextTiedTeams.length >= tiedTeams.length) {
-        throw new Error(
-          'resolveTiedGroup: defineTiedTeams did not strictly shrink the tied group on restart -- infinite recursion guard tripped'
-        )
-      }
 
       const restResult = resolveTiedGroupWithMockEvaluator(
         nextTiedTeams,
@@ -116,7 +117,8 @@ function resolveTiedGroupWithMockEvaluator(
         records,
         terminalReason,
         cycles, // Pass cycles through
-        nextAlreadyCommitted
+        nextAlreadyCommitted,
+        depth + 1
       )
 
       if (restResult.status === 'resolved') {
@@ -239,27 +241,28 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
     expect(result.order).toEqual([1, 2])
   })
 
-  it('should throw when restart does not strictly shrink the tied group', () => {
+  it('should throw when partition remainder is not strictly smaller (rest.length guard)', () => {
     const tiedTeams: TeamId[] = [1, 2, 3]
     const records = createFixtureRecords(tiedTeams)
     const baseOrdering: BaseOrdering = [tiedTeams]
 
-    // Deliberately-broken defineTiedTeams: returns same group (violates invariant)
-    const brokenDefineTiedTeams = () => tiedTeams
+    const defineTiedTeams = () => tiedTeams
 
     const procedureFor = () => ['step1']
 
+    // Deliberately-broken evaluator: produces a partition whose rest is as
+    // large as the input, violating the real partition-remainder invariant.
     const mockEvaluator = (stepId: string, teams: readonly TeamId[]): StepOutcome => ({
       step: stepId as TiebreakerStepId,
       values: teams.map(t => ({ teamId: t, value: { kind: 'indeterminate' } })),
-      partition: [[1], [2, 3]],
+      partition: [[1], [2, 3, 4]],
       separated: true
     })
 
     expect(() => {
       resolveTiedGroupWithMockEvaluator(
         tiedTeams,
-        brokenDefineTiedTeams,
+        defineTiedTeams,
         procedureFor,
         mockEvaluator,
         baseOrdering,

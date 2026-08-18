@@ -19,12 +19,23 @@ import { CONFERENCE_RULES } from './rules'
  * Recursively resolves a tied group of teams through a conference's
  * tiebreaker procedure.
  *
- * **Two invariants enforced:**
- * 1. Every recursive call receives a strictly-smaller `tiedTeams` array than
- *    its caller, guaranteeing termination (enforced via assertion at restart).
+ * **Termination argument:**
+ * 1. `alreadyCommitted` grows by at least one team on every restart, while
+ *    `defineTiedTeams` is contracted to exclude every id in it (see
+ *    `acc.ts:51`, `acc.ts:85` for the ACC's exclusion). The selectable
+ *    universe therefore strictly shrinks, and recursion depth is bounded by
+ *    the conference's team count regardless of whether a redefined pool is
+ *    momentarily larger.
  * 2. An eliminated/seeded team never re-enters a later cycle, enforced
  *    structurally because `alreadyCommitted` only grows and `defineTiedTeams`
  *    is contracted to exclude every id in it.
+ *
+ * The ACC's published language — "If still tied after any step, restart the
+ * entire tiebreaker (including re-defining tied teams)" — explicitly permits
+ * a redefined pool that is larger than the previous one. A guard that
+ * required `nextTiedTeams.length < tiedTeams.length` rejected this legal
+ * restart and caused ~4% of ACC resolutions to fall back to record order.
+ * A defensive depth cap (128) provides the backstop instead.
  *
  * These invariants are load-bearing for Pitfall 1's "restart on partial
  * separation, continue on no separation" semantics, and for the ACC's
@@ -64,8 +75,16 @@ export function resolveTiedGroup(
   overallWinCounts: ReadonlyMap<TeamId, number> | undefined,
   alreadyCommitted: ReadonlySet<TeamId>,
   terminalReason: TerminalReason,
-  cycles: TiebreakerCycle[] = []
+  cycles: TiebreakerCycle[] = [],
+  depth: number = 0
 ): TiebreakerResult {
+  // Defensive depth cap: 128 comfortably exceeds the largest P4 conference
+  // (18 teams, SEC/Big Ten) while still failing fast on a genuine runaway.
+  // This is a backstop, not the termination argument — see docblock above.
+  if (depth > 128) {
+    throw new Error('resolveTiedGroup: recursion depth cap exceeded')
+  }
+
   // Base case: single team resolves immediately
   if (tiedTeams.length === 1) {
     return {
@@ -132,13 +151,6 @@ export function resolveTiedGroup(
       // (This is how the ACC's per-restart redefinition works correctly)
       const nextTiedTeams = defineTiedTeams(baseOrdering, records, nextAlreadyCommitted)
 
-      // Verify the restart strictly shrinks
-      if (nextTiedTeams.length >= tiedTeams.length) {
-        throw new Error(
-          'resolveTiedGroup: defineTiedTeams did not strictly shrink the tied group on restart -- infinite recursion guard tripped'
-        )
-      }
-
       // Recurse on the reduced group
       const restResult = resolveTiedGroup(
         nextTiedTeams,
@@ -149,7 +161,8 @@ export function resolveTiedGroup(
         overallWinCounts,
         nextAlreadyCommitted,
         terminalReason,
-        cycles
+        cycles,
+        depth + 1
       )
 
       // Merge the resolved rest with the winners (winners rank ahead)

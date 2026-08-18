@@ -121,8 +121,9 @@ describe('evaluateHeadToHead', () => {
     expect(result.partition).toEqual([[1], [2], [3]])
   })
 
-  it('returns separated:false for non-round-robin with no beatAllOthers', () => {
+  it('returns separated:false for non-round-robin with no beatAllOthers and no lostToAllOthers', () => {
     // A beat B, B beat C, A did not play C
+    // No team beat all others, no team lost to all others
     const teams: TeamId[] = [1, 2, 3]
     const records = new Map<TeamId, ConferenceRecord>([
       [
@@ -176,6 +177,137 @@ describe('evaluateHeadToHead', () => {
         expect(['mixed', 'no-common-games']).toContain(value.result)
       }
     }
+  })
+
+  it('separates a team that lost to every other tied team (non-round-robin, no beat-all)', () => {
+    // Three tied teams A(1), B(2), C(3): C lost to both A and B.
+    // No team beat both others (A did not play B — non-round-robin).
+    // The ACC's published step 2: "The team that lost to every other Tied
+    // Team is eliminated."
+    const teams: TeamId[] = [1, 2, 3]
+    const records = new Map<TeamId, ConferenceRecord>([
+      [
+        1,
+        {
+          teamId: 1,
+          wins: 1,
+          losses: 0,
+          gamesPlayed: 1,
+          winPct: 1.0,
+          beat: new Set([3]),
+          lostTo: new Set(),
+          opponents: new Set([3])
+        }
+      ],
+      [
+        2,
+        {
+          teamId: 2,
+          wins: 1,
+          losses: 0,
+          gamesPlayed: 1,
+          winPct: 1.0,
+          beat: new Set([3]),
+          lostTo: new Set(),
+          opponents: new Set([3])
+        }
+      ],
+      [
+        3,
+        {
+          teamId: 3,
+          wins: 0,
+          losses: 2,
+          gamesPlayed: 2,
+          winPct: 0.0,
+          beat: new Set(),
+          lostTo: new Set([1, 2]),
+          opponents: new Set([1, 2])
+        }
+      ]
+    ])
+
+    const result = evaluateHeadToHead(teams, records)
+
+    expect(result.separated).toBe(true)
+    // Two-bucket partition: [A, B] then [C]
+    expect(result.partition).toEqual([[1, 2], [3]])
+    // C should carry 'lost-to-all' result
+    const cValue = result.values.find(v => v.teamId === 3)
+    expect(cValue?.value).toEqual({ kind: 'headToHead', result: 'lost-to-all' })
+  })
+
+  it('separates both beat-all and lost-to-all into a three-bucket partition', () => {
+    // Four tied teams: D(4) beat A(1), B(2), C(3); C(3) lost to A, B, D.
+    // A did not play B (non-round-robin).
+    // D goes to bucket 1 (beat-all), A and B to bucket 2 (middle), C to
+    // bucket 3 (lost-to-all).
+    const teams: TeamId[] = [1, 2, 3, 4]
+    const records = new Map<TeamId, ConferenceRecord>([
+      [
+        1,
+        {
+          teamId: 1,
+          wins: 1,
+          losses: 1,
+          gamesPlayed: 2,
+          winPct: 0.5,
+          beat: new Set([3]),
+          lostTo: new Set([4]),
+          opponents: new Set([3, 4])
+        }
+      ],
+      [
+        2,
+        {
+          teamId: 2,
+          wins: 1,
+          losses: 1,
+          gamesPlayed: 2,
+          winPct: 0.5,
+          beat: new Set([3]),
+          lostTo: new Set([4]),
+          opponents: new Set([3, 4])
+        }
+      ],
+      [
+        3,
+        {
+          teamId: 3,
+          wins: 0,
+          losses: 3,
+          gamesPlayed: 3,
+          winPct: 0.0,
+          beat: new Set(),
+          lostTo: new Set([1, 2, 4]),
+          opponents: new Set([1, 2, 4])
+        }
+      ],
+      [
+        4,
+        {
+          teamId: 4,
+          wins: 3,
+          losses: 0,
+          gamesPlayed: 3,
+          winPct: 1.0,
+          beat: new Set([1, 2, 3]),
+          lostTo: new Set(),
+          opponents: new Set([1, 2, 3])
+        }
+      ]
+    ])
+
+    const result = evaluateHeadToHead(teams, records)
+
+    expect(result.separated).toBe(true)
+    // Three-bucket partition: [D], [A, B], [C]
+    expect(result.partition).toEqual([[4], [1, 2], [3]])
+    // D should carry 'beat-all', C should carry 'lost-to-all'
+    const dValue = result.values.find(v => v.teamId === 4)
+    expect(dValue?.value).toEqual({ kind: 'headToHead', result: 'beat-all' })
+    const cValue = result.values.find(v => v.teamId === 3)
+    expect(cValue?.value).toEqual({ kind: 'headToHead', result: 'lost-to-all' })
   })
 })
 

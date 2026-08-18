@@ -23,8 +23,6 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { computeStandings, resolveAllConferences } from '../../../shared/domain/standings'
 import type { StandingsTeam } from '../../../shared/types/standings'
 import type { Game, Team } from '../../../shared/types/schedule'
@@ -206,42 +204,10 @@ describe('a team the resolved order dropped but whose record is shared (D-04)', 
 // Test 4 — the committed 2026 slate (the reviewer's reproduction, automated)
 // ---------------------------------------------------------------------------
 
-function readJson<T>(relativePath: string): T {
-  const url = new URL(relativePath, import.meta.url)
-  return JSON.parse(readFileSync(fileURLToPath(url), 'utf8')) as T
-}
-
-/**
- * mulberry32 — a self-contained deterministic PRNG. Written inline rather than
- * pulled from a package so this plan installs nothing (threat T-05-03-SC).
- */
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0
-  return () => {
-    a = (a + 0x6D2B79F5) >>> 0
-    let t = a
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-function generatePicks(
-  games: readonly Game[],
-  random: () => number,
-  throughWeek?: number
-): Record<number, number> {
-  const picks: Record<number, number> = {}
-  for (const game of games) {
-    if (throughWeek !== undefined && game.week > throughWeek) continue
-    picks[game.id] = random() < 0.5 ? game.homeId : game.awayId
-  }
-  return picks
-}
+import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 
 describe('the committed 2026 slate never contradicts a resolved seed order', () => {
-  const { games } = readJson<{ games: Game[] }>('../../../public/data/2026/games.json')
-  const { teams } = readJson<{ teams: Team[] }>('../../../public/data/2026/teams.json')
+  const { games, teams } = readSlate()
 
   /**
    * Collects every way a single generated season can contradict the engine:

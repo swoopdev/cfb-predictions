@@ -365,6 +365,29 @@ describe('computeStandings', () => {
         ['Florida', 'Georgia', 'LSU']
       )
     })
+
+    it('breaks a fallback-order tie by win COUNT when win PERCENTAGE is equal but games played differs', () => {
+      // Alabama plays one conference game and wins it (1-0, pct 1.0);
+      // Florida plays two and wins both (2-0, pct 1.0) -- same percentage,
+      // different win counts. `fallbackOrder`'s comparator falls through the
+      // (already-equal) percentage check to the win-count check, so Florida
+      // ranks ahead of Alabama despite the tied percentage.
+      const games = [
+        game(201, ALABAMA, GEORGIA, true),
+        game(202, FLORIDA, LSU, true),
+        game(203, FLORIDA, OLE_MISS, true)
+      ]
+      const picks: Record<number, number> = { 201: ALABAMA, 202: FLORIDA, 203: FLORIDA }
+
+      // Whole conference omitted from resolvedTiebreakers -> every row
+      // routes through fallbackOrder.
+      const ordered = computeStandings(games, allTeams, picks, {})
+      const bySchoolLocal = (school: string) => ordered.SEC!.find(r => r.school === school)!
+
+      expect(bySchoolLocal('Alabama').confRecord).toEqual({ wins: 1, losses: 0 })
+      expect(bySchoolLocal('Florida').confRecord).toEqual({ wins: 2, losses: 0 })
+      expect(bySchoolLocal('Florida').rank).toBeLessThan(bySchoolLocal('Alabama').rank)
+    })
   })
 
   describe('untrusted picks (T-05-SC)', () => {

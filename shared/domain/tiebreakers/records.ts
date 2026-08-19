@@ -86,6 +86,15 @@ export function deriveConferenceRecords(
 
   const records = new Map<TeamId, ConferenceRecord>()
   for (const teamId of teamIds) {
+    // Every `?? 0` / `?? new Set()` below is unreachable, not merely
+    // untested: the seeding loop above (`for (const teamId of teamIds)`,
+    // before any game is processed) sets an entry in `wins`/`losses`/
+    // `beat`/`lostTo`/`opponents` for EVERY id in this exact same `teamIds`
+    // set, so every `.get(teamId)` in THIS loop is always defined. Kept as a
+    // type-safety fallback for `Map.get`'s `T | undefined` return, not a
+    // reachable runtime path -- closed via `v8 ignore` rather than a test
+    // that can never execute it.
+    /* v8 ignore next 2 */
     const teamWins = wins.get(teamId) ?? 0
     const teamLosses = losses.get(teamId) ?? 0
     const gamesPlayed = teamWins + teamLosses
@@ -95,6 +104,7 @@ export function deriveConferenceRecords(
       losses: teamLosses,
       gamesPlayed,
       winPct: winPctSafe(teamWins, gamesPlayed),
+      /* v8 ignore next 3 */
       beat: beat.get(teamId) ?? new Set(),
       lostTo: lostTo.get(teamId) ?? new Set(),
       opponents: opponents.get(teamId) ?? new Set()

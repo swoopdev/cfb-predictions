@@ -189,6 +189,17 @@ describe('applyManualOrdering (D-08/D-17)', () => {
     expect(result.groups[1]).toBe(group)
   })
 
+  it('leaves the group unresolved when the stored ordering contains a duplicate id -- Pitfall 8\'s phantom/duplicate-row guard', () => {
+    // Length matches group.teams.length (3), but only 2 DISTINCT ids -- a
+    // hand-edited storage entry naming the same team twice rather than a
+    // genuinely different membership. isTeamSetEqual's size check must catch
+    // this even though the array length alone looks plausible.
+    const decisions = { [hash]: [1, 1, 2] }
+    const result = applyManualOrdering(ranking, decisions, true)
+    expect(result.groups).toHaveLength(2)
+    expect(result.groups[1]).toBe(group)
+  })
+
   it('never mutates its input ranking or any group in it', () => {
     const decisions = { [hash]: [3, 1, 2] }
     const before = JSON.parse(JSON.stringify(ranking))

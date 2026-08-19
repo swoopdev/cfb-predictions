@@ -934,4 +934,19 @@ describe('evaluateStep dispatcher', () => {
 
     expect(result.step).toBe('next-highest-placed-common-opponent')
   })
+
+  // Coverage gate (06-07 Task 3): the exhaustive-switch default branch. A
+  // real caller can never reach this -- `TiebreakerStepId` is a closed
+  // string union and every `CONFERENCE_RULES` entry only ever names one of
+  // its five members -- but the dispatcher still throws defensively rather
+  // than silently returning `undefined` if that invariant is ever violated
+  // (e.g. a malformed step id smuggled in via an `as` cast).
+  it('throws on an unrecognized step id rather than silently returning undefined', () => {
+    const teams: TeamId[] = [1, 2]
+    const records = new Map<TeamId, ConferenceRecord>()
+
+    expect(() =>
+      evaluateStep('not-a-real-step' as unknown as Parameters<typeof evaluateStep>[0], teams, [], records)
+    ).toThrow('Unknown step ID: not-a-real-step')
+  })
 })

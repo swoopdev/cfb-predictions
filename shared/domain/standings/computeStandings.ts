@@ -111,6 +111,13 @@ function fallbackOrder(
   confWinPct: ReadonlyMap<TeamId, number>
 ): StandingsTeam[][] {
   const sorted = [...rows].sort((a, b) => {
+    // `?? 0` is unreachable, not merely untested: `confWinPct` (built by the
+    // caller, below) always maps EVERY `confTeams` id, and `rows`/`leftover`
+    // are themselves derived from `confTeams`, so `a.id`/`b.id` are always
+    // present. Kept as a type-safety fallback for `Map.get`'s `T | undefined`
+    // return, not a reachable runtime path -- coverage-gate closed via
+    // `/* v8 ignore next 2 */` rather than a test that can never execute it.
+    /* v8 ignore next 2 */
     const pctA = confWinPct.get(a.id) ?? 0
     const pctB = confWinPct.get(b.id) ?? 0
     if (pctA !== pctB) return pctB - pctA
@@ -228,6 +235,18 @@ export function computeStandings(
     // standings layer keeps no second implementation and derives no
     // played-games denominator of its own — that duplicate is how this layer
     // drifted away from the engine and produced CR-01.
+    // `?.winPct ?? 0` below is unreachable, not merely untested:
+    // `deriveConferenceRecords` seeds every id in the `teamIds` set it is
+    // given (records.ts's own loop, before any game is processed), and
+    // `confTeamIds`/`p4TeamIds` ARE `confTeams`/`p4Teams`' id sets by
+    // construction, so `confRecords.get(t.id)`/`overallRecords.get(team.id)`
+    // below are always defined. Kept as a type-safety fallback for
+    // `Map.get`'s `T | undefined` return (and because `ranking.groups` is a
+    // hand-suppliable Plan 06-05 input elsewhere in this file, so defensive
+    // coding is this file's own established convention), not a reachable
+    // runtime path here -- closed via `v8 ignore` rather than a test that
+    // can never execute it.
+    /* v8 ignore next 2 */
     const confWinPct = new Map<TeamId, number>(
       confTeams.map(t => [t.id, confRecords.get(t.id)?.winPct ?? 0])
     )
@@ -239,6 +258,7 @@ export function computeStandings(
         id: team.id,
         school: team.school,
         conference: team.conference,
+        /* v8 ignore next 2 */
         overallRecord: { wins: overall?.wins ?? 0, losses: overall?.losses ?? 0 },
         confRecord: { wins: conf?.wins ?? 0, losses: conf?.losses ?? 0 },
         // Placeholders; assigned after the groups are walked.

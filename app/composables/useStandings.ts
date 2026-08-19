@@ -1,4 +1,4 @@
-import { computed, watchEffect } from 'vue'
+import { computed, watch } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
 import {
   computeStandings,
@@ -34,9 +34,24 @@ import { useTeams } from './useTeams'
  * measured the full recompute at ~7ms for the 888-game slate (well under a
  * frame); Phase 6's N-seed resolution adds a further 0.45ms median — still
  * nowhere near a frame budget that would justify a debounce. The ONE
- * `watchEffect` in this file (below) is not a derivation — it is
- * `pruneStale`'s storage write, a genuine side effect, and side effects do
- * not belong inside a `computed`.
+ * `watch` in this file (below) is not a derivation — it is `pruneStale`'s
+ * storage write, a genuine side effect, and side effects do not belong
+ * inside a `computed`.
+ *
+ * **WR-03: explicit-source `watch`, not `watchEffect`.** `pruneStale`
+ * reads `decisions.value[conference]` and, on an actual prune, writes
+ * `decisions.value = {...}` (`useManualTiebreakers.ts`). A bare
+ * `watchEffect` tracks every `.value` read that happens DURING its own
+ * synchronous run, lexical scope or not -- so `pruneStale`'s read of
+ * `decisions` would register as a dependency of this very effect, and its
+ * own write would then trigger a redundant second run of the whole thing
+ * (re-deriving `raw`/`complete` and re-pruning all four conferences, which
+ * happens to converge harmlessly, but is an easy-to-miss self-triggering
+ * dependency). `watch([rawRankings, slateComplete], ...)` only tracks its
+ * explicit source list -- reads inside the callback body (including
+ * whatever `pruneStale` touches) establish no dependency at all, so the
+ * effect runs exactly once per `rawRankings`/`slateComplete` change,
+ * regardless of what it writes.
  *
  * **IN-02's "toOutcomes derived twice" note.** `resolveAllConferences` and
  * `computeStandings` each call `toOutcomes` internally today. This
@@ -62,7 +77,7 @@ import { useTeams } from './useTeams'
  * duplicates.
  *
  * `pruneStale` (06-UI-SPEC.md §9.4's delete-on-read) runs from a
- * `watchEffect` over `rawRankings` — NEVER the manually-adjusted
+ * `watch` over `rawRankings` — NEVER the manually-adjusted
  * `rankings` — because a matched group is rewritten to `resolvedBy:
  * 'manual'` by `applyManualOrdering`, and `pruneStale`'s own comparison only
  * considers `resolvedBy === 'unresolved'` groups. Reading the adjusted
@@ -121,19 +136,24 @@ export function useStandings(season = 2026) {
     return computeStandings(games.value!.games, teams.value!, picks.value, rankings.value)
   })
 
-  // The one side effect in this file — see the docblock above for why it is
-  // a `watchEffect` and why it reads `rawRankings`, never `rankings`.
-  watchEffect(() => {
-    const raw = rawRankings.value
-    const complete = slateComplete.value
-    if (!raw || !complete) return
+  // The one side effect in this file — see the docblock above (WR-03) for
+  // why this is an explicit-source `watch`, not a `watchEffect`, and why it
+  // reads `rawRankings`, never `rankings`. Explicit sources are what keep
+  // `pruneStale`'s own `decisions.value` read/write (inside the callback
+  // body) from registering as a dependency of this same effect.
+  watch(
+    [rawRankings, slateComplete],
+    ([raw, complete]) => {
+      if (!raw || !complete) return
 
-    for (const conference of P4_CONFERENCES) {
-      const conferenceRaw = raw[conference]
-      if (!conferenceRaw) continue
-      pruneStale(conference, conferenceRaw, complete[conference] ?? false)
-    }
-  })
+      for (const conference of P4_CONFERENCES) {
+        const conferenceRaw = raw[conference]
+        if (!conferenceRaw) continue
+        pruneStale(conference, conferenceRaw, complete[conference] ?? false)
+      }
+    },
+    { immediate: true }
+  )
 
   return { picks, rankings, standings, slateComplete, commitOrdering }
 }

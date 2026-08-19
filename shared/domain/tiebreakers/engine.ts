@@ -86,12 +86,18 @@ export function resolveTiedGroup(
     throw new Error('resolveTiedGroup: recursion depth cap exceeded')
   }
 
-  // Base case: single team resolves immediately
+  // Base case: single team resolves immediately. CR-01: `trace` is this
+  // call's OWN explanation for `order[0]` -- and a lone remaining team was
+  // never itself separated by any step (it is simply what's left once
+  // everyone else was seeded/eliminated in an ANCESTOR call's own cycles),
+  // so its own trace is empty. `cycles` may already hold entries from
+  // ancestor calls sharing this same accumulator; those belong to whichever
+  // team(s) THEY resolved, never to this one.
   if (tiedTeams.length === 1) {
     return {
       status: 'resolved',
       order: [...tiedTeams],
-      trace: cycles
+      trace: []
     }
   }
 
@@ -115,28 +121,32 @@ export function resolveTiedGroup(
 
     // Check if this step fully resolved the top bucket into a single team
     if (winners!.length === 1 && rest.length === 0) {
-      // Fully resolved within this cycle
-      cycles.push({
+      // Fully resolved within this cycle. CR-01: `trace` is exactly this
+      // one cycle -- nothing else was evaluated to reach this winner, so
+      // nothing else belongs in the explanation attached to `order[0]`.
+      const thisCycle: TiebreakerCycle = {
         tiedTeams,
         steps,
         outcome: 'resolved',
         removed: [{ teamId: winners![0]!, reason: 'seeded', atStep: stepId }]
-      })
+      }
+      cycles.push(thisCycle)
       return {
         status: 'resolved',
         order: [...winners!],
-        trace: cycles
+        trace: [thisCycle]
       }
     }
 
     if (winners!.length >= 1 && rest.length > 0) {
       // Partial separation: restart with the reduced group (Pitfall 1)
-      cycles.push({
+      const thisCycle: TiebreakerCycle = {
         tiedTeams,
         steps,
         outcome: 'restart',
         removed: winners!.map(teamId => ({ teamId, reason: 'seeded' as const, atStep: stepId }))
-      })
+      }
+      cycles.push(thisCycle)
 
       // Invariant (a): `rest` must be strictly smaller than `tiedTeams`
       if (rest.length >= tiedTeams.length) {
@@ -172,6 +182,16 @@ export function resolveTiedGroup(
       // database id. When the bucket holds exactly one team there is nothing
       // to resolve, so this branch only runs for winners.length > 1.
       let orderedWinners: readonly TeamId[]
+      // CR-01: the cycle(s) that actually explain `orderedWinners[0]`,
+      // composed LOCALLY rather than read back positionally out of the
+      // shared `cycles` accumulator. Positional slicing breaks the instant
+      // the winners bucket itself needs more than one restart to fully order
+      // its own members (`bucketResult`'s own recursion pushes MORE cycles
+      // into the same shared array before this call ever gets a chance to
+      // snapshot a boundary) -- local composition is correct by construction
+      // at every recursion depth because each nested call already returns
+      // ITS OWN correctly-scoped `trace` for ITS OWN `order[0]`.
+      let ownWinnerTrace: readonly TiebreakerCycle[]
       if (winners!.length > 1) {
         // Containment invariant: every tied-team set considered while
         // resolving the winners bucket must be a SUBSET of that bucket. A
@@ -212,9 +232,21 @@ export function resolveTiedGroup(
         }
 
         orderedWinners = bucketResult.order
+        // By induction, `bucketResult.trace` already correctly explains
+        // ONLY `bucketResult.order[0]` (this same fix applies at every
+        // recursion depth) -- exactly what's needed here, since
+        // `orderedWinners[0] === bucketResult.order[0]`.
+        ownWinnerTrace = bucketResult.trace
       } else {
         orderedWinners = winners!
+        ownWinnerTrace = []
       }
+
+      // This call's own explanation for `orderedWinners[0]`: the cycle that
+      // separated `winners` from `rest` at THIS level, plus (when the
+      // winners bucket itself needed further resolution) whatever cycles
+      // the bucket recursion needed to arrive at its own first-place team.
+      const ownTrace: readonly TiebreakerCycle[] = [thisCycle, ...ownWinnerTrace]
 
       // Recurse on the reduced group
       const restResult = resolveTiedGroup(
@@ -230,12 +262,15 @@ export function resolveTiedGroup(
         depth + 1
       )
 
-      // Merge the resolved rest with the (now genuinely resolved) winners
+      // Merge the resolved rest with the (now genuinely resolved) winners.
+      // `trace` is `ownTrace`, composed above -- never `restResult.trace`,
+      // which explains `restResult.order[0]` (a DIFFERENT team, whichever
+      // comes next in this pool), not `orderedWinners[0]`.
       if (restResult.status === 'resolved') {
         return {
           status: 'resolved',
           order: [...orderedWinners, ...restResult.order],
-          trace: restResult.trace
+          trace: ownTrace
         }
       } else {
         // Recursive call hit needsUserInput; propagate it (both spots are blocked)

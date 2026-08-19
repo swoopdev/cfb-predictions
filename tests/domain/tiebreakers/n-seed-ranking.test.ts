@@ -182,6 +182,31 @@ function violationsFor(label: string, picks: Record<number, number>): string[] {
       }
     })
 
+    // --- CR-01 regression: the decisive step actually explains THIS slot's
+    // own team. `TiebreakerReasoning.vue`'s "Decided at" panel renders
+    // `trace.at(-1)`'s separating step for a `'tiebreaker'` group -- if
+    // `resolveTiedGroup` ever threads an over-inclusive cascade of a LATER
+    // slot's cycles back onto this one, the decisive step's own `values`
+    // stop referencing the team this rank is actually for. ---
+    ranking.groups.forEach((group, groupIndex) => {
+      if (group.resolvedBy !== 'tiebreaker' || group.trace.length === 0) return
+      const lastCycle = group.trace.at(-1)!
+      const decisiveStep = lastCycle.steps.filter(step => step.separated).at(-1)
+      if (!decisiveStep) return // covered by the D-16 check above
+      const ownTeamId = group.teams[0]!
+      const referencedIds = new Set(decisiveStep.values.map(v => v.teamId))
+      if (!referencedIds.has(ownTeamId)) {
+        violations.push(
+          label2(
+            groupIndex,
+            id => schoolName(id, teams),
+            `decisive step '${decisiveStep.step}' values [${[...referencedIds].map(id => schoolName(id, teams)).join(', ')}] `
+            + `do not reference this group's own team ${schoolName(ownTeamId, teams)} (${ownTeamId})`
+          )
+        )
+      }
+    })
+
     // --- championshipFor: reads groups[0]/groups[1] directly, per D-12. ---
     const { seed1, seed2 } = championshipFor(ranking)
     if (ranking.groups.length > 0) {

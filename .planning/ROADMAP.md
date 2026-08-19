@@ -22,7 +22,7 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
 - [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
 - [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (executed 2026-08-14; awaiting UAT — 05-VERIFICATION.md is `human_needed`, 4 items pending in 05-UAT.md)
-- [ ] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties
+- [x] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties (completed 2026-08-19)
 - [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
 - [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks
 
@@ -227,7 +227,7 @@ Plans:
 
 **Measurement obligation: DISCHARGED** (2026-08-15, in `06-RESEARCH.md` §The Measurement). The N-seed figure was measured against the committed slate over 200 generated seasons with both engine repairs applied. Answer: the 1-2 target holds for the SEC (0.10), Big Ten (0.19) and Big 12 (0.01) and fails for the ACC by roughly 4x (3.84 per fully-picked season, p90 5, 0% of seasons needing zero) — structural, because the ACC's amended policy has exactly one computable step. The measurement also exposed a **third** engine defect (the dropped lost-to-all elimination in `evaluateHeadToHead`) and quantified the seed1/seed2 root cause at **19.2% of contested slots** resolving by raw team id. All three defects are planned. Interaction model B (order the whole group in one interaction) is adopted, halving the ACC figure from 9.23. The ACC number was escalated to the user, who reaffirmed D-17's no-call-out design and superseded D-09 with preserve-and-suspend (`06-UI-SPEC.md` §0.1).
 
-**Plans**: 6/7 plans executed
+**Plans**: 7/7 plans complete
 
 - [x] 06-01-PLAN.md — wave 1 — engine defect repairs: delete the false ACC recursion guard, execute the dropped lost-to-all elimination, extract the shared generated-season harness
 - [x] 06-02-PLAN.md — wave 2 — the N-seed commit-and-restart loop, `RankGroup`/`ConferenceRanking`, and the unseparated-top-bucket repair that removes the seed1/seed2 contradiction
@@ -235,7 +235,7 @@ Plans:
 - [x] 06-06-PLAN.md — wave 3 — `TiebreakerReasoning.vue`: step-by-step reasoning, decisive step first, and the model-B ordering terminus
 - [x] 06-04-PLAN.md — wave 4 — `ChampionshipCard.vue` above every conference table, read from `championshipFor`
 - [x] 06-05-PLAN.md — wave 4 — manual-resolution lifecycle: the D-07 completion predicate, the D-08 invalidation key, and the preserve-and-suspend storage composable
-- [ ] 06-07-PLAN.md — wave 5 — integration: three-state rank cell markers, reasoning mounted per group, manual decisions wired end to end, and the pre-Phase-5 coverage gate closed
+- [x] 06-07-PLAN.md — wave 5 — integration: three-state rank cell markers, reasoning mounted per group, manual decisions wired end to end, and the pre-Phase-5 coverage gate closed
 
 **UI hint**: yes
 
@@ -283,6 +283,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
 | 5. Standings Engine & UI | 3/3 | Complete   | 2026-08-14 |
-| 6. Tiebreaker UI & Championships | 6/7 | In Progress|  |
+| 6. Tiebreaker UI & Championships | 7/7 | Complete   | 2026-08-19 |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

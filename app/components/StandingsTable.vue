@@ -1,13 +1,15 @@
 <script setup lang="ts">
-// `computed`/`useId` are imported explicitly from 'vue', and ChampionshipCard
-// is imported relatively rather than through Nuxt's component auto-import, so
-// this component mounts in a plain vitest run (the project's vitest config
-// registers no Nuxt auto-import plugin — see GameCard.test.ts's note on why
-// its component was left untestable).
-import { computed, useId } from 'vue'
+// `computed`/`ref`/`useId` are imported explicitly from 'vue', and both
+// ChampionshipCard and TiebreakerReasoning are imported relatively rather
+// than through Nuxt's component auto-import, so this component mounts in a
+// plain vitest run (the project's vitest config registers no Nuxt
+// auto-import plugin — see GameCard.test.ts's note on why its component was
+// left untestable).
+import { computed, ref, useId } from 'vue'
 import type { StandingsTeam } from '#shared/types/standings'
-import type { ConferenceRanking } from '#shared/domain/tiebreakers/types'
+import type { ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import ChampionshipCard from './ChampionshipCard.vue'
+import TiebreakerReasoning from './TiebreakerReasoning.vue'
 
 /**
  * Renders ONE conference's standings (D-03: a real `<table>`, not cards —
@@ -15,22 +17,41 @@ import ChampionshipCard from './ChampionshipCard.vue'
  *
  * Deliberately dumb: it takes an already-ranked, already-sorted
  * `StandingsTeam[]` and renders it. All ordering and rank assignment lives in
- * `computeStandings()`, so Phase 6 can reuse this component against a
- * manually-resolved ranking with no changes here.
+ * `computeStandings()`, so this component only ever reads a `RankGroup`'s
+ * fields, never a display-layer tie predicate.
  *
- * Ties need no badge, icon, or tooltip (D-05/D-06) — matching rank numbers
- * next to matching W-L values are the indication.
+ * **D-10/D-11 (reverses Phase 5's D-05/D-06).** Phase 5 declined a tie badge
+ * on the rationale that a matching rank number plus matching W-L values were
+ * sufficient indication. Phase 5's own verification measured that rationale
+ * false on ~1% of tables: the ACC ties on alternate schedule lengths, so two
+ * teams can share a rank with DIFFERENT records (`1 Boston College 6-2`
+ * rendered above `1 Duke 7-2`). D-01 removed the shared rank that hid this;
+ * D-10 makes it legible again with two markers, derived exclusively from the
+ * `ranking` prop's `RankGroup`s — NEVER from comparing two rows' own
+ * `confRecord` values, which would reimplement a tie predicate in the
+ * display layer (the CR-01 defect Phase 5 spent a whole plan repairing, and
+ * one that gets the ACC wrong by construction). Both markers are neutral-
+ * palette only (D-11).
  *
- * `ranking` (Plan 06-04, TIE-07): the ONLY new prop this component gains.
- * Threaded straight through to `ChampionshipCard`, which reads the
- * championship matchup off it via `championshipFor` -- never off this
- * component's own row order (D-12). Also the prop Plan 07's rank markers
- * read from, so its shape and threading are settled here.
+ * `ranking` (Plan 06-04, TIE-07; extended Plan 06-07 for D-10/D-15):
+ * threaded straight through to `ChampionshipCard` (via `championshipFor`,
+ * never this component's own row order — D-12) and read directly here to
+ * derive each row's rank-cell state and to mount the per-group reasoning
+ * row (D-15).
  */
 const props = defineProps<{
   standings: readonly StandingsTeam[]
   conferenceName: string
   ranking?: ConferenceRanking | undefined
+}>()
+
+const emit = defineEmits<{
+  /**
+   * Re-emitted from `TiebreakerReasoning`'s own `commit` event, carrying the
+   * group it was committed for alongside the chosen order. Nothing consumes
+   * this yet — wiring it to storage is Task 2's job.
+   */
+  commit: [group: RankGroup, order: TeamId[]]
 }>()
 
 const headingId = useId()
@@ -57,6 +78,126 @@ const schoolById = computed<ReadonlyMap<number, string>>(
 const hasPickedConferenceGames = computed<boolean>(() =>
   props.standings.some(team => team.confRecord.wins + team.confRecord.losses > 0)
 )
+
+type MarkerKind = 'none' | 'a' | 'b'
+
+/**
+ * §6's three-state predicate, read exclusively off a `RankGroup` -- never
+ * off two rows' `confRecord`. `'none'` covers BOTH the degraded path (no
+ * `group` at all) and a genuinely uncontested rank (`contestedWith.length
+ * <= 1`), which is exactly what §10's degraded row needs: with `ranking`
+ * undefined every row's `group` is `undefined`, so every branch below falls
+ * through to `'none'` structurally rather than via a second code path.
+ */
+function markerKindFor(group: RankGroup | undefined): MarkerKind {
+  if (!group) return 'none'
+  if (group.teams.length > 1) return 'b'
+  if (group.contestedWith.length > 1) return 'a'
+  return 'none'
+}
+
+interface RowMeta {
+  team: StandingsTeam
+  group: RankGroup | undefined
+  groupIndex: number | undefined
+  markerKind: MarkerKind
+  isGroupLastRow: boolean
+}
+
+/**
+ * One entry per standings row, precomputed once per render rather than
+ * inline in the template: which `RankGroup` (and its index in
+ * `ranking.groups`) the row belongs to, its marker state, and whether it is
+ * the LAST standings row belonging to that group -- `computeStandings`
+ * always emits a group's rows contiguously, so a single forward pass is
+ * enough to find each group's last row without re-scanning `standings` per
+ * row.
+ */
+const rowMeta = computed<RowMeta[]>(() => {
+  const groups = props.ranking?.groups
+  const groupByTeam = new Map<TeamId, RankGroup>()
+  const groupIndexByTeam = new Map<TeamId, number>()
+
+  if (groups) {
+    groups.forEach((group, index) => {
+      for (const teamId of group.teams) {
+        groupByTeam.set(teamId, group)
+        groupIndexByTeam.set(teamId, index)
+      }
+    })
+  }
+
+  const lastRowTeamIdForGroup = new Map<number, TeamId>()
+  for (const team of props.standings) {
+    const index = groupIndexByTeam.get(team.id)
+    if (index !== undefined) lastRowTeamIdForGroup.set(index, team.id)
+  }
+
+  return props.standings.map((team) => {
+    const group = groupByTeam.get(team.id)
+    const groupIndex = groupIndexByTeam.get(team.id)
+    return {
+      team,
+      group,
+      groupIndex,
+      markerKind: markerKindFor(group),
+      isGroupLastRow: groupIndex !== undefined && lastRowTeamIdForGroup.get(groupIndex) === team.id
+    }
+  })
+})
+
+/**
+ * §6.1: the chip/pill IS the disclosure trigger. Local, ephemeral,
+ * per-session state -- a group index map, never persisted -- mirroring
+ * `StandingsSidebar.vue`'s own collapse-state comment: this is a viewing
+ * preference for the current session, not part of the user's scenario.
+ */
+const expandedGroups = ref<ReadonlySet<number>>(new Set())
+
+function isExpanded(groupIndex: number): boolean {
+  return expandedGroups.value.has(groupIndex)
+}
+
+function toggleGroup(groupIndex: number): void {
+  const next = new Set(expandedGroups.value)
+  if (next.has(groupIndex)) {
+    next.delete(groupIndex)
+  } else {
+    next.add(groupIndex)
+  }
+  expandedGroups.value = next
+}
+
+function reasoningPanelId(groupIndex: number): string {
+  return `${headingId}-reasoning-${groupIndex}`
+}
+
+/**
+ * §13's three accessible names, differing by marker case -- marker
+ * semantics reach assistive tech through the accessible name, not the
+ * visual treatment (§12.1).
+ */
+function chipAccessibleName(row: RowMeta): string {
+  const group = row.group!
+  const rank = row.team.rank
+  if (row.markerKind === 'b') {
+    const others = group.teams.length - 1
+    return `Rank ${rank}, tied with ${others} other team${others === 1 ? '' : 's'}. Show reasoning.`
+  }
+  const provenance = group.resolvedBy === 'manual' ? 'decided by your choice' : 'decided by tiebreaker'
+  return `Rank ${rank}, ${provenance}. Show reasoning.`
+}
+
+const MARKER_A_CLASS = 'inline-flex min-w-6 justify-center rounded px-1 bg-accented text-default text-sm font-semibold tabular-nums'
+const MARKER_B_CLASS = 'inline-flex min-w-6 justify-center rounded-full px-1 bg-inverted text-inverted text-sm font-semibold tabular-nums'
+
+function markerClass(kind: MarkerKind): string {
+  return kind === 'b' ? MARKER_B_CLASS : MARKER_A_CLASS
+}
+
+function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
+  emit('commit', group, order)
+}
 </script>
 
 <template>
@@ -133,36 +274,71 @@ const hasPickedConferenceGames = computed<boolean>(() =>
         </tr>
       </thead>
       <tbody class="divide-y divide-default">
-        <tr
-          v-for="team in standings"
-          :key="team.id"
-          class="hover:bg-elevated/60 transition-colors"
+        <template
+          v-for="row in rowMeta"
+          :key="row.team.id"
         >
-          <!-- The rank column carries the entire tie signal (D-05/D-06: no
-               badge, no icon, no tooltip), so it is left-aligned, tabular and
-               at full text weight — three teams sharing a `2` have to be
-               obvious in a single downward glance, which a dimmed
-               right-aligned number is not. -->
-          <td class="py-1.5 pr-2 text-left tabular-nums font-medium text-default">
-            {{ team.rank }}
-          </td>
-          <!-- No `truncate`/`nowrap`: at the sidebar's 320px the longest P4
-               school ("Mississippi State") fits, and if a narrower viewport
-               forces it, wrapping is the correct failure — a clipped team
-               name is not. -->
-          <th
-            scope="row"
-            class="py-1.5 pr-2 text-left font-normal text-highlighted"
+          <!-- §6: the rank cell carries the entire tie signal now -- three
+               states, all derived from `row.group`/`row.markerKind`, never
+               from comparing this row's `confRecord` against a neighbour's. -->
+          <tr
+            :class="[
+              'transition-colors',
+              row.markerKind === 'b' ? 'bg-muted border-l-2 border-inverted' : 'hover:bg-elevated/60'
+            ]"
           >
-            {{ team.school }}
-          </th>
-          <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
-            {{ team.overallRecord.wins }}-{{ team.overallRecord.losses }}
-          </td>
-          <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
-            {{ team.confRecord.wins }}-{{ team.confRecord.losses }}
-          </td>
-        </tr>
+            <td class="py-1.5 pr-2 text-left tabular-nums font-medium text-default">
+              <button
+                v-if="row.markerKind !== 'none'"
+                type="button"
+                :class="[markerClass(row.markerKind), 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary']"
+                :aria-expanded="isExpanded(row.groupIndex!)"
+                :aria-controls="reasoningPanelId(row.groupIndex!)"
+                :aria-label="chipAccessibleName(row)"
+                @click="toggleGroup(row.groupIndex!)"
+              >
+                {{ row.team.rank }}
+              </button>
+              <template v-else>
+                {{ row.team.rank }}
+              </template>
+            </td>
+            <!-- No `truncate`/`nowrap`: at the sidebar's 320px the longest P4
+                 school ("Mississippi State") fits, and if a narrower viewport
+                 forces it, wrapping is the correct failure — a clipped team
+                 name is not. -->
+            <th
+              scope="row"
+              class="py-1.5 pr-2 text-left font-normal text-highlighted"
+            >
+              {{ row.team.school }}
+            </th>
+            <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
+              {{ row.team.overallRecord.wins }}-{{ row.team.overallRecord.losses }}
+            </td>
+            <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
+              {{ row.team.confRecord.wins }}-{{ row.team.confRecord.losses }}
+            </td>
+          </tr>
+
+          <!-- §7.1: mounted immediately after the group's LAST row, inside
+               this SAME `<tbody>`. Absent from the DOM entirely when
+               collapsed -- not hidden, not display:none (§12.4). -->
+          <tr v-if="row.group && row.groupIndex !== undefined && row.isGroupLastRow && isExpanded(row.groupIndex)">
+            <td
+              :id="reasoningPanelId(row.groupIndex)"
+              colspan="4"
+              class="p-0"
+            >
+              <TiebreakerReasoning
+                :group="row.group"
+                :school-by-id="schoolById"
+                :slate-complete="false"
+                @commit="order => handleReasoningCommit(row.group!, order)"
+              />
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </section>

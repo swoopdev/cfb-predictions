@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest'
 import type { TiebreakerResult } from '../shared/domain/tiebreakers/types'
-import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveChampionship } from './helpers/legacy-championship'
 import {
   secTwoWayTie,
   secThreeWayTie,
@@ -35,7 +35,7 @@ function assertNeedsUserInput(result: TiebreakerResult, expectedReason: string, 
 describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
   describe('Fixture 1: secTwoWayTie', () => {
     it('should resolve two-team tie via head-to-head', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secTwoWayTie.conferenceGames,
         secTwoWayTie.outcomes,
@@ -57,7 +57,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 2: secThreeWayTie', () => {
     it('should resolve three-team tie through steps', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secThreeWayTie.conferenceGames,
         secThreeWayTie.outcomes,
@@ -72,7 +72,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 3: secFourWayTie', () => {
     it('should resolve four-team tie', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secFourWayTie.conferenceGames,
         secFourWayTie.outcomes,
@@ -92,7 +92,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 4: secFiveWayTie', () => {
     it('should resolve five-team tie', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secFiveWayTie.conferenceGames,
         secFiveWayTie.outcomes,
@@ -112,7 +112,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 5: secRestartVsContinueDivergence', () => {
     it('should demonstrate correct restart behavior', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secRestartVsContinueDivergence.conferenceGames,
         secRestartVsContinueDivergence.outcomes,
@@ -135,7 +135,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 6: secPartialHeadToHeadGraph', () => {
     it('should handle partial H2H graph and proceed to next step', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secPartialHeadToHeadGraph.conferenceGames,
         secPartialHeadToHeadGraph.outcomes,
@@ -150,7 +150,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 7: secZeroCommonOpponents', () => {
     it('should handle zero common opponents without NaN failures', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secZeroCommonOpponents.conferenceGames,
         secZeroCommonOpponents.outcomes,
@@ -172,7 +172,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 8: secNeedsUserInput', () => {
     it('should return NeedsUserInput when all computable steps fail to separate', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secNeedsUserInput.conferenceGames,
         secNeedsUserInput.outcomes,
@@ -209,7 +209,7 @@ describe('SEC tiebreaker fixtures (Phase 03-04)', () => {
 
   describe('Fixture 9: secCollectiveBucketComparison', () => {
     it('should apply collective-bucket comparison at next-highest-placed step (per D-13)', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'SEC',
         secCollectiveBucketComparison.conferenceGames,
         secCollectiveBucketComparison.outcomes,

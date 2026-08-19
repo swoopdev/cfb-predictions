@@ -10,6 +10,8 @@
  * grows a dependency on tiebreaker mechanics.
  */
 
+import type { ConferenceId } from '../domain/tiebreakers/types'
+
 /**
  * A win/loss pair. Used for BOTH the overall (season-wide) record and the
  * conference-games-only record; PROJECT.md's core value depends on those two
@@ -29,13 +31,19 @@ export interface ConferenceRecord {
  * size of the one before it — three teams sharing rank `2` are followed by
  * rank `5`.
  *
- * A rank group is the equivalence closure of two relations (see
- * `computeStandings`): teams the tiebreaker engine placed in the same resolved
- * seed order share a rank (D-11 — the engine's sequence decides their display
- * order but never splits them across rank numbers), and teams with an
- * identical conference record share a rank (D-04). Closing over both is what
- * lets a team the engine's restart redefinition dropped keep the rank of the
- * identical-record team it placed.
+ * D-01: a rank group is exactly one `RankGroup` emitted by
+ * `resolveConferenceRanking` (`shared/domain/tiebreakers/engine.ts`) — never
+ * a display-layer relation. Standard competition ranking is unchanged, but
+ * the tie definition is now the engine's own ordered partition and nothing
+ * else: two teams with an identical conference record land on DIFFERENT
+ * ranks whenever the published procedure separated them, and share a rank
+ * only when a `RankGroup.teams` array holds more than one team, i.e. the
+ * procedure genuinely could not separate them. This supersedes Phase 5's
+ * D-04, which grouped ranks by the equivalence closure of "same resolved
+ * seed group" and "identical conference W-L" — a relation this phase deletes
+ * because it hid the exact defect that forced the reversal: an ACC table
+ * rendering `1 Boston College 6-2` above `1 Duke 7-2`, two different records
+ * sharing a rank number.
  */
 export interface StandingsTeam {
   id: number
@@ -47,25 +55,32 @@ export interface StandingsTeam {
   confRecord: ConferenceRecord
   rank: number
   /**
-   * True when at least one other team in this conference shares `rank`.
+   * True when the tiebreaker procedure could not separate this team from at
+   * least one other team sharing `rank`.
    *
-   * "Tied" here means exactly "displayed on the same rank number", which for
-   * engine-placed teams means the engine defined them as tied for a
-   * championship slot BEFORE applying any tiebreaker step (STAND-04) — the
-   * step order that separated them lives in `rank`'s row sequence, not here.
-   * It is not a claim that the tie is unresolved; an unresolved tie is
-   * `needsUserInput` on the engine's own result and is Phase 6's concern
-   * (D-10).
+   * D-01/D-05: `isTied` now means the procedure was genuinely unable to
+   * separate the group — it is no longer merely "displayed on the same rank
+   * number" (Phase 5's weaker claim, which conflated "the engine defined
+   * them as tied for a slot" with "the procedure could not order them"). A
+   * false value means every rank above and below this row is either this
+   * team's own solitary rank or was earned against real contention
+   * (`resolvedBy: 'tiebreaker'` — see `RankGroup.contestedWith`), never a
+   * database-id ordering standing in for a tiebreaker result.
    */
   isTied: boolean
 }
 
 /**
  * Standings for every P4 conference, keyed by conference name exactly as it
- * appears in `teams.json` (`'SEC' | 'Big Ten' | 'Big 12' | 'ACC'`). Every P4
- * conference is always present, even when no picks have been made — an
- * unpicked season yields every team at 0-0.
+ * appears in `teams.json` (`'SEC' | 'Big Ten' | 'Big 12' | 'ACC'`).
+ *
+ * WR-06 (deferred from Phase 5): tightened from a loose string index
+ * signature to `Record<ConferenceId, ...>` so the type itself expresses
+ * "every P4 conference is always present" — `computeStandings` always
+ * returns all four keys, even for an entirely unpicked season (every team at
+ * 0-0) or a conference with zero rostered members (`[]`). The not-yet-computed
+ * state (games/teams still loading) is `undefined` at the call site, held by
+ * `useStandings`, never an empty `{}` that would satisfy this type by
+ * accident.
  */
-export type StandingsResult = {
-  [confName: string]: StandingsTeam[]
-}
+export type StandingsResult = Readonly<Record<ConferenceId, readonly StandingsTeam[]>>

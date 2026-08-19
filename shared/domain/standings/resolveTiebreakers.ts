@@ -1,15 +1,16 @@
 import type { Game, Team } from '../../types/schedule'
-import type { ChampionshipResult, ConferenceId, TeamId } from '../tiebreakers/types'
-import { resolveConferenceChampionship } from '../tiebreakers/engine'
+import type { ConferenceId, ConferenceRanking, TeamId } from '../tiebreakers/types'
+import { resolveConferenceRanking } from '../tiebreakers/engine'
 import { P4_CONFERENCES, conferenceGamesFor, toOutcomes } from './computeStandings'
 
 /**
- * Every P4 conference's championship resolution, keyed by conference name.
+ * Every P4 conference's full 1..N ranking, keyed by conference name.
  * `Partial` because a conference is omitted when its resolution throws (see
  * `resolveAllConferences`) — consumers must treat a missing key as "no
- * tiebreaker information", not as an error.
+ * tiebreaker information", not as an error. WR-06 tightens `StandingsResult`,
+ * not this type — the omit-on-throw path means this stays `Partial`.
  */
-export type ResolvedTiebreakers = Partial<Record<ConferenceId, ChampionshipResult>>
+export type ResolvedTiebreakers = Partial<Record<ConferenceId, ConferenceRanking>>
 
 /**
  * Runs Phase 3's tiebreaker engine once per P4 conference and collects the
@@ -24,7 +25,7 @@ export type ResolvedTiebreakers = Partial<Record<ConferenceId, ChampionshipResul
  *
  * Pure and framework-free, same as `computeStandings`.
  *
- * **Failure isolation.** `resolveConferenceChampionship` throws on malformed
+ * **Failure isolation.** `resolveConferenceRanking` throws on malformed
  * input and its recursion guards throw on an engine invariant violation. A
  * throw is caught per conference and that conference is simply omitted, so
  * one conference's bad state can never blank out the other three's standings.
@@ -63,7 +64,7 @@ export function resolveAllConferences(
     if (confTeamIds.size === 0) continue
 
     try {
-      resolved[conference] = resolveConferenceChampionship(
+      resolved[conference] = resolveConferenceRanking(
         conference,
         conferenceGamesFor(games, confTeamIds),
         outcomes,

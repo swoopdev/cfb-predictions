@@ -320,7 +320,7 @@ export const accRestartRedefinesTiedGroup: AccFixture = {
 // - They do NOT play each other (can be in different divisions/matchup groups).
 // - Introduce a 9-game third team (e.g., Duke 150) at 6-3 (lower win count).
 // - Duke is NOT part of the initial tied group.
-// - Expected: resolveConferenceChampionship returns NeedsUserInput because FSU and Louisville
+// - Expected: the tied-group resolution returns NeedsUserInput because FSU and Louisville
 //   are tied (H2H doesn't apply — they didn't play each other), and the next step (common opponents)
 //   also doesn't fully separate them (or there are no common opponents).
 export const accMixedScheduleTiedTeamDefinition: AccFixture = {

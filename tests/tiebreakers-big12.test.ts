@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveChampionship } from './helpers/legacy-championship'
 import {
   big12TwoWayTie,
   big12ThreeWayTie,
@@ -24,7 +24,7 @@ import {
 describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
   describe('Fixture 1: big12TwoWayTie', () => {
     it('should resolve two-team tie via head-to-head', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12TwoWayTie.conferenceGames,
         big12TwoWayTie.outcomes,
@@ -41,7 +41,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 2: big12ThreeWayTie', () => {
     it('should resolve three-team tie, exercising restart procedure', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12ThreeWayTie.conferenceGames,
         big12ThreeWayTie.outcomes,
@@ -57,7 +57,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 3: big12FourWayTie', () => {
     it('should resolve four-team tie with at least one 2-2 split', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12FourWayTie.conferenceGames,
         big12FourWayTie.outcomes,
@@ -73,7 +73,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 4: big12FiveWayTie', () => {
     it('should resolve five-team tie through multiple restart cycles', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12FiveWayTie.conferenceGames,
         big12FiveWayTie.outcomes,
@@ -89,7 +89,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 5: big12RestartVsContinueDivergence', () => {
     it('should demonstrate restart vs continue divergence', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12RestartVsContinueDivergence.conferenceGames,
         big12RestartVsContinueDivergence.outcomes,
@@ -110,7 +110,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 6: big12PartialHeadToHeadGraph', () => {
     it('should handle partial head-to-head graph correctly', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12PartialHeadToHeadGraph.conferenceGames,
         big12PartialHeadToHeadGraph.outcomes,
@@ -126,7 +126,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 7: big12ZeroCommonOpponents', () => {
     it('should handle zero common opponents without NaN', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12ZeroCommonOpponents.conferenceGames,
         big12ZeroCommonOpponents.outcomes,
@@ -152,7 +152,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 8: big12CollectiveBucketComparison (D-05 regression)', () => {
     it('should resolve via collective-bucket comparison, NOT one-at-a-time', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12CollectiveBucketComparison.conferenceGames,
         big12CollectiveBucketComparison.outcomes,
@@ -184,7 +184,7 @@ describe('Big 12 tiebreaker fixtures (Phase 03-06)', () => {
 
   describe('Fixture 9: big12NeedsUserInputViaTotalWins', () => {
     it('should require user input after reaching total-wins step with FCS cap', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big 12',
         big12NeedsUserInputViaTotalWins.conferenceGames,
         big12NeedsUserInputViaTotalWins.outcomes,

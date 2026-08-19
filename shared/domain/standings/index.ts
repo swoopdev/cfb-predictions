@@ -18,3 +18,6 @@ export {
 
 export { resolveAllConferences } from './resolveTiebreakers'
 export type { ResolvedTiebreakers } from './resolveTiebreakers'
+
+export { isConferenceSlateComplete, slateCompletionByConference } from './slateCompletion'
+export type { SlateCompletion } from './slateCompletion'

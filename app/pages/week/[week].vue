@@ -2,8 +2,6 @@
 import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
-import type { StandingsResult } from '#shared/types/standings'
-import { computeStandings, resolveAllConferences } from '#shared/domain/standings'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
@@ -95,22 +93,12 @@ const conferenceGroups = computed(() => {
 // not just whether the grid is empty.
 const emptyVariant = computed(() => determineEmptyStateVariant(rawWeekGames.value, filteredGames.value))
 
-// D-13/STAND-02: standings are a plain `computed` over (games, teams, picks)
-// — no watcher, no debounce. Vue invalidates it the instant `picks` mutates,
-// so a pick and its standings consequence land in the same render. Measured
-// at ~7ms for the full 888-game slate across all four conferences, which is
-// well under a frame and is why no debounce is warranted.
-const resolvedTiebreakers = computed(() => {
-  const slate = games.value?.games
-  if (!slate || !teams.value) return undefined
-  return resolveAllConferences(slate, teams.value, picks.value)
-})
-
-const standings = computed<StandingsResult>(() => {
-  const slate = games.value?.games
-  if (!slate || !teams.value) return {}
-  return computeStandings(slate, teams.value, picks.value, resolvedTiebreakers.value)
-})
+// IN-02/D-13/STAND-02: standings and tiebreaker resolution live behind one
+// composable (`useStandings`), which owns the single readiness guard and
+// returns `undefined` (never an empty-object sentinel) until games and teams
+// resolve. See the composable's own docblock for the D-13/STAND-02 no-
+// watcher/no-debounce rationale and measured cost.
+const { standings, rankings, slateComplete, commitOrdering } = useStandings(2026)
 
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
@@ -322,6 +310,9 @@ function handleClearSeason() {
         v-if="loadState === 'ready'"
         :standings="standings"
         :active-conference="conf"
+        :rankings="rankings"
+        :slate-complete="slateComplete"
+        :commit-ordering="commitOrdering"
       />
       <div
         v-else-if="loadState === 'loading'"

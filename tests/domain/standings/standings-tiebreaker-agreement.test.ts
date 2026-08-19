@@ -4,11 +4,11 @@
 
 /**
  * The CR-01 regression suite (05-REVIEW.md): standings row order must never
- * contradict the seed order the tiebreaker engine actually resolved.
+ * contradict the order the tiebreaker engine actually resolved.
  *
  * WR-07 recorded that the 05-01 suite is structurally BLIND to this — no test
- * ever compared a standings row against a resolved seed, and every SEC team in
- * `secRoundRobinGames` plays exactly four conference games, so unequal
+ * ever compared a standings row against a resolved group, and every SEC team
+ * in `secRoundRobinGames` plays exactly four conference games, so unequal
  * games-played (the precondition for the defect) is absent from the fixtures.
  * This file closes both halves: synthetic fixtures that pin the mechanism, and
  * a property assertion over 200 generated seasons of the committed 2026 slate,
@@ -17,17 +17,22 @@
  * Every expected order below is derived from the engine's own output at
  * runtime. Nothing is hard-coded from a hand-run of the implementation.
  *
+ * 06-03: rewritten from the pre-Plan-06-02 `{ conference, seed1, seed2 }`
+ * shape to `ConferenceRanking.groups` — the engine's single ordered
+ * partition — and from D-04's "identical record implies identical rank"
+ * invariant to D-01's "same rank iff same RankGroup" invariant. See each
+ * describe block below for what changed and why.
+ *
  * Runs under the `node` environment: happy-dom's global `URL` produces a
  * non-`file:`-schemed URL that Node's `fileURLToPath` rejects (see
  * `.planning/phases/05-standings-engine-ui/deferred-items.md`, class B).
  */
 
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { computeStandings, resolveAllConferences } from '../../../shared/domain/standings'
 import type { StandingsTeam } from '../../../shared/types/standings'
-import type { Game, Team } from '../../../shared/types/schedule'
+import { championshipFor } from '../../../shared/domain/tiebreakers/engine'
+import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 import {
   allTeams,
   BOSTON_COLLEGE,
@@ -83,29 +88,28 @@ describe('ACC mixed conference-schedule lengths (real engine end to end)', () =>
     resolved
   )
 
-  it('resolves seed 1 to the .667 team ahead of the .750 team', () => {
+  it('resolves the top two groups to the .667 team ahead of the .750 team', () => {
     // Sanity-check the fixture actually exercises `defineAccTiedTeams`'
     // alternate-schedule-length pull-in, so a later fixture edit that quietly
     // removes the tie shows up as a failure here rather than as a silently
     // vacuous test below.
-    const seed1 = resolved.ACC!.seed1
-    expect(seed1.status).toBe('resolved')
-    if (seed1.status !== 'resolved') return
-    expect([...seed1.order]).toEqual([BOSTON_COLLEGE, MIAMI])
+    //
+    // 06-03: `championshipFor` reads the championship spots directly off
+    // `ranking.groups[0]`/`groups[1]` -- there is no separate seed1/seed2
+    // resolution left to read `.order` from.
+    const { seed1, seed2 } = championshipFor(resolved.ACC!)
+    expect(seed1?.teams).toEqual([BOSTON_COLLEGE])
+    expect(seed2?.teams).toEqual([MIAMI])
   })
 
   it('puts the engine-resolved champion in the top standings row', () => {
-    const seed1 = resolved.ACC!.seed1
-    if (seed1.status !== 'resolved') throw new Error('fixture no longer resolves seed 1')
-
-    expect(standings.ACC![0]!.id).toBe(seed1.order[0])
+    const champion = resolved.ACC!.groups[0]!.teams[0]
+    expect(standings.ACC![0]!.id).toBe(champion)
   })
 
-  it('never inverts the resolved seed-1 order in the displayed rows', () => {
-    const seed1 = resolved.ACC!.seed1
-    if (seed1.status !== 'resolved') throw new Error('fixture no longer resolves seed 1')
-
-    const indices = displayIndices(seed1.order, standings.ACC!)
+  it('never inverts the resolved group order in the displayed rows', () => {
+    const order = resolved.ACC!.groups.flatMap(group => group.teams)
+    const indices = displayIndices(order, standings.ACC!)
     expect(indices).not.toContain(-1)
     expect(isStrictlyAscending(indices)).toBe(true)
   })
@@ -123,26 +127,22 @@ describe('equal win percentage, unequal conference record', () => {
     equalPctUnequalRecordResolved
   )
 
-  it('puts the resolved seed-1 team on top even though it has fewer wins', () => {
+  it('puts the resolved group\'s first-listed team on top even though it has fewer wins', () => {
     // Alabama is 2-0 and Georgia 3-0. Both are 1.000, which is the SEC's tie
-    // definition, and the engine placed Alabama first.
+    // definition, and the fixture's group lists Alabama first.
     expect(standings.SEC![0]!.id).toBe(ALABAMA)
   })
 
-  it('gives the whole resolved seed group one shared rank number', () => {
+  it('gives the whole resolved group one shared rank number', () => {
     const alabama = bySchool(standings.SEC!, 'Alabama')
     const georgia = bySchool(standings.SEC!, 'Georgia')
 
     expect(alabama.rank).toBe(georgia.rank)
   })
 
-  it('never inverts the resolved seed-1 order in the displayed rows', () => {
-    const indices = displayIndices(
-      equalPctUnequalRecordResolved.SEC!.seed1.status === 'resolved'
-        ? equalPctUnequalRecordResolved.SEC!.seed1.order
-        : [],
-      standings.SEC!
-    )
+  it('never inverts the resolved group order in the displayed rows', () => {
+    const order = equalPctUnequalRecordResolved.SEC!.groups[0]!.teams
+    const indices = displayIndices(order, standings.SEC!)
 
     expect(indices).toHaveLength(2)
     expect(isStrictlyAscending(indices)).toBe(true)
@@ -150,50 +150,45 @@ describe('equal win percentage, unequal conference record', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Test 3 — Fixture C, a team dropped by the restart redefinition
+// Test 3 — Fixture C, a team dropped entirely from every group (D-01 reversal)
 // ---------------------------------------------------------------------------
 
-describe('a team the resolved order dropped but whose record is shared (D-04)', () => {
-  const standings = computeStandings(
-    droppedTiedTeamGames,
-    allTeams,
-    droppedTiedTeamPicks,
-    droppedTiedTeamResolved
-  )
+describe('a team the resolved ranking dropped entirely (the defensive fallback path)', () => {
+  const standings = computeStandings(droppedTiedTeamGames, allTeams, droppedTiedTeamPicks, droppedTiedTeamResolved)
 
-  it('puts the resolved seed-1 team on top', () => {
+  it('puts the resolved group\'s team on top', () => {
     expect(standings.SEC![0]!.id).toBe(ALABAMA)
   })
 
   /**
-   * The regression this test exists for is a SPLIT, not an inversion. It
-   * passes against the pre-05-03 engine by accident — Georgia and LSU hold
-   * identical records, so the old adjacency-keyed `assignRanks` already gave
-   * them one rank. What it proves is that grouping on seed-group membership
-   * ALONE — the obvious, wrong fix — would rank Georgia (placed in
-   * `seed1.order`) apart from LSU (dropped from it) and break D-04 in the act
-   * of fixing CR-01. The RED gate for this plan's Task 1 is carried by the
-   * other three describe blocks.
+   * D-01 reverses what this test proved before Plan 06-03. Under Phase 5's
+   * D-04 closure, a team the resolved order dropped (LSU) still shared a
+   * rank with its identical-record twin (Georgia), because rank was partly
+   * record-derived. Under D-01, rank comes ONLY from `ranking.groups`: LSU
+   * is named in no group here, so it falls through to `fallbackOrder` and
+   * lands on its OWN rank, distinct from Georgia's placed rank, even though
+   * their conference records are identical. This is the intended behaviour,
+   * not a regression — only the engine's own partition can put two teams on
+   * the same rank now.
    */
-  it('keeps a dropped team on the same rank as the placed team it ties', () => {
+  it('gives the dropped team its own rank, separate from the placed team it once shared a record with', () => {
     const georgia = bySchool(standings.SEC!, 'Georgia')
     const lsu = bySchool(standings.SEC!, 'LSU')
 
     expect(`${georgia.confRecord.wins}-${georgia.confRecord.losses}`).toBe('2-1')
     expect(`${lsu.confRecord.wins}-${lsu.confRecord.losses}`).toBe('2-1')
-    expect(georgia.rank).toBe(lsu.rank)
+    expect(georgia.rank).not.toBe(lsu.rank)
   })
 
-  it('never inverts the resolved seed-1 order in the displayed rows', () => {
-    const seed1 = droppedTiedTeamResolved.SEC!.seed1
-    if (seed1.status !== 'resolved') throw new Error('fixture no longer resolves seed 1')
+  it('never inverts the resolved group order for the placed teams in the displayed rows', () => {
+    const order = droppedTiedTeamResolved.SEC!.groups.flatMap(group => group.teams)
+    const indices = displayIndices(order, standings.SEC!)
 
-    const indices = displayIndices(seed1.order, standings.SEC!)
     expect(indices).not.toContain(-1)
     expect(isStrictlyAscending(indices)).toBe(true)
   })
 
-  it('places Georgia, not LSU, ahead — the engine order still decides display', () => {
+  it('places Georgia, the placed team, ahead of LSU, the dropped team', () => {
     const rows = standings.SEC!
     const georgiaIndex = rows.findIndex(r => r.id === GEORGIA)
     const lsuIndex = rows.findIndex(r => r.id === LSU)
@@ -206,135 +201,97 @@ describe('a team the resolved order dropped but whose record is shared (D-04)', 
 // Test 4 — the committed 2026 slate (the reviewer's reproduction, automated)
 // ---------------------------------------------------------------------------
 
-function readJson<T>(relativePath: string): T {
-  const url = new URL(relativePath, import.meta.url)
-  return JSON.parse(readFileSync(fileURLToPath(url), 'utf8')) as T
-}
-
-/**
- * mulberry32 — a self-contained deterministic PRNG. Written inline rather than
- * pulled from a package so this plan installs nothing (threat T-05-03-SC).
- */
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0
-  return () => {
-    a = (a + 0x6D2B79F5) >>> 0
-    let t = a
-    t = Math.imul(t ^ (t >>> 15), t | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-function generatePicks(
-  games: readonly Game[],
-  random: () => number,
-  throughWeek?: number
-): Record<number, number> {
-  const picks: Record<number, number> = {}
-  for (const game of games) {
-    if (throughWeek !== undefined && game.week > throughWeek) continue
-    picks[game.id] = random() < 0.5 ? game.homeId : game.awayId
-  }
-  return picks
-}
-
-describe('the committed 2026 slate never contradicts a resolved seed order', () => {
-  const { games } = readJson<{ games: Game[] }>('../../../public/data/2026/games.json')
-  const { teams } = readJson<{ teams: Team[] }>('../../../public/data/2026/teams.json')
+describe('the committed 2026 slate never contradicts a resolved ranking', () => {
+  const { games, teams } = readSlate()
 
   /**
    * Collects every way a single generated season can contradict the engine:
    *
-   * (i)   a resolved seed order whose display indices are not strictly
-   *       ascending, or whose first team is not row 0 (seed 1 only — seed 2's
-   *       leader legitimately sits below the champion);
-   * (ii)  an id in a resolved seed order that has no row at all, reported
-   *       explicitly rather than being allowed to compare as ascending;
-   * (iii) two rows in the same conference with identical conference W-L but
-   *       different rank numbers — the D-04 invariant, which catches the
-   *       natural restart-redefinition drop wherever it occurs.
+   * (i)   the full group walk's display indices are not strictly ascending,
+   *       or the first team named across all groups is not row 0 (the
+   *       conference's #1 seed);
+   * (ii)  an id named in a group has no row at all, reported explicitly
+   *       rather than being allowed to compare as ascending;
+   * (iii) **D-01 (replaces the D-04 clause).** Two rows carry the same rank
+   *       number IF AND ONLY IF they are in the SAME `RankGroup`. Built from
+   *       an id-to-rank map (off the standings rows) and an
+   *       id-to-group-index map (off `ranking.groups`); any pair whose rank
+   *       equality and group-membership equality disagree, in EITHER
+   *       direction, is a violation.
    *
-   * **Why seed 2's ordering check is scoped to the teams seed 1 did not
-   * place.** `seed1.order` and `seed2.order` can genuinely disagree about the
-   * relative order of two teams, in which case NO row order satisfies both and
-   * the standings layer must pick one. This plan's design picks seed 1 (it is
-   * the sequence that also carries the champion), so seed 2 is authoritative
-   * exactly over its group-1 membership — the ids a resolved `seed1.order` did
-   * not already claim. The disagreement is an engine-side artefact and is
-   * pinned by its own describe block below; scoping here is not a relaxation
-   * of what this suite can detect, because the excluded pairs are checked at
-   * full strength against `seed1.order` in clause (i).
+   * **The old seed-2 scoping caveat is now moot.** Pre-06-02, seed 1 and
+   * seed 2 were two INDEPENDENT resolutions that could genuinely disagree
+   * about a shared team's relative order, so this suite scoped seed 2's
+   * ordering check to the ids seed 1 did not already claim. Plan 06-02 made
+   * every group in `ranking.groups` come from ONE ordered sequence, so there
+   * is no second, independently-resolved order left to disagree with — the
+   * single full-group walk in clause (i) already checks everything seed 1
+   * and seed 2 used to check between them, at full strength, everywhere.
    */
   function violationsFor(label: string, picks: Record<number, number>): string[] {
     const violations: string[] = []
     const resolved = resolveAllConferences(games, teams, picks)
     const standings = computeStandings(games, teams, picks, resolved)
 
-    for (const [conference, championship] of Object.entries(resolved)) {
+    for (const [conference, ranking] of Object.entries(resolved)) {
       const rows = standings[conference] ?? []
       const schoolById = new Map(rows.map(r => [r.id, r.school]))
       const displayed = rows.map(r => `${r.school} ${r.confRecord.wins}-${r.confRecord.losses} #${r.rank}`)
 
-      const seed1 = championship.seed1
-      const claimedBySeed1 = new Set<number>(seed1.status === 'resolved' ? seed1.order : [])
+      const fullOrder = ranking.groups.flatMap(group => group.teams)
+      const engineOrder = fullOrder.map(id => schoolById.get(id) ?? `unknown id ${id}`).join(' > ')
 
-      for (const seedName of ['seed1', 'seed2'] as const) {
-        const seed = championship[seedName]
-        if (seed.status !== 'resolved') continue
+      // (ii) missing rows first, over the FULL order — an absent id must not
+      // be smuggled past the ordering check as a `-1` that happens to sort
+      // ascending.
+      const indices = displayIndices(fullOrder, rows)
+      indices.forEach((index, position) => {
+        if (index === -1) {
+          violations.push(
+            `[missing-row] ${label} ${conference}: id ${fullOrder[position]} is in the resolved ranking but has no standings row`
+            + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
+          )
+        }
+      })
 
-        const engineOrder = seed.order
-          .map(id => schoolById.get(id) ?? `unknown id ${id}`)
-          .join(' > ')
+      // (i) ordering
+      const present = indices.filter(index => index !== -1)
+      if (!isStrictlyAscending(present)) {
+        violations.push(
+          `[order] ${label} ${conference}: displayed order contradicts the engine`
+          + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
+        )
+      }
 
-        // (ii) missing rows first, over the FULL order — an absent id must not
-        // be smuggled past the ordering check as a `-1` that happens to sort
-        // ascending.
-        displayIndices(seed.order, rows).forEach((index, position) => {
-          if (index === -1) {
+      if (rows.length > 0 && fullOrder.length > 0 && rows[0]!.id !== fullOrder[0]) {
+        violations.push(
+          `[champion] ${label} ${conference}: engine champion `
+          + `${schoolById.get(fullOrder[0]!) ?? fullOrder[0]} is not the top row`
+          + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
+        )
+      }
+
+      // (iii) D-01: same rank iff same RankGroup.
+      const groupIndexById = new Map<number, number>()
+      ranking.groups.forEach((group, index) => {
+        for (const teamId of group.teams) groupIndexById.set(teamId, index)
+      })
+
+      for (let i = 0; i < rows.length; i++) {
+        for (let j = i + 1; j < rows.length; j++) {
+          const a = rows[i]!
+          const b = rows[j]!
+          const sameRank = a.rank === b.rank
+          const sameGroup = groupIndexById.has(a.id)
+            && groupIndexById.has(b.id)
+            && groupIndexById.get(a.id) === groupIndexById.get(b.id)
+
+          if (sameRank !== sameGroup) {
             violations.push(
-              `[missing-row] ${label} ${conference} ${seedName}: id ${seed.order[position]} is in the resolved order but has no standings row`
-              + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
+              `[d-01] ${label} ${conference}: ${a.school} (rank ${a.rank}) and ${b.school} (rank ${b.rank}) `
+              + `${sameRank ? 'share a rank but are not in the same RankGroup' : 'are in the same RankGroup but carry different ranks'}`
             )
           }
-        })
-
-        // (i) ordering
-        const governed = seedName === 'seed1'
-          ? seed.order
-          : seed.order.filter(id => !claimedBySeed1.has(id))
-        const present = displayIndices(governed, rows).filter(index => index !== -1)
-
-        if (!isStrictlyAscending(present)) {
-          violations.push(
-            `[order] ${label} ${conference} ${seedName}: displayed order contradicts the engine`
-            + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
-          )
-        }
-
-        if (seedName === 'seed1' && rows.length > 0 && rows[0]!.id !== seed.order[0]) {
-          violations.push(
-            `[champion] ${label} ${conference} seed1: engine champion `
-            + `${schoolById.get(seed.order[0]!) ?? seed.order[0]} is not the top row`
-            + ` | engine: ${engineOrder} | displayed: ${displayed.join(' | ')}`
-          )
-        }
-      }
-    }
-
-    // (iii) D-04 across every conference, resolved or not.
-    for (const [conference, rows] of Object.entries(standings)) {
-      const rankByRecord = new Map<string, { rank: number, school: string }>()
-      for (const row of rows) {
-        const key = `${row.confRecord.wins}-${row.confRecord.losses}`
-        const seen = rankByRecord.get(key)
-        if (seen === undefined) {
-          rankByRecord.set(key, { rank: row.rank, school: row.school })
-        } else if (seen.rank !== row.rank) {
-          violations.push(
-            `[d-04] ${label} ${conference}: ${seen.school} and ${row.school} are both ${key}`
-            + ` but carry ranks ${seen.rank} and ${row.rank}`
-          )
         }
       }
     }
@@ -365,69 +322,42 @@ describe('the committed 2026 slate never contradicts a resolved seed order', () 
   })
 
   /**
-   * Found while making the property test above pass, and pinned here so it
-   * cannot silently change: `seed1.order` and `seed2.order` can contradict
-   * each other, and when they do NO row order satisfies both.
-   *
-   * Measured over the same 200 generated seasons: 7 of 649 conferences with
-   * both seeds resolved, and in ALL SEVEN the contradicted pair sits inside a
-   * bucket the engine never actually separated. `resolveTiedGroup` emits
-   * `[...winners, ...restResult.order]` (`engine.ts:159`), and when a step's
-   * top bucket holds more than one team every one of them is recorded as
-   * `seeded` with their internal order coming from `partitionByStepValue`'s
-   * `sort((a, b) => a - b)` — a raw TEAM ID sort, not a resolution. Seed 2
-   * then re-runs the same step over a smaller pool (a different common-opponent
-   * set, say) and legitimately reaches the opposite answer.
-   *
-   * So `seed1.order` is authoritative at position 0 always, and beyond that
-   * only where the engine genuinely separated teams. This standings layer
-   * follows `seed1.order` where the two disagree — the sequence that carries
-   * the champion wins — and the assertions below fix what the user actually
-   * sees in that case: one shared rank number across the whole disputed
-   * group, so the disagreement never surfaces as differing ranks.
-   *
-   * The real repair belongs in Phase 3/6 (the engine should not present an
-   * unseparated bucket as an ordered sequence); logged in
+   * PRE-06-02: `seed1.order` and `seed2.order` could genuinely contradict
+   * each other — measured at 7 of 649 resolved conferences over 200
+   * generated seasons of the committed 2026 slate — because `resolveSlot`
+   * ran seed 1 and seed 2 as two INDEPENDENT resolutions and an unseparated
+   * top bucket was presented as an ordered sequence (`partitionByStepValue`'s
+   * raw team-id sort). Full detail in
    * `.planning/phases/05-standings-engine-ui/deferred-items.md`.
+   *
+   * 06-02 replaced both causes at once, and 06-03 removed the separate
+   * seed1/seed2 return shape entirely: `resolveConferenceRanking` now
+   * produces ONE ordered sequence of rank groups (`ranking.groups`), and
+   * `championshipFor` reads the championship spots off `groups[0]`/`groups[1]`
+   * of that SAME array. Two views into one array cannot disagree with each
+   * other by construction — there is no second, independently-computed order
+   * left to contradict, so the elaborate cross-seed contradiction search this
+   * block used to run is no longer expressible (there is nothing left to
+   * compare). What remains worth guarding is that `championshipFor` STAYS a
+   * pure read of `ranking.groups` rather than quietly reintroducing a second,
+   * independent resolution path.
    */
-  describe('when the engine contradicts itself between seed 1 and seed 2', () => {
-    // Fully-picked PRNG seed 1, Big 12: seed1 = [Oklahoma State, West
-    // Virginia, UCF] but seed2 = [UCF, West Virginia].
-    const picks = generatePicks(games, mulberry32(1))
-    const resolved = resolveAllConferences(games, teams, picks)
-    const standings = computeStandings(games, teams, picks, resolved)
-    const rows = standings['Big 12']!
-    const championship = resolved['Big 12']!
+  describe('the engine can no longer contradict itself between seed 1 and seed 2 (06-02/06-03)', () => {
+    it('derives seed1/seed2 as a pure read of groups[0]/groups[1], never a second resolution', () => {
+      for (let seed = 1; seed <= 20; seed++) {
+        const random = mulberry32(seed)
+        const resolved = resolveAllConferences(games, teams, generatePicks(games, random))
 
-    it('still produces the contradiction this block exists to cover', () => {
-      expect(championship.seed1.status).toBe('resolved')
-      expect(championship.seed2.status).toBe('resolved')
-      if (championship.seed1.status !== 'resolved') return
-      if (championship.seed2.status !== 'resolved') return
-
-      const positionInSeed1 = new Map(championship.seed1.order.map((id, index) => [id, index]))
-      const seed2AsSeed1Positions = championship.seed2.order.map(id => positionInSeed1.get(id))
-
-      // Both of seed 2's teams are inside seed 1's order, in the OPPOSITE
-      // relative order — the unsatisfiable shape.
-      expect(seed2AsSeed1Positions).toEqual([2, 1])
-    })
-
-    it('follows seed 1, so the resolved champion is still row 0', () => {
-      if (championship.seed1.status !== 'resolved') return
-
-      expect(rows[0]!.id).toBe(championship.seed1.order[0])
-      expect(isStrictlyAscending(displayIndices(championship.seed1.order, rows))).toBe(true)
-    })
-
-    it('puts the whole disputed group on one rank number, so no user can see the disagreement', () => {
-      if (championship.seed1.status !== 'resolved') return
-
-      const disputed = championship.seed1.order.map(id => rows.find(r => r.id === id)!)
-      const ranks = new Set(disputed.map(r => r.rank))
-
-      expect(ranks.size).toBe(1)
-      expect(disputed.every(r => r.isTied)).toBe(true)
+        for (const ranking of Object.values(resolved)) {
+          const { seed1, seed2 } = championshipFor(ranking)
+          expect(seed1).toBe(ranking.groups[0])
+          if (ranking.groups[0] !== undefined && ranking.groups[0].teams.length === 1) {
+            expect(seed2).toBe(ranking.groups[1])
+          } else {
+            expect(seed2).toBeUndefined()
+          }
+        }
+      }
     })
   })
 })

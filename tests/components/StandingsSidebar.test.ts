@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import StandingsSidebar from '~/components/StandingsSidebar.vue'
 import type { StandingsResult, StandingsTeam } from '../../shared/types/standings'
+import type { ConferenceRanking, RankGroup } from '../../shared/domain/tiebreakers/types'
+import type { ResolvedTiebreakers } from '../../shared/domain/standings'
 
 /**
  * StandingsSidebar rendering tests.
@@ -87,6 +89,33 @@ describe('StandingsSidebar', () => {
     })
 
     expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+  })
+
+  // Task 3 (06-03): `standings` is now `StandingsResult | undefined` — the
+  // week page gates this component's mount on `loadState === 'ready'`, so
+  // `undefined` reaches it only defensively, never in the normal flow. It
+  // must degrade to the same "no teams" panel every conference already shows
+  // when empty, never throw on the tightened `Readonly<Record<ConferenceId,
+  // ...>>` type it now reads through optional chaining.
+  it('renders an empty panel per conference, not an empty page, when standings is undefined', () => {
+    const wrapper = mount(StandingsSidebar, {
+      props: { standings: undefined }
+    })
+
+    expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+    expect(wrapper.text()).toContain('No teams to show for SEC.')
+  })
+
+  // T-06-07: an unrecognised `activeConference` must fall back to all four
+  // conferences, never an empty panel — this is the sanitization the
+  // tightened `StandingsResult` type depends on to index safely.
+  it('falls back to all four conferences rather than an empty panel for an unrecognised conference', () => {
+    const wrapper = mount(StandingsSidebar, {
+      props: { standings, activeConference: 'not-a-real-conference' }
+    })
+
+    expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+    expect(wrapper.text()).not.toContain('No teams to show for SEC.')
   })
 
   it('explains itself when the active filter names a conference with no standings', () => {
@@ -193,5 +222,117 @@ describe('StandingsSidebar', () => {
 
     const schools = wrapper.findAll('tbody th').map(th => th.text())
     expect(schools).toEqual(['Alabama', 'Georgia'])
+  })
+
+  // Plan 06-04 (TIE-07): `rankings` is the seam Task 3 threads down to
+  // `ChampionshipCard`. This component performs no filtering or computation
+  // on it -- it only indexes and passes the per-conference entry through.
+  describe('rankings threading (Plan 06-04)', () => {
+    const secTeam = team('Alabama', 'SEC')
+    const secOnly: StandingsResult = { 'SEC': [secTeam], 'Big Ten': [], 'Big 12': [], 'ACC': [] }
+
+    const secRanking: ConferenceRanking = {
+      conference: 'SEC',
+      groups: [
+        { teams: [secTeam.id], resolvedBy: 'sole-candidate', contestedWith: [secTeam.id], trace: [] }
+      ]
+    }
+    const rankings: ResolvedTiebreakers = { SEC: secRanking }
+
+    it('passes the matching conference entry down and renders its championship card', () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: secOnly, activeConference: 'SEC', rankings }
+      })
+
+      expect(wrapper.text()).toContain('CHAMPIONSHIP GAME')
+      expect(wrapper.text()).toContain('Alabama')
+    })
+
+    it('renders every table without throwing when rankings is undefined', () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: secOnly, activeConference: 'SEC' }
+      })
+
+      expect(renderedConferences(wrapper)).toEqual(['SEC'])
+      expect(wrapper.find('table').exists()).toBe(true)
+    })
+  })
+
+  // Plan 06-07 (Task 2): `slateComplete`/`commitOrdering` are the D-17
+  // ordering-interaction seam. This component performs no completion
+  // computation or storage access of its own -- it only indexes the
+  // per-conference boolean and passes the shared handler straight through.
+  describe('slateComplete/commitOrdering threading (Plan 06-07)', () => {
+    const alabama = team('Alabama', 'SEC')
+    const georgia = team('Georgia', 'SEC', 1)
+    const tiedStandings: StandingsResult = {
+      'SEC': [
+        { ...alabama, isTied: true },
+        { ...georgia, isTied: true }
+      ],
+      'Big Ten': [],
+      'Big 12': [],
+      'ACC': []
+    }
+    const unresolvedGroup: RankGroup = {
+      teams: [alabama.id, georgia.id],
+      resolvedBy: 'unresolved',
+      contestedWith: [alabama.id, georgia.id],
+      trace: [],
+      terminalReason: { code: 'needs-scores', ruleCitation: 'x', sourceName: 'y' }
+    }
+    const rankings: ResolvedTiebreakers = { SEC: { conference: 'SEC', groups: [unresolvedGroup] } }
+
+    async function expandTheOnlyGroup(wrapper: ReturnType<typeof mount>) {
+      await wrapper.get('tbody button').trigger('click')
+    }
+
+    it('never offers the ordering interaction when the slate-complete map is absent', async () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: tiedStandings, activeConference: 'SEC', rankings }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+
+      expect(wrapper.text()).not.toContain('Nothing separates these')
+    })
+
+    it('never offers the ordering interaction when this conference\'s slate is explicitly incomplete', async () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: {
+          standings: tiedStandings,
+          activeConference: 'SEC',
+          rankings,
+          slateComplete: { 'SEC': false, 'Big Ten': false, 'Big 12': false, 'ACC': false }
+        }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+
+      expect(wrapper.text()).not.toContain('Nothing separates these')
+    })
+
+    it('offers the ordering interaction and forwards a commit to the supplied handler once the slate is complete', async () => {
+      const commitOrdering = vi.fn()
+      const wrapper = mount(StandingsSidebar, {
+        props: {
+          standings: tiedStandings,
+          activeConference: 'SEC',
+          rankings,
+          slateComplete: { 'SEC': true, 'Big Ten': false, 'Big 12': false, 'ACC': false },
+          commitOrdering
+        }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+      expect(wrapper.text()).toContain('Nothing separates these')
+
+      const teamButtons = wrapper.findAll('[role="group"] button')
+      await teamButtons[0]!.trigger('click')
+      await teamButtons[1]!.trigger('click')
+
+      expect(commitOrdering).toHaveBeenCalledTimes(1)
+      expect(commitOrdering).toHaveBeenCalledWith('SEC', unresolvedGroup, expect.arrayContaining([alabama.id, georgia.id]))
+    })
   })
 })

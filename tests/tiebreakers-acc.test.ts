@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveChampionship } from './helpers/legacy-championship'
 import { deriveConferenceRecords } from '../shared/domain/tiebreakers/records'
 import { defineAccTiedTeams } from '../shared/domain/tiebreakers/acc'
 import {
@@ -28,7 +28,7 @@ import {
 describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
   describe('Fixture 1: accTwoWayTie', () => {
     it('should resolve two-team tie via head-to-head', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accTwoWayTie.conferenceGames,
         accTwoWayTie.outcomes,
@@ -49,7 +49,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 2: accThreeWayTie', () => {
     it('should handle three-team tie with round-robin H2H', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accThreeWayTie.conferenceGames,
         accThreeWayTie.outcomes,
@@ -72,7 +72,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 3: accFourWayTie', () => {
     it('should resolve four-team tie with partial H2H graph', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accFourWayTie.conferenceGames,
         accFourWayTie.outcomes,
@@ -87,7 +87,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 4: accFiveWayTie', () => {
     it('should resolve five-team tie', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accFiveWayTie.conferenceGames,
         accFiveWayTie.outcomes,
@@ -102,7 +102,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 5: accRestartRedefinesTiedGroup', () => {
     it('should demonstrate tied-team redefinition across restart cycles', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accRestartRedefinesTiedGroup.conferenceGames,
         accRestartRedefinesTiedGroup.outcomes,
@@ -196,7 +196,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
     })
 
     it('should exercise end-to-end tiebreaker with mixed-schedule teams', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accMixedScheduleTiedTeamDefinition.conferenceGames,
         accMixedScheduleTiedTeamDefinition.outcomes,
@@ -218,7 +218,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 7: accPartialHeadToHeadGraph', () => {
     it('should handle partial H2H graph (not all pairs played)', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accPartialHeadToHeadGraph.conferenceGames,
         accPartialHeadToHeadGraph.outcomes,
@@ -236,7 +236,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 8: accZeroCommonOpponents', () => {
     it('should return NeedsUserInput when teams did not play each other', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accZeroCommonOpponents.conferenceGames,
         accZeroCommonOpponents.outcomes,
@@ -258,7 +258,7 @@ describe('ACC tiebreaker fixtures (Phase 03-07)', () => {
 
   describe('Fixture 9: accNeedsUserInputTypicalCase', () => {
     it('should demonstrate the common ACC case: NeedsUserInput (head-to-head fails)', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'ACC',
         accNeedsUserInputTypicalCase.conferenceGames,
         accNeedsUserInputTypicalCase.outcomes,

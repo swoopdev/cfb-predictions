@@ -6,7 +6,7 @@ import type { ConferenceRecord } from './records'
  * percentage; teams with exactly equal `winPct` land in the same bucket,
  * and teamIds within a bucket are sorted ascending by id for determinism.
  *
- * Must be computed exactly once per `resolveConferenceChampionship` call
+ * Must be computed exactly once per `resolveConferenceRanking` call
  * and passed as a plain, frozen value into every step evaluator --
  * PITFALLS.md Pitfall 4's circularity trap ("resolving a tie for 1st
  * requires resolving the tie for 4th") is caused directly by recomputing

@@ -148,7 +148,7 @@ describe('StandingsTable', () => {
       expect(button.attributes('aria-label')).toBe('Rank 1, decided by your choice. Show reasoning.')
     })
 
-    it('renders marker (b) -- a round pill, a muted band, and a left rule on EVERY row of the group -- for a shared rank', () => {
+    it('renders marker (b) -- a lighter round pill, no row-level band or border -- for a shared rank', () => {
       const ranking: ConferenceRanking = {
         conference: 'SEC',
         groups: [
@@ -174,16 +174,60 @@ describe('StandingsTable', () => {
       const rows = wrapper.findAll('tbody tr').filter(tr => tr.find('th').exists())
       expect(rows).toHaveLength(2)
       for (const tr of rows) {
-        expect(tr.classes()).toContain('bg-muted')
-        expect(tr.classes()).toContain('border-l-2')
-        expect(tr.classes()).toContain('border-inverted')
+        expect(tr.classes()).not.toContain('bg-muted')
+        expect(tr.classes()).not.toContain('border-l-2')
+        expect(tr.classes()).not.toContain('border-inverted')
         const button = tr.get('button')
+        expect(button.classes()).toContain('bg-muted')
+        expect(button.classes()).toContain('ring')
+        expect(button.classes()).not.toContain('bg-inverted')
+        expect(button.classes()).not.toContain('text-inverted')
+        // Stays distinct from marker (a)'s bg-accented/rounded chip -- shape
+        // and fill, not just fill.
+        expect(button.classes()).not.toContain('bg-accented')
+        expect(button.classes()).not.toContain('rounded')
         expect(button.classes()).toContain('rounded-full')
         expect(button.attributes('aria-label')).toBe('Rank 1, tied with 1 other team. Show reasoning.')
         // The rank number repeats on EVERY row -- never blanked past the
         // first (§6): each row must stay self-describing for a screen reader.
         expect(button.text()).toBe('1')
       }
+    })
+
+    // §12/simplification: the Rank column (header + both render paths) is
+    // horizontally centered -- covers the plain-number path (no `ranking`)
+    // and the marker/button path (a shared rank), since both share the same
+    // `<td>` wrapper.
+    it('centers the Rank column header and cell in both the plain-number and marker render paths', () => {
+      const plainWrapper = mount(StandingsTable, {
+        props: { standings: [row({ id: 1, rank: 1 })], conferenceName: 'SEC' }
+      })
+      expect(plainWrapper.findAll('thead th')[0]!.classes()).toContain('text-center')
+      expect(plainWrapper.findAll('tbody tr')[0]!.find('td').classes()).toContain('text-center')
+
+      const ranking: ConferenceRanking = {
+        conference: 'SEC',
+        groups: [
+          rankGroup({
+            teams: [1, 2],
+            resolvedBy: 'unresolved',
+            contestedWith: [1, 2],
+            terminalReason: { code: 'needs-scores', ruleCitation: 'x', sourceName: 'y' }
+          })
+        ]
+      }
+      const markerWrapper = mount(StandingsTable, {
+        props: {
+          standings: [
+            row({ id: 1, school: 'Alabama', rank: 1, isTied: true }),
+            row({ id: 2, school: 'Georgia', rank: 1, isTied: true })
+          ],
+          conferenceName: 'SEC',
+          ranking
+        }
+      })
+      expect(markerWrapper.findAll('thead th')[0]!.classes()).toContain('text-center')
+      expect(markerWrapper.findAll('tbody tr')[0]!.find('td').classes()).toContain('text-center')
     })
 
     it('marker (a) appears for two adjacent rows with DIFFERENT conference records in separate contested groups -- proving derivation from the group, not from record comparison', () => {

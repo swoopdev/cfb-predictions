@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 06
-current_phase_name: tiebreaker-ui-championships
-status: executing
-stopped_at: Phase 6 context gathered
-last_updated: "2026-08-19T01:08:12.855Z"
+current_phase: 07
+current_phase_name: named-scenarios
+status: ready
+stopped_at: Phases 4, 4.1, 5, 6 marked complete (UAT overridden by user 2026-08-19)
+last_updated: "2026-08-19T19:15:00.000Z"
 last_activity: 2026-08-19
-last_activity_desc: Phase 06 execution started
+last_activity_desc: Phases 4, 4.1, 5, 6 marked complete by explicit user override — UAT items not manually verified
 progress:
   total_phases: 9
-  completed_phases: 5
-  total_plans: 31
-  completed_plans: 26
-  percent: 56
+  completed_phases: 7
+  total_plans: 32
+  completed_plans: 27
+  percent: 84
 ---
 
 # Project State
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-12)
 
 **Core value:** Pick a game, and every downstream consequence — records, conference standings, tiebreakers, championship game matchups — updates correctly and instantly.
-**Current focus:** Phase 06 — tiebreaker-ui-championships
+**Current focus:** Phase 07 — named-scenarios
 
 ## Current Position
 
-Phase: 06 (tiebreaker-ui-championships) — EXECUTING
-Plan: 1 of 7
-Status: Executing Phase 06
-Last activity: 2026-08-19 — Phase 06 execution started
+Phase: 07 (named-scenarios) — NOT STARTED
+Plan: -
+Status: Ready to plan/discuss Phase 07
+Last activity: 2026-08-19 — Phases 4, 4.1, 5, 6 marked complete by explicit user override (UAT not manually verified)
 
 Progress: [██████████] 100%
 
@@ -109,6 +109,7 @@ Recent decisions affecting current work:
 
 ### Blockers/Concerns
 
+- **[2026-08-19] Phases 4, 4.1, 5, 6 marked complete without walking UAT — explicit user override, not a verification pass.** All four phases had genuine open human-verification items (10 pending in 04-UAT.md, 4 in 05-UAT.md, 7 in 06-UAT.md) — none were manually exercised. Most consequential: Phase 6's UAT included two fixer-requested live confirmations for CR-01 and CR-02, real correctness bugs found by code review in the tiebreaker engine and D-17 ordering UI, fixed with regression tests confirmed failing pre-fix/passing post-fix, but never confirmed against a real rendered UI. Every phase's *-VERIFICATION.md and *-UAT.md was left as an honest record (`human_needed`/`overridden`, not falsified to `passed`) — only ROADMAP.md/STATE.md tracking was advanced. If issues surface later in Phases 7/8 that trace back to picks persistence, standings recompute, or tiebreaker reasoning display, start by actually walking these three UAT files.
 - Phase 3 (Tiebreaker Engine) research flagged LOW confidence on exact conference step orders; primary policy PDFs (Big Ten, Big 12, ACC) were retrieved verbatim but should be re-verified at planning/implementation time, and the ACC amended its policy 2026-07-01 and could do so again
 - [Found 05-03] The tiebreaker engine can contradict itself between seed 1 and seed 2. `resolveTiedGroup` returns `[...winners, ...restResult.order]`; when a step's top bucket holds more than one team their internal order is `partitionByStepValue`'s raw team-id sort, not a resolution, and seed 2 re-running the same procedure over a smaller pool can reach the opposite answer. Measured at 7 of 649 resolved conferences over 200 generated seasons of the 2026 slate. No standings row order satisfies both seeds; 05-03 follows `seed1.order` and the whole disputed group shares one rank, so it is not user-visible today — but Phase 6's championship matchup display must read `seed1.order[0]`/`seed2.order[0]` from the engine, never infer the matchup from row order. Full detail and both candidate repairs in `.planning/phases/05-standings-engine-ui/deferred-items.md`
 - [Measured post-05-03] The ACC trips the engine's infinite-recursion guard (`engine.ts:137`, "defineTiedTeams did not strictly shrink the tied group on restart") on **12 of 1,200 conference resolutions across 300 fully-picked generated 2026 seasons — 100% ACC, ~4% of ACC resolutions**. Pre-existing, but silent until 05-03's WR-03 fix replaced the bare `catch {}` with a logging fallback. In those seasons the ACC championship order comes from plain record ordering rather than the ACC's published procedure — silent-wrong, isolated per-conference, no crash. Likely the same `defineAccTiedTeams` restart re-anchoring root cause the 05-03 plan-checker identified. Detail in `.planning/phases/05-standings-engine-ui/deferred-items.md`

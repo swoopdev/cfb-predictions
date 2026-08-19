@@ -18,11 +18,12 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 **Parallel track:** Phase 3 (Tiebreaker Engine) depends only on Phase 1 and has no UI dependency. It can be built in parallel with Phases 2 and 4, then wired into standings ranking in Phase 5 and championship reasoning in Phase 6.
 
 - [x] **Phase 1: Data Pipeline** - Committed, validated 2026 FBS teams/games dataset with vendored logos and a schedule fingerprint (completed 2026-08-13)
-- [ ] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team
+- [x] **Phase 2: Foundation & Read-Only Slate** - Static Nuxt shell with a typed query layer; users can browse the season week by week, filtered by conference or team (completed 2026-08-13)
 - [x] **Phase 3: Tiebreaker Engine** *(parallel with 2, 4, 5)* - Pure-logic engine that resolves each P4 conference's championship participants (or surfaces the tie) per its published rules (completed 2026-08-14)
-- [ ] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption
-- [ ] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (executed 2026-08-14; awaiting UAT — 05-VERIFICATION.md is `human_needed`, 4 items pending in 05-UAT.md)
-- [x] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties (completed 2026-08-19)
+- [x] **Phase 4: Picks & Persistence** - Users can pick winners for the full season; picks persist, bulk-fill, and recover from corruption (marked complete 2026-08-19; UAT overridden by user, not manually verified — see 04-UAT.md)
+- [x] **Phase 4.1: Picks & Persistence — UI Polish** - Progress bars, white picked-card backgrounds, repositioned buttons, conference-grouped game sections (marked complete 2026-08-19)
+- [x] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (marked complete 2026-08-19; UAT overridden by user, not manually verified — see 05-UAT.md)
+- [x] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties (marked complete 2026-08-19; UAT overridden by user, not manually verified — see 06-UAT.md)
 - [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
 - [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks
 
@@ -144,13 +145,13 @@ Plans:
 Plans:
 **Wave 0**
 
-- [ ] 04-01-PLAN.md — Install @vueuse/nuxt, author usePicksStorage + useAutoFilledGames composables with corruption recovery and test fixtures
-- [ ] 04-02-PLAN.md — Extend GameCard.vue with click-to-pick interaction, visual feedback (border + checkmark), keyboard/accessibility support
+- [x] 04-01-PLAN.md — Install @vueuse/nuxt, author usePicksStorage + useAutoFilledGames composables with corruption recovery and test fixtures
+- [x] 04-02-PLAN.md — Extend GameCard.vue with click-to-pick interaction, visual feedback (border + checkmark), keyboard/accessibility support
 
 **Wave 1** *(blocked on Wave 0 completion)*
 
-- [ ] 04-03-PLAN.md — Create progress badge components (global + per-week), integrate into week page layout, author usePickProgress composable
-- [ ] 04-04-PLAN.md — Implement bulk fill/clear operations, confirmation modal for Clear Season, integrate buttons into week page, manual UAT verification
+- [x] 04-03-PLAN.md — Create progress badge components (global + per-week), integrate into week page layout, author usePickProgress composable
+- [x] 04-04-PLAN.md — Implement bulk fill/clear operations, confirmation modal for Clear Season, integrate buttons into week page, manual UAT verification
 
 **UI hint**: yes
 
@@ -171,7 +172,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 04-01-POLISH-PLAN.md — Refactor progress components to horizontal bars, add white background to picked cards, reposition bulk operation buttons, update game grouping for conference filters
+- [x] 04-01-POLISH-PLAN.md — Refactor progress components to horizontal bars, add white background to picked cards, reposition bulk operation buttons, update game grouping for conference filters
 
 **UI hint**: yes
 
@@ -280,9 +281,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 1. Data Pipeline | 5/5 | Complete    | 2026-08-13 |
 | 2. Foundation & Read-Only Slate | 4/4 | Complete    | 2026-08-13 |
 | 3. Tiebreaker Engine | 8/8 | Complete    | 2026-08-14 |
-| 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
-| 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
-| 5. Standings Engine & UI | 3/3 | Complete   | 2026-08-14 |
-| 6. Tiebreaker UI & Championships | 7/7 | Complete   | 2026-08-19 |
+| 4. Picks & Persistence | 4/4 | Complete (UAT overridden) | 2026-08-19 |
+| 4.1. Picks & Persistence — UI Polish | 1/1 | Complete | 2026-08-19 |
+| 5. Standings Engine & UI | 3/3 | Complete (UAT overridden) | 2026-08-19 |
+| 6. Tiebreaker UI & Championships | 7/7 | Complete (UAT overridden) | 2026-08-19 |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

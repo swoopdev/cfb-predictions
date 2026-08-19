@@ -498,5 +498,228 @@ describe('tone', () => {
   })
 })
 
-// Task 2 (ordering interaction) adds its cases below this line once the
-// component exists.
+// --- Task 2: the D-17 ordering terminus (model B) ---
+
+function unresolvedGroup(teamIds: readonly TeamId[]): RankGroup {
+  return group({
+    teams: teamIds,
+    resolvedBy: 'unresolved',
+    contestedWith: teamIds,
+    trace: [],
+    terminalReason: NEUTRAL_REASON
+  })
+}
+
+const TEN_TEAM_IDS: TeamId[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+describe('ordering gate', () => {
+  it('is absent when the group holds one team, even if the slate is complete', () => {
+    const g = group({ teams: [1], resolvedBy: 'tiebreaker', contestedWith: [1, 2], trace: [] })
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    expect(wrapper.find('[role="group"]').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('Nothing separates these')
+  })
+
+  it('is absent when the slate is incomplete, however many teams share the rank', () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: false }
+    })
+
+    expect(wrapper.find('[role="group"]').exists()).toBe(false)
+    expect(wrapper.findAll('button')).toHaveLength(0)
+  })
+
+  it('appears when the group is unresolved and the slate is complete', () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    expect(wrapper.find('[role="group"]').exists()).toBe(true)
+  })
+})
+
+describe('assignment', () => {
+  it('moves a clicked team to the assigned list at the next position; assigned rows are static text, not buttons', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const dukeButton = wrapper.findAll('button').find(b => b.text() === 'Duke')!
+    await dukeButton.trigger('click')
+
+    expect(wrapper.findAll('button').some(b => b.text() === 'Duke')).toBe(false)
+    const assignedRow = wrapper.findAll('li').find(li => li.text().includes('Duke'))!
+    expect(assignedRow.find('button').exists()).toBe(false)
+    expect(assignedRow.text()).toContain('1')
+  })
+})
+
+describe('ordering of unassigned rows', () => {
+  it('lists unassigned teams alphabetically by school regardless of the order ids appear in the group', () => {
+    const g = unresolvedGroup([3, 1, 2])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const names = wrapper.findAll('button')
+      .map(b => b.text())
+      .filter(text => text === 'Duke' || text === 'Miami' || text === 'Clemson')
+    expect(names).toEqual(['Clemson', 'Duke', 'Miami'])
+  })
+})
+
+describe('correction', () => {
+  it('undo removes the last assignment; start over clears all; both disabled at zero assigned', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const findButton = (label: string) => wrapper.findAll('button').find(b => b.text() === label)!
+
+    expect(findButton('Undo last').attributes('disabled')).toBeDefined()
+    expect(findButton('Start over').attributes('disabled')).toBeDefined()
+
+    await findButton('Duke').trigger('click')
+    await findButton('Miami').trigger('click')
+    expect(wrapper.text()).toContain('Ranked 2 of 3.')
+
+    await findButton('Undo last').trigger('click')
+    expect(wrapper.text()).toContain('Ranked 1 of 3.')
+
+    await findButton('Start over').trigger('click')
+    expect(wrapper.text()).toContain('Ranked 0 of 3.')
+    expect(findButton('Undo last').attributes('disabled')).toBeDefined()
+    expect(findButton('Start over').attributes('disabled')).toBeDefined()
+  })
+})
+
+describe('commit', () => {
+  it('emits exactly once, on the final assignment, with the complete ordering -- never a partial one', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const findButton = (label: string) => wrapper.findAll('button').find(b => b.text() === label)!
+
+    await findButton('Duke').trigger('click')
+    expect(wrapper.emitted('commit')).toBeUndefined()
+
+    await findButton('Miami').trigger('click')
+    expect(wrapper.emitted('commit')).toBeUndefined()
+
+    await findButton('Clemson').trigger('click')
+    expect(wrapper.emitted('commit')).toHaveLength(1)
+    expect(wrapper.emitted('commit')![0]).toEqual([[1, 2, 3]])
+  })
+})
+
+describe('focus management', () => {
+  it('moves focus to the first remaining unassigned team button after an assignment', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true },
+      attachTo: document.body
+    })
+
+    await wrapper.findAll('button').find(b => b.text() === 'Duke')!.trigger('click')
+
+    const remaining = wrapper.findAll('button').filter(b => b.text() === 'Clemson' || b.text() === 'Miami')
+    expect(remaining[0]!.element).toBe(document.activeElement)
+
+    wrapper.unmount()
+  })
+
+  it('moves focus to Start over after the final assignment', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true },
+      attachTo: document.body
+    })
+
+    const findButton = (label: string) => wrapper.findAll('button').find(b => b.text() === label)!
+    await findButton('Duke').trigger('click')
+    await findButton('Miami').trigger('click')
+    await findButton('Clemson').trigger('click')
+
+    expect(findButton('Start over').element).toBe(document.activeElement)
+
+    wrapper.unmount()
+  })
+
+  it('keeps focus on Undo last while it remains enabled', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true },
+      attachTo: document.body
+    })
+
+    const findButton = (label: string) => wrapper.findAll('button').find(b => b.text() === label)!
+    await findButton('Duke').trigger('click')
+    await findButton('Miami').trigger('click')
+    await findButton('Undo last').trigger('click')
+
+    expect(findButton('Undo last').element).toBe(document.activeElement)
+
+    wrapper.unmount()
+  })
+
+  it('moves focus to the first unassigned team button when Undo last becomes disabled', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true },
+      attachTo: document.body
+    })
+
+    const findButton = (label: string) => wrapper.findAll('button').find(b => b.text() === label)!
+    await findButton('Duke').trigger('click')
+    await findButton('Undo last').trigger('click')
+
+    const remaining = wrapper.findAll('button').filter(b => b.text() === 'Duke' || b.text() === 'Miami' || b.text() === 'Clemson')
+    expect(remaining[0]!.element).toBe(document.activeElement)
+
+    wrapper.unmount()
+  })
+})
+
+describe('announcement', () => {
+  it('carries the visible count and an assistive announcement, never assertive, replaced by the all-ranked sentence on completion', async () => {
+    const g = unresolvedGroup([1, 2])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const status = wrapper.find('[role="status"]')
+    expect(status.attributes('aria-live')).not.toBe('assertive')
+    expect(status.text()).toContain('Ranked 0 of 2.')
+
+    await wrapper.findAll('button').find(b => b.text() === 'Duke')!.trigger('click')
+    expect(status.find('.sr-only').text()).toBe('Duke ranked 1. 1 teams remaining.')
+
+    await wrapper.findAll('button').find(b => b.text() === 'Miami')!.trigger('click')
+    expect(status.find('.sr-only').text()).toBe('All 2 teams ranked.')
+  })
+})
+
+describe('scale', () => {
+  it('renders ten team buttons and no inner scroll container at the measured maximum', () => {
+    const g = unresolvedGroup(TEN_TEAM_IDS)
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    const schoolNames = new Set(SCHOOLS.values())
+    const teamButtons = wrapper.findAll('button').filter(b => schoolNames.has(b.text()))
+    expect(teamButtons).toHaveLength(10)
+
+    const scrollable = wrapper.html().match(/overflow-y-auto|max-h-/)
+    expect(scrollable).toBeNull()
+  })
+})

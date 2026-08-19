@@ -19,7 +19,7 @@ import type { StandingsTeam } from '#shared/types/standings'
  * next to matching W-L values are the indication.
  */
 defineProps<{
-  standings: StandingsTeam[]
+  standings: readonly StandingsTeam[]
   conferenceName: string
 }>()
 

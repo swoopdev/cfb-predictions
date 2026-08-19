@@ -6,6 +6,7 @@
 // reasoning as StandingsTable's own header note).
 import { computed, ref, useId } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
+import type { ConferenceId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
 import StandingsTable from './StandingsTable.vue'
 
@@ -20,8 +21,13 @@ import StandingsTable from './StandingsTable.vue'
  * the computation pure and reusable for Phase 6.
  */
 const props = withDefaults(defineProps<{
-  /** Output of `computeStandings()` — all four P4 conferences. */
-  standings: StandingsResult
+  /**
+   * Output of `useStandings()` — all four P4 conferences, or `undefined`
+   * while games/teams are still resolving (WR-06: never an empty-object
+   * sentinel — the week page gates this component's mount on `loadState`
+   * instead).
+   */
+  standings: StandingsResult | undefined
   /**
    * The active conference filter, straight from `?conf=` (Phase 2). `null` /
    * `undefined` means "All".
@@ -36,22 +42,36 @@ const props = withDefaults(defineProps<{
  * (itself `Object.keys(CONFERENCE_RULES)`) rather than re-listed here, so
  * "which conferences are P4, and in what order" keeps exactly one definition
  * in the codebase. That order is already SEC, Big Ten, Big 12, ACC.
+ * `P4_CONFERENCES` is `readonly ConferenceId[]` (Task 1), so this needs no
+ * cast to be usable with `includes` below.
  */
-const P4_ORDER = P4_CONFERENCES as readonly string[]
+const P4_ORDER = P4_CONFERENCES
 
 /**
- * T-05-03: `activeConference` originates in a user-controlled URL query param.
- * Anything that is not one of the four P4 conference names — an unknown or
- * hand-edited string, the literal "All" sentinel, or a G5 conference that has
- * no standings in v1 — is treated as "no filter" rather than rendering an
- * empty or broken panel.
+ * T-06-07: narrows an arbitrary string to `ConferenceId` by checking
+ * membership in `P4_ORDER`, the one place P4 membership is defined. The cast
+ * inside is safe because `includes` performs the actual runtime check this
+ * function's return type promises — it exists so `selectedConference` and
+ * `visibleConferences` come out typed as `ConferenceId`, which is what lets
+ * the tightened `StandingsResult` be indexed below without a second cast.
  */
-const selectedConference = computed<string | null>(() => {
+function isP4Conference(value: string): value is ConferenceId {
+  return P4_ORDER.includes(value as ConferenceId)
+}
+
+/**
+ * T-05-03/T-06-07: `activeConference` originates in a user-controlled URL
+ * query param. Anything that is not one of the four P4 conference names — an
+ * unknown or hand-edited string, the literal "All" sentinel, or a G5
+ * conference that has no standings in v1 — is treated as "no filter" rather
+ * than rendering an empty or broken panel.
+ */
+const selectedConference = computed<ConferenceId | null>(() => {
   const value = props.activeConference
-  return typeof value === 'string' && P4_ORDER.includes(value) ? value : null
+  return typeof value === 'string' && isP4Conference(value) ? value : null
 })
 
-const visibleConferences = computed<string[]>(() =>
+const visibleConferences = computed<ConferenceId[]>(() =>
   selectedConference.value ? [selectedConference.value] : [...P4_ORDER]
 )
 
@@ -130,7 +150,7 @@ const panelId = useId()
           class="py-4 first:pt-0 last:pb-0"
         >
           <StandingsTable
-            :standings="standings[conference] ?? []"
+            :standings="standings?.[conference] ?? []"
             :conference-name="conference"
           />
         </div>

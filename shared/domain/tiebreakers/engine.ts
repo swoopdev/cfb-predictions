@@ -458,4 +458,3 @@ export function championshipFor(
   const seed2 = seed1.teams.length === 1 ? ranking.groups[1] : undefined
   return { seed1, seed2 }
 }
-

@@ -89,6 +89,33 @@ describe('StandingsSidebar', () => {
     expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
   })
 
+  // Task 3 (06-03): `standings` is now `StandingsResult | undefined` — the
+  // week page gates this component's mount on `loadState === 'ready'`, so
+  // `undefined` reaches it only defensively, never in the normal flow. It
+  // must degrade to the same "no teams" panel every conference already shows
+  // when empty, never throw on the tightened `Readonly<Record<ConferenceId,
+  // ...>>` type it now reads through optional chaining.
+  it('renders an empty panel per conference, not an empty page, when standings is undefined', () => {
+    const wrapper = mount(StandingsSidebar, {
+      props: { standings: undefined }
+    })
+
+    expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+    expect(wrapper.text()).toContain('No teams to show for SEC.')
+  })
+
+  // T-06-07: an unrecognised `activeConference` must fall back to all four
+  // conferences, never an empty panel — this is the sanitization the
+  // tightened `StandingsResult` type depends on to index safely.
+  it('falls back to all four conferences rather than an empty panel for an unrecognised conference', () => {
+    const wrapper = mount(StandingsSidebar, {
+      props: { standings, activeConference: 'not-a-real-conference' }
+    })
+
+    expect(renderedConferences(wrapper)).toEqual(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+    expect(wrapper.text()).not.toContain('No teams to show for SEC.')
+  })
+
   it('explains itself when the active filter names a conference with no standings', () => {
     const wrapper = mount(StandingsSidebar, {
       props: { standings, activeConference: 'Mountain West' }

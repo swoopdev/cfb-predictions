@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { computeStandings, resolveAllConferences, toOutcomes, P4_CONFERENCES } from '../../../shared/domain/standings'
 import type { StandingsTeam } from '../../../shared/types/standings'
-import type { ChampionshipResult } from '../../../shared/domain/tiebreakers/types'
+import type { ConferenceRanking, RankGroup, TeamId } from '../../../shared/domain/tiebreakers/types'
 import {
   allTeams,
   game,
@@ -21,8 +21,45 @@ import {
   singleConferenceGame,
   singleNonConferenceGame,
   singleFcsGame,
-  unflaggedSameConferenceGame
+  unflaggedSameConferenceGame,
+  accMixedScheduleTeams,
+  BOSTON_COLLEGE,
+  MIAMI,
+  LOUISVILLE,
+  VIRGINIA,
+  SYRACUSE,
+  WAKE_FOREST
 } from '../../fixtures/standings.fixtures'
+
+/**
+ * Hand-built `RankGroup`/`ConferenceRanking` builders for the D-01 tests
+ * below. Phase 6 supplies `ConferenceRanking` by hand wherever a test needs
+ * to pin an exact partition without driving the real engine through a
+ * contrived slate — the contract under test is what `computeStandings` does
+ * with a GIVEN partition, not whether the engine can be coaxed into
+ * producing one.
+ */
+function soleGroup(teamId: TeamId): RankGroup {
+  return { teams: [teamId], resolvedBy: 'sole-candidate', contestedWith: [teamId], trace: [] }
+}
+
+function tiebreakerGroup(teamId: TeamId, contestedWith: readonly TeamId[]): RankGroup {
+  return { teams: [teamId], resolvedBy: 'tiebreaker', contestedWith, trace: [] }
+}
+
+function unresolvedGroup(teams: readonly TeamId[]): RankGroup {
+  return {
+    teams,
+    resolvedBy: 'unresolved',
+    contestedWith: teams,
+    trace: [],
+    terminalReason: { code: 'needs-scores', ruleCitation: '', sourceName: '' }
+  }
+}
+
+function ranking(conference: ConferenceRanking['conference'], groups: readonly RankGroup[]): ConferenceRanking {
+  return { conference, groups }
+}
 
 /**
  * Unit tests for the pure standings engine (STAND-01/02/03/04).
@@ -173,7 +210,18 @@ describe('computeStandings', () => {
     })
   })
 
-  describe('ranking (STAND-04, D-04)', () => {
+  describe('ranking (STAND-04, D-01)', () => {
+    // D-01 supersedes Phase 5's D-04. D-04 ranked rows by the equivalence
+    // closure of "shares a resolved seed group" and "has identical
+    // conference W-L" -- which meant three teams with matching conference
+    // records shared a rank number REGARDLESS of what the tiebreaker
+    // procedure actually determined. That closure is exactly what let an
+    // ACC table render `1 Boston College 6-2` above `1 Duke 7-2`: two
+    // different records sharing a rank, because Boston College's shorter
+    // conference schedule (3 games, not 4) landed it in the same resolved
+    // seed group as Duke's identical-loss-count 7-2. D-01 reverses this:
+    // rank comes ONLY from the engine's own ordered partition
+    // (`ConferenceRanking.groups`), never from record equality.
     const result = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks)
 
     it('gives three teams with an identical conference record the same rank, then skips to 5', () => {
@@ -218,73 +266,77 @@ describe('computeStandings', () => {
       expect(tied).toEqual(['Florida', 'Georgia', 'LSU'])
     })
 
-    it('uses a resolved tiebreaker to order teams within a tie without changing their rank', () => {
-      // Internally consistent with the fixture: Alabama is 4-0 and alone in
-      // the top bucket, so seed 1 is its outright; seed 2 is the deliberate
-      // Florida/Georgia/LSU head-to-head cycle, resolved here the way Phase 6
-      // will hand it back after a manual resolution.
-      const resolved: Partial<Record<'SEC', ChampionshipResult>> = {
-        SEC: {
-          conference: 'SEC',
-          seed1: { status: 'resolved', order: [ALABAMA], trace: [] },
-          seed2: { status: 'resolved', order: [LSU, GEORGIA, FLORIDA], trace: [] }
-        }
-      }
+    it('gives three teams with an identical conference record three DIFFERENT ranks when the engine placed them in separate single-team groups', () => {
+      // D-01's central reversal. Florida, Georgia and LSU are all 2-2 in
+      // `secRoundRobinPicks` -- the exact identical-record shape that used to
+      // force a shared rank under D-04's closure. Here the engine's own
+      // partition places Alabama and Ole Miss in a tied top group (rank 1)
+      // and separates Florida/Georgia/LSU into three single-team groups —
+      // proving rank comes ONLY from `ranking.groups`, never from record
+      // equality: Ole Miss (0-4) outranks all three 2-2 teams because the
+      // hand-built partition says so, not because of its record.
+      const secRanking = ranking('SEC', [
+        unresolvedGroup([ALABAMA, OLE_MISS]),
+        tiebreakerGroup(FLORIDA, [FLORIDA, GEORGIA, LSU]),
+        tiebreakerGroup(GEORGIA, [FLORIDA, GEORGIA, LSU]),
+        tiebreakerGroup(LSU, [FLORIDA, GEORGIA, LSU])
+      ])
 
-      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, resolved)
-      const tied = ordered.SEC!.filter(r => r.rank === 2)
+      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, { SEC: secRanking })
 
-      expect(ordered.SEC![0]!.school).toBe('Alabama')
-      expect(ordered.SEC![0]!.rank).toBe(1)
-      expect(tied.map(r => r.school)).toEqual(['LSU', 'Georgia', 'Florida'])
-      expect(tied.every(r => r.rank === 2)).toBe(true)
-      expect(bySchool(ordered.SEC!, 'Ole Miss').rank).toBe(5)
-      expect(ordered.SEC!.map(r => r.rank)).toEqual([1, 2, 2, 2, 5])
+      expect(bySchool(ordered.SEC!, 'Alabama').rank).toBe(1)
+      expect(bySchool(ordered.SEC!, 'Alabama').isTied).toBe(true)
+      expect(bySchool(ordered.SEC!, 'Ole Miss').rank).toBe(1)
+      expect(bySchool(ordered.SEC!, 'Ole Miss').isTied).toBe(true)
+      expect(bySchool(ordered.SEC!, 'Florida').rank).toBe(3)
+      expect(bySchool(ordered.SEC!, 'Florida').isTied).toBe(false)
+      expect(bySchool(ordered.SEC!, 'Georgia').rank).toBe(4)
+      expect(bySchool(ordered.SEC!, 'Georgia').isTied).toBe(false)
+      expect(bySchool(ordered.SEC!, 'LSU').rank).toBe(5)
+      expect(bySchool(ordered.SEC!, 'LSU').isTied).toBe(false)
     })
 
-    it('ignores a resolved order naming a team that is not in the conference', () => {
+    it('gives three teams the engine could not separate one shared rank, and the next group skips past all three', () => {
+      // A 6-team roster (the ACC mixed-schedule fixture) so there is a "next
+      // group" past a 3-team unresolved slot to assert against: rank 1, rank
+      // 2, then an unresolved trio sharing rank 3 (occupying slots 3-5), then
+      // the final team at rank 6 -- standard competition ranking, unchanged.
+      const accRanking = ranking('ACC', [
+        soleGroup(BOSTON_COLLEGE),
+        tiebreakerGroup(MIAMI, [MIAMI]),
+        unresolvedGroup([LOUISVILLE, VIRGINIA, SYRACUSE]),
+        soleGroup(WAKE_FOREST)
+      ])
+
+      const ordered = computeStandings([], accMixedScheduleTeams, {}, { ACC: accRanking })
+      const tied = ordered.ACC!.filter(r => r.rank === 3)
+
+      expect(bySchool(ordered.ACC!, 'Boston College').rank).toBe(1)
+      expect(bySchool(ordered.ACC!, 'Miami').rank).toBe(2)
+      expect(tied.map(r => r.id).sort((a, b) => a - b)).toEqual(
+        [LOUISVILLE, VIRGINIA, SYRACUSE].sort((a, b) => a - b)
+      )
+      expect(tied.every(r => r.isTied)).toBe(true)
+      expect(bySchool(ordered.ACC!, 'Wake Forest').rank).toBe(6)
+      expect(bySchool(ordered.ACC!, 'Wake Forest').isTied).toBe(false)
+    })
+
+    it('ignores a group naming a team that is not in the conference', () => {
       // T-05-03-01. Phase 6 supplies this argument by hand, so an id that is
       // unknown, out-of-conference, or simply stale must neither throw nor
       // materialise a phantom row.
-      const resolved: Partial<Record<'SEC', ChampionshipResult>> = {
-        SEC: {
-          conference: 'SEC',
-          seed1: { status: 'resolved', order: [MICHIGAN, 987654, ALABAMA], trace: [] },
-          seed2: { status: 'resolved', order: [-1], trace: [] }
-        }
-      }
+      const secRanking = ranking('SEC', [
+        unresolvedGroup([MICHIGAN, 987654, ALABAMA]),
+        soleGroup(-1)
+      ])
 
-      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, resolved)
+      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, { SEC: secRanking })
 
       expect(ordered.SEC!).toHaveLength(5)
       expect(ordered.SEC!.map(r => r.id).sort((a, b) => a - b)).toEqual(
         [ALABAMA, FLORIDA, GEORGIA, LSU, OLE_MISS]
       )
       expect(ordered.SEC![0]!.school).toBe('Alabama')
-    })
-
-    it('gives two placed teams in DIFFERENT seed groups one rank when their records match', () => {
-      // The cross-group record collision the rank closure exists for. A rule
-      // that merely let unplaced teams adopt a placed team's rank would miss
-      // it: Georgia (group 0) and LSU (group 1) are both 2-2 and would land on
-      // different rank numbers, violating D-04.
-      //
-      // Not reachable through `resolveConferenceChampionship` — seed 2's
-      // redefinition anchors on the same records seed 1's restart did — but
-      // Phase 6 supplies this argument by hand, so the contract must hold.
-      const resolved: Partial<Record<'SEC', ChampionshipResult>> = {
-        SEC: {
-          conference: 'SEC',
-          seed1: { status: 'resolved', order: [GEORGIA], trace: [] },
-          seed2: { status: 'resolved', order: [LSU], trace: [] }
-        }
-      }
-
-      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, resolved)
-
-      expect(bySchool(ordered.SEC!, 'Georgia').rank).toBe(bySchool(ordered.SEC!, 'LSU').rank)
-      expect(ordered.SEC![0]!.school).toBe('Georgia')
-      expect(ordered.SEC![1]!.school).toBe('LSU')
     })
 
     it('breaks a same-name, same-record tie by team id so output is never order-dependent', () => {
@@ -301,26 +353,14 @@ describe('computeStandings', () => {
       expect(alabamas).toEqual([ALABAMA, 800, 900])
     })
 
-    it('ignores a needsUserInput tiebreaker result and keeps the deterministic fallback order', () => {
-      const resolved: Partial<Record<'SEC', ChampionshipResult>> = {
-        SEC: {
-          conference: 'SEC',
-          seed1: {
-            status: 'needsUserInput',
-            tiedTeams: [FLORIDA, GEORGIA, LSU],
-            reason: { code: 'needs-scores', ruleCitation: '', sourceName: '' },
-            trace: []
-          },
-          seed2: {
-            status: 'needsUserInput',
-            tiedTeams: [FLORIDA, GEORGIA, LSU],
-            reason: { code: 'needs-scores', ruleCitation: '', sourceName: '' },
-            trace: []
-          }
-        }
-      }
-
-      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, resolved)
+    it('falls back to deterministic record ordering when a conference is omitted from resolvedTiebreakers (the omit-on-throw path)', () => {
+      // A conference key absent from `resolvedTiebreakers` is the shape
+      // `resolveAllConferences` produces after catching a per-conference
+      // throw (WR-03) -- not reachable through the real engine on the
+      // committed 2026 slate today, but the try/catch itself is retained, so
+      // `computeStandings` must still degrade this conference to record
+      // ordering rather than throwing or blanking the whole table.
+      const ordered = computeStandings(secRoundRobinGames, allTeams, secRoundRobinPicks, {})
       expect(ordered.SEC!.filter(r => r.rank === 2).map(r => r.school)).toEqual(
         ['Florida', 'Georgia', 'LSU']
       )
@@ -389,13 +429,17 @@ describe('resolveAllConferences', () => {
     expect(Object.keys(resolved).sort()).toEqual(['ACC', 'Big 12', 'Big Ten', 'SEC'])
   })
 
-  it('reports needsUserInput for the deliberate head-to-head cycle behind the tie', () => {
+  it('reports an unresolved group for the deliberate head-to-head cycle behind the tie', () => {
     const resolved = resolveAllConferences(secRoundRobinGames, allTeams, secRoundRobinPicks)
 
-    // Alabama is 4-0 and alone in the top bucket, so seed 1 resolves outright;
-    // seed 2 is the unbreakable Florida/Georgia/LSU cycle.
-    expect(resolved.SEC!.seed1.status).toBe('resolved')
-    expect(resolved.SEC!.seed2.status).toBe('needsUserInput')
+    // Alabama is 4-0 and alone in the top bucket, so the first group resolves
+    // outright; the second group is the unbreakable Florida/Georgia/LSU cycle.
+    expect(resolved.SEC!.groups[0]!.resolvedBy).not.toBe('unresolved')
+    expect(resolved.SEC!.groups[0]!.teams).toEqual([ALABAMA])
+    expect(resolved.SEC!.groups[1]!.resolvedBy).toBe('unresolved')
+    expect([...resolved.SEC!.groups[1]!.teams].sort((a, b) => a - b)).toEqual(
+      [FLORIDA, GEORGIA, LSU].sort((a, b) => a - b)
+    )
   })
 
   it('feeds straight back into computeStandings', () => {

@@ -13,7 +13,7 @@
  */
 
 import type { Game, Team } from '../../shared/types/schedule'
-import type { ChampionshipResult, ConferenceId } from '../../shared/domain/tiebreakers/types'
+import type { ConferenceId, ConferenceRanking } from '../../shared/domain/tiebreakers/types'
 
 // ---------------------------------------------------------------------------
 // Team ids
@@ -333,14 +333,24 @@ export const equalPctUnequalRecordPicks: Record<number, number> = {
 
 /**
  * Hand-built rather than engine-derived, because the contract under test is
- * what `computeStandings` does with a GIVEN `ChampionshipResult` — which is
- * precisely the argument Phase 6 will supply by hand (D-11/D-14).
+ * what `computeStandings` does with a GIVEN `ConferenceRanking` — which is
+ * precisely the argument Phase 6 will supply by hand (D-11/D-14). Alabama
+ * and Georgia are placed in one two-team group (in that order), so they
+ * share rank 1 with Alabama's row displayed first — the group's own order
+ * decides display, not win count.
  */
-export const equalPctUnequalRecordResolved: Partial<Record<ConferenceId, ChampionshipResult>> = {
+export const equalPctUnequalRecordResolved: Partial<Record<ConferenceId, ConferenceRanking>> = {
   SEC: {
     conference: 'SEC',
-    seed1: { status: 'resolved', order: [ALABAMA, GEORGIA], trace: [] },
-    seed2: { status: 'resolved', order: [GEORGIA], trace: [] }
+    groups: [
+      {
+        teams: [ALABAMA, GEORGIA],
+        resolvedBy: 'unresolved',
+        contestedWith: [ALABAMA, GEORGIA],
+        trace: [],
+        terminalReason: { code: 'needs-scores', ruleCitation: '', sourceName: '' }
+      }
+    ]
   }
 }
 
@@ -352,20 +362,25 @@ export const equalPctUnequalRecordResolved: Partial<Record<ConferenceId, Champio
  * Alabama 3-0, Georgia 2-1, LSU 2-1 — Georgia and LSU hold an IDENTICAL
  * conference record.
  *
- * Paired with `droppedTiedTeamResolved`, whose `seed1.order` places Georgia
- * and omits LSU entirely. That omission is not contrived: `engine.ts:133`
- * recurses on a fully REDEFINED pool rather than on the partition's remainder,
- * and for the ACC `defineAccTiedTeams` re-anchors `bestGamesPlayed` on a new
- * best-win-pct team, so a team pulled in against the old anchor can fail
- * against the new one and never appear in `order` at all. Phase 6 produces the
- * same shape whenever a manual resolution names only part of the pool.
+ * Paired with `droppedTiedTeamResolved`, whose groups place Georgia and omit
+ * LSU from every group entirely. This is `computeStandings`'s **defensive
+ * fallback path** (its docblock's case 2): not reachable from the real
+ * `resolveConferenceRanking` on the committed 2026 slate today — Plan 06-02's
+ * `contestedWith`-as-trace-union repair means the engine's own termination
+ * guarantee (`committed.size === teamIds.size`) always covers the whole
+ * roster — but a hand-supplied `ConferenceRanking` naming fewer teams than
+ * the conference actually has is exactly what Plan 06-05's manual-decision
+ * feature (or a malformed fixture) can produce, and silently dropping a real
+ * team from standings is the worst failure mode PROJECT.md's core value
+ * cares about, so this path is deliberately, not incidentally, covered.
  *
- * A hand-built result is used rather than a natural ACC slate deliberately:
- * the natural drop needs a four-way round-robin pool splitting 2/2 on
- * intra-group head-to-head PLUS a higher-win-percentage team positioned to
- * re-anchor `bestGamesPlayed`, which is fragile to construct and fragile to
- * keep true. Test 4's identical-record invariant covers the natural
- * occurrence across 200 generated seasons of the committed 2026 slate.
+ * **D-01 changes what this fixture proves.** Under Phase 5's D-04 closure,
+ * a team the resolved order dropped still shared a rank with its
+ * identical-record twin, because rank was partly record-derived. Under D-01,
+ * rank comes ONLY from `ranking.groups` — LSU, named in no group here, falls
+ * through to `fallbackOrder` and lands on ITS OWN rank, distinct from
+ * Georgia's placed rank, even though their conference records match. See
+ * `standings-tiebreaker-agreement.test.ts` for the assertion this drives.
  */
 export const droppedTiedTeamGames: Game[] = [
   game(821, ALABAMA, FLORIDA, true),
@@ -387,15 +402,14 @@ export const droppedTiedTeamPicks: Record<number, number> = {
   827: LSU
 }
 
-export const droppedTiedTeamResolved: Partial<Record<ConferenceId, ChampionshipResult>> = {
+export const droppedTiedTeamResolved: Partial<Record<ConferenceId, ConferenceRanking>> = {
   SEC: {
     conference: 'SEC',
-    seed1: { status: 'resolved', order: [ALABAMA, GEORGIA], trace: [] },
-    seed2: {
-      status: 'needsUserInput',
-      tiedTeams: [GEORGIA, LSU],
-      reason: { code: 'needs-scores', ruleCitation: '', sourceName: '' },
-      trace: []
-    }
+    groups: [
+      { teams: [ALABAMA], resolvedBy: 'sole-candidate', contestedWith: [ALABAMA], trace: [] },
+      { teams: [GEORGIA], resolvedBy: 'tiebreaker', contestedWith: [GEORGIA, LSU], trace: [] }
+      // LSU is deliberately named in NO group — the defensive-fallback case
+      // this fixture exists to exercise.
+    ]
   }
 }

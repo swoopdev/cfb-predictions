@@ -120,6 +120,7 @@ Recent decisions affecting current work:
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260814-f6z | Repair 45 pre-existing test failures blocking the Phase 5 gate | 2026-08-14 | 1b4ccdc | [260814-f6z-repair-45-pre-existing-test-failures-blo](./quick/260814-f6z-repair-45-pre-existing-test-failures-blo/) |
+| 260819-hm8 | Simplify standings table tied-rank visual treatment | 2026-08-19 | a08595c | [260819-hm8-simplify-the-standings-table-tied-rank-v](./quick/260819-hm8-simplify-the-standings-table-tied-rank-v/) |
 
 ### Roadmap Evolution
 

@@ -4,7 +4,7 @@
 // component mounts in the plain vitest project the same way
 // `StandingsSidebar.vue` does -- the project's vitest config registers no
 // Nuxt auto-import plugin.
-import { computed, nextTick, ref, useId } from 'vue'
+import { computed, nextTick, ref, useId, watch } from 'vue'
 import type {
   RankGroup,
   StepOutcome,
@@ -146,6 +146,27 @@ const showTerminalReason = computed(() => props.group.resolvedBy === 'unresolved
 const showOrderingControl = computed(() => props.group.teams.length > 1 && props.slateComplete)
 
 const assignedIds = ref<TeamId[]>([])
+
+/**
+ * CR-02: `StandingsTable.vue` keys this component's `v-for` by the group's
+ * LAST ROW's team id, not by group membership -- if a later pick changes
+ * which teams are tied at this rank slot while that same team happens to
+ * remain the group's last row, Vue reuses this component instance instead
+ * of remounting it, and `assignedIds` would otherwise keep pointing at
+ * teams no longer in the live group (stale "ranked" list, a false
+ * "all ranked" announcement, and a commit whose ids don't set-equal the
+ * live group -- silently no-op'd by `commitOrdering`'s guard, but with no
+ * feedback to the user stuck looking at a dead control). Reset local
+ * ordering state whenever the group's own membership actually changes.
+ */
+watch(
+  () => props.group.teams,
+  (next, prev) => {
+    if (!prev || next.length !== prev.length || next.some((id, i) => id !== prev[i])) {
+      assignedIds.value = []
+    }
+  }
+)
 
 const assignedTeams = computed(() =>
   assignedIds.value.map((id, index) => ({ id, school: schoolName(id), position: index + 1 }))

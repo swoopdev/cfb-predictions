@@ -600,6 +600,42 @@ describe('correction', () => {
   })
 })
 
+describe('CR-02: group membership change resets local ordering state', () => {
+  it('clears an in-progress assignment when the group\'s teams change while the component instance persists', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    await wrapper.findAll('button').find(b => b.text() === 'Duke')!.trigger('click')
+    expect(wrapper.text()).toContain('Ranked 1 of 3.')
+
+    // Same component instance (as StandingsTable.vue's unkeyed-by-membership
+    // v-for can produce), but the tied group is now a different set of teams.
+    await wrapper.setProps({ group: unresolvedGroup([4, 5, 6]) })
+
+    expect(wrapper.text()).toContain('Ranked 0 of 3.')
+    expect(wrapper.findAll('li').some(li => li.text().includes('Duke'))).toBe(false)
+    expect(wrapper.findAll('button').some(b => b.text() === 'Duke')).toBe(false)
+  })
+
+  it('does not reset in-progress assignment when the group prop is replaced with an equal-membership object', async () => {
+    const g = unresolvedGroup([1, 2, 3])
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+    })
+
+    await wrapper.findAll('button').find(b => b.text() === 'Duke')!.trigger('click')
+    expect(wrapper.text()).toContain('Ranked 1 of 3.')
+
+    // A fresh object with the SAME membership (e.g. a recompute that left
+    // this group unchanged) must not discard progress the user already made.
+    await wrapper.setProps({ group: unresolvedGroup([1, 2, 3]) })
+
+    expect(wrapper.text()).toContain('Ranked 1 of 3.')
+  })
+})
+
 describe('commit', () => {
   it('emits exactly once, on the final assignment, with the complete ordering -- never a partial one', async () => {
     const g = unresolvedGroup([1, 2, 3])

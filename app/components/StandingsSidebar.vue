@@ -6,9 +6,9 @@
 // reasoning as StandingsTable's own header note).
 import { computed, ref, useId } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
-import type { ConferenceId } from '#shared/domain/tiebreakers/types'
+import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
-import type { ResolvedTiebreakers } from '#shared/domain/standings'
+import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
 import StandingsTable from './StandingsTable.vue'
 
 /**
@@ -44,9 +44,27 @@ const props = withDefaults(defineProps<{
    * which is where `ranking` is actually consumed.
    */
   rankings?: ResolvedTiebreakers | undefined
+  /**
+   * Output of `useStandings()` (Plan 06-07). `undefined` while games/teams
+   * are still resolving -- indexed with `?? false` below, per conference, so
+   * an absent map degrades to "not complete" (the D-17 ordering interaction
+   * stays hidden) rather than throwing. This component performs no
+   * completion computation of its own; it only indexes and passes the
+   * per-conference boolean straight down to `StandingsTable`.
+   */
+  slateComplete?: SlateCompletion | undefined
+  /**
+   * `useStandings()`'s own `commitOrdering`, threaded straight through
+   * unchanged to every `StandingsTable`. A single shared function works for
+   * all four conferences because it already takes `conference` as its first
+   * argument -- this component holds no storage knowledge of its own.
+   */
+  commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
 }>(), {
   activeConference: null,
-  rankings: undefined
+  rankings: undefined,
+  slateComplete: undefined,
+  commitOrdering: undefined
 })
 
 /**
@@ -165,6 +183,8 @@ const panelId = useId()
             :standings="standings?.[conference] ?? []"
             :conference-name="conference"
             :ranking="rankings?.[conference]"
+            :slate-complete="slateComplete?.[conference] ?? false"
+            :commit-ordering="commitOrdering"
           />
         </div>
       </div>

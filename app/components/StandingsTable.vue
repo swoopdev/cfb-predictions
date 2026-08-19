@@ -7,7 +7,7 @@
 // left untestable).
 import { computed, ref, useId } from 'vue'
 import type { StandingsTeam } from '#shared/types/standings'
-import type { ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
+import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import ChampionshipCard from './ChampionshipCard.vue'
 import TiebreakerReasoning from './TiebreakerReasoning.vue'
 
@@ -38,20 +38,20 @@ import TiebreakerReasoning from './TiebreakerReasoning.vue'
  * never this component's own row order — D-12) and read directly here to
  * derive each row's rank-cell state and to mount the per-group reasoning
  * row (D-15).
+ *
+ * `slateComplete`/`commitOrdering` (Plan 06-07, Task 2): threaded straight
+ * through to `TiebreakerReasoning` and its `commit` event, respectively.
+ * This component computes nothing about completion and touches no storage
+ * of its own — it only knows which conference it is (`conferenceName`, cast
+ * to `ConferenceId` since every real caller passes one of the four P4
+ * names) to pass along with a committed group's ordering.
  */
 const props = defineProps<{
   standings: readonly StandingsTeam[]
   conferenceName: string
   ranking?: ConferenceRanking | undefined
-}>()
-
-const emit = defineEmits<{
-  /**
-   * Re-emitted from `TiebreakerReasoning`'s own `commit` event, carrying the
-   * group it was committed for alongside the chosen order. Nothing consumes
-   * this yet — wiring it to storage is Task 2's job.
-   */
-  commit: [group: RankGroup, order: TeamId[]]
+  slateComplete?: boolean
+  commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
 }>()
 
 const headingId = useId()
@@ -196,7 +196,7 @@ function markerClass(kind: MarkerKind): string {
 }
 
 function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
-  emit('commit', group, order)
+  props.commitOrdering?.(props.conferenceName as ConferenceId, group, order)
 }
 </script>
 
@@ -333,7 +333,7 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
               <TiebreakerReasoning
                 :group="row.group"
                 :school-by-id="schoolById"
-                :slate-complete="false"
+                :slate-complete="slateComplete ?? false"
                 @commit="order => handleReasoningCommit(row.group!, order)"
               />
             </td>

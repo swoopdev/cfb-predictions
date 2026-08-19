@@ -98,7 +98,7 @@ const emptyVariant = computed(() => determineEmptyStateVariant(rawWeekGames.valu
 // returns `undefined` (never an empty-object sentinel) until games and teams
 // resolve. See the composable's own docblock for the D-13/STAND-02 no-
 // watcher/no-debounce rationale and measured cost.
-const { standings, rankings } = useStandings(2026)
+const { standings, rankings, slateComplete, commitOrdering } = useStandings(2026)
 
 const filterLabel = computed(() => {
   if (teamId.value !== undefined) return teamsById.value.get(teamId.value)?.school ?? 'This team'
@@ -311,6 +311,8 @@ function handleClearSeason() {
         :standings="standings"
         :active-conference="conf"
         :rankings="rankings"
+        :slate-complete="slateComplete"
+        :commit-ordering="commitOrdering"
       />
       <div
         v-else-if="loadState === 'loading'"

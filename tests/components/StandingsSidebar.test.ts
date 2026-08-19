@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import StandingsSidebar from '~/components/StandingsSidebar.vue'
 import type { StandingsResult, StandingsTeam } from '../../shared/types/standings'
-import type { ConferenceRanking } from '../../shared/domain/tiebreakers/types'
+import type { ConferenceRanking, RankGroup } from '../../shared/domain/tiebreakers/types'
 import type { ResolvedTiebreakers } from '../../shared/domain/standings'
 
 /**
@@ -255,6 +255,84 @@ describe('StandingsSidebar', () => {
 
       expect(renderedConferences(wrapper)).toEqual(['SEC'])
       expect(wrapper.find('table').exists()).toBe(true)
+    })
+  })
+
+  // Plan 06-07 (Task 2): `slateComplete`/`commitOrdering` are the D-17
+  // ordering-interaction seam. This component performs no completion
+  // computation or storage access of its own -- it only indexes the
+  // per-conference boolean and passes the shared handler straight through.
+  describe('slateComplete/commitOrdering threading (Plan 06-07)', () => {
+    const alabama = team('Alabama', 'SEC')
+    const georgia = team('Georgia', 'SEC', 1)
+    const tiedStandings: StandingsResult = {
+      'SEC': [
+        { ...alabama, isTied: true },
+        { ...georgia, isTied: true }
+      ],
+      'Big Ten': [],
+      'Big 12': [],
+      'ACC': []
+    }
+    const unresolvedGroup: RankGroup = {
+      teams: [alabama.id, georgia.id],
+      resolvedBy: 'unresolved',
+      contestedWith: [alabama.id, georgia.id],
+      trace: [],
+      terminalReason: { code: 'needs-scores', ruleCitation: 'x', sourceName: 'y' }
+    }
+    const rankings: ResolvedTiebreakers = { SEC: { conference: 'SEC', groups: [unresolvedGroup] } }
+
+    async function expandTheOnlyGroup(wrapper: ReturnType<typeof mount>) {
+      await wrapper.get('tbody button').trigger('click')
+    }
+
+    it('never offers the ordering interaction when the slate-complete map is absent', async () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: tiedStandings, activeConference: 'SEC', rankings }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+
+      expect(wrapper.text()).not.toContain('Nothing separates these')
+    })
+
+    it('never offers the ordering interaction when this conference\'s slate is explicitly incomplete', async () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: {
+          standings: tiedStandings,
+          activeConference: 'SEC',
+          rankings,
+          slateComplete: { 'SEC': false, 'Big Ten': false, 'Big 12': false, 'ACC': false }
+        }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+
+      expect(wrapper.text()).not.toContain('Nothing separates these')
+    })
+
+    it('offers the ordering interaction and forwards a commit to the supplied handler once the slate is complete', async () => {
+      const commitOrdering = vi.fn()
+      const wrapper = mount(StandingsSidebar, {
+        props: {
+          standings: tiedStandings,
+          activeConference: 'SEC',
+          rankings,
+          slateComplete: { 'SEC': true, 'Big Ten': false, 'Big 12': false, 'ACC': false },
+          commitOrdering
+        }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+      expect(wrapper.text()).toContain('Nothing separates these')
+
+      const teamButtons = wrapper.findAll('[role="group"] button')
+      await teamButtons[0]!.trigger('click')
+      await teamButtons[1]!.trigger('click')
+
+      expect(commitOrdering).toHaveBeenCalledTimes(1)
+      expect(commitOrdering).toHaveBeenCalledWith('SEC', unresolvedGroup, expect.arrayContaining([alabama.id, georgia.id]))
     })
   })
 })

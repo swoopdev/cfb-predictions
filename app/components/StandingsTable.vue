@@ -1,10 +1,13 @@
 <script setup lang="ts">
-// `useId` is imported explicitly from 'vue' rather than taken from Nuxt's
-// auto-import, so this component mounts in a plain vitest run (the project's
-// vitest config registers no Nuxt auto-import plugin — see GameCard.test.ts's
-// note on why its component was left untestable).
-import { useId } from 'vue'
+// `computed`/`useId` are imported explicitly from 'vue', and ChampionshipCard
+// is imported relatively rather than through Nuxt's component auto-import, so
+// this component mounts in a plain vitest run (the project's vitest config
+// registers no Nuxt auto-import plugin — see GameCard.test.ts's note on why
+// its component was left untestable).
+import { computed, useId } from 'vue'
 import type { StandingsTeam } from '#shared/types/standings'
+import type { ConferenceRanking } from '#shared/domain/tiebreakers/types'
+import ChampionshipCard from './ChampionshipCard.vue'
 
 /**
  * Renders ONE conference's standings (D-03: a real `<table>`, not cards —
@@ -17,13 +20,43 @@ import type { StandingsTeam } from '#shared/types/standings'
  *
  * Ties need no badge, icon, or tooltip (D-05/D-06) — matching rank numbers
  * next to matching W-L values are the indication.
+ *
+ * `ranking` (Plan 06-04, TIE-07): the ONLY new prop this component gains.
+ * Threaded straight through to `ChampionshipCard`, which reads the
+ * championship matchup off it via `championshipFor` -- never off this
+ * component's own row order (D-12). Also the prop Plan 07's rank markers
+ * read from, so its shape and threading are settled here.
  */
-defineProps<{
+const props = defineProps<{
   standings: readonly StandingsTeam[]
   conferenceName: string
+  ranking?: ConferenceRanking | undefined
 }>()
 
 const headingId = useId()
+
+/**
+ * §5.1/Task 3: built from the SAME `standings` rows already passed in --
+ * every row already carries `id` and `school`, so `ChampionshipCard` needs
+ * no separate teams data source. An empty `standings` array (not-yet-loaded
+ * or a genuinely empty conference) yields an empty map, which is exactly the
+ * signal `ChampionshipCard`'s loading state reads (see that component's
+ * `state` computed).
+ */
+const schoolById = computed<ReadonlyMap<number, string>>(
+  () => new Map(props.standings.map(team => [team.id, team.school]))
+)
+
+/**
+ * §10 empty-state predicate: true when any row has at least one picked
+ * conference game. A picked conference game always produces exactly one win
+ * and one loss for its two participants, so summing `confRecord` per row is
+ * equivalent to counting picked conference games directly, without pulling
+ * the games slate into this component.
+ */
+const hasPickedConferenceGames = computed<boolean>(() =>
+  props.standings.some(team => team.confRecord.wins + team.confRecord.losses > 0)
+)
 </script>
 
 <template>
@@ -37,6 +70,18 @@ const headingId = useId()
     >
       {{ conferenceName }}
     </h3>
+
+    <!-- Task 3/§5.1: rendered between the heading and the table, inside this
+         SAME `<section>` -- placing it in `StandingsSidebar` instead would
+         put it above the heading and break the `aria-labelledby` grouping.
+         Guarded by the same zero-teams check as the table itself: no card
+         (and no table) when a conference genuinely has no rows. -->
+    <ChampionshipCard
+      v-if="standings.length > 0"
+      :ranking="ranking"
+      :school-by-id="schoolById"
+      :has-picked-conference-games="hasPickedConferenceGames"
+    />
 
     <p
       v-if="standings.length === 0"

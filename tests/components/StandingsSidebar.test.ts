@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import StandingsSidebar from '~/components/StandingsSidebar.vue'
 import type { StandingsResult, StandingsTeam } from '../../shared/types/standings'
+import type { ConferenceRanking } from '../../shared/domain/tiebreakers/types'
+import type { ResolvedTiebreakers } from '../../shared/domain/standings'
 
 /**
  * StandingsSidebar rendering tests.
@@ -220,5 +222,39 @@ describe('StandingsSidebar', () => {
 
     const schools = wrapper.findAll('tbody th').map(th => th.text())
     expect(schools).toEqual(['Alabama', 'Georgia'])
+  })
+
+  // Plan 06-04 (TIE-07): `rankings` is the seam Task 3 threads down to
+  // `ChampionshipCard`. This component performs no filtering or computation
+  // on it -- it only indexes and passes the per-conference entry through.
+  describe('rankings threading (Plan 06-04)', () => {
+    const secTeam = team('Alabama', 'SEC')
+    const secOnly: StandingsResult = { 'SEC': [secTeam], 'Big Ten': [], 'Big 12': [], 'ACC': [] }
+
+    const secRanking: ConferenceRanking = {
+      conference: 'SEC',
+      groups: [
+        { teams: [secTeam.id], resolvedBy: 'sole-candidate', contestedWith: [secTeam.id], trace: [] }
+      ]
+    }
+    const rankings: ResolvedTiebreakers = { SEC: secRanking }
+
+    it('passes the matching conference entry down and renders its championship card', () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: secOnly, activeConference: 'SEC', rankings }
+      })
+
+      expect(wrapper.text()).toContain('CHAMPIONSHIP GAME')
+      expect(wrapper.text()).toContain('Alabama')
+    })
+
+    it('renders every table without throwing when rankings is undefined', () => {
+      const wrapper = mount(StandingsSidebar, {
+        props: { standings: secOnly, activeConference: 'SEC' }
+      })
+
+      expect(renderedConferences(wrapper)).toEqual(['SEC'])
+      expect(wrapper.find('table').exists()).toBe(true)
+    })
   })
 })

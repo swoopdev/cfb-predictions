@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import StandingsTable from '~/components/StandingsTable.vue'
 import type { StandingsTeam } from '../../shared/types/standings'
+import type { ConferenceRanking } from '../../shared/domain/tiebreakers/types'
 
 /**
  * StandingsTable rendering tests.
@@ -73,10 +74,15 @@ describe('StandingsTable', () => {
     const ranks = wrapper.findAll('tbody tr').map(tr => tr.find('td')!.text())
     expect(ranks).toEqual(['2', '2', '2', '5'])
 
-    // No badge/icon markup anywhere — matching ranks are the whole indication.
-    expect(wrapper.find('.badge').exists()).toBe(false)
-    expect(wrapper.find('svg').exists()).toBe(false)
-    expect(wrapper.text()).not.toContain('tied')
+    // Scoped to the table body (Plan 06-04): a `ChampionshipCard` now renders
+    // inside this same `<section>`, above the `<table>`, so a whole-wrapper
+    // query would no longer test only what this assertion was written to
+    // test. Its full reversal (D-10's markers) is Plan 07's task, not this
+    // one -- this is the minimum mechanical narrowing to keep it accurate.
+    const tbody = wrapper.get('tbody')
+    expect(tbody.find('.badge').exists()).toBe(false)
+    expect(tbody.find('svg').exists()).toBe(false)
+    expect(tbody.text()).not.toContain('tied')
   })
 
   it('labels the section with the conference name', () => {
@@ -95,5 +101,50 @@ describe('StandingsTable', () => {
 
     expect(wrapper.find('table').exists()).toBe(false)
     expect(wrapper.text()).toContain('No teams to show for ACC.')
+  })
+
+  // Plan 06-04 (TIE-07): the ONLY new prop this component gains. Full
+  // ChampionshipCard behavior is covered in ChampionshipCard.test.ts -- this
+  // asserts only the threading contract: the card renders inside this
+  // section, above the table, when a ranking is supplied, and the table
+  // renders unaffected when it is not.
+  describe('championship card threading (Plan 06-04)', () => {
+    const ranking: ConferenceRanking = {
+      conference: 'SEC',
+      groups: [
+        { teams: [1], resolvedBy: 'sole-candidate', contestedWith: [1], trace: [] },
+        { teams: [2], resolvedBy: 'sole-candidate', contestedWith: [2], trace: [] }
+      ]
+    }
+
+    it('renders the card above the table when a ranking is supplied', () => {
+      const wrapper = mount(StandingsTable, {
+        props: {
+          standings: [
+            row({ id: 1, school: 'Alabama' }),
+            row({ id: 2, school: 'Georgia' })
+          ],
+          conferenceName: 'SEC',
+          ranking
+        }
+      })
+
+      const section = wrapper.get('section')
+      const children = [...section.element.children]
+      const cardIndex = children.findIndex(el => el.tagName === 'DIV')
+      const tableIndex = children.findIndex(el => el.tagName === 'TABLE')
+
+      expect(cardIndex).toBeGreaterThanOrEqual(0)
+      expect(tableIndex).toBeGreaterThan(cardIndex)
+      expect(wrapper.text()).toContain('CHAMPIONSHIP GAME')
+    })
+
+    it('still renders the table when ranking is not supplied', () => {
+      const wrapper = mount(StandingsTable, {
+        props: { standings: [row()], conferenceName: 'SEC' }
+      })
+
+      expect(wrapper.find('table').exists()).toBe(true)
+    })
   })
 })

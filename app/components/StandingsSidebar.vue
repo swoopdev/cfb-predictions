@@ -8,6 +8,7 @@ import { computed, ref, useId } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
+import type { ResolvedTiebreakers } from '#shared/domain/standings'
 import StandingsTable from './StandingsTable.vue'
 
 /**
@@ -33,8 +34,19 @@ const props = withDefaults(defineProps<{
    * `undefined` means "All".
    */
   activeConference?: string | null
+  /**
+   * Output of `useStandings()` (Plan 06-04, TIE-07). `Partial` because a
+   * conference is omitted when its tiebreaker resolution threw (see
+   * `resolveAllConferences`) -- `undefined` per-conference is exactly the
+   * signal `ChampionshipCard`'s error state reads. This component performs
+   * no filtering or computation of its own on it; it only indexes and
+   * passes the per-conference entry straight down to `StandingsTable`,
+   * which is where `ranking` is actually consumed.
+   */
+  rankings?: ResolvedTiebreakers | undefined
 }>(), {
-  activeConference: null
+  activeConference: null,
+  rankings: undefined
 })
 
 /**
@@ -152,6 +164,7 @@ const panelId = useId()
           <StandingsTable
             :standings="standings?.[conference] ?? []"
             :conference-name="conference"
+            :ranking="rankings?.[conference]"
           />
         </div>
       </div>

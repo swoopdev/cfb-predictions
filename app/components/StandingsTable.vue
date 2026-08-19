@@ -100,8 +100,23 @@ interface RowMeta {
   team: StandingsTeam
   group: RankGroup | undefined
   groupIndex: number | undefined
+  groupKey: string | undefined
   markerKind: MarkerKind
   isGroupLastRow: boolean
+}
+
+/**
+ * WR-02: a stable identity for a `RankGroup`, derived from its own
+ * membership (sorted team ids) rather than its position in
+ * `ranking.groups`. A pick that changes the conference's ranking can shift
+ * which group occupies a given array index entirely -- `expandedGroups`
+ * (disclosure state that survives the recompute, since it's component-local
+ * `ref` state) must key off what a group actually IS, not where it
+ * currently sits, or a previously-expanded index can silently start
+ * pointing at an unrelated group after the recompute.
+ */
+function groupKeyFor(group: RankGroup): string {
+  return [...group.teams].sort((a, b) => a - b).join('-')
 }
 
 /**
@@ -140,6 +155,7 @@ const rowMeta = computed<RowMeta[]>(() => {
       team,
       group,
       groupIndex,
+      groupKey: group ? groupKeyFor(group) : undefined,
       markerKind: markerKindFor(group),
       isGroupLastRow: groupIndex !== undefined && lastRowTeamIdForGroup.get(groupIndex) === team.id
     }
@@ -148,28 +164,30 @@ const rowMeta = computed<RowMeta[]>(() => {
 
 /**
  * §6.1: the chip/pill IS the disclosure trigger. Local, ephemeral,
- * per-session state -- a group index map, never persisted -- mirroring
+ * per-session state -- keyed by `groupKeyFor` (WR-02: group membership
+ * identity, never a raw `ranking.groups` array index, which a recompute can
+ * silently reassign to an unrelated group) -- mirroring
  * `StandingsSidebar.vue`'s own collapse-state comment: this is a viewing
  * preference for the current session, not part of the user's scenario.
  */
-const expandedGroups = ref<ReadonlySet<number>>(new Set())
+const expandedGroups = ref<ReadonlySet<string>>(new Set())
 
-function isExpanded(groupIndex: number): boolean {
-  return expandedGroups.value.has(groupIndex)
+function isExpanded(groupKey: string): boolean {
+  return expandedGroups.value.has(groupKey)
 }
 
-function toggleGroup(groupIndex: number): void {
+function toggleGroup(groupKey: string): void {
   const next = new Set(expandedGroups.value)
-  if (next.has(groupIndex)) {
-    next.delete(groupIndex)
+  if (next.has(groupKey)) {
+    next.delete(groupKey)
   } else {
-    next.add(groupIndex)
+    next.add(groupKey)
   }
   expandedGroups.value = next
 }
 
-function reasoningPanelId(groupIndex: number): string {
-  return `${headingId}-reasoning-${groupIndex}`
+function reasoningPanelId(groupKey: string): string {
+  return `${headingId}-reasoning-${groupKey}`
 }
 
 /**
@@ -291,10 +309,10 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
                 v-if="row.markerKind !== 'none'"
                 type="button"
                 :class="[markerClass(row.markerKind), 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary']"
-                :aria-expanded="isExpanded(row.groupIndex!)"
-                :aria-controls="reasoningPanelId(row.groupIndex!)"
+                :aria-expanded="isExpanded(row.groupKey!)"
+                :aria-controls="reasoningPanelId(row.groupKey!)"
                 :aria-label="chipAccessibleName(row)"
-                @click="toggleGroup(row.groupIndex!)"
+                @click="toggleGroup(row.groupKey!)"
               >
                 {{ row.team.rank }}
               </button>
@@ -323,9 +341,9 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
           <!-- §7.1: mounted immediately after the group's LAST row, inside
                this SAME `<tbody>`. Absent from the DOM entirely when
                collapsed -- not hidden, not display:none (§12.4). -->
-          <tr v-if="row.group && row.groupIndex !== undefined && row.isGroupLastRow && isExpanded(row.groupIndex)">
+          <tr v-if="row.group && row.groupKey !== undefined && row.isGroupLastRow && isExpanded(row.groupKey)">
             <td
-              :id="reasoningPanelId(row.groupIndex)"
+              :id="reasoningPanelId(row.groupKey)"
               colspan="4"
               class="p-0"
             >

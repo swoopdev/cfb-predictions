@@ -338,6 +338,71 @@ describe('StandingsTable', () => {
       expect(wrapper.findAll('tbody button')[0]!.attributes('aria-expanded')).toBe('false')
     })
 
+    it('WR-02: keeps disclosure state pinned to a group\'s membership, not its array index, when a recompute reorders groups', async () => {
+      const groupA = rankGroup({
+        teams: [1, 2],
+        resolvedBy: 'unresolved',
+        contestedWith: [1, 2],
+        trace: [{
+          tiedTeams: [1, 2],
+          steps: [{
+            step: 'head-to-head',
+            values: [
+              { teamId: 1, value: { kind: 'indeterminate' } },
+              { teamId: 2, value: { kind: 'indeterminate' } }
+            ],
+            partition: [[1, 2]],
+            separated: false
+          }],
+          outcome: 'exhausted',
+          removed: []
+        }],
+        terminalReason: { code: 'needs-scores', ruleCitation: 'x', sourceName: 'y' }
+      })
+      const groupB = rankGroup({ teams: [3], resolvedBy: 'tiebreaker', contestedWith: [3, 4] })
+
+      const standings = [
+        row({ id: 1, school: 'Alabama', rank: 1, isTied: true }),
+        row({ id: 2, school: 'Georgia', rank: 1, isTied: true }),
+        row({ id: 3, school: 'Florida', rank: 2 })
+      ]
+
+      const wrapper = mount(StandingsTable, {
+        props: {
+          standings,
+          conferenceName: 'SEC',
+          ranking: { conference: 'SEC', groups: [groupA, groupB] }
+        }
+      })
+
+      // Expand groupA -- it's the first (index 0) chip button, ahead of Florida's.
+      await wrapper.findAll('tbody button')[0]!.trigger('click')
+      expect(wrapper.findAll('tbody button')[0]!.attributes('aria-expanded')).toBe('true')
+      expect(wrapper.find('td[colspan="4"]').exists()).toBe(true)
+
+      // A recompute (e.g. a later pick) reorders `ranking.groups` -- groupB
+      // now occupies index 0 and groupA index 1 -- while `standings` (and
+      // therefore row order) is unchanged.
+      await wrapper.setProps({
+        ranking: { conference: 'SEC', groups: [groupB, groupA] }
+      })
+
+      // groupA (Alabama/Georgia) is still the group the user expanded --
+      // membership, not the index it now occupies, is what disclosure state
+      // tracks. Its reasoning row must still be present, positioned after
+      // Georgia's row (groupA's own last row).
+      const rowsAfterReorder = wrapper.findAll('tbody tr')
+      const georgiaIndex = rowsAfterReorder.findIndex(r => r.text().includes('Georgia'))
+      expect(rowsAfterReorder[georgiaIndex + 1]!.find('td[colspan="4"]').exists()).toBe(true)
+
+      // groupB (Florida, now at index 0) was never toggled and must render
+      // collapsed -- exactly one reasoning panel exists (groupA's), never
+      // two and never groupB's alone. The pre-fix bug tracked disclosure by
+      // index, so it would have shown index 0's group (now Florida/groupB)
+      // expanded instead of groupA.
+      expect(wrapper.findAll('td[colspan="4"]')).toHaveLength(1)
+    })
+
     it('renders no button, no chip, no pill and no band when the ranking prop is undefined', () => {
       const wrapper = mount(StandingsTable, {
         props: {

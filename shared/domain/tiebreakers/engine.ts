@@ -5,7 +5,6 @@ import type {
   TiebreakerCycle,
   TerminalReason,
   TiebreakerResult,
-  ChampionshipResult,
   ConferenceId,
   StepOutcome,
   RankGroup,
@@ -296,9 +295,9 @@ export function resolveTiedGroup(
  *
  * Validates that every gameId in `outcomes` corresponds to a real conference
  * game and that every TeamId value is one of that game's two participants
- * (T-03-02 entry validation) -- identical to the validation
- * `resolveConferenceChampionship` performed, now the shared entry point both
- * routines validate through.
+ * (T-03-02 entry validation) -- the sole entry-boundary check for the engine
+ * as of Plan 06-03, which deleted the legacy two-seed entry point that used
+ * to duplicate it.
  *
  * @param conference the four-letter P4 conference identifier
  * @param conferenceGames the full list of conference-scoped games (pre-filtered)
@@ -460,72 +459,3 @@ export function championshipFor(
   return { seed1, seed2 }
 }
 
-/**
- * Maps a `RankGroup` onto the legacy `TiebreakerResult` shape. `undefined`
- * (no second group at all -- a degenerate conference with one team, or a
- * single group that absorbed the whole roster) becomes a resolved empty
- * order; there is no consumer left to read past `order[0]` regardless.
- */
-function toTiebreakerResult(group: RankGroup | undefined): TiebreakerResult {
-  if (group === undefined) {
-    return { status: 'resolved', order: [], trace: [] }
-  }
-  if (group.resolvedBy === 'unresolved') {
-    return {
-      status: 'needsUserInput',
-      tiedTeams: group.teams,
-      reason: group.terminalReason!,
-      trace: group.trace
-    }
-  }
-  return { status: 'resolved', order: group.teams, trace: group.trace }
-}
-
-/**
- * @deprecated D-03/D-12: thin derived view over `resolveConferenceRanking`,
- * kept ONLY so Phase 5's existing callers keep compiling and passing through
- * this plan. Deleted entirely in Plan 06-03 -- `championshipFor` /
- * `ConferenceRanking` are the shape every new caller should target.
- *
- * Resolves the #1 and #2 championship spots for a given conference by
- * reading `groups[0]`/`groups[1]` off the full N-seed ranking. If seed 1 is
- * `needsUserInput`, seed 2 is set to the SAME result object (both spots
- * blocked on the same manual decision) -- this legacy invariant is preserved
- * exactly, even though `championshipFor` itself returns `seed2: undefined`
- * in that case (the new shape has no need to duplicate the object).
- *
- * @param conference the four-letter P4 conference identifier
- * @param conferenceGames the full list of conference-scoped games (pre-filtered)
- * @param outcomes a complete map of {gameId -> winnerId} for every game in conferenceGames
- * @param teamIds the conference's full membership for deriving conference records
- * @param allSeasonGames optional; all games (conference + non-conference) used for Big 12's
- *   total-wins step (RESEARCH.md OQ3: the one exception to "all steps are conference-scoped")
- * @param knownFbsTeamIds optional; the set of FBS team ids (used with allSeasonGames to
- *   apply the Big 12's FCS-win cap)
- */
-export function resolveConferenceChampionship(
-  conference: ConferenceId,
-  conferenceGames: readonly { id: number, homeId: TeamId, awayId: TeamId, conferenceGame: boolean }[],
-  outcomes: ReadonlyMap<number, TeamId>,
-  teamIds: ReadonlySet<TeamId>,
-  allSeasonGames?: readonly { id: number, homeId: TeamId, awayId: TeamId, conferenceGame: boolean }[],
-  knownFbsTeamIds?: ReadonlySet<TeamId>
-): ChampionshipResult {
-  const ranking = resolveConferenceRanking(
-    conference,
-    conferenceGames,
-    outcomes,
-    teamIds,
-    allSeasonGames,
-    knownFbsTeamIds
-  )
-  const { seed1: seed1Group, seed2: seed2Group } = championshipFor(ranking)
-
-  const seed1 = toTiebreakerResult(seed1Group)
-  const seed2
-    = seed1.status === 'needsUserInput'
-      ? seed1 // legacy semantics: both championship spots blocked on the same decision
-      : toTiebreakerResult(seed2Group)
-
-  return { conference, seed1, seed2 }
-}

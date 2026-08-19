@@ -20,7 +20,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import { resolveAllConferences } from '../../../shared/domain/standings'
-import type { ChampionshipResult } from '../../../shared/domain/tiebreakers/types'
+import type { ConferenceRanking } from '../../../shared/domain/tiebreakers/types'
 import { mulberry32, generatePicks, readSlate } from '../../helpers/generated-seasons'
 
 describe('ACC recursion-guard trip across 200 generated seasons', () => {
@@ -102,19 +102,20 @@ describe('lost-to-all elimination property across 200 generated seasons', () => 
    * result: 'lost-to-all' and no value with result: 'beat-all', that
    * outcome's separated must be true — the swept team forms a bucket
    * by itself, separating the group.
+   *
+   * 06-03: walks EVERY rank group's own `trace` rather than just the first
+   * two (`seed1`/`seed2`) — each `RankGroup` now carries only its own
+   * resolution cycle (Pitfall 5's per-group trace isolation, Plan 06-02), so
+   * restricting to the first two groups would under-cover compared to the
+   * pre-06-02 combined two-seed read, which shared one accumulator per
+   * conference.
    */
   it('a lost-to-all outcome with no beat-all is always separated', () => {
     const violations: string[] = []
 
-    function checkResolved(
-      label: string,
-      championship: ChampionshipResult
-    ): void {
-      for (const seedName of ['seed1', 'seed2'] as const) {
-        const seed = championship[seedName]
-        if (seed.status !== 'resolved') continue
-
-        for (const cycle of seed.trace) {
+    function checkResolved(label: string, ranking: ConferenceRanking): void {
+      for (const group of ranking.groups) {
+        for (const cycle of group.trace) {
           for (const step of cycle.steps) {
             if (step.step !== 'head-to-head') continue
 
@@ -127,7 +128,7 @@ describe('lost-to-all elimination property across 200 generated seasons', () => 
 
             if (hasLostToAll && !hasBeatAll && !step.separated) {
               violations.push(
-                `[lost-to-all-not-separated] ${label} ${championship.conference} ${seedName}: `
+                `[lost-to-all-not-separated] ${label} ${ranking.conference}: `
                 + `head-to-head has lost-to-all without beat-all but separated is false`
               )
             }
@@ -140,8 +141,8 @@ describe('lost-to-all elimination property across 200 generated seasons', () => 
       const random = mulberry32(seed)
       const picks = generatePicks(games, random)
       const resolved = resolveAllConferences(games, teams, picks)
-      for (const championship of Object.values(resolved)) {
-        checkResolved(`fully-picked seed ${seed}`, championship as ChampionshipResult)
+      for (const ranking of Object.values(resolved)) {
+        checkResolved(`fully-picked seed ${seed}`, ranking)
       }
     }
 
@@ -149,8 +150,8 @@ describe('lost-to-all elimination property across 200 generated seasons', () => 
       const random = mulberry32(seed)
       const picks = generatePicks(games, random, 7)
       const resolved = resolveAllConferences(games, teams, picks)
-      for (const championship of Object.values(resolved)) {
-        checkResolved(`weeks 1-7 seed ${seed}`, championship as ChampionshipResult)
+      for (const ranking of Object.values(resolved)) {
+        checkResolved(`weeks 1-7 seed ${seed}`, ranking)
       }
     }
 

@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveChampionship } from './helpers/legacy-championship'
 import {
   bigTenTwoWayTie,
   bigTenThreeWayTie,
@@ -24,7 +24,7 @@ import {
 describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
   describe('Fixture 1: bigTenTwoWayTie', () => {
     it('should resolve two-team tie via head-to-head', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenTwoWayTie.conferenceGames,
         bigTenTwoWayTie.outcomes,
@@ -45,7 +45,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 2: bigTenThreeWayTie', () => {
     it('should resolve three-team tie through multi-team procedure', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenThreeWayTie.conferenceGames,
         bigTenThreeWayTie.outcomes,
@@ -72,7 +72,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 3: bigTenFourWayTie', () => {
     it('should resolve four-team tie via H2H and restart', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenFourWayTie.conferenceGames,
         bigTenFourWayTie.outcomes,
@@ -92,7 +92,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 4: bigTenFiveWayTie', () => {
     it('should resolve five-team tie through multiple restart cycles', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenFiveWayTie.conferenceGames,
         bigTenFiveWayTie.outcomes,
@@ -112,7 +112,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 5: bigTenRestartVsContinueDivergence', () => {
     it('should demonstrate correct restart behavior (not continue)', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenRestartVsContinueDivergence.conferenceGames,
         bigTenRestartVsContinueDivergence.outcomes,
@@ -138,7 +138,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 6: bigTenPartialHeadToHeadGraph', () => {
     it('should handle partial H2H graph and proceed to next step', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenPartialHeadToHeadGraph.conferenceGames,
         bigTenPartialHeadToHeadGraph.outcomes,
@@ -158,7 +158,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 7: bigTenZeroCommonOpponents', () => {
     it('should handle zero common opponents without NaN failures', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenZeroCommonOpponents.conferenceGames,
         bigTenZeroCommonOpponents.outcomes,
@@ -179,7 +179,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 8: bigTenUnbalancedScheduleAndNeedsUserInput', () => {
     it('should compare winning percentages (not raw counts) and bottom out at ranking step', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenUnbalancedScheduleAndNeedsUserInput.conferenceGames,
         bigTenUnbalancedScheduleAndNeedsUserInput.outcomes,
@@ -214,7 +214,7 @@ describe('Big Ten tiebreaker fixtures (Phase 03-05)', () => {
 
   describe('Fixture 9: bigTenCollectiveBucketComparison', () => {
     it('should apply collective-bucket comparison at next-highest-placed step (per D-13)', () => {
-      const result = resolveConferenceChampionship(
+      const result = resolveChampionship(
         'Big Ten',
         bigTenCollectiveBucketComparison.conferenceGames,
         bigTenCollectiveBucketComparison.outcomes,

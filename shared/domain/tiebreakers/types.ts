@@ -36,7 +36,7 @@ export interface Game {
  * The frozen, best-to-worst raw-win-percentage ordering of a conference's
  * teams, grouped into buckets: `bucket.length > 1` means those teams are
  * tied on raw win percentage at that slot. Computed once per
- * `resolveConferenceChampionship` call and passed as a plain value into
+ * `resolveConferenceRanking` call and passed as a plain value into
  * every step evaluator -- this is the direct fix for PITFALLS.md Pitfall
  * 4's circularity trap ("resolving a tie for 1st requires resolving the
  * tie for 4th"). Never recomputed mid-procedure.
@@ -131,23 +131,6 @@ export type TiebreakerResult
     }
 
 /**
- * The result of resolving both championship spots (seed 1 and seed 2) for a
- * conference. Each seed is resolved independently; if seed 1 is
- * needsUserInput, seed 2 is set to the same result (both spots blocked).
- *
- * @deprecated D-03/D-12: this shape is a thin derived view over
- * `ConferenceRanking` as of Plan 06-02 (`resolveConferenceChampionship` now
- * calls `resolveConferenceRanking` and maps its output onto this shape for
- * backward compatibility). It is DELETED entirely in Plan 06-03 — new code
- * must consume `ConferenceRanking` / `championshipFor` instead.
- */
-export interface ChampionshipResult {
-  conference: ConferenceId
-  seed1: TiebreakerResult
-  seed2: TiebreakerResult
-}
-
-/**
  * How a single rank slot (or shared rank) was determined.
  *
  * - `sole-candidate`: exactly one team occupied the pool for this slot; no
@@ -167,7 +150,7 @@ export type RankGroupResolution = 'sole-candidate' | 'tiebreaker' | 'manual' | '
  * `ConferenceRanking.groups` is an ORDERED sequence, best to worst — this is
  * what makes seed 1 (`groups[0]`) and seed 2 (`groups[1]`) structurally
  * incapable of contradicting each other (D-12): one sequence produces both,
- * unlike the two independent resolutions `resolveConferenceChampionship`
+ * unlike the two independent per-seed resolutions the pre-Plan-06-02 engine
  * used to run.
  */
 export interface RankGroup {

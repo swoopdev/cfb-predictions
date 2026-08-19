@@ -46,8 +46,9 @@ function winPctSafe(wins: number, gamesPlayed: number): number {
  * validate that assumption or throw on a missing entry (`outcomes.get`
  * simply returns `undefined`, and neither team is credited for that game)
  * -- the entry-point validation boundary for a caller-supplied incomplete
- * `outcomes` map belongs to `resolveConferenceChampionship` (Plan 03-03),
- * not here.
+ * `outcomes` map belongs to `resolveConferenceRanking` (Plan 03-03; the
+ * conference's combined two-seed entry point before Plan 06-03 renamed and
+ * extended it to a full 1..N ranking), not here.
  */
 export function deriveConferenceRecords(
   conferenceGames: readonly Game[],

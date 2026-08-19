@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { TeamId, StepOutcome, BaseOrdering, TiebreakerResult, TerminalReason, TiebreakerCycle } from '../shared/domain/tiebreakers/types'
 import type { ConferenceRecord } from '../shared/domain/tiebreakers/records'
-import { resolveConferenceChampionship } from '../shared/domain/tiebreakers/engine'
+import { resolveChampionship } from './helpers/legacy-championship'
 
 /**
  * Fixture builder for synthetic tiebreaker test cases.
@@ -305,7 +305,7 @@ describe('Task 1: resolveTiedGroup recursive core', () => {
   })
 })
 
-describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
+describe('Task 2: CONFERENCE_RULES and the combined two-seed championship read', () => {
   it('should resolve a clean 1-team #1 (no tie) and a 2-team #2 tie using SEC rules', () => {
     // Fixture: SEC conference with one clear leader and a 2-team tie for #2
     const teamIds = new Set<TeamId>([1, 2, 3])
@@ -320,7 +320,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
       [3, 2]
     ])
 
-    const result = resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+    const result = resolveChampionship('SEC', conferenceGames, outcomes, teamIds)
 
     // Seed 1: Team 1 (2-0) is clear leader
     expect(result.seed1.status).toBe('resolved')
@@ -339,7 +339,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
     ]
     const outcomes = new Map<number, TeamId>([])
 
-    const result = resolveConferenceChampionship('ACC', conferenceGames, outcomes, teamIds)
+    const result = resolveChampionship('ACC', conferenceGames, outcomes, teamIds)
 
     // Seed 1: both teams tied, no head-to-head -> needsUserInput
     expect(result.seed1.status).toBe('needsUserInput')
@@ -359,7 +359,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
     const outcomes = new Map<number, TeamId>([[1, 3]])
 
     expect(() => {
-      resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+      resolveChampionship('SEC', conferenceGames, outcomes, teamIds)
     }).toThrow(/not a participant/)
   })
 
@@ -383,7 +383,7 @@ describe('Task 2: CONFERENCE_RULES and resolveConferenceChampionship', () => {
       [6, 3]
     ])
 
-    const result = resolveConferenceChampionship('SEC', conferenceGames, outcomes, teamIds)
+    const result = resolveChampionship('SEC', conferenceGames, outcomes, teamIds)
 
     // Seed 1: Team 1 (3-0) is clear
     expect(result.seed1.status).toBe('resolved')

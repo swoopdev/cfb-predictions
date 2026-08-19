@@ -189,7 +189,7 @@ function chipAccessibleName(row: RowMeta): string {
 }
 
 const MARKER_A_CLASS = 'inline-flex min-w-6 justify-center rounded px-1 bg-accented text-default text-sm font-semibold tabular-nums'
-const MARKER_B_CLASS = 'inline-flex min-w-6 justify-center rounded-full px-1 bg-inverted text-inverted text-sm font-semibold tabular-nums'
+const MARKER_B_CLASS = 'inline-flex min-w-6 justify-center rounded-full px-1 bg-muted text-toned ring ring-default text-sm font-semibold tabular-nums'
 
 function markerClass(kind: MarkerKind): string {
   return kind === 'b' ? MARKER_B_CLASS : MARKER_A_CLASS
@@ -247,7 +247,7 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
         <tr class="border-b border-default text-xs uppercase tracking-wide text-muted">
           <th
             scope="col"
-            class="w-8 py-1.5 pr-2 text-left font-medium"
+            class="w-8 py-1.5 px-2 text-center font-medium"
           >
             Rank
           </th>
@@ -280,14 +280,13 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
         >
           <!-- §6: the rank cell carries the entire tie signal now -- three
                states, all derived from `row.group`/`row.markerKind`, never
-               from comparing this row's `confRecord` against a neighbour's. -->
-          <tr
-            :class="[
-              'transition-colors',
-              row.markerKind === 'b' ? 'bg-muted border-l-2 border-inverted' : 'hover:bg-elevated/60'
-            ]"
-          >
-            <td class="py-1.5 pr-2 text-left tabular-nums font-medium text-default">
+               from comparing this row's `confRecord` against a neighbour's.
+               The row itself no longer carries any tie-related styling --
+               tied and uncontested rows share the same transition/hover
+               treatment; the shared rank number and its marker are the
+               sole row-level signal. -->
+          <tr class="transition-colors hover:bg-elevated/60">
+            <td class="py-1.5 px-2 text-center tabular-nums font-medium text-default">
               <button
                 v-if="row.markerKind !== 'none'"
                 type="button"

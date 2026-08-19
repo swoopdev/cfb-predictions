@@ -227,12 +227,12 @@ Plans:
 
 **Measurement obligation: DISCHARGED** (2026-08-15, in `06-RESEARCH.md` §The Measurement). The N-seed figure was measured against the committed slate over 200 generated seasons with both engine repairs applied. Answer: the 1-2 target holds for the SEC (0.10), Big Ten (0.19) and Big 12 (0.01) and fails for the ACC by roughly 4x (3.84 per fully-picked season, p90 5, 0% of seasons needing zero) — structural, because the ACC's amended policy has exactly one computable step. The measurement also exposed a **third** engine defect (the dropped lost-to-all elimination in `evaluateHeadToHead`) and quantified the seed1/seed2 root cause at **19.2% of contested slots** resolving by raw team id. All three defects are planned. Interaction model B (order the whole group in one interaction) is adopted, halving the ACC figure from 9.23. The ACC number was escalated to the user, who reaffirmed D-17's no-call-out design and superseded D-09 with preserve-and-suspend (`06-UI-SPEC.md` §0.1).
 
-**Plans**: 2/7 plans executed
+**Plans**: 4/7 plans executed
 
 - [x] 06-01-PLAN.md — wave 1 — engine defect repairs: delete the false ACC recursion guard, execute the dropped lost-to-all elimination, extract the shared generated-season harness
 - [x] 06-02-PLAN.md — wave 2 — the N-seed commit-and-restart loop, `RankGroup`/`ConferenceRanking`, and the unseparated-top-bucket repair that removes the seed1/seed2 contradiction
-- [ ] 06-03-PLAN.md — wave 3 — `computeStandings` ranks from the engine's partition (union-find deleted), `StandingsResult` tightened (WR-06), `useStandings` composable extracted (IN-02)
-- [ ] 06-06-PLAN.md — wave 3 — `TiebreakerReasoning.vue`: step-by-step reasoning, decisive step first, and the model-B ordering terminus
+- [x] 06-03-PLAN.md — wave 3 — `computeStandings` ranks from the engine's partition (union-find deleted), `StandingsResult` tightened (WR-06), `useStandings` composable extracted (IN-02)
+- [x] 06-06-PLAN.md — wave 3 — `TiebreakerReasoning.vue`: step-by-step reasoning, decisive step first, and the model-B ordering terminus
 - [ ] 06-04-PLAN.md — wave 4 — `ChampionshipCard.vue` above every conference table, read from `championshipFor`
 - [ ] 06-05-PLAN.md — wave 4 — manual-resolution lifecycle: the D-07 completion predicate, the D-08 invalidation key, and the preserve-and-suspend storage composable
 - [ ] 06-07-PLAN.md — wave 5 — integration: three-state rank cell markers, reasoning mounted per group, manual decisions wired end to end, and the pre-Phase-5 coverage gate closed
@@ -283,6 +283,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 4. Picks & Persistence | 4/4 | Complete    | 2026-08-15 |
 | 4.1. Picks & Persistence — UI Polish | 0/1 | Planned (INSERTED) | - |
 | 5. Standings Engine & UI | 3/3 | Complete   | 2026-08-14 |
-| 6. Tiebreaker UI & Championships | 2/7 | In Progress|  |
+| 6. Tiebreaker UI & Championships | 4/7 | In Progress|  |
 | 7. Named Scenarios | 0/TBD | Not started | - |
 | 8. Share Links | 0/TBD | Not started | - |

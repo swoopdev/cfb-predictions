@@ -200,6 +200,40 @@ describe('value rendering', () => {
     })
     expect(wrapper.find('dd').text()).toBe('not applicable')
   })
+
+  it('WR-01: renders a total-wins record as a bare win count, never a fabricated 0-loss record or win percentage', () => {
+    const g = group({
+      teams: [1],
+      resolvedBy: 'tiebreaker',
+      contestedWith: [1, 2],
+      trace: [
+        cycle({
+          tiedTeams: [1, 2],
+          steps: [
+            stepOutcome({
+              step: 'total-wins',
+              separated: true,
+              // `evaluateTotalWins` repurposes `winPct` as the raw win count
+              // and never tracks losses (`losses` is always 0) -- this
+              // fixture matches that shape exactly.
+              values: [{ teamId: 1, value: { kind: 'record', wins: 9, losses: 0, winPct: 9 } }],
+              partition: [[1], [2]]
+            })
+          ],
+          outcome: 'resolved',
+          removed: []
+        })
+      ]
+    })
+
+    const wrapper = mount(TiebreakerReasoning, {
+      props: { group: g, schoolById: SCHOOLS, slateComplete: false }
+    })
+
+    expect(wrapper.find('dd').text()).toBe('9 total wins')
+    expect(wrapper.text()).not.toContain('9-0')
+    expect(wrapper.text()).not.toContain('9.000')
+  })
 })
 
 describe('full procedure', () => {

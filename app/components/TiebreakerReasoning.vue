@@ -63,10 +63,24 @@ function formatWinPct(pct: number): string {
   return pct.toFixed(3).replace(/^0\./, '.')
 }
 
-/** One string per `StepValue` variant, no icon (§7.2's copy table, verbatim). */
-function stepValueText(value: StepValue): string {
+/**
+ * One string per `StepValue` variant, no icon (§7.2's copy table, verbatim).
+ *
+ * WR-01: `evaluateTotalWins` (Big 12 only) repurposes `'record'`'s `winPct`
+ * field as the raw win count for display consistency and never tracks
+ * losses (`losses` is always 0) -- routing it through the generic
+ * `wins-losses (winPct)` format below would render a fabricated "9-0"
+ * record and a nonsensical "9.000" win percentage. `stepId` lets this
+ * function special-case that one step rather than the generic record
+ * formatter misreading Big 12-only data every other conference never
+ * produces.
+ */
+function stepValueText(value: StepValue, stepId: TiebreakerStepId): string {
   switch (value.kind) {
     case 'record':
+      if (stepId === 'total-wins') {
+        return `${value.wins} total win${value.wins === 1 ? '' : 's'}`
+      }
       return `${value.wins}-${value.losses} (${formatWinPct(value.winPct)})`
     case 'headToHead':
       switch (value.result) {
@@ -318,7 +332,7 @@ function startOver() {
                 class="text-sm"
                 :class="entry.value.kind === 'indeterminate' ? 'text-dimmed' : 'text-default'"
               >
-                {{ stepValueText(entry.value) }}
+                {{ stepValueText(entry.value, step.step) }}
               </dd>
             </template>
           </dl>
@@ -349,7 +363,7 @@ function startOver() {
             class="text-sm"
             :class="entry.value.kind === 'indeterminate' ? 'text-dimmed' : 'text-default'"
           >
-            {{ stepValueText(entry.value) }}
+            {{ stepValueText(entry.value, decisiveStep.step) }}
           </dd>
         </template>
       </dl>

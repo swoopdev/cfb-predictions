@@ -40,16 +40,18 @@ export function groupByConference(games: Game[], teamsById: Map<number, Team>): 
  */
 export function filterGames(
   games: Game[],
-  filter: { conf?: string, team?: number },
+  filter: { conf?: string[], team?: number[] },
   teamsById: Map<number, Team>
 ): Game[] {
-  if (filter.team !== undefined) {
-    return games.filter(g => g.homeId === filter.team || g.awayId === filter.team)
+  if (filter.team && filter.team.length > 0) {
+    const teamSet = new Set(filter.team)
+    return games.filter(g => teamSet.has(g.homeId) || teamSet.has(g.awayId))
   }
-  if (filter.conf !== undefined) {
+  if (filter.conf && filter.conf.length > 0) {
+    const confSet = new Set(filter.conf)
     return games.filter(g =>
-      teamsById.get(g.homeId)?.conference === filter.conf
-      || teamsById.get(g.awayId)?.conference === filter.conf
+      confSet.has(teamsById.get(g.homeId)?.conference ?? '')
+      || confSet.has(teamsById.get(g.awayId)?.conference ?? '')
     )
   }
   return games
@@ -62,9 +64,9 @@ export function filterGames(
  * back to unfiltered ("All") instead of crashing or rendering a broken
  * partial state.
  */
-export function sanitizeConfParam(raw: string | undefined, knownConferences: string[]): string | undefined {
-  if (raw === undefined) return undefined
-  return knownConferences.includes(raw) ? raw : undefined
+export function sanitizeConfParam(raw: string | undefined, knownConferences: string[]): string[] {
+  if (!raw) return []
+  return raw.split(',').filter(value => knownConferences.includes(value))
 }
 
 /**
@@ -75,11 +77,12 @@ export function sanitizeConfParam(raw: string | undefined, knownConferences: str
  * comparison. Returns `undefined` unless `raw` parses to a safe integer
  * that is also a known team id.
  */
-export function sanitizeTeamParam(raw: string | undefined, teamsById: Map<number, Team>): number | undefined {
-  if (!raw) return undefined
-  const id = Number(raw)
-  if (!Number.isSafeInteger(id)) return undefined
-  return teamsById.has(id) ? id : undefined
+export function sanitizeTeamParam(raw: string | undefined, teamsById: Map<number, Team>): number[] {
+  if (!raw) return []
+  return raw
+    .split(',')
+    .map(Number)
+    .filter(id => Number.isSafeInteger(id) && teamsById.has(id))
 }
 
 /**
@@ -88,8 +91,8 @@ export function sanitizeTeamParam(raw: string | undefined, teamsById: Map<number
  * query object: `conf` set, `team` always nulled out, every other current
  * key re-spread so it survives the replace.
  */
-export function buildConfQuery(currentQuery: Record<string, unknown>, conf: string | undefined): Record<string, unknown> {
-  return { ...currentQuery, conf, team: undefined }
+export function buildConfQuery(currentQuery: Record<string, unknown>, conf: string[] | undefined): Record<string, unknown> {
+  return { ...currentQuery, conf: conf && conf.length > 0 ? conf.join(',') : undefined, team: undefined }
 }
 
 /**
@@ -97,19 +100,19 @@ export function buildConfQuery(currentQuery: Record<string, unknown>, conf: stri
  * `team` set, `conf` always nulled out, every other current key re-spread
  * so it survives Vue Router's query-replace behavior.
  */
-export function buildTeamQuery(currentQuery: Record<string, unknown>, team: number | undefined): Record<string, unknown> {
-  return { ...currentQuery, team, conf: undefined }
+export function buildTeamQuery(currentQuery: Record<string, unknown>, team: number[] | undefined): Record<string, unknown> {
+  return { ...currentQuery, team: team && team.length > 0 ? team.join(',') : undefined, conf: undefined }
 }
 
 /**
- * D-15 superseded during Phase 2 UAT: week 14 has zero games and was
- * removed from navigation entirely (see 02-CONTEXT.md D-15 note). `WEEKS`
- * now lists only the 14 navigable weeks — 1 through 13, then 15 — so week
- * 14 is unreachable via Prev/Next or the week-picker. The `/week/14` route
- * itself still resolves for a direct deep link; it's just no longer listed
- * here.
+ * D-15 (superseded): week 14 has zero real CFBD games — it's conference
+ * championship week — and was removed from navigation during Phase 2 UAT.
+ * It's back in `WEEKS` now that the week 14 page renders the four
+ * conference championship matchups instead of a `GameCard` grid, so it has
+ * real content again and needs to be reachable via Prev/Next and the
+ * week-picker like every other week.
  */
-export const WEEKS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15]
+export const WEEKS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 // `WEEKS` is a non-empty literal array by construction; these fallbacks
 // only exist to satisfy `noUncheckedIndexedAccess` and are never actually
@@ -159,12 +162,13 @@ export function buildWeekQuery(currentQuery: Record<string, unknown>, week: numb
 }
 
 /**
- * Pitfall 4: "the week itself has zero games" (e.g. week 14, D-15) and "an
- * active filter narrowed an otherwise non-empty week to zero games" (e.g. a
- * team's bye week) are different situations requiring different copy.
- * Checked against `rawWeekGames` (PRE-filter) vs `filteredGames`
- * (POST-filter) — never derived from the filtered list alone, which cannot
- * distinguish the two causes.
+ * Pitfall 4: "the week itself has zero games" and "an active filter
+ * narrowed an otherwise non-empty week to zero games" (e.g. a team's bye
+ * week) are different situations requiring different copy. Checked against
+ * `rawWeekGames` (PRE-filter) vs `filteredGames` (POST-filter) — never
+ * derived from the filtered list alone, which cannot distinguish the two
+ * causes. (Week 14 no longer hits this path at all — the week page renders
+ * its own conference-championship branch before either variant applies.)
  */
 export function determineEmptyStateVariant(rawWeekGames: Game[], filteredGames: Game[]): 'week-empty' | 'filter-empty' | 'populated' {
   if (rawWeekGames.length === 0) return 'week-empty'

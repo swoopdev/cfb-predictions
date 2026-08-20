@@ -37,7 +37,7 @@ const percentage = computed(() => {
 </script>
 
 <template>
-  <div class="relative w-full h-5 bg-muted rounded overflow-hidden shrink-0">
+  <div class="relative w-full h-5 bg-neutral-200 dark:bg-muted rounded overflow-hidden shrink-0">
     <!-- Fill background (animates width) -->
     <div
       class="absolute top-0 left-0 h-full bg-primary transition-all duration-300 ease-out"
@@ -45,7 +45,7 @@ const percentage = computed(() => {
     />
     <!-- Centered label -->
     <div class="absolute inset-0 flex items-center justify-center">
-      <span class="text-xs font-semibold text-white">
+      <span class="text-xs font-semibold text-default">
         {{ weekProgress.picked }}/{{ weekProgress.total }} picked
       </span>
     </div>

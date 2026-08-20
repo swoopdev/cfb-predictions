@@ -13,18 +13,30 @@ import type { Game } from '#shared/types/schedule'
  */
 
 /**
- * Fill all unpicked games in a specific week with the home team.
+ * Picks a winner for `game` at random -- home or away, each 50/50 -- rather
+ * than always the home team. `random` defaults to `Math.random` but is
+ * injectable so callers (tests) can supply a deterministic stand-in instead
+ * of asserting against genuinely random output.
+ */
+function randomWinner(game: Game, random: () => number): number {
+  return random() < 0.5 ? game.homeId : game.awayId
+}
+
+/**
+ * Fill all unpicked games in a specific week with a random winner.
  * Existing picks are never overwritten.
  *
  * @param games - Array of all Game objects for the season
  * @param weekNum - Week number to fill (e.g., 1, 2, ...)
  * @param currentPicks - Current picks object { gameId: winningTeamId }
+ * @param random - RNG hook, defaults to `Math.random` (this task: injectable so tests can be deterministic)
  * @returns Object with newPicks (updated picks) and autoFilledIds (newly-filled game IDs)
  */
 export function fillWeekRemaining(
   games: Game[],
   weekNum: number,
-  currentPicks: Record<number, number>
+  currentPicks: Record<number, number>,
+  random: () => number = Math.random
 ): { newPicks: Record<number, number>, autoFilledIds: number[] } {
   const weekGames = games.filter(g => g.week === weekNum)
   const updates: Record<number, number> = {}
@@ -32,7 +44,7 @@ export function fillWeekRemaining(
 
   for (const game of weekGames) {
     if (!(game.id in currentPicks)) {
-      updates[game.id] = game.homeId
+      updates[game.id] = randomWinner(game, random)
       autoFilledIds.push(game.id)
     }
   }
@@ -44,23 +56,25 @@ export function fillWeekRemaining(
 }
 
 /**
- * Fill all unpicked games in the entire season with the home team.
+ * Fill all unpicked games in the entire season with a random winner.
  * Existing picks are never overwritten.
  *
  * @param games - Array of all Game objects for the season
  * @param currentPicks - Current picks object { gameId: winningTeamId }
+ * @param random - RNG hook, defaults to `Math.random` (this task: injectable so tests can be deterministic)
  * @returns Object with newPicks (updated picks) and autoFilledIds (newly-filled game IDs)
  */
 export function fillSeasonRemaining(
   games: Game[],
-  currentPicks: Record<number, number>
+  currentPicks: Record<number, number>,
+  random: () => number = Math.random
 ): { newPicks: Record<number, number>, autoFilledIds: number[] } {
   const updates: Record<number, number> = {}
   const autoFilledIds: number[] = []
 
   for (const game of games) {
     if (!(game.id in currentPicks)) {
-      updates[game.id] = game.homeId
+      updates[game.id] = randomWinner(game, random)
       autoFilledIds.push(game.id)
     }
   }

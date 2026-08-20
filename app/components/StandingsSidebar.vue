@@ -4,7 +4,8 @@
 // auto-import, so this component mounts in the plain vitest project (the
 // project's vitest config registers no Nuxt auto-import plugin — same
 // reasoning as StandingsTable's own header note).
-import { computed, ref, useId } from 'vue'
+import { computed } from 'vue'
+import type { Team } from '#shared/types/schedule'
 import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
@@ -30,10 +31,16 @@ const props = withDefaults(defineProps<{
    */
   standings: StandingsResult | undefined
   /**
-   * The active conference filter, straight from `?conf=` (Phase 2). `null` /
-   * `undefined` means "All".
+   * Team lookup for logos (this task) -- threaded straight through to
+   * `StandingsTable`, which is where the logo is actually rendered. This
+   * component performs no team lookup of its own.
    */
-  activeConference?: string | null
+  teamsById?: Map<number, Team>
+  /**
+   * The active conference filter(s), straight from `?conf=` (Phase 2, now
+   * multi-select). Empty array / `null` / `undefined` means "All".
+   */
+  activeConference?: string[] | null
   /**
    * Output of `useStandings()` (Plan 06-04, TIE-07). `Partial` because a
    * conference is omitted when its tiebreaker resolution threw (see
@@ -60,22 +67,33 @@ const props = withDefaults(defineProps<{
    * argument -- this component holds no storage knowledge of its own.
    */
   commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
+  /**
+   * `{ conferenceName: winningTeamId }`, from `useChampionshipPicksStorage`.
+   * The championship picker itself now lives on the week 14 page, not here
+   * -- this is threaded straight through to `StandingsTable`, display-only,
+   * so a picked result still reflects in the standings' overall record.
+   */
+  championshipPicks?: Record<string, number>
 }>(), {
-  activeConference: null,
+  teamsById: () => new Map(),
+  activeConference: () => [],
   rankings: undefined,
   slateComplete: undefined,
-  commitOrdering: undefined
+  commitOrdering: undefined,
+  championshipPicks: undefined
 })
 
 /**
- * Display order when no filter is active. Derived from `P4_CONFERENCES`
- * (itself `Object.keys(CONFERENCE_RULES)`) rather than re-listed here, so
- * "which conferences are P4, and in what order" keeps exactly one definition
- * in the codebase. That order is already SEC, Big Ten, Big 12, ACC.
- * `P4_CONFERENCES` is `readonly ConferenceId[]` (Task 1), so this needs no
- * cast to be usable with `includes` below.
+ * Display order when no filter is active (this task: alphabetical -- ACC,
+ * Big 12, Big Ten, SEC -- rather than `P4_CONFERENCES`'s own declaration
+ * order). `P4_CONFERENCES` (itself `Object.keys(CONFERENCE_RULES)`) still
+ * stays the one place P4 membership is defined; this only re-sorts a copy
+ * of it for display, so "which conferences are P4" keeps exactly one
+ * definition while "what order the sidebar lists them in" is this
+ * component's own concern. `P4_CONFERENCES` is `readonly ConferenceId[]`
+ * (Task 1), so this needs no cast to be usable with `includes` below.
  */
-const P4_ORDER = P4_CONFERENCES
+const P4_ORDER: readonly ConferenceId[] = [...P4_CONFERENCES].sort((a, b) => a.localeCompare(b))
 
 /**
  * T-06-07: narrows an arbitrary string to `ConferenceId` by checking
@@ -91,18 +109,29 @@ function isP4Conference(value: string): value is ConferenceId {
 
 /**
  * T-05-03/T-06-07: `activeConference` originates in a user-controlled URL
- * query param. Anything that is not one of the four P4 conference names — an
- * unknown or hand-edited string, the literal "All" sentinel, or a G5
- * conference that has no standings in v1 — is treated as "no filter" rather
- * than rendering an empty or broken panel.
+ * query param (now multi-select). Anything that is not one of the four P4
+ * conference names — an unknown or hand-edited string, or a G5 conference
+ * that has no standings in v1 — is dropped rather than rendering an empty or
+ * broken panel. Order follows `P4_ORDER`, not selection order, so the panel
+ * stays stable regardless of pick order.
  */
-const selectedConference = computed<ConferenceId | null>(() => {
-  const value = props.activeConference
-  return typeof value === 'string' && isP4Conference(value) ? value : null
+const selectedConferences = computed<ConferenceId[]>(() => {
+  const values = props.activeConference ?? []
+  return P4_ORDER.filter(c => values.includes(c) && isP4Conference(c))
 })
 
 const visibleConferences = computed<ConferenceId[]>(() =>
-  selectedConference.value ? [selectedConference.value] : [...P4_ORDER]
+  selectedConferences.value.length > 0 ? selectedConferences.value : [...P4_ORDER]
+)
+
+/**
+ * `UAccordion`'s own item shape (this task). `value` doubles as the label
+ * -- there is no separate display name for a conference anywhere in this
+ * app -- and as the key `StandingsTable` is re-indexed by in the `#body`
+ * slot below.
+ */
+const accordionItems = computed(() =>
+  visibleConferences.value.map(conference => ({ value: conference, label: conference }))
 )
 
 /**
@@ -111,83 +140,82 @@ const visibleConferences = computed<ConferenceId[]>(() =>
  * user's filter.
  */
 const showsUnfilterableNote = computed<boolean>(() =>
-  typeof props.activeConference === 'string'
-  && props.activeConference !== ''
-  && props.activeConference !== 'All'
-  && selectedConference.value === null
+  (props.activeConference?.length ?? 0) > 0
+  && selectedConferences.value.length === 0
 )
 
-// Ephemeral, per-session sidebar visibility on narrow viewports (D-01).
+// Sidebar open/collapsed state (D-01). Owned by the parent via v-model so a
+// header-level toggle button can drive the same panel USidebar renders here.
 // Deliberately not persisted: it is a viewing preference for the current
-// scroll position, not part of the user's scenario.
-const expanded = ref(false)
-const panelId = useId()
+// session, not part of the user's scenario.
+const open = defineModel<boolean>('open', { default: true })
 </script>
 
 <template>
-  <aside
-    class="w-full lg:w-80 lg:shrink-0 lg:sticky lg:top-6"
+  <!-- USidebar's default `container` is viewport-fixed, meant for full app
+       shells. This page's standings panel instead lives inline in the
+       page's normal flow (following document scroll), so `container` is
+       overridden to `sticky` and the `gap` spacer (which only exists to
+       reserve layout space for a fixed sidebar) is dropped — the sticky
+       container reserves its own space directly. -->
+  <USidebar
+    v-model:open="open"
+    side="right"
+    collapsible="icon"
+    title="Standings"
     aria-label="Conference standings"
+    :style="{ '--sidebar-width': '26rem' }"
+    :ui="{
+      root: 'shrink-0 h-auto lg:h-full lg:min-h-screen data-[state=collapsed]:hidden',
+      gap: 'hidden',
+      container: 'static lg:relative z-[60] flex h-auto lg:h-full lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
+      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden h-full flex flex-col lg:sticky lg:top-0 lg:max-h-screen',
+      header: 'lg:pt-4 lg:pb-4',
+      body: 'p-3 sm:p-4 overflow-y-auto min-h-0'
+    }"
   >
-    <!-- Mobile only: the panel is tall (up to 67 rows across four
-         conferences), so it stays collapsed until asked for rather than
-         pushing the game slate off the bottom of the screen. On `lg` and up
-         the button is gone and the panel is unconditionally visible — the
-         breakpoint is `lg`, not the `md` the plan suggested, because between
-         768px and 1024px a 320px sidebar leaves the 280px-min game grid a
-         single cramped column. -->
-    <button
-      type="button"
-      class="lg:hidden mb-2 w-full inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-default bg-elevated ring ring-accented hover:bg-accented transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-      :aria-expanded="expanded"
-      :aria-controls="panelId"
-      @click="expanded = !expanded"
-    >
-      {{ expanded ? 'Hide standings' : 'Show standings' }}
-      <!-- Decorative: the button's own text already says which way it goes,
-           so the chevron is hidden from assistive tech. -->
-      <svg
-        class="size-4 transition-transform"
-        :class="expanded ? 'rotate-180' : ''"
-        viewBox="0 0 20 20"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.75"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M6 8l4 4 4-4" />
-      </svg>
-    </button>
-
-    <div
-      :id="panelId"
-      class="lg:block lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto overscroll-contain rounded-lg bg-default ring ring-default p-3 sm:p-4"
-      :class="expanded ? 'block' : 'hidden'"
-    >
-      <p
-        v-if="showsUnfilterableNote"
-        class="mb-3 text-xs text-dimmed"
-      >
-        Standings cover the four power conferences.
-      </p>
-
-      <div class="divide-y divide-default">
-        <div
-          v-for="conference in visibleConferences"
-          :key="conference"
-          class="py-4 first:pt-0 last:pb-0"
+    <template #default="{ state }">
+      <template v-if="state === 'expanded'">
+        <p
+          v-if="showsUnfilterableNote"
+          class="mb-3 text-xs text-dimmed"
         >
-          <StandingsTable
-            :standings="standings?.[conference] ?? []"
-            :conference-name="conference"
-            :ranking="rankings?.[conference]"
-            :slate-complete="slateComplete?.[conference] ?? false"
-            :commit-ordering="commitOrdering"
-          />
-        </div>
-      </div>
-    </div>
-  </aside>
+          Standings cover the four power conferences.
+        </p>
+
+        <!-- `UAccordion`, not a hand-rolled disclosure button: every
+             conference collapses independently (`type="multiple"`), all
+             start open (`default-value`), and each is truly removed from
+             the DOM while collapsed via the accordion's own
+             `unmount-on-hide` (matching the "absent, not hidden" disclosure
+             convention `TiebreakerReasoning` already uses elsewhere in this
+             tree). `StandingsTable` renders with `show-heading="false"`
+             here because the accordion trigger's own label already IS the
+             conference name -- a second `<h3>` inside would duplicate it. -->
+        <UAccordion
+          :items="accordionItems"
+          type="multiple"
+          :default-value="visibleConferences"
+          :ui="{
+            root: 'w-full',
+            trigger: 'text-xs font-semibold uppercase tracking-wide text-toned py-2',
+            content: 'pb-4'
+          }"
+        >
+          <template #body="{ item }">
+            <StandingsTable
+              :standings="standings?.[(item.value as ConferenceId)] ?? []"
+              :teams-by-id="teamsById"
+              :conference-name="item.value"
+              :ranking="rankings?.[(item.value as ConferenceId)]"
+              :slate-complete="slateComplete?.[(item.value as ConferenceId)] ?? false"
+              :commit-ordering="commitOrdering"
+              :show-heading="false"
+              :championship-picks="championshipPicks"
+            />
+          </template>
+        </UAccordion>
+      </template>
+    </template>
+  </USidebar>
 </template>

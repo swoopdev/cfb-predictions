@@ -4,14 +4,14 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ],
   link: [
-    { rel: 'icon', href: '/favicon.ico' }
+    { rel: 'icon', href: '/favicon.png', type: 'image/png' }
   ],
   htmlAttrs: {
     lang: 'en'
   }
 })
 
-const title = 'CFB Predictions'
+const title = 'CFB Schedule Predictor'
 const description = 'Pick the winner of every FBS game on the 2026 schedule and watch conference standings and championship matchups update live.'
 
 useSeoMeta({

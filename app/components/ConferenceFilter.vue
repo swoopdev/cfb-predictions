@@ -33,29 +33,60 @@ export const CONFERENCE_ITEMS: ConferenceItem[] = [
 // sanitizer. Stays a plain string[] (unaffected by the label/value split
 // above) since it's compared directly against the raw `?conf=` query value.
 export const KNOWN_CONFERENCES = CONFERENCE_ITEMS.slice(1).map(item => item.value)
+
+// The selectable items in the checkbox dropdown — real conferences only.
+// "All conferences" isn't an item to pick; it's what the label shows when
+// nothing is selected (empty array).
+export const CONFERENCE_SELECT_ITEMS: ConferenceItem[] = CONFERENCE_ITEMS.slice(1)
 </script>
 
 <script setup lang="ts">
-const conf = defineModel<string | undefined>()
+// Multi-select: model is the list of chosen conference values. An empty
+// array means "no filter" (All conferences) — the same sentinel meaning
+// `undefined` used to carry before this became a checkbox multi-select.
+const conf = defineModel<string[]>({ default: () => [] })
 
-// USelect needs a concrete selected item at all times; "All" is the
-// in-component sentinel for "no conference filter" (conf === undefined).
-const selected = computed<string>({
-  get: () => conf.value ?? 'All',
-  set: (value) => {
-    conf.value = value === 'All' ? undefined : value
-  }
+const label = computed(() => {
+  if (conf.value.length === 0) return 'All conferences'
+  if (conf.value.length === 1) return conf.value[0]
+  return `${conf.value.length} conferences`
 })
 </script>
 
 <template>
-  <USelect
-    v-model="selected"
-    :items="CONFERENCE_ITEMS"
+  <USelectMenu
+    v-model="conf"
+    multiple
+    :items="CONFERENCE_SELECT_ITEMS"
     value-key="value"
     label-key="label"
-    placeholder="All conferences"
-    class="w-56 sm:w-64"
+    :placeholder="label"
+    :search-input="false"
+    class="w-[45vw] max-w-44 sm:w-56 lg:w-64"
     :ui="{ content: 'min-w-[16rem]' }"
-  />
+  >
+    <template #default>
+      {{ label }}
+    </template>
+    <template #content-top>
+      <UButton
+        label="Clear"
+        icon="i-lucide-x"
+        color="neutral"
+        variant="ghost"
+        size="xs"
+        block
+        :disabled="conf.length === 0"
+        class="justify-start"
+        @click="conf = []"
+      />
+    </template>
+    <template #item-leading="{ item }">
+      <UCheckbox
+        :model-value="conf.includes(item.value)"
+        tabindex="-1"
+        class="pointer-events-none"
+      />
+    </template>
+  </USelectMenu>
 </template>

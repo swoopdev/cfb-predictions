@@ -6,9 +6,10 @@
 // auto-import plugin — see GameCard.test.ts's note on why its component was
 // left untestable).
 import { computed, ref, useId } from 'vue'
+import type { Team } from '#shared/types/schedule'
 import type { StandingsTeam } from '#shared/types/standings'
 import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
-import ChampionshipCard from './ChampionshipCard.vue'
+import { championshipFor } from '#shared/domain/tiebreakers/engine'
 import TiebreakerReasoning from './TiebreakerReasoning.vue'
 
 /**
@@ -46,38 +47,119 @@ import TiebreakerReasoning from './TiebreakerReasoning.vue'
  * to `ConferenceId` since every real caller passes one of the four P4
  * names) to pass along with a committed group's ordering.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   standings: readonly StandingsTeam[]
+  /**
+   * Team lookup for logos (this task): `standings` rows don't carry a logo
+   * field (D-01/D-02's display contract is deliberately free of team
+   * metadata the tiebreaker engine doesn't need), so the logo is looked up
+   * by id from the same `teamsById` the rest of the page already resolves,
+   * matching `GameCard`'s own placeholder-shield fallback for a missing
+   * logo.
+   */
+  teamsById?: Map<number, Team>
   conferenceName: string
   ranking?: ConferenceRanking | undefined
   slateComplete?: boolean
   commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
-}>()
+  /**
+   * Whether to render this component's own `<h3>` heading (this task).
+   * Defaults `true` for standalone/unit-test usage. `StandingsSidebar` sets
+   * this `false` when it mounts a `StandingsTable` inside a `UAccordion`
+   * item -- the accordion trigger already renders the conference name as
+   * its own clickable label, so a second heading here would just duplicate
+   * it directly above the table.
+   */
+  showHeading?: boolean
+  /**
+   * `{ conferenceName: winningTeamId }`, from `useChampionshipPicksStorage`.
+   * The championship pick itself is now made on the week 14 page's own
+   * `ChampionshipCard` grid, not here -- this is read display-only (see
+   * `displayOverallRecord` below) to reflect a picked championship result in
+   * the standings table's overall record.
+   */
+  championshipPicks?: Record<string, number>
+}>(), {
+  teamsById: () => new Map(),
+  ranking: undefined,
+  slateComplete: undefined,
+  commitOrdering: undefined,
+  showHeading: true,
+  championshipPicks: undefined
+})
 
 const headingId = useId()
 
 /**
- * §5.1/Task 3: built from the SAME `standings` rows already passed in --
- * every row already carries `id` and `school`, so `ChampionshipCard` needs
- * no separate teams data source. An empty `standings` array (not-yet-loaded
- * or a genuinely empty conference) yields an empty map, which is exactly the
- * signal `ChampionshipCard`'s loading state reads (see that component's
- * `state` computed).
+ * §7.1: `TiebreakerReasoning`'s own school lookup, built from the SAME
+ * `standings` rows already passed in -- every row already carries `id` and
+ * `school`, so no separate teams data source is needed.
  */
 const schoolById = computed<ReadonlyMap<number, string>>(
   () => new Map(props.standings.map(team => [team.id, team.school]))
 )
 
 /**
- * §10 empty-state predicate: true when any row has at least one picked
- * conference game. A picked conference game always produces exactly one win
- * and one loss for its two participants, so summing `confRecord` per row is
- * equivalent to counting picked conference games directly, without pulling
- * the games slate into this component.
+ * This task: a picked championship winner bumps the DISPLAYED overall
+ * record only -- never `confRecord`, never `rank`/`isTied`, and never fed
+ * back into `computeStandings()` itself. A real conference championship
+ * happens after the regular-season standings (and the seeding they
+ * produce) are already final, so the result cannot retroactively change
+ * who made the game; it can only add one win/loss to the two teams that
+ * played it. Derived from the SAME `ranking` prop `ChampionshipCard` reads
+ * (via the same pure `championshipFor`, never a second implementation), so
+ * this only activates once `ranking` has resolved the matchup down to two
+ * concrete teams -- an unresolved/candidate seed yields `undefined` here
+ * and every row's record renders unchanged.
  */
-const hasPickedConferenceGames = computed<boolean>(() =>
-  props.standings.some(team => team.confRecord.wins + team.confRecord.losses > 0)
+const championshipParticipants = computed<{ seed1: TeamId, seed2: TeamId } | undefined>(() => {
+  if (!props.ranking) return undefined
+  const { seed1, seed2 } = championshipFor(props.ranking)
+  if (!seed1 || seed1.teams.length !== 1) return undefined
+  if (!seed2 || seed2.teams.length !== 1) return undefined
+  return { seed1: seed1.teams[0]!, seed2: seed2.teams[0]! }
+})
+
+const rawChampionshipWinnerId = computed<TeamId | undefined>(
+  () => props.championshipPicks?.[props.conferenceName]
 )
+
+/**
+ * A crown/record bump requires the picked winner to still be one of the
+ * two CURRENT championship participants (this task, fixing a bug where the
+ * crown showed up on a row before the regular season -- let alone the
+ * championship game itself -- was decided). `championshipPicks` is keyed
+ * only by conference name, so a stale pick left over from an earlier
+ * scenario/regular-season state (or picked before `championshipParticipants`
+ * had resolved to two concrete teams) must NOT be trusted at face value --
+ * it's only a real result once it matches one of `seed1`/`seed2` for the
+ * CURRENT `ranking`, AND the conference's own regular season (`slateComplete`)
+ * is actually finished -- `ChampionshipCard` itself won't let a pick be made
+ * before then, so a stray value that predates `slateComplete` can only be
+ * stale storage, never a real pick.
+ */
+const championshipWinnerId = computed<TeamId | undefined>(() => {
+  const participants = championshipParticipants.value
+  const winnerId = rawChampionshipWinnerId.value
+  if (!props.slateComplete || !participants || winnerId === undefined) return undefined
+  if (winnerId !== participants.seed1 && winnerId !== participants.seed2) return undefined
+  return winnerId
+})
+
+function displayOverallRecord(team: StandingsTeam): { wins: number, losses: number } {
+  const participants = championshipParticipants.value
+  const winnerId = championshipWinnerId.value
+  if (!participants || winnerId === undefined) return team.overallRecord
+
+  const loserId = winnerId === participants.seed1 ? participants.seed2 : participants.seed1
+  if (team.id === winnerId) {
+    return { wins: team.overallRecord.wins + 1, losses: team.overallRecord.losses }
+  }
+  if (team.id === loserId) {
+    return { wins: team.overallRecord.wins, losses: team.overallRecord.losses + 1 }
+  }
+  return team.overallRecord
+}
 
 type MarkerKind = 'none' | 'a' | 'b'
 
@@ -216,31 +298,29 @@ function markerClass(kind: MarkerKind): string {
 function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
   props.commitOrdering?.(props.conferenceName as ConferenceId, group, order)
 }
+
+const PLACEHOLDER_LOGO = '/logos/placeholder.svg'
+
+function logoFor(team: StandingsTeam): string {
+  return props.teamsById.get(team.id)?.logo ?? PLACEHOLDER_LOGO
+}
 </script>
 
 <template>
-  <section :aria-labelledby="headingId">
+  <section :aria-labelledby="showHeading ? headingId : undefined">
     <!-- `text-toned`, not `text-dimmed`: with four conferences stacked in the
          sidebar this heading is the primary wayfinding element, not a
-         de-emphasised label. -->
+         de-emphasised label. Omitted entirely when this table mounts inside
+         a `UAccordion` item (`showHeading: false`) -- the accordion's own
+         trigger already renders the conference name as a clickable label,
+         so a second heading here would duplicate it. -->
     <h3
+      v-if="showHeading"
       :id="headingId"
       class="text-xs font-semibold uppercase tracking-wide text-toned mb-2"
     >
       {{ conferenceName }}
     </h3>
-
-    <!-- Task 3/§5.1: rendered between the heading and the table, inside this
-         SAME `<section>` -- placing it in `StandingsSidebar` instead would
-         put it above the heading and break the `aria-labelledby` grouping.
-         Guarded by the same zero-teams check as the table itself: no card
-         (and no table) when a conference genuinely has no rows. -->
-    <ChampionshipCard
-      v-if="standings.length > 0"
-      :ranking="ranking"
-      :school-by-id="schoolById"
-      :has-picked-conference-games="hasPickedConferenceGames"
-    />
 
     <p
       v-if="standings.length === 0"
@@ -328,10 +408,29 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
               scope="row"
               class="py-1.5 pr-2 text-left font-normal text-highlighted"
             >
-              {{ row.team.school }}
+              <div class="flex items-center gap-2">
+                <img
+                  :src="logoFor(row.team)"
+                  alt=""
+                  class="size-5 shrink-0 object-contain"
+                  :class="{ 'dark:brightness-0 dark:invert': logoFor(row.team) === PLACEHOLDER_LOGO }"
+                >
+                <span>{{ row.team.school }}</span>
+                <!-- Crown (this task): marks the team picked to win THIS
+                     conference's championship game (`championshipWinnerId`,
+                     read straight off the same `championshipPicks` prop
+                     `displayOverallRecord` above already reads) -- never a
+                     second "who won" computation of its own. -->
+                <UIcon
+                  v-if="row.team.id === championshipWinnerId"
+                  name="i-lucide-crown"
+                  class="size-4 shrink-0 text-amber-500 dark:text-amber-400"
+                  aria-label="Conference champion (picked)"
+                />
+              </div>
             </th>
             <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
-              {{ row.team.overallRecord.wins }}-{{ row.team.overallRecord.losses }}
+              {{ displayOverallRecord(row.team).wins }}-{{ displayOverallRecord(row.team).losses }}
             </td>
             <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
               {{ row.team.confRecord.wins }}-{{ row.team.confRecord.losses }}

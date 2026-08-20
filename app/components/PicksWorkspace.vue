@@ -255,45 +255,37 @@ function advanceWeek() {
       <div
         class="sticky top-0 z-50 bg-default/95 backdrop-blur -mx-6 px-6 lg:-mx-8 lg:px-8 pt-6 pb-4 border-b border-neutral-300 dark:border-neutral-800"
       >
-        <!-- Header layout: stacked rows on mobile -- scenario switcher,
-             then week nav, then conference/team filters side by side, then
-             Fill/Clear alongside theme/podium -- collapsing into the single
-             desktop row via `lg:contents` on each row wrapper, with
-             explicit `lg:order-*` on every item so the desktop ordering
-             stays independent of the mobile DOM grouping. -->
+        <!-- Header layout: three rows on mobile -- week nav centered alone
+             on top, conference/team filters side by side below it, then
+             Fill/Clear alongside theme/podium on the bottom row --
+             collapsing into the single desktop row via `lg:contents` on
+             each row wrapper, with explicit `lg:order-*` on every item so
+             the desktop ordering (nav, filters, Fill/Clear, theme/podium)
+             stays exactly what it is on `main`, independent of the mobile
+             DOM grouping. Deliberately unchanged from `main`: the scenario
+             switcher lives in its own collapsible segment BELOW this bar,
+             so it never competes with these controls for space. -->
         <div class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
-          <!-- Phase 7 (D-07): scenario switcher. Rendered from the page's
-               own scope through this slot, so the page keeps ownership of
-               the scenario registry while the switcher still sits inside
-               main's sticky header rather than in a separate bar above it
-               (which would stop the standings sidebar touching the top
-               edge of the screen). -->
-          <div class="flex min-w-0 justify-center lg:contents">
-            <div class="min-w-0 lg:order-1">
-              <slot name="scenario" />
-            </div>
-          </div>
-
           <div class="flex justify-center lg:contents">
             <!-- Week navigation -->
             <WeekNav
               :week="week"
-              class="lg:order-2"
+              class="lg:order-1"
               @navigate="w => emit('navigate', w)"
             />
           </div>
           <div class="flex flex-nowrap items-center justify-center gap-4 lg:contents">
             <ConferenceFilter
               v-model="confModel"
-              class="lg:order-3"
+              class="lg:order-2"
             />
             <TeamFilter
               v-model="teamIdModel"
-              class="lg:order-4"
+              class="lg:order-3"
             />
           </div>
           <div class="flex items-center gap-4 lg:contents">
-            <div class="flex gap-2 lg:order-5">
+            <div class="flex gap-2 lg:order-4">
               <UButton
                 :disabled="weekGames.filter(g => !(g.id in picks)).length === 0"
                 variant="ghost"
@@ -327,7 +319,7 @@ function advanceWeek() {
                 Clear Season
               </UButton>
             </div>
-            <div class="ml-auto flex items-center gap-2 lg:order-6 lg:ml-auto">
+            <div class="ml-auto flex items-center gap-2 lg:order-5 lg:ml-auto">
               <UColorModeButton size="xl" />
               <UButton
                 icon="i-lucide-podium"
@@ -340,6 +332,16 @@ function advanceWeek() {
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Phase 7 (D-07): scenario switcher, in its own collapsible segment
+           BELOW the sticky header rather than inside it -- the header row is
+           `main`'s and stays untouched, and a segment that collapses to a
+           single summary line costs nothing on mobile when the user isn't
+           managing scenarios. Rendered from the page's own scope through
+           this slot, so the page keeps ownership of the registry. -->
+      <div class="border-b border-default">
+        <slot name="scenario" />
       </div>
 
       <div

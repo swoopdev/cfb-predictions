@@ -6,6 +6,7 @@
 // reasoning as StandingsTable's own header note).
 import { computed } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
+import type { Team } from '#shared/types/schedule'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
 import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
@@ -60,11 +61,30 @@ const props = withDefaults(defineProps<{
    * argument -- this component holds no storage knowledge of its own.
    */
   commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
+  /**
+   * Full team lookup (this task) -- threaded straight through to every
+   * `StandingsTable`/`ChampionshipCard` so the championship matchup can
+   * render team logos/colors, the same way `GameCard` does for the regular
+   * slate. Optional/defaulted to an empty `Map`: the championship picker
+   * simply degrades to its plain-text form (no logos, no picking) rather
+   * than throwing when a caller doesn't have teams loaded yet.
+   */
+  teamsById?: ReadonlyMap<number, Team>
+  /**
+   * `{ conferenceName: winningTeamId }` (this task), from
+   * `useChampionshipPicksStorage`. Mutated directly by `ChampionshipCard`
+   * exactly the way `GameCard` mutates its own `picks` prop -- this
+   * component holds no storage knowledge of its own, same as
+   * `commitOrdering` above.
+   */
+  championshipPicks?: Record<string, number>
 }>(), {
   activeConference: null,
   rankings: undefined,
   slateComplete: undefined,
-  commitOrdering: undefined
+  commitOrdering: undefined,
+  teamsById: undefined,
+  championshipPicks: undefined
 })
 
 /**
@@ -192,6 +212,8 @@ const open = defineModel<boolean>('open', { default: true })
               :slate-complete="slateComplete?.[(item.value as ConferenceId)] ?? false"
               :commit-ordering="commitOrdering"
               :show-heading="false"
+              :teams-by-id="teamsById"
+              :championship-picks="championshipPicks"
             />
           </template>
         </UAccordion>

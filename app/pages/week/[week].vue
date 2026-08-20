@@ -19,6 +19,11 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 const picks: Ref<Record<number, number>> = usePicksStorage(2026)
 const { markAutoFilled } = useAutoFilledGames(2026)
 
+// Conference championship winner picks: `{ conferenceName: winningTeamId }`,
+// separate from `picks` because a championship matchup has no real CFBD
+// game id (this task).
+const championshipPicks: Ref<Record<string, number>> = useChampionshipPicksStorage(2026)
+
 // Standings sidebar open/collapsed state, lifted here so the header's
 // toggle button and StandingsSidebar's own USidebar instance share it.
 const standingsOpen = ref(true)
@@ -143,7 +148,10 @@ function handleClearWeek() {
                to the right of the progress bar they act on, rather than
                occupying a whole separate line. -->
           <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-            <!-- Week heading with per-week progress bar (D-10, D-02) -->
+            <!-- Week heading, per-week progress bar, and Fill/Clear Week
+                 actions (D-10, D-02). Fill/Clear sit immediately after the
+                 progress bar they act on, left-aligned with it, rather than
+                 pushed to the far right of the row. -->
             <div class="flex items-center gap-4 flex-1">
               <h1 class="text-xl font-semibold">
                 Week {{ week }}
@@ -154,25 +162,24 @@ function handleClearWeek() {
                   :games="filteredGames"
                 />
               </div>
-            </div>
-            <!-- Fill/Clear Week actions -->
-            <div class="flex gap-2">
-              <UButton
-                :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
-                variant="ghost"
-                size="sm"
-                @click="handleFillWeek"
-              >
-                Fill Week
-              </UButton>
-              <UButton
-                :disabled="filteredGames.filter(g => g.id in picks).length === 0"
-                variant="ghost"
-                size="sm"
-                @click="handleClearWeek"
-              >
-                Clear Week
-              </UButton>
+              <div class="flex gap-2">
+                <UButton
+                  :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
+                  variant="ghost"
+                  size="sm"
+                  @click="handleFillWeek"
+                >
+                  Fill Week
+                </UButton>
+                <UButton
+                  :disabled="filteredGames.filter(g => g.id in picks).length === 0"
+                  variant="ghost"
+                  size="sm"
+                  @click="handleClearWeek"
+                >
+                  Clear Week
+                </UButton>
+              </div>
             </div>
             <!-- Week navigation -->
             <WeekNav
@@ -301,6 +308,8 @@ function handleClearWeek() {
         :rankings="rankings"
         :slate-complete="slateComplete"
         :commit-ordering="commitOrdering"
+        :teams-by-id="teamsById"
+        :championship-picks="championshipPicks"
       />
       <div
         v-else-if="loadState === 'loading'"

@@ -7,7 +7,9 @@
 // left untestable).
 import { computed, ref, useId } from 'vue'
 import type { StandingsTeam } from '#shared/types/standings'
+import type { Team } from '#shared/types/schedule'
 import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
+import { championshipFor } from '#shared/domain/tiebreakers/engine'
 import ChampionshipCard from './ChampionshipCard.vue'
 import TiebreakerReasoning from './TiebreakerReasoning.vue'
 
@@ -61,11 +63,27 @@ const props = withDefaults(defineProps<{
    * it directly above the table.
    */
   showHeading?: boolean
+  /**
+   * Full team lookup (this task), threaded straight through to
+   * `ChampionshipCard` for logos/colors -- this component holds no team
+   * data of its own beyond the already-ranked `standings` rows it's given.
+   */
+  teamsById?: ReadonlyMap<number, Team>
+  /**
+   * `{ conferenceName: winningTeamId }` (this task), from
+   * `useChampionshipPicksStorage`, threaded straight through to
+   * `ChampionshipCard`, which is the only place that reads or mutates it.
+   * Also read here (display-only, see `displayOverallRecord` below) to
+   * reflect a picked championship result in the standings table itself.
+   */
+  championshipPicks?: Record<string, number>
 }>(), {
   ranking: undefined,
   slateComplete: undefined,
   commitOrdering: undefined,
-  showHeading: true
+  showHeading: true,
+  teamsById: undefined,
+  championshipPicks: undefined
 })
 
 const headingId = useId()
@@ -92,6 +110,47 @@ const schoolById = computed<ReadonlyMap<number, string>>(
 const hasPickedConferenceGames = computed<boolean>(() =>
   props.standings.some(team => team.confRecord.wins + team.confRecord.losses > 0)
 )
+
+/**
+ * This task: a picked championship winner bumps the DISPLAYED overall
+ * record only -- never `confRecord`, never `rank`/`isTied`, and never fed
+ * back into `computeStandings()` itself. A real conference championship
+ * happens after the regular-season standings (and the seeding they
+ * produce) are already final, so the result cannot retroactively change
+ * who made the game; it can only add one win/loss to the two teams that
+ * played it. Derived from the SAME `ranking` prop `ChampionshipCard` reads
+ * (via the same pure `championshipFor`, never a second implementation), so
+ * this only activates once `ranking` has resolved the matchup down to two
+ * concrete teams -- an unresolved/candidate seed yields `undefined` here
+ * and every row's record renders unchanged.
+ */
+const championshipParticipants = computed<{ seed1: TeamId, seed2: TeamId } | undefined>(() => {
+  if (!props.ranking) return undefined
+  const { seed1, seed2 } = championshipFor(props.ranking)
+  if (!seed1 || seed1.teams.length !== 1) return undefined
+  if (!seed2 || seed2.teams.length !== 1) return undefined
+  return { seed1: seed1.teams[0]!, seed2: seed2.teams[0]! }
+})
+
+const championshipWinnerId = computed<TeamId | undefined>(
+  () => props.championshipPicks?.[props.conferenceName]
+)
+
+function displayOverallRecord(team: StandingsTeam): { wins: number, losses: number } {
+  const participants = championshipParticipants.value
+  const winnerId = championshipWinnerId.value
+  if (!participants || winnerId === undefined) return team.overallRecord
+  if (winnerId !== participants.seed1 && winnerId !== participants.seed2) return team.overallRecord
+
+  const loserId = winnerId === participants.seed1 ? participants.seed2 : participants.seed1
+  if (team.id === winnerId) {
+    return { wins: team.overallRecord.wins + 1, losses: team.overallRecord.losses }
+  }
+  if (team.id === loserId) {
+    return { wins: team.overallRecord.wins, losses: team.overallRecord.losses + 1 }
+  }
+  return team.overallRecord
+}
 
 type MarkerKind = 'none' | 'a' | 'b'
 
@@ -260,6 +319,8 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
       :has-picked-conference-games="hasPickedConferenceGames"
       :slate-complete="slateComplete ?? false"
       :conference-name="(conferenceName as ConferenceId)"
+      :teams-by-id="teamsById"
+      :championship-picks="championshipPicks"
     />
 
     <p
@@ -351,7 +412,7 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
               {{ row.team.school }}
             </th>
             <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
-              {{ row.team.overallRecord.wins }}-{{ row.team.overallRecord.losses }}
+              {{ displayOverallRecord(row.team).wins }}-{{ displayOverallRecord(row.team).losses }}
             </td>
             <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
               {{ row.team.confRecord.wins }}-{{ row.team.confRecord.losses }}

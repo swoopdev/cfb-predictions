@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * The championship matchup element (TIE-07, D-12, D-13, D-14, P-2).
+ * The championship matchup element (TIE-07, D-12, D-13, D-14, P-2; reskinned
+ * and made pickable this task).
  *
  * Reads the two championship seeds directly off `championshipFor(ranking)` --
  * `ranking.groups[0]`/`groups[1]` -- and renders nothing else. Standings row
@@ -9,29 +10,36 @@
  * championship game (D-12). This component never indexes `groups` by hand
  * and never receives a standings-row array to infer a matchup from.
  *
- * Dumb and presentational: no store access, no composable calls, no data
- * fetching. `schoolById` and `hasPickedConferenceGames` are both derived by
- * the caller (`StandingsTable.vue`) from the same `standings` rows it
- * already has, which is why this component takes no games/picks prop of its
- * own -- see the `state` computed below for how it still tells "not loaded
- * yet" apart from "resolution failed" without one.
+ * `schoolById` and `hasPickedConferenceGames` are both derived by the caller
+ * (`StandingsTable.vue`) from the same `standings` rows it already has,
+ * which is why this component takes no games/picks prop of its own for
+ * THOSE two -- see the `state` computed below for how it still tells "not
+ * loaded yet" apart from "resolution failed" without one.
  *
- * D-14 is absolute: an unresolved seed renders exactly one presentation --
- * no badge, no icon, no `TerminalReason` text, no branch on WHY the seed is
- * unresolved (mid-season incompleteness and a permanently-uncomputable
- * ranking-step read identically here). `TerminalReason.ruleCitation` belongs
- * only in `TiebreakerReasoning.vue` (Plan 06-06), which is TIE-05's
+ * D-14 is absolute for the still-unresolved presentation: an unresolved seed
+ * renders exactly one presentation -- no badge, no icon, no `TerminalReason`
+ * text, no branch on WHY the seed is unresolved. `TerminalReason.ruleCitation`
+ * belongs only in `TiebreakerReasoning.vue` (Plan 06-06), which is TIE-05's
  * territory -- this component never imports `TerminalReason`.
  *
- * `import { computed, ref } from 'vue'` explicitly, plain HTML elements only
- * (no `UButton`/`UIcon`/auto-import) -- the plain vitest project registers no
- * Nuxt auto-import plugin (06-UI-SPEC.md §1.1).
+ * **This task's addition: a pickable matchup, styled like `GameCard`.** Once
+ * both seeds resolve to a single concrete team each, the card renders the
+ * exact same two-row, click-to-pick pattern `GameCard` uses for a real
+ * slate game (checkmark, logo, team-color accent) instead of static text --
+ * see `pickable` below. `championshipPicks` is mutated directly by
+ * `togglePick`, the same convention `GameCard` uses for its own `picks`
+ * prop, keyed by `conferenceName` (a championship matchup has no real CFBD
+ * game id to key off of). The picked winner's effect on the standings
+ * table's overall record is `StandingsTable`'s own concern
+ * (`displayOverallRecord`) -- this component only records the pick.
  */
 import { computed, ref } from 'vue'
-import type { ConferenceRanking, RankGroup } from '#shared/domain/tiebreakers/types'
+import type { ConferenceRanking, RankGroup, ConferenceId, TeamId } from '#shared/domain/tiebreakers/types'
+import type { Team } from '#shared/types/schedule'
 import { championshipFor } from '#shared/domain/tiebreakers/engine'
+import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   ranking: ConferenceRanking | undefined
   schoolById: ReadonlyMap<number, string>
   hasPickedConferenceGames: boolean
@@ -44,7 +52,16 @@ const props = defineProps<{
    * the conference's own choices are actually finished deciding it.
    */
   slateComplete: boolean
-}>()
+  /** Which conference this is -- the key `championshipPicks` is read/written under. */
+  conferenceName: ConferenceId
+  /** Full team lookup, for logos/colors on the pickable rows. */
+  teamsById?: ReadonlyMap<number, Team>
+  /** `{ conferenceName: winningTeamId }`, mutated directly by `togglePick`. */
+  championshipPicks?: Record<string, number>
+}>(), {
+  teamsById: undefined,
+  championshipPicks: undefined
+})
 
 /**
  * Local disclosure state for the P-2 candidate overflow control. One flag is
@@ -56,11 +73,36 @@ const props = defineProps<{
 const expanded = ref(false)
 
 type SeedDisplay
-  = | { kind: 'name', name: string }
+  = | { kind: 'name', teamId: TeamId, name: string }
     | { kind: 'candidates', connective: string, candidates: readonly string[] }
 
 function schoolFor(teamId: number): string {
   return props.schoolById.get(teamId) ?? String(teamId)
+}
+
+const PLACEHOLDER_TEAM = Object.freeze({
+  logo: '/logos/placeholder.svg',
+  color: '#6b7280',
+  alternateColor: '#6b7280'
+})
+
+/**
+ * `teamsById` is the full app-wide team map (passed down from the week
+ * page), so a championship participant -- always a P4 team already present
+ * in `schoolById` -- is expected to resolve here too. The placeholder
+ * fallback mirrors `GameCard`'s own FCS-opponent fallback (gray, generic
+ * shield) purely defensively, for a `teamsById` that hasn't loaded yet.
+ */
+function teamFor(teamId: TeamId): Team {
+  return props.teamsById?.get(teamId) ?? {
+    id: teamId,
+    school: schoolFor(teamId),
+    mascot: null,
+    abbreviation: null,
+    conference: props.conferenceName,
+    classification: null,
+    ...PLACEHOLDER_TEAM
+  }
 }
 
 /**
@@ -75,7 +117,8 @@ function alphabeticalCandidates(group: RankGroup): readonly string[] {
 function displayFor(group: RankGroup | undefined, connective: string): SeedDisplay | undefined {
   if (!group) return undefined
   if (group.teams.length === 1) {
-    return { kind: 'name', name: schoolFor(group.teams[0]!) }
+    const teamId = group.teams[0]!
+    return { kind: 'name', teamId, name: schoolFor(teamId) }
   }
   return { kind: 'candidates', connective, candidates: alphabeticalCandidates(group) }
 }
@@ -108,6 +151,72 @@ const hiddenCount = computed(() =>
 )
 
 /**
+ * The card only becomes an actual pick control once BOTH spots have
+ * resolved to one concrete team each -- an unresolved/candidate seed falls
+ * back to the plain-text presentation below (`pendingBlock`), same as
+ * before this task. `championshipPicks` being present is also required:
+ * a caller that doesn't wire up pick storage gets the read-only text
+ * presentation, never a control it can click with no effect.
+ */
+const pickable = computed(() =>
+  primary.value?.kind === 'name'
+  && secondary.value?.kind === 'name'
+  && props.championshipPicks !== undefined
+)
+
+const homeTeam = computed<Team | undefined>(() =>
+  primary.value?.kind === 'name' ? teamFor(primary.value.teamId) : undefined
+)
+const awayTeam = computed<Team | undefined>(() =>
+  secondary.value?.kind === 'name' ? teamFor(secondary.value.teamId) : undefined
+)
+
+/**
+ * A 90deg linear gradient between the two participants' primary colors,
+ * for the top badge (this task). Independent of `pickable` -- the two
+ * teams' colors are known as soon as both seeds resolve to a name, even
+ * before `championshipPicks` makes the card an actual pick control, so the
+ * badge can go two-color as soon as there's a real matchup to show.
+ */
+const pillGradient = computed<string | undefined>(() => {
+  if (!homeTeam.value || !awayTeam.value) return undefined
+  return `linear-gradient(90deg, ${awayTeam.value.color} 0%, ${homeTeam.value.color} 100%)`
+})
+
+const pickedTeamId = computed<TeamId | undefined>(() => props.championshipPicks?.[props.conferenceName])
+
+function togglePick(teamId: TeamId): void {
+  if (!props.championshipPicks) return
+  if (pickedTeamId.value === teamId) {
+    // eslint-disable-next-line vue/no-mutating-props, @typescript-eslint/no-dynamic-delete
+    delete props.championshipPicks[props.conferenceName]
+  } else {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.championshipPicks[props.conferenceName] = teamId
+  }
+}
+
+function handleTeamKeydown(teamId: TeamId, event: KeyboardEvent): void {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    togglePick(teamId)
+  }
+}
+
+function contrastFor(team: Team) {
+  return validateTeamContrast(team.color, 'light')
+}
+
+function textColorFor(bgColor: string): string {
+  const hex = bgColor.replace('#', '')
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000
+  return brightness > 128 ? '#000000' : '#ffffff'
+}
+
+/**
  * §10 state precedence: loading, then empty (absence of picks -- NOT an
  * unsettled-tie distinction, per D-14), then error, then the normal matchup
  * read.
@@ -128,16 +237,32 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
 </script>
 
 <template>
-  <div
+  <UCard
     v-if="slateComplete && (state === 'matchup' || state === 'error')"
-    class="bg-elevated ring ring-accented rounded-lg p-3 mb-4"
+    :ui="{
+      root: 'relative bg-transparent ring-1 ring-primary overflow-visible mb-4',
+      body: 'p-3 sm:p-3'
+    }"
   >
-    <p class="text-xs font-semibold uppercase tracking-wide text-muted">
-      CHAMPIONSHIP GAME
-    </p>
+    <!-- Same badge treatment `GameCard` uses for its own top-straddling
+         badges, so a championship card reads as one visual family with the
+         regular slate rather than a bespoke box. Once both participants are
+         known, the pill's background is a gradient of their two team
+         colors instead of the flat `primary` fill -- a same-conference
+         color clash (e.g. two red teams) is still legible because the text
+         is white with a shadow, not colored to match either team. -->
+    <div class="absolute -top-2.5 right-2 z-10">
+      <UBadge
+        :color="pillGradient ? 'neutral' : 'primary'"
+        :variant="pillGradient ? undefined : 'solid'"
+        label="Conference Championship"
+        :class="pillGradient ? 'text-white border-transparent' : undefined"
+        :style="pillGradient ? { backgroundImage: pillGradient, textShadow: '0 1px 2px rgb(0 0 0 / 0.55)' } : undefined"
+      />
+    </div>
 
     <template v-if="state === 'error'">
-      <p class="text-xs font-semibold uppercase tracking-wide text-muted">
+      <p class="text-xs font-semibold uppercase tracking-wide text-muted pt-2">
         Tiebreakers unavailable
       </p>
       <p class="text-sm text-muted">
@@ -145,14 +270,122 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
       </p>
     </template>
 
+    <!-- Pickable: same two-row, click-to-pick pattern as `GameCard`. -->
+    <template v-else-if="pickable && awayTeam && homeTeam">
+      <div
+        class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 mt-2 transition-colors"
+        :class="{
+          'border-l-8': pickedTeamId === awayTeam.id,
+          'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== awayTeam.id
+        }"
+        :style="{
+          ...(pickedTeamId === awayTeam.id ? {
+            borderColor: awayTeam.color,
+            backgroundColor: awayTeam.alternateColor,
+            ...applyContrastFilter(contrastFor(awayTeam))
+          } : {})
+        }"
+        :tabindex="0"
+        :aria-label="pickedTeamId === awayTeam.id
+          ? `Clear pick: ${awayTeam.school}`
+          : `Pick ${awayTeam.school} to win the ${conferenceName} Championship`
+        "
+        role="button"
+        @click="togglePick(awayTeam.id)"
+        @keydown="handleTeamKeydown(awayTeam.id, $event)"
+      >
+        <div class="w-4 h-4 flex items-center justify-center shrink-0">
+          <UIcon
+            v-if="pickedTeamId === awayTeam.id"
+            name="lucide:check"
+            class="w-4 h-4"
+            :style="{ color: textColorFor(awayTeam.alternateColor) }"
+          />
+          <div
+            v-else
+            class="w-4 h-4"
+          />
+        </div>
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <img
+            :src="awayTeam.logo"
+            class="size-8 shrink-0"
+            :class="{ 'dark:brightness-0 dark:invert': awayTeam.logo === '/logos/placeholder.svg' }"
+            alt=""
+          >
+          <span
+            class="truncate text-sm"
+            :style="{ color: pickedTeamId === awayTeam.id ? textColorFor(awayTeam.alternateColor) : undefined }"
+            :class="{ 'text-default': pickedTeamId !== awayTeam.id }"
+            :title="awayTeam.school"
+          >{{ awayTeam.school }}</span>
+        </div>
+      </div>
+
+      <div
+        class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
+        :class="{
+          'border-l-8': pickedTeamId === homeTeam.id,
+          'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== homeTeam.id
+        }"
+        :style="{
+          ...(pickedTeamId === homeTeam.id ? {
+            borderColor: homeTeam.color,
+            backgroundColor: homeTeam.alternateColor,
+            ...applyContrastFilter(contrastFor(homeTeam))
+          } : {})
+        }"
+        :tabindex="0"
+        :aria-label="pickedTeamId === homeTeam.id
+          ? `Clear pick: ${homeTeam.school}`
+          : `Pick ${homeTeam.school} to win the ${conferenceName} Championship`
+        "
+        role="button"
+        @click="togglePick(homeTeam.id)"
+        @keydown="handleTeamKeydown(homeTeam.id, $event)"
+      >
+        <div class="w-4 h-4 flex items-center justify-center shrink-0">
+          <UIcon
+            v-if="pickedTeamId === homeTeam.id"
+            name="lucide:check"
+            class="w-4 h-4"
+            :style="{ color: textColorFor(homeTeam.alternateColor) }"
+          />
+          <div
+            v-else
+            class="w-4 h-4"
+          />
+        </div>
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <img
+            :src="homeTeam.logo"
+            class="size-8 shrink-0"
+            :class="{ 'dark:brightness-0 dark:invert': homeTeam.logo === '/logos/placeholder.svg' }"
+            alt=""
+          >
+          <span
+            class="truncate text-sm"
+            :style="{ color: pickedTeamId === homeTeam.id ? textColorFor(homeTeam.alternateColor) : undefined }"
+            :class="{ 'text-default': pickedTeamId !== homeTeam.id }"
+            :title="homeTeam.school"
+          >{{ homeTeam.school }}</span>
+        </div>
+      </div>
+    </template>
+
+    <!-- Not yet pickable: seeds still unresolved to candidate lists, or no
+         pick storage was supplied -- the original plain-text presentation. -->
     <template v-else>
       <p
         v-if="primary?.kind === 'name'"
-        class="text-base font-semibold text-highlighted"
+        class="text-base font-semibold text-highlighted pt-2"
       >
         {{ primary.name }}
       </p>
-      <div v-else-if="primary?.kind === 'candidates'">
+      <div
+        v-else-if="primary?.kind === 'candidates'"
+        class="pt-2"
+      >
         <p class="text-sm text-default">
           {{ primary.connective }}{{ visibleCandidates.join(' / ') }}
           <button
@@ -201,5 +434,5 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
         </p>
       </div>
     </template>
-  </div>
+  </UCard>
 </template>

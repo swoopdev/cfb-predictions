@@ -19,12 +19,12 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
   id: props.game.awayId,
   school: props.game.awayTeam,
   logo: '/logos/placeholder.svg',
-  color: '#000000', // Fallback for FCS teams
+  color: '#6b7280', // Gray fallback for FCS teams (no team-specific color)
   mascot: null,
   abbreviation: null,
   conference: 'FCS',
   classification: null,
-  alternateColor: '#000000'
+  alternateColor: '#6b7280'
 } as Team)
 
 // Pick state computations
@@ -78,16 +78,55 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 <template>
   <UCard
     :ui="{
-      root: 'bg-slate-500',
+      root: 'relative bg-transparent ring-1 ring-primary overflow-visible',
       body: 'p-3 sm:p-3'
     }"
   >
+    <!-- Badges (neutral site, conference game) - stacked, straddling top edge -->
+    <div
+      v-if="game.neutralSite || game.conferenceGame"
+      class="absolute -top-2.5 right-2 flex flex-row items-center gap-1 z-10"
+    >
+      <UPopover
+        v-if="game.conferenceGame"
+        mode="click"
+      >
+        <UBadge
+          color="primary"
+          variant="solid"
+          label="Conference"
+          class="cursor-pointer"
+        />
+        <template #content>
+          <p class="text-sm p-2 max-w-48">
+            This game counts toward conference standings.
+          </p>
+        </template>
+      </UPopover>
+      <UPopover
+        v-if="game.neutralSite"
+        mode="click"
+      >
+        <UBadge
+          color="neutral"
+          variant="solid"
+          label="Neutral"
+          class="cursor-pointer"
+        />
+        <template #content>
+          <p class="text-sm p-2 max-w-48">
+            Played at a neutral site — neither team is at home.
+          </p>
+        </template>
+      </UPopover>
+    </div>
+
     <!-- Away team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-2 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 mt-2 transition-colors"
       :class="{
         'border-l-8': pickedTeamId === away.id,
-        'hover:bg-gray-200': pickedTeamId !== away.id
+        'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== away.id
       }"
       :style="{
         ...(pickedTeamId === away.id ? {
@@ -124,6 +163,9 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         <img
           :src="away.logo"
           class="size-8 shrink-0"
+          :class="{
+            'dark:brightness-0 dark:invert': away.logo === '/logos/placeholder.svg'
+          }"
           alt=""
         >
         <span
@@ -132,24 +174,19 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
           }"
           :class="{
-            'text-black': pickedTeamId !== away.id
+            'text-default': pickedTeamId !== away.id
           }"
           :title="away.school"
         >{{ away.school }}</span>
       </div>
     </div>
 
-    <!-- @ separator -->
-    <div class="text-center text-dimmed text-sm py-2 px-2">
-      @
-    </div>
-
     <!-- Home team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-2 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
       :class="{
         'border-l-8': pickedTeamId === home?.id,
-        'hover:bg-gray-200': pickedTeamId !== home?.id
+        'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== home?.id
       }"
       :style="{
         ...(pickedTeamId === home?.id ? {
@@ -186,6 +223,9 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         <img
           :src="home?.logo"
           class="size-8 shrink-0"
+          :class="{
+            'dark:brightness-0 dark:invert': home?.logo === '/logos/placeholder.svg'
+          }"
           alt=""
         >
         <span
@@ -194,30 +234,16 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
           }"
           :class="{
-            'text-black': pickedTeamId !== home?.id
+            'text-default': pickedTeamId !== home?.id
           }"
           :title="home?.school"
-        >{{ home?.school }}</span>
+        ><span
+          class="text-dimmed"
+          :style="{
+            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+          }"
+        >@ </span>{{ home?.school }}</span>
       </div>
-    </div>
-
-    <!-- Badges section (neutral site, conference game) -->
-    <div
-      v-if="game.neutralSite || game.conferenceGame"
-      class="flex gap-1 mt-2"
-    >
-      <UBadge
-        v-if="game.neutralSite"
-        color="neutral"
-        variant="subtle"
-        label="Neutral site"
-      />
-      <UBadge
-        v-if="game.conferenceGame"
-        color="primary"
-        variant="subtle"
-        label="Conference game"
-      />
     </div>
   </UCard>
 </template>

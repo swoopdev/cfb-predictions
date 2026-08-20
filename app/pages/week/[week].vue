@@ -3,7 +3,7 @@ import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
-import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
+import { fillWeekRemaining, clearWeek } from '~/utils/bulkPickOperations'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,7 +17,11 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 
 // Pick state: loaded from localStorage and reactive
 const picks: Ref<Record<number, number>> = usePicksStorage(2026)
-const { autoFilled, markAutoFilled } = useAutoFilledGames(2026)
+const { markAutoFilled } = useAutoFilledGames(2026)
+
+// Standings sidebar open/collapsed state, lifted here so the header's
+// toggle button and StandingsSidebar's own USidebar instance share it.
+const standingsOpen = ref(true)
 
 // Drives loading/error branching for the ONE-TIME initial data resolution.
 // Subsequent week/filter changes read already-cached data (staleTime:
@@ -67,11 +71,6 @@ const filteredGames = computed<Game[]>(() =>
   filterGames(rawWeekGames.value, { conf: conf.value, team: teamId.value }, teamsById.value)
 )
 
-// All games for the entire season, filtered by active conference/team filter
-const allFilteredGames = computed<Game[]>(() =>
-  filterGames(games.value?.games ?? [], { conf: conf.value, team: teamId.value }, teamsById.value)
-)
-
 // D-07, D-14/D-16: games within a week group under their home team's conference
 // (sorted alphabetically), UNLESS a conference filter is active (D-14/D-16), in which case
 // all games involving that conference appear in a single section (D-14/D-16).
@@ -114,21 +113,9 @@ function handleFillWeek() {
   markAutoFilled(autoFilledIds)
 }
 
-function handleFillSeason() {
-  if (!games.value?.games) return
-  const { newPicks, autoFilledIds } = fillSeasonRemaining(games.value.games, picks.value)
-  picks.value = newPicks
-  markAutoFilled(autoFilledIds)
-}
-
 function handleClearWeek() {
   if (!games.value?.games) return
   picks.value = clearWeek(games.value.games, week.value, picks.value)
-}
-
-function handleClearSeason() {
-  picks.value = clearSeason()
-  autoFilled.value.splice(0) // Also clear provenance tracking
 }
 </script>
 
@@ -138,82 +125,82 @@ function handleClearSeason() {
          desktop; the sidebar stacks below the slate on narrow viewports. -->
     <div class="flex flex-col lg:flex-row lg:items-start gap-6">
       <div class="min-w-0 flex-1">
-        <!-- Global Progress Badge (D-09): displays overall season progress -->
-        <div class="mb-4">
-          <PickProgress :games="allFilteredGames" />
-        </div>
-
-        <!-- Season Controls (D-11: positioned above game grid) -->
-        <div class="flex flex-wrap items-center gap-4 mb-6">
-          <div class="flex gap-2">
-            <UButton
-              :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
-              variant="ghost"
-              size="sm"
-              @click="handleFillSeason"
-            >
-              Fill Season
-            </UButton>
-            <UButton
-              :disabled="Object.keys(picks).length === 0"
-              variant="ghost"
-              size="sm"
-              @click="handleClearSeason"
-            >
-              Clear Season
-            </UButton>
+        <!-- Header: week heading, nav, fill/clear and the conference/team
+             filter row all live in one sticky block, scoped to this column
+             only — the standings sidebar is a flex sibling that starts at
+             the very top of the page, not pushed down below the header.
+             `-mt-6` cancels the page's own `py-6` top padding so the header
+             sits flush with zero gap above it once it's stuck to the
+             viewport top; `pt-6` puts that same space back INSIDE the box
+             (below its background/border) so the heading itself isn't
+             jammed against the edge. -->
+        <div
+          class="sticky top-0 z-50 bg-default/95 backdrop-blur -mt-6 pt-6 pb-4 -mx-6 px-6 lg:-ml-8 lg:pl-8 lg:-mr-6 lg:pr-6 border-b border-neutral-300 dark:border-neutral-800"
+        >
+          <!-- Week heading with per-week progress bar, Fill/Clear Week
+               actions, and navigation, all on one row. Fill/Clear moved here
+               from their own row below the heading (this task) so they sit
+               to the right of the progress bar they act on, rather than
+               occupying a whole separate line. -->
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+            <!-- Week heading with per-week progress bar (D-10, D-02) -->
+            <div class="flex items-center gap-4 flex-1">
+              <h1 class="text-xl font-semibold">
+                Week {{ week }}
+              </h1>
+              <div class="flex-1 max-w-xs">
+                <PickProgressWeek
+                  :week-num="week"
+                  :games="filteredGames"
+                />
+              </div>
+            </div>
+            <!-- Fill/Clear Week actions -->
+            <div class="flex gap-2">
+              <UButton
+                :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
+                variant="ghost"
+                size="sm"
+                @click="handleFillWeek"
+              >
+                Fill Week
+              </UButton>
+              <UButton
+                :disabled="filteredGames.filter(g => g.id in picks).length === 0"
+                variant="ghost"
+                size="sm"
+                @click="handleClearWeek"
+              >
+                Clear Week
+              </UButton>
+            </div>
+            <!-- Week navigation -->
+            <WeekNav
+              :week="week"
+              @navigate="goToWeek"
+            />
           </div>
-        </div>
 
-        <!-- Week heading with per-week progress bar and navigation -->
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-          <!-- Week heading with per-week progress bar (D-10, D-02) -->
-          <div class="flex items-center gap-4 flex-1">
-            <h1 class="text-xl font-semibold">
-              Week {{ week }}
-            </h1>
-            <div class="flex-1 max-w-xs">
-              <PickProgressWeek
-                :week-num="week"
-                :games="filteredGames"
+          <div class="flex flex-wrap items-center gap-4">
+            <ConferenceFilter v-model="conf" />
+            <TeamFilter v-model="teamId" />
+            <div class="ml-auto flex items-center gap-2">
+              <UColorModeButton size="xl" />
+              <UButton
+                icon="i-lucide-podium"
+                color="neutral"
+                variant="ghost"
+                size="xl"
+                :aria-label="standingsOpen ? 'Hide standings' : 'Show standings'"
+                @click="standingsOpen = !standingsOpen"
               />
             </div>
           </div>
-          <!-- Week navigation -->
-          <WeekNav
-            :week="week"
-            @navigate="goToWeek"
-          />
-        </div>
-
-        <!-- Week-level action buttons (repositioned below heading per D-10) -->
-        <div class="flex gap-2 mb-6">
-          <UButton
-            :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
-            variant="ghost"
-            size="sm"
-            @click="handleFillWeek"
-          >
-            Fill Week
-          </UButton>
-          <UButton
-            :disabled="filteredGames.filter(g => g.id in picks).length === 0"
-            variant="ghost"
-            size="sm"
-            @click="handleClearWeek"
-          >
-            Clear Week
-          </UButton>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-4 mb-6">
-          <ConferenceFilter v-model="conf" />
-          <TeamFilter v-model="teamId" />
         </div>
 
         <div
           v-if="loadState === 'loading'"
-          class="grid gap-4"
+          class="grid gap-4 mt-4"
           style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
         >
           <USkeleton
@@ -225,7 +212,7 @@ function handleClearSeason() {
 
         <div
           v-else-if="loadState === 'error'"
-          class="py-12 text-center"
+          class="py-12 text-center mt-4"
         >
           <h2 class="text-2xl font-semibold mb-2">
             Couldn't load the schedule.
@@ -237,7 +224,7 @@ function handleClearSeason() {
 
         <div
           v-else-if="emptyVariant === 'week-empty'"
-          class="py-12 text-center"
+          class="py-12 text-center mt-4"
         >
           <h2 class="text-2xl font-semibold mb-2">
             No games this week
@@ -249,7 +236,7 @@ function handleClearSeason() {
 
         <div
           v-else-if="emptyVariant === 'filter-empty'"
-          class="py-12 text-center"
+          class="py-12 text-center mt-4"
         >
           <h2 class="text-2xl font-semibold mb-2">
             No games match this filter
@@ -261,7 +248,7 @@ function handleClearSeason() {
 
         <div
           v-else
-          class="space-y-8"
+          class="space-y-8 mt-4"
         >
           <div
             v-for="group in conferenceGroups"
@@ -308,6 +295,7 @@ function handleClearSeason() {
            failure. -->
       <StandingsSidebar
         v-if="loadState === 'ready'"
+        v-model:open="standingsOpen"
         :standings="standings"
         :active-conference="conf"
         :rankings="rankings"
@@ -316,7 +304,7 @@ function handleClearSeason() {
       />
       <div
         v-else-if="loadState === 'loading'"
-        class="w-full lg:w-80 lg:shrink-0"
+        class="hidden lg:block lg:w-80 lg:shrink-0"
       >
         <USkeleton class="h-96 w-full rounded-lg" />
       </div>

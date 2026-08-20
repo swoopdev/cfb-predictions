@@ -46,13 +46,27 @@ import TiebreakerReasoning from './TiebreakerReasoning.vue'
  * to `ConferenceId` since every real caller passes one of the four P4
  * names) to pass along with a committed group's ordering.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   standings: readonly StandingsTeam[]
   conferenceName: string
   ranking?: ConferenceRanking | undefined
   slateComplete?: boolean
   commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
-}>()
+  /**
+   * Whether to render this component's own `<h3>` heading (this task).
+   * Defaults `true` for standalone/unit-test usage. `StandingsSidebar` sets
+   * this `false` when it mounts a `StandingsTable` inside a `UAccordion`
+   * item -- the accordion trigger already renders the conference name as
+   * its own clickable label, so a second heading here would just duplicate
+   * it directly above the table.
+   */
+  showHeading?: boolean
+}>(), {
+  ranking: undefined,
+  slateComplete: undefined,
+  commitOrdering: undefined,
+  showHeading: true
+})
 
 const headingId = useId()
 
@@ -219,11 +233,15 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
 </script>
 
 <template>
-  <section :aria-labelledby="headingId">
+  <section :aria-labelledby="showHeading ? headingId : undefined">
     <!-- `text-toned`, not `text-dimmed`: with four conferences stacked in the
          sidebar this heading is the primary wayfinding element, not a
-         de-emphasised label. -->
+         de-emphasised label. Omitted entirely when this table mounts inside
+         a `UAccordion` item (`showHeading: false`) -- the accordion's own
+         trigger already renders the conference name as a clickable label,
+         so a second heading here would duplicate it. -->
     <h3
+      v-if="showHeading"
       :id="headingId"
       class="text-xs font-semibold uppercase tracking-wide text-toned mb-2"
     >
@@ -240,6 +258,8 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
       :ranking="ranking"
       :school-by-id="schoolById"
       :has-picked-conference-games="hasPickedConferenceGames"
+      :slate-complete="slateComplete ?? false"
+      :conference-name="(conferenceName as ConferenceId)"
     />
 
     <p

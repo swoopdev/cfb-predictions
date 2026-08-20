@@ -504,14 +504,15 @@ describe('StandingsTable', () => {
             row({ id: 2, school: 'Georgia' })
           ],
           conferenceName: 'SEC',
-          ranking
+          ranking,
+          slateComplete: true
         }
       })
 
       const section = wrapper.get('section')
-      const children = [...section.element.children]
-      const cardIndex = children.findIndex(el => el.tagName === 'DIV')
-      const tableIndex = children.findIndex(el => el.tagName === 'TABLE')
+      const descendants = [...section.element.querySelectorAll('div, table')]
+      const cardIndex = descendants.findIndex(el => el.textContent?.includes('CHAMPIONSHIP GAME'))
+      const tableIndex = descendants.findIndex(el => el.tagName === 'TABLE')
 
       expect(cardIndex).toBeGreaterThanOrEqual(0)
       expect(tableIndex).toBeGreaterThan(cardIndex)

@@ -35,6 +35,15 @@ const props = defineProps<{
   ranking: ConferenceRanking | undefined
   schoolById: ReadonlyMap<number, string>
   hasPickedConferenceGames: boolean
+  /**
+   * Whether this conference's own slate is fully picked (Plan 06-07's
+   * per-conference completion map, threaded straight through from
+   * `StandingsTable`). The card stays hidden until this is true — a
+   * matchup can technically resolve to a name or a short candidate list
+   * well before every game is picked, but the card is only useful once
+   * the conference's own choices are actually finished deciding it.
+   */
+  slateComplete: boolean
 }>()
 
 /**
@@ -120,21 +129,14 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
 
 <template>
   <div
-    v-if="state !== 'loading'"
+    v-if="slateComplete && (state === 'matchup' || state === 'error')"
     class="bg-elevated ring ring-accented rounded-lg p-3 mb-4"
   >
     <p class="text-xs font-semibold uppercase tracking-wide text-muted">
       CHAMPIONSHIP GAME
     </p>
 
-    <p
-      v-if="state === 'empty'"
-      class="text-sm text-dimmed"
-    >
-      Pick this conference's games to see the matchup.
-    </p>
-
-    <template v-else-if="state === 'error'">
+    <template v-if="state === 'error'">
       <p class="text-xs font-semibold uppercase tracking-wide text-muted">
         Tiebreakers unavailable
       </p>

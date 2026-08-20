@@ -53,7 +53,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([group({ teams: [1] }), group({ teams: [2] })]),
         schoolById: new Map([[1, 'Georgia'], [2, 'Alabama']]),
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -71,7 +72,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([group({ teams: [1] }), unresolvedGroup([10, 20, 30, 40])]),
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -94,7 +96,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([unresolvedGroup([10, 20, 30])]),
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -116,7 +119,8 @@ describe('ChampionshipCard', () => {
         props: {
           ranking: ranking([group({ teams: [1] }), unresolvedGroup([10, 20], code)]),
           schoolById,
-          hasPickedConferenceGames: true
+          hasPickedConferenceGames: true,
+          slateComplete: true
         }
       })
       return wrapper.text()
@@ -136,7 +140,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([unresolvedGroup(teams)]),
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -163,7 +168,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([unresolvedGroup([201, 202, 203])]),
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -172,21 +178,33 @@ describe('ChampionshipCard', () => {
     expect(text.indexOf('Mu')).toBeLessThan(text.indexOf('Zeta'))
   })
 
-  it('renders the pick-your-games copy and no candidate list when no conference games are picked', () => {
+  it('renders nothing when no conference games are picked, even with slateComplete forced true', () => {
     const schoolById = new Map([[1, 'Georgia'], [10, 'Duke'], [20, 'Miami']])
     const wrapper = mount(ChampionshipCard, {
       props: {
         ranking: ranking([unresolvedGroup([1, 10, 20])]),
         schoolById,
-        hasPickedConferenceGames: false
+        hasPickedConferenceGames: false,
+        slateComplete: true
       }
     })
 
-    expect(wrapper.text()).toContain('Pick this conference')
-    expect(wrapper.text()).not.toContain('Georgia')
-    expect(wrapper.text()).not.toContain('Duke')
-    expect(wrapper.text()).not.toContain('One of:')
-    expect(wrapper.text()).not.toContain('Two of:')
+    expect(wrapper.text()).toBe('')
+    expect(wrapper.find('div').exists()).toBe(false)
+  })
+
+  it('renders nothing once picks resolve a matchup while the conference slate is still incomplete', () => {
+    const wrapper = mount(ChampionshipCard, {
+      props: {
+        ranking: ranking([group({ teams: [1] }), group({ teams: [2] })]),
+        schoolById: new Map([[1, 'Georgia'], [2, 'Alabama']]),
+        hasPickedConferenceGames: true,
+        slateComplete: false
+      }
+    })
+
+    expect(wrapper.text()).toBe('')
+    expect(wrapper.find('div').exists()).toBe(false)
   })
 
   it('renders the unavailable heading and body, with no seed blocks and no raw exception, when the ranking is undefined but rows exist', () => {
@@ -195,7 +213,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: undefined,
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 
@@ -233,18 +252,20 @@ describe('ChampionshipCard', () => {
         props: {
           ranking: ranking([group({ teams: [1] }), unresolvedGroup([10, 20])]),
           schoolById,
-          hasPickedConferenceGames: true
+          hasPickedConferenceGames: true,
+          slateComplete: true
         }
       }),
       mount(ChampionshipCard, {
         props: {
           ranking: ranking([unresolvedGroup([1, 10, 20])]),
           schoolById,
-          hasPickedConferenceGames: false
+          hasPickedConferenceGames: false,
+          slateComplete: false
         }
       }),
       mount(ChampionshipCard, {
-        props: { ranking: undefined, schoolById, hasPickedConferenceGames: true }
+        props: { ranking: undefined, schoolById, hasPickedConferenceGames: true, slateComplete: true }
       })
     ]
 
@@ -262,7 +283,8 @@ describe('ChampionshipCard', () => {
       props: {
         ranking: ranking([group({ teams: [1] }), unresolvedGroup([10, 20, 30, 40])]),
         schoolById,
-        hasPickedConferenceGames: true
+        hasPickedConferenceGames: true,
+        slateComplete: true
       }
     })
 

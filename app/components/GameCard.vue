@@ -30,6 +30,8 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
 // Pick state computations
 const pickedTeamId = computed(() => props.picks[props.game.id])
 
+const homeBorderColor = computed(() => home.value?.color ?? away.value.color)
+
 // Contrast validation for team colors
 const homeContrast = computed(() =>
   validateTeamContrast(home.value?.color ?? '#000000', 'light')
@@ -78,8 +80,12 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 <template>
   <UCard
     :ui="{
-      root: 'relative bg-transparent ring-1 ring-primary overflow-visible',
+      root: 'relative bg-transparent overflow-visible rounded-lg game-card-gradient-border',
       body: 'p-3 sm:p-3'
+    }"
+    :style="{
+      '--away-border-color': away.color,
+      '--home-border-color': homeBorderColor
     }"
   >
     <!-- Badges (neutral site, conference game) - stacked, straddling top edge -->
@@ -247,3 +253,29 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
     </div>
   </UCard>
 </template>
+
+<style scoped>
+.game-card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--away-border-color) 0%,
+    var(--away-border-color) 50%,
+    var(--home-border-color) 50%,
+    var(--home-border-color) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+</style>

@@ -80,7 +80,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 <template>
   <UCard
     :ui="{
-      root: 'relative bg-transparent overflow-visible rounded-lg game-card-gradient-border',
+      root: 'relative bg-elevated overflow-visible rounded-lg game-card-gradient-border',
       body: 'p-3 sm:p-3'
     }"
     :style="{

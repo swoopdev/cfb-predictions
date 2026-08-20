@@ -1,13 +1,15 @@
 import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
+import { scenarioKeys } from '~/utils/scenarioKeys'
 
 /**
  * Provenance tracking composable: maintains which game picks were auto-filled vs. user-made.
  * Picks store IDs in a separate array (not in the picks object itself) to keep the picks
  * object flat and compact for Phase 8's share-link encoding.
  *
- * **Storage:** Auto-filled game IDs are stored as an array under `cfb_autofilled_${season}`.
- * JSON serialization/deserialization is handled by the custom serializer.
+ * **Storage:** Auto-filled game IDs are stored as an array under
+ * `cfb_autofilled_${season}_${scenarioId}`. JSON serialization/deserialization is
+ * handled by the custom serializer.
  *
  * **API:**
  * - `autoFilled: Ref<number[]>` — The underlying array of auto-filled game IDs
@@ -15,9 +17,17 @@ import { computed } from 'vue'
  * - `markAutoFilled(gameIds: number[])` — Add game IDs to the auto-filled set (idempotent)
  * - `isAutoFilled(gameId: number): boolean` — Check if a game was auto-filled
  *
+ * **Scenario scoping (Phase 7, D-02, D-04).** `scenarioId` is required and
+ * comes first — a defaulted `season` parameter after a required one would
+ * defeat the default's usefulness (RESEARCH.md Pitfall 2). Every call MUST
+ * construct a fresh composable instance per scenario id (never pass a
+ * reactive/computed key into one long-lived `useStorage()` call for this
+ * array-valued state) — RESEARCH.md Pitfall 1 is a verified, reproduced
+ * defect where doing so leaks one scenario's data into another.
+ *
  * **Usage:**
  * ```typescript
- * const { autoFilled, autoFilledSet, markAutoFilled, isAutoFilled } = useAutoFilledGames()
+ * const { autoFilled, autoFilledSet, markAutoFilled, isAutoFilled } = useAutoFilledGames('scenario-a', 2026)
  * markAutoFilled([123, 456])  // Mark games 123, 456 as auto-filled
  * isAutoFilled(123)           // true
  * isAutoFilled(789)           // false
@@ -27,13 +37,14 @@ import { computed } from 'vue'
  * Picks object is flat `{ gameId: teamId }` for compactness (Phase 8 share links).
  * Provenance tracking would widen picks to `{ gameId: { winner: teamId, autoFilled: bool } }`,
  * increasing JSON size. A separate key keeps both concerns decoupled and the picks object
- * minimal, supporting future scenarios (Phase 7) where multiple pick sets may coexist.
+ * minimal, supporting scenarios (Phase 7) where multiple pick sets coexist.
  *
+ * @param scenarioId - Scenario id. Required, non-defaulted — namespaces the storage key.
  * @param season - Season year (default: 2026). Used to namespace the storage key.
  * @returns Object with { autoFilled, autoFilledSet, markAutoFilled, isAutoFilled }
  */
-export function useAutoFilledGames(season = 2026) {
-  const key = `cfb_autofilled_${season}`
+export function useAutoFilledGames(scenarioId: string, season = 2026) {
+  const key = scenarioKeys.autofilled(season, scenarioId)
 
   const autoFilled = useStorage<number[]>(
     key,

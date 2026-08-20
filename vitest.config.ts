@@ -48,6 +48,16 @@ export default defineConfig({
           functions: 90,
           lines: 90
         },
+        // Phase 8: shareLink.ts is this phase's own untrusted-input boundary
+        // (ASVS V5, T-08-01..T-08-04) -- the FIRST genuinely externally-supplied
+        // input this app has ever parsed. Same 90% floor as the tiebreaker
+        // directory above, for the same reason.
+        'shared/domain/shareLink.ts': {
+          statements: 90,
+          branches: 90,
+          functions: 90,
+          lines: 90
+        },
         // Phase 5 (05-01 <verification>): the standings engine is the other
         // half of "if the math is wrong, nothing else matters" — same
         // rationale as the tiebreaker gate above, set at the plan's stated

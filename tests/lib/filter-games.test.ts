@@ -49,7 +49,7 @@ describe('filterGames', () => {
       makeGame(102, 2, 5), // team 5 away
       makeGame(103, 2, 3) // no team 5
     ]
-    const result = filterGames(games, { team: 5 }, teamsById)
+    const result = filterGames(games, { team: [5] }, teamsById)
     expect(result).toEqual([games[0], games[1]])
   })
 
@@ -59,10 +59,10 @@ describe('filterGames', () => {
     const secOnlyGame = makeGame(202, 1, 4)
     const games = [crossConfGame, secOnlyGame]
 
-    const secResult = filterGames(games, { conf: 'SEC' }, teamsById)
+    const secResult = filterGames(games, { conf: ['SEC'] }, teamsById)
     expect(secResult).toEqual([crossConfGame, secOnlyGame])
 
-    const bigTenResult = filterGames(games, { conf: 'Big Ten' }, teamsById)
+    const bigTenResult = filterGames(games, { conf: ['Big Ten'] }, teamsById)
     expect(bigTenResult).toEqual([crossConfGame])
   })
 
@@ -71,8 +71,8 @@ describe('filterGames', () => {
       makeGame(101, 5, 1), // team 5 home, not SEC
       makeGame(102, 1, 4) // SEC vs SEC, no team 5
     ]
-    const result = filterGames(games, { conf: 'SEC', team: 5 }, teamsById)
-    expect(result).toEqual(filterGames(games, { team: 5 }, teamsById))
+    const result = filterGames(games, { conf: ['SEC'], team: [5] }, teamsById)
+    expect(result).toEqual(filterGames(games, { team: [5] }, teamsById))
     expect(result).toEqual([games[0]])
   })
 })

@@ -21,3 +21,6 @@ export type { ResolvedTiebreakers } from './resolveTiebreakers'
 
 export { isConferenceSlateComplete, slateCompletionByConference } from './slateCompletion'
 export type { SlateCompletion } from './slateCompletion'
+
+export { computeStandingsPipeline } from './pipeline'
+export type { StandingsPipelineResult } from './pipeline'

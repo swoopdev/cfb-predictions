@@ -8,14 +8,24 @@ import { usePickProgress } from '~/composables/usePickProgress'
 import { usePicksStorage } from '~/composables/usePicksStorage'
 
 interface Props {
+  scenarioId: string
   season?: number
   games?: Game[]
 }
 
 const props = withDefaults(defineProps<Props>(), { season: 2026 })
 
-const picks = usePicksStorage(props.season)
-const { progressOverall } = usePickProgress(props.season)
+const picks = usePicksStorage(props.scenarioId, props.season)
+// WR-04: every current production caller is `PicksWorkspace.vue`, which
+// always passes `props.games` (never `undefined`, even for an empty array),
+// so the `usePickProgress` branch below is unreachable in the shipped app --
+// it still stands up its own second `usePicksStorage`/`useGames` instance on
+// every mount. Kept intentionally (not removed) as the fallback for a future
+// caller that renders this badge without an already-filtered games array;
+// `tests/components/PickProgress.test.ts` mounts the component directly and
+// exercises this exact branch in isolation, so it is not untested, only
+// unreached via `PicksWorkspace.vue`.
+const { progressOverall } = usePickProgress(props.scenarioId, props.season)
 
 // If games are provided (filtered), calculate progress from those; otherwise use composable
 const progressData = computed(() => {

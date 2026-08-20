@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { useStorage } from '@vueuse/core'
+import { scenarioKeys } from '~/utils/scenarioKeys'
 
 /**
  * Conference championship pick state: `{ conferenceName: winningTeamId }`,
@@ -13,11 +14,19 @@ import { useStorage } from '@vueuse/core'
  * shape and corruption-recovery convention (D-07/D-08) for consistency, not
  * because this composable is imported anywhere near that one.
  *
+ * Phase 7/8: scenario-scoped. The key is built through `scenarioKeys`, like
+ * every other per-scenario storage key, so duplicating or deleting a
+ * scenario carries/removes its championship picks alongside its game picks.
+ * Callers live inside `PicksWorkspace.vue`, which is `:key`-remounted on
+ * every scenario switch -- so this is called once per scenario id, never
+ * with a reactive id (RESEARCH.md Pitfall 1).
+ *
+ * @param scenarioId - Owning scenario's id.
  * @param season - Season year (default: 2026). Used to namespace the storage key.
  * @returns A reactive `Ref<Record<string, number>>` — conference name to winning team id.
  */
-export function useChampionshipPicksStorage(season = 2026): Ref<Record<string, number>> {
-  const key = `cfb_championship_picks_${season}`
+export function useChampionshipPicksStorage(scenarioId: string, season = 2026): Ref<Record<string, number>> {
+  const key = scenarioKeys.championshipPicks(season, scenarioId)
   const corruptKey = `${key}_corrupt`
 
   const picks = useStorage<Record<string, number>>(

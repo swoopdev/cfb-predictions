@@ -1,15 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextTick } from 'vue'
 import { useAutoFilledGames } from '~/composables/useAutoFilledGames'
+import { scenarioKeys } from '~/utils/scenarioKeys'
 import { autoFilledExamples } from '../fixtures/picks.fixtures'
 
 /**
  * Tests for useAutoFilledGames composable.
- * Covers: provenance tracking, Set conversion, persistence, idempotence.
+ * Covers: provenance tracking, Set conversion, persistence, idempotence,
+ * scenario namespacing.
  */
 
 const SEASON = 2026
-const STORAGE_KEY = `cfb_autofilled_${SEASON}`
+const SCENARIO_ID = 'scenario-1'
+const STORAGE_KEY = scenarioKeys.autofilled(SEASON, SCENARIO_ID)
 
 describe('useAutoFilledGames', () => {
   beforeEach(() => {
@@ -22,7 +25,7 @@ describe('useAutoFilledGames', () => {
 
   describe('markAutoFilled', () => {
     it('should add game IDs to the auto-filled set', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
 
@@ -30,7 +33,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should handle adding a single game ID', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([789])
 
@@ -38,7 +41,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should persist changes to localStorage', async () => {
-      const { markAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
 
@@ -49,7 +52,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should be idempotent: calling with same IDs multiple times is safe', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
       const firstLength = autoFilled.value.length
@@ -62,7 +65,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should handle duplicate game IDs in input by deduplicating', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456, 123, 789, 456])
 
@@ -74,7 +77,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should append new IDs without overwriting existing ones', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
       markAutoFilled([789])
@@ -87,7 +90,7 @@ describe('useAutoFilledGames', () => {
 
   describe('isAutoFilled', () => {
     it('should return true for marked game IDs', () => {
-      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
 
@@ -96,7 +99,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should return false for unmarked game IDs', () => {
-      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123])
 
@@ -105,14 +108,14 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should return false when no game IDs are marked', () => {
-      const { isAutoFilled } = useAutoFilledGames(SEASON)
+      const { isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       expect(isAutoFilled(123)).toBe(false)
       expect(isAutoFilled(456)).toBe(false)
     })
 
     it('should correctly identify game IDs after multiple markAutoFilled calls', () => {
-      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123])
       expect(isAutoFilled(123)).toBe(true)
@@ -126,7 +129,7 @@ describe('useAutoFilledGames', () => {
 
   describe('autoFilledSet', () => {
     it('should expose autoFilled array as a Computed<Set>', () => {
-      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456])
 
@@ -135,7 +138,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should contain exactly the IDs from the underlying array', () => {
-      const { autoFilled, autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, autoFilledSet, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456, 789])
 
@@ -143,7 +146,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should be reactive: reflects changes when autoFilled is updated', () => {
-      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123])
       const set1 = autoFilledSet.value
@@ -156,7 +159,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should allow O(1) lookups via Set.has()', () => {
-      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456, 789])
 
@@ -167,7 +170,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should support iteration over Set', () => {
-      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilledSet, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([123, 456, 789])
 
@@ -181,24 +184,24 @@ describe('useAutoFilledGames', () => {
 
   describe('Persistence', () => {
     it('should persist auto-filled IDs across composable instances', async () => {
-      const { markAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       markAutoFilled([123, 456])
 
       await nextTick()
 
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([123, 456])
     })
 
     it('should restore from localStorage on initialization', () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify([789, 101]))
 
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([789, 101])
     })
 
     it('should initialize empty when no prior data exists', () => {
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([])
     })
   })
@@ -207,28 +210,28 @@ describe('useAutoFilledGames', () => {
     it('should recover from corrupted JSON by returning empty array', () => {
       localStorage.setItem(STORAGE_KEY, 'not json')
 
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([])
     })
 
     it('should recover from JSON object instead of array', () => {
       localStorage.setItem(STORAGE_KEY, '{"123": true}')
 
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([])
     })
 
     it('should recover from JSON null', () => {
       localStorage.setItem(STORAGE_KEY, 'null')
 
-      const { autoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       expect(autoFilled.value).toEqual([])
     })
 
     it('should allow new marks after corruption recovery', () => {
       localStorage.setItem(STORAGE_KEY, 'not json')
 
-      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       markAutoFilled([123])
 
       expect(isAutoFilled(123)).toBe(true)
@@ -238,16 +241,16 @@ describe('useAutoFilledGames', () => {
   describe('Season Namespacing', () => {
     it('should use season-namespaced storage key', () => {
       const season = 2027
-      const { markAutoFilled } = useAutoFilledGames(season)
+      const { markAutoFilled } = useAutoFilledGames(SCENARIO_ID, season)
       markAutoFilled([123])
 
-      expect(localStorage.getItem(`cfb_autofilled_${season}`)).toBeDefined()
+      expect(localStorage.getItem(scenarioKeys.autofilled(season, SCENARIO_ID))).toBeDefined()
       expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
     })
 
     it('should support multiple seasons independently', () => {
-      const { markAutoFilled: mark2026, autoFilled: af2026 } = useAutoFilledGames(2026)
-      const { markAutoFilled: mark2027, autoFilled: af2027 } = useAutoFilledGames(2027)
+      const { markAutoFilled: mark2026, autoFilled: af2026 } = useAutoFilledGames(SCENARIO_ID, 2026)
+      const { markAutoFilled: mark2027, autoFilled: af2027 } = useAutoFilledGames(SCENARIO_ID, 2027)
 
       mark2026([123, 456])
       mark2027([789])
@@ -257,9 +260,36 @@ describe('useAutoFilledGames', () => {
     })
   })
 
+  describe('Scenario Namespacing', () => {
+    it('should use scenario-namespaced storage key', () => {
+      const otherId = 'scenario-2'
+      const { markAutoFilled } = useAutoFilledGames(otherId, SEASON)
+      markAutoFilled([123])
+
+      expect(localStorage.getItem(scenarioKeys.autofilled(SEASON, otherId))).toBeDefined()
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+    })
+
+    it('should support two scenario ids under the same season independently, in both memory and localStorage', async () => {
+      const { markAutoFilled: markA, autoFilled: afA } = useAutoFilledGames('scenario-a', SEASON)
+      const { markAutoFilled: markB, autoFilled: afB } = useAutoFilledGames('scenario-b', SEASON)
+
+      markA([123, 456])
+      markB([789])
+
+      await nextTick()
+
+      expect(afA.value).toEqual([123, 456])
+      expect(afB.value).toEqual([789])
+
+      expect(JSON.parse(localStorage.getItem(scenarioKeys.autofilled(SEASON, 'scenario-a'))!)).toEqual([123, 456])
+      expect(JSON.parse(localStorage.getItem(scenarioKeys.autofilled(SEASON, 'scenario-b'))!)).toEqual([789])
+    })
+  })
+
   describe('Integration Scenarios', () => {
     it('should support bulk week fill scenario', () => {
-      const { autoFilled, markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       const weekGames = autoFilledExamples.bulkWeek
 
       markAutoFilled(weekGames)
@@ -271,7 +301,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should support bulk season fill scenario', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       const seasonGames = autoFilledExamples.bulkSeason
 
       markAutoFilled(seasonGames)
@@ -280,7 +310,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should correctly handle mixed user and auto-filled picks', () => {
-      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SEASON)
+      const { markAutoFilled, isAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       // Simulate: bulk fill 5 games
       markAutoFilled([101, 102, 103, 104, 105])
@@ -296,7 +326,7 @@ describe('useAutoFilledGames', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty input array', () => {
-      const { autoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { autoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([])
 
@@ -304,7 +334,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should handle large game IDs', () => {
-      const { isAutoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { isAutoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
       const largeId = Number.MAX_SAFE_INTEGER
 
       markAutoFilled([largeId])
@@ -313,7 +343,7 @@ describe('useAutoFilledGames', () => {
     })
 
     it('should handle zero and negative game IDs', () => {
-      const { isAutoFilled, markAutoFilled } = useAutoFilledGames(SEASON)
+      const { isAutoFilled, markAutoFilled } = useAutoFilledGames(SCENARIO_ID, SEASON)
 
       markAutoFilled([0, -1, 1])
 

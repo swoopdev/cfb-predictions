@@ -1,13 +1,11 @@
 import { computed, watch } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
 import {
-  computeStandings,
   resolveAllConferences,
-  slateCompletionByConference,
+  computeStandingsPipeline,
   P4_CONFERENCES
 } from '#shared/domain/standings'
 import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
-import { applyManualOrdering } from '#shared/domain/tiebreakers/invalidation'
 import { usePicksStorage } from './usePicksStorage'
 import { useManualTiebreakers } from './useManualTiebreakers'
 import { useGames } from './useGames'
@@ -64,11 +62,14 @@ import { useTeams } from './useTeams'
  *
  * **Plan 06-07: the manual-decision lifecycle now lives here.**
  * `rankings` is `rawRankings` (the engine's direct output) with
- * `applyManualOrdering` applied per conference — the ONLY place in the app
- * that combines the two. Order is load-bearing (06-UI-SPEC.md §9.2): manual
- * application sits AFTER `resolveAllConferences` and BEFORE
- * `computeStandings`, because `computeStandings` assigns ranks by walking
- * groups, and the split manual groups have to exist by the time it runs.
+ * `applyManualOrdering` applied per conference. Order is load-bearing
+ * (06-UI-SPEC.md §9.2): manual application sits AFTER `resolveAllConferences`
+ * and BEFORE `computeStandings`, because `computeStandings` assigns ranks by
+ * walking groups, and the split manual groups have to exist by the time it
+ * runs. As of 08-REVIEW WR-03 (iteration 2), that ORDER is written once, in
+ * `#shared/domain/standings`'s `computeStandingsPipeline` (`pipeline`
+ * below) — the same function `PicksWorkspace.vue`'s preview branch calls —
+ * rather than duplicated by hand here and there.
  *
  * The two gates stay independent, exactly as §9.2 requires and never
  * collapsed into one check: gate 1 (`slateComplete[conference]`) is checked
@@ -87,6 +88,10 @@ import { useTeams } from './useTeams'
  * is what makes suspension retention rather than deletion (06-UI-SPEC.md
  * §0.1/§9.1).
  *
+ * @param scenarioId Scenario id. Required, non-defaulted -- flows unchanged
+ *   into BOTH internal `usePicksStorage` and `useManualTiebreakers` calls;
+ *   `useGames`/`useTeams` are schedule/roster data, not scenario-scoped, and
+ *   never receive it.
  * @param season Season year (default: 2026)
  * @returns Object with:
  *   - picks: the `Ref<Record<gameId, teamId>>` from `usePicksStorage`
@@ -99,11 +104,11 @@ import { useTeams } from './useTeams'
  *     re-exported unchanged so components have one call and hold no
  *     storage knowledge of their own
  */
-export function useStandings(season = 2026) {
-  const picks = usePicksStorage(season)
+export function useStandings(scenarioId: string, season = 2026) {
+  const picks = usePicksStorage(scenarioId, season)
   const { data: games } = useGames(season)
   const { data: teams } = useTeams(season)
-  const { decisionsFor, commitOrdering, pruneStale } = useManualTiebreakers(season)
+  const { decisions, commitOrdering, pruneStale } = useManualTiebreakers(scenarioId, season)
 
   const ready = computed(() => Boolean(games.value?.games && teams.value))
 
@@ -112,29 +117,19 @@ export function useStandings(season = 2026) {
     return resolveAllConferences(games.value!.games, teams.value!, picks.value)
   })
 
-  const slateComplete = computed<SlateCompletion | undefined>(() => {
+  // 08-REVIEW WR-03 (iteration 2): the resolve -> slate-completion ->
+  // apply-manual-ordering -> compute-standings composition ORDER now lives
+  // in exactly one place, `computeStandingsPipeline`, shared with
+  // `PicksWorkspace.vue`'s preview branch -- see that function's docblock
+  // for why `pruneStale`'s side effect stays out of it and composable-only.
+  const pipeline = computed(() => {
     if (!ready.value) return undefined
-    return slateCompletionByConference(games.value!.games, teams.value!, picks.value)
+    return computeStandingsPipeline(games.value!.games, teams.value!, picks.value, decisions.value)
   })
 
-  const rankings = computed<ResolvedTiebreakers | undefined>(() => {
-    const raw = rawRankings.value
-    if (!raw) return undefined
-
-    const applied: ResolvedTiebreakers = {}
-    for (const conference of P4_CONFERENCES) {
-      const conferenceRaw = raw[conference]
-      if (!conferenceRaw) continue
-      const complete = slateComplete.value?.[conference] ?? false
-      applied[conference] = applyManualOrdering(conferenceRaw, decisionsFor(conference).value, complete)
-    }
-    return applied
-  })
-
-  const standings = computed<StandingsResult | undefined>(() => {
-    if (!ready.value) return undefined
-    return computeStandings(games.value!.games, teams.value!, picks.value, rankings.value)
-  })
+  const slateComplete = computed<SlateCompletion | undefined>(() => pipeline.value?.slateComplete)
+  const rankings = computed<ResolvedTiebreakers | undefined>(() => pipeline.value?.rankings)
+  const standings = computed<StandingsResult | undefined>(() => pipeline.value?.standings)
 
   // The one side effect in this file — see the docblock above (WR-03) for
   // why this is an explicit-source `watch`, not a `watchEffect`, and why it

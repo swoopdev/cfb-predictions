@@ -79,13 +79,20 @@ const props = withDefaults(defineProps<{
    * the standings table's overall record.
    */
   championshipPicks?: Record<string, number>
+  /**
+   * 08-REVIEW WR-04 (iteration 2): threaded straight through to
+   * `TiebreakerReasoning`, unchanged -- see that component's own prop
+   * docblock for why.
+   */
+  previewActive?: boolean
 }>(), {
   teamsById: () => new Map(),
   ranking: undefined,
   slateComplete: undefined,
   commitOrdering: undefined,
   showHeading: true,
-  championshipPicks: undefined
+  championshipPicks: undefined,
+  previewActive: false
 })
 
 const headingId = useId()
@@ -450,6 +457,7 @@ function logoFor(team: StandingsTeam): string {
                 :group="row.group"
                 :school-by-id="schoolById"
                 :slate-complete="slateComplete ?? false"
+                :preview-active="previewActive"
                 @commit="order => handleReasoningCommit(row.group!, order)"
               />
             </td>

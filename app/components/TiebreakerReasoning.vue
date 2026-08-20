@@ -28,11 +28,23 @@ import type {
  * `commit` emit. The consumer (Plan 07's `useManualTiebreakers`) decides
  * what to do with that ordering.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   group: RankGroup
   schoolById: ReadonlyMap<TeamId, string>
   slateComplete: boolean
-}>()
+  /**
+   * 08-REVIEW WR-04 (iteration 2): true while this table is rendering a
+   * share-link preview rather than the real, storage-backed scenario
+   * (`PicksWorkspace.vue`'s `commitOrdering` is a silent no-op in that
+   * state -- RESEARCH.md Assumption A3 -- because there is no scenario id
+   * to attach a manual decision to). Hides the interactive ordering
+   * terminus and replaces it with an explanatory message instead of
+   * letting a user complete an interaction that silently does nothing.
+   */
+  previewActive?: boolean
+}>(), {
+  previewActive: false
+})
 
 const emit = defineEmits<{
   commit: [order: TeamId[]]
@@ -392,8 +404,19 @@ function startOver() {
       </p>
     </template>
 
+    <!-- 08-REVIEW WR-04 (iteration 2): during an active share-link preview,
+         `commitOrdering` is a silent no-op (PicksWorkspace.vue) -- rather
+         than let the interaction start and silently fail to stick, replace
+         the interactive terminus with an explanatory message. -->
+    <p
+      v-if="showOrderingControl && previewActive"
+      class="text-xs text-muted mt-3"
+    >
+      Save a copy of this scenario to set manual tiebreakers.
+    </p>
+
     <div
-      v-if="showOrderingControl"
+      v-else-if="showOrderingControl"
       role="group"
       :aria-labelledby="terminusId"
       class="mt-3"

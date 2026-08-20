@@ -16,18 +16,21 @@ export interface PickProgress {
  *
  * Progress is always in sync with picks via computed dependencies — no manual updates needed.
  *
+ * @param scenarioId Scenario id. Required, non-defaulted -- flows unchanged
+ *   into the internal `usePicksStorage` call; `useGames` is schedule data,
+ *   not scenario-scoped, and never receives it.
  * @param season Season year (default: 2026)
  * @returns Object with:
  *   - progressOverall: Computed<PickProgress> for entire season
  *   - progressForWeek: Function(weekNum) -> Computed<PickProgress> for a specific week
  *
  * @example
- * const { progressOverall, progressForWeek } = usePickProgress(2026)
+ * const { progressOverall, progressForWeek } = usePickProgress('scenario-a', 2026)
  * console.log(progressOverall.value) // { picked: 5, total: 130 }
  * console.log(progressForWeek(1).value) // { picked: 2, total: 14 }
  */
-export function usePickProgress(season = 2026) {
-  const picks = usePicksStorage(season)
+export function usePickProgress(scenarioId: string, season = 2026) {
+  const picks = usePicksStorage(scenarioId, season)
   const { data: gamesData } = useGames(season)
 
   /**

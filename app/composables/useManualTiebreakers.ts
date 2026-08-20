@@ -1,25 +1,9 @@
 import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
 import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
-import { decisionHash } from '#shared/domain/tiebreakers/invalidation'
+import { decisionHash, MAX_ENTRIES_PER_CONFERENCE, validateConferenceDecisions } from '#shared/domain/tiebreakers/invalidation'
 import type { ConferenceDecisions, ManualDecisions } from '#shared/domain/tiebreakers/invalidation'
-
-const P4_CONFERENCE_NAMES = new Set<string>(['SEC', 'Big Ten', 'Big 12', 'ACC'])
-
-/**
- * T-06-02 (DoS): a stored conference holding more than this many hash
- * entries is dropped WHOLESALE on read -- this is not the measured usage
- * shape (the ACC's own worst case is ~3.85 decisions/season), it is a
- * ceiling against a hand-edited or maliciously enormous payload.
- */
-const MAX_ENTRIES_PER_CONFERENCE = 32
-
-/**
- * T-06-01/T-06-02: 20 exceeds the largest P4 conference (18, the Big Ten),
- * so a legitimate group can never hit this cap -- only a hand-edited entry
- * can, and it is dropped, not truncated.
- */
-const MAX_IDS_PER_ENTRY = 20
+import { scenarioKeys } from '~/utils/scenarioKeys'
 
 /**
  * Structural set equality: same size, same members, order irrelevant.
@@ -40,53 +24,6 @@ function isTeamSetEqual(a: readonly TeamId[], b: readonly TeamId[]): boolean {
     if (!setB.has(id)) return false
   }
   return true
-}
-
-function isValidOrderedIds(value: unknown): value is TeamId[] {
-  if (!Array.isArray(value)) return false
-  if (value.length > MAX_IDS_PER_ENTRY) return false
-  if (!value.every(id => Number.isInteger(id))) return false
-  return new Set(value).size === value.length
-}
-
-/**
- * Validates an untrusted parsed JSON payload against T-06-01/T-06-02's
- * shape: an object keyed by known P4 conference names, each value an object
- * of at most `MAX_ENTRIES_PER_CONFERENCE` hash-keyed entries, each entry's
- * value an array of at most `MAX_IDS_PER_ENTRY` distinct integer team ids.
- *
- * A violating CONFERENCE (unknown key, non-object value, or too many
- * entries) is dropped in full. A violating ENTRY inside an otherwise-valid
- * conference is dropped alone -- a corrupt decision costs that one decision,
- * not the conference or the page, mirroring `toOutcomes`' silent-drop
- * discipline.
- */
-function validateConferenceDecisions(payload: unknown): ConferenceDecisions {
-  if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
-    return {}
-  }
-
-  const result: Record<string, ManualDecisions> = {}
-
-  for (const [conference, entries] of Object.entries(payload as Record<string, unknown>)) {
-    if (!P4_CONFERENCE_NAMES.has(conference)) continue
-    if (typeof entries !== 'object' || entries === null || Array.isArray(entries)) continue
-
-    const entryPairs = Object.entries(entries as Record<string, unknown>)
-    if (entryPairs.length > MAX_ENTRIES_PER_CONFERENCE) continue // drop the whole conference
-
-    const validEntries: Record<string, readonly TeamId[]> = {}
-    for (const [hash, ids] of entryPairs) {
-      if (isValidOrderedIds(ids)) {
-        validEntries[hash] = ids
-      }
-      // else: drop this one entry silently; the rest of the conference survives
-    }
-
-    result[conference] = validEntries
-  }
-
-  return result as ConferenceDecisions
 }
 
 /**
@@ -125,6 +62,15 @@ function validateConferenceDecisions(payload: unknown): ConferenceDecisions {
  * codes) leaves almost nothing useful to log about a hash-keyed team-id
  * array, so this file adds none at all.
  *
+ * **Scenario scoping (Phase 7, D-02, D-04).** `scenarioId` is required and
+ * comes first -- a defaulted `season` parameter after a required one would
+ * defeat the default's usefulness (RESEARCH.md Pitfall 2). Every call MUST
+ * construct a fresh composable instance per scenario id (never pass a
+ * reactive/computed key into one long-lived `useStorage()` call for this
+ * object-valued state) -- RESEARCH.md Pitfall 1 is a verified, reproduced
+ * defect where doing so leaks one scenario's data into another.
+ *
+ * @param scenarioId Scenario id. Required, non-defaulted -- namespaces the storage key.
  * @param season Season year (default: 2026). Namespaces the storage key.
  * @returns Object with:
  *   - decisions: the raw `Ref<ConferenceDecisions>` storage, already
@@ -140,8 +86,8 @@ function validateConferenceDecisions(payload: unknown): ConferenceDecisions {
  *     than deletion), and deletes any stored entry that no longer matches a
  *     live unresolved group once the slate is complete
  */
-export function useManualTiebreakers(season = 2026) {
-  const key = `cfb_manual_tiebreakers_${season}`
+export function useManualTiebreakers(scenarioId: string, season = 2026) {
+  const key = scenarioKeys.manualTiebreakers(season, scenarioId)
 
   const decisions = useStorage<ConferenceDecisions>(
     key,
@@ -174,9 +120,29 @@ export function useManualTiebreakers(season = 2026) {
     const hash = decisionHash(group)
     const conferenceDecisions = decisions.value[conference] ?? {}
 
+    // 08-REVIEW WR-02 (iteration 2): mirror the read-side
+    // MAX_ENTRIES_PER_CONFERENCE cap at write time. Overwriting an
+    // already-stored hash never grows the entry count, so only a genuinely
+    // NEW hash needs the cap check. When adding it would exceed the cap,
+    // evict the oldest entry (first-inserted key by object enumeration
+    // order) first -- this keeps the in-memory/stored shape from ever
+    // legitimately drifting past what `validateConferenceDecisions` accepts
+    // on the next read, which otherwise drops the WHOLE conference rather
+    // than just the overflow.
+    let nextConferenceDecisions: Record<string, readonly TeamId[]>
+    if (hash in conferenceDecisions) {
+      nextConferenceDecisions = { ...conferenceDecisions, [hash]: orderedTeamIds }
+    } else {
+      const keys = Object.keys(conferenceDecisions)
+      const survivors = keys.length >= MAX_ENTRIES_PER_CONFERENCE ? keys.slice(1) : keys
+      nextConferenceDecisions = {}
+      for (const key of survivors) nextConferenceDecisions[key] = conferenceDecisions[key]!
+      nextConferenceDecisions[hash] = orderedTeamIds
+    }
+
     decisions.value = {
       ...decisions.value,
-      [conference]: { ...conferenceDecisions, [hash]: orderedTeamIds }
+      [conference]: nextConferenceDecisions
     }
   }
 

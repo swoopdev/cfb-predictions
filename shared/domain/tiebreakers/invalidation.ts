@@ -117,6 +117,94 @@ function isTeamSetEqual(a: readonly TeamId[], b: readonly TeamId[]): boolean {
   return true
 }
 
+const P4_CONFERENCE_NAMES = new Set<string>(['SEC', 'Big Ten', 'Big 12', 'ACC'])
+
+/**
+ * T-06-02 (DoS): a stored conference holding more than this many hash
+ * entries is dropped WHOLESALE on read -- this is not the measured usage
+ * shape (the ACC's own worst case is ~3.85 decisions/season), it is a
+ * ceiling against a hand-edited or maliciously enormous payload.
+ *
+ * Exported (08-REVIEW WR-02, iteration 2) so `app/composables/
+ * useManualTiebreakers.ts`'s `commitOrdering` write path can evict down to
+ * the same cap BEFORE writing, instead of only being enforced here on the
+ * next read -- otherwise a session that legitimately accumulates more than
+ * this many distinct decision hashes for one conference can silently drift
+ * past what this module accepts, and the read-side guard above drops the
+ * WHOLE conference, not just the overflow.
+ */
+export const MAX_ENTRIES_PER_CONFERENCE = 32
+
+/**
+ * T-06-01/T-06-02: 20 exceeds the largest P4 conference (18, the Big Ten),
+ * so a legitimate group can never hit this cap -- only a hand-edited entry
+ * can, and it is dropped, not truncated.
+ */
+const MAX_IDS_PER_ENTRY = 20
+
+/**
+ * Structural shape check for one stored/decoded ordering: a plain array of
+ * distinct integer team ids, no longer than `MAX_IDS_PER_ENTRY`.
+ *
+ * Shared by both this module's callers -- `app/composables/useManualTiebreakers.ts`'s
+ * `useStorage` read path (validating a possibly hand-edited localStorage
+ * entry) and `shared/domain/shareLink.ts`'s TLV decode (validating a
+ * possibly hand-crafted or bit-flipped share code) -- so a hand-crafted share
+ * payload is held to the identical caps as a hand-edited storage entry.
+ */
+export function isValidOrderedIds(value: unknown): value is TeamId[] {
+  if (!Array.isArray(value)) return false
+  if (value.length > MAX_IDS_PER_ENTRY) return false
+  if (!value.every(id => Number.isInteger(id))) return false
+  return new Set(value).size === value.length
+}
+
+/**
+ * Validates an untrusted parsed JSON payload against T-06-01/T-06-02's
+ * shape: an object keyed by known P4 conference names, each value an object
+ * of at most `MAX_ENTRIES_PER_CONFERENCE` hash-keyed entries, each entry's
+ * value an array of at most `MAX_IDS_PER_ENTRY` distinct integer team ids.
+ *
+ * A violating CONFERENCE (unknown key, non-object value, or too many
+ * entries) is dropped in full. A violating ENTRY inside an otherwise-valid
+ * conference is dropped alone -- a corrupt decision costs that one decision,
+ * not the conference or the page, mirroring `toOutcomes`' silent-drop
+ * discipline.
+ *
+ * Two callers share this implementation: `app/composables/useManualTiebreakers.ts`'s
+ * `useStorage` read path (a possibly hand-edited localStorage entry) and
+ * Phase 8's `shared/domain/shareLink.ts` TLV decode (a possibly hand-crafted
+ * or bit-flipped share code's manual-tiebreaker-overrides section) -- both
+ * untrusted-input boundaries need byte-for-byte identical validation.
+ */
+export function validateConferenceDecisions(payload: unknown): ConferenceDecisions {
+  if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+    return {}
+  }
+
+  const result: Record<string, ManualDecisions> = {}
+
+  for (const [conference, entries] of Object.entries(payload as Record<string, unknown>)) {
+    if (!P4_CONFERENCE_NAMES.has(conference)) continue
+    if (typeof entries !== 'object' || entries === null || Array.isArray(entries)) continue
+
+    const entryPairs = Object.entries(entries as Record<string, unknown>)
+    if (entryPairs.length > MAX_ENTRIES_PER_CONFERENCE) continue // drop the whole conference
+
+    const validEntries: Record<string, readonly TeamId[]> = {}
+    for (const [hash, ids] of entryPairs) {
+      if (isValidOrderedIds(ids)) {
+        validEntries[hash] = ids
+      }
+      // else: drop this one entry silently; the rest of the conference survives
+    }
+
+    result[conference] = validEntries
+  }
+
+  return result as ConferenceDecisions
+}
+
 /**
  * Applies stored manual decisions to a conference's ranking, producing a new
  * `ConferenceRanking`. Never mutates its input `ranking` or any group in it

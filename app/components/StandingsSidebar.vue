@@ -74,13 +74,22 @@ const props = withDefaults(defineProps<{
    * so a picked result still reflects in the standings' overall record.
    */
   championshipPicks?: Record<string, number>
+  /**
+   * 08-REVIEW WR-04 (iteration 2): true while the parent is rendering a
+   * share-link preview -- threaded straight through to every
+   * `StandingsTable`, unchanged, so the manual-ordering terminus can
+   * explain itself instead of silently no-opping (`PicksWorkspace.vue`'s
+   * `commitOrdering` guard).
+   */
+  previewActive?: boolean
 }>(), {
   teamsById: () => new Map(),
   activeConference: () => [],
   rankings: undefined,
   slateComplete: undefined,
   commitOrdering: undefined,
-  championshipPicks: undefined
+  championshipPicks: undefined,
+  previewActive: false
 })
 
 /**
@@ -212,6 +221,7 @@ const open = defineModel<boolean>('open', { default: true })
               :commit-ordering="commitOrdering"
               :show-heading="false"
               :championship-picks="championshipPicks"
+              :preview-active="previewActive"
             />
           </template>
         </UAccordion>

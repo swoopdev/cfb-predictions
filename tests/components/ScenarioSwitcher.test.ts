@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import ScenarioSwitcher from '~/components/ScenarioSwitcher.vue'
 import type { ScenarioMeta } from '#shared/types/scenarios'
@@ -24,7 +25,7 @@ function scenarioList(): ScenarioMeta[] {
   ]
 }
 
-function mountCollapsed(props: { scenarios?: ScenarioMeta[], modelValue?: string } = {}) {
+function mountSwitcher(props: { scenarios?: ScenarioMeta[], modelValue?: string } = {}) {
   return mount(ScenarioSwitcher, {
     props: {
       scenarios: props.scenarios ?? scenarioList(),
@@ -34,59 +35,28 @@ function mountCollapsed(props: { scenarios?: ScenarioMeta[], modelValue?: string
   })
 }
 
-/**
- * The switcher is a collapsible segment that starts CLOSED -- picking games
- * is the page's job and managing scenarios is an occasional detour, so the
- * segment costs one summary line until the user opens it. The select menu
- * and every row action therefore only exist once it is expanded, which is
- * what this helper does before handing the wrapper back.
- */
-async function mountSwitcher(props: { scenarios?: ScenarioMeta[], modelValue?: string } = {}) {
-  const wrapper = mountCollapsed(props)
-  await wrapper.get('button[aria-expanded]').trigger('click')
-  return wrapper
-}
-
 describe('ScenarioSwitcher', () => {
-  it('starts collapsed, naming the active scenario without exposing the row actions', () => {
-    const wrapper = mountCollapsed({ modelValue: 'b' })
+  // Nuxt UI renders its own selected-state check via ComboboxItemIndicator,
+  // after the #item-trailing slot and outside any slot this component can
+  // override -- so it lands at the far END of the row, past the
+  // edit/duplicate/share/delete buttons. The selected marker belongs at the
+  // front (see the #item-leading check below), so the built-in one is hidden.
+  it('hides the built-in trailing check so the only selected marker is the leading one', () => {
+    const wrapper = mountSwitcher()
 
-    expect(wrapper.get('button[aria-expanded]').attributes('aria-expanded')).toBe('false')
-    expect(wrapper.text()).toContain('Scenarios')
-    // The active scenario is readable while collapsed, so the user never has
-    // to expand the segment just to confirm which picks are on screen.
-    expect(wrapper.text()).toContain('Scenario B')
-    expect(wrapper.find('[aria-label="Rename Scenario B"]').exists()).toBe(false)
-  })
-
-  it('expands on click, revealing the select menu and row actions', async () => {
-    const wrapper = mountCollapsed()
-
-    await wrapper.get('button[aria-expanded]').trigger('click')
-
-    expect(wrapper.get('button[aria-expanded]').attributes('aria-expanded')).toBe('true')
-    expect(wrapper.find('[aria-label="Rename Scenario A"]').exists()).toBe(true)
-  })
-
-  it('force-expands so a pending inline rename is never set on a hidden row', async () => {
-    const wrapper = mountCollapsed()
-    expect(wrapper.get('button[aria-expanded]').attributes('aria-expanded')).toBe('false')
-
-    await wrapper.setProps({ pendingEditId: 'b' })
-
-    expect(wrapper.get('button[aria-expanded]').attributes('aria-expanded')).toBe('true')
-    expect(wrapper.find('input').exists()).toBe(true)
+    const menu = wrapper.findComponent({ name: 'USelectMenu' })
+    expect(menu.props('ui').itemTrailingIcon).toBe('hidden')
   })
 
   it('renders every scenario in the scenarios prop', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     expect(wrapper.text()).toContain('Scenario A')
     expect(wrapper.text()).toContain('Scenario B')
   })
 
   it('emits update:modelValue with the selected scenario id when a row is chosen', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     const rows = wrapper.findAll('[role="option"]')
     expect(rows).toHaveLength(2)
@@ -95,8 +65,47 @@ describe('ScenarioSwitcher', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['b'])
   })
 
+  // The rename input lives INSIDE a combobox listbox, which treats Space as
+  // "select the highlighted option" -- so typing a space in a scenario name
+  // used to close the menu and commit the half-typed name. The input stops
+  // the event from reaching that handler while still letting the space be
+  // typed, which is what this asserts: the keydown must not propagate.
+  it('rename: Space is typed into the name, not swallowed as a menu selection', async () => {
+    const wrapper = mountSwitcher()
+    await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
+
+    const bubbled: string[] = []
+    wrapper.element.addEventListener('keydown', e => bubbled.push((e as KeyboardEvent).key))
+
+    const input = wrapper.get('input')
+    await input.trigger('keydown', { key: ' ' })
+
+    expect(bubbled).not.toContain(' ')
+    // Still editing, nothing committed.
+    expect(wrapper.emitted('rename')).toBeUndefined()
+    expect(wrapper.find('input').exists()).toBe(true)
+  })
+
+  it('rename: focuses and selects the name so typing replaces it immediately', async () => {
+    const wrapper = mount(ScenarioSwitcher, {
+      attachTo: document.body,
+      props: { scenarios: scenarioList(), modelValue: 'a' },
+      global: { stubs: nuxtUiTestStubs }
+    })
+
+    await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
+    await nextTick()
+
+    const input = wrapper.get('input').element as HTMLInputElement
+    expect(document.activeElement).toBe(input)
+    expect(input.selectionStart).toBe(0)
+    expect(input.selectionEnd).toBe('Scenario A'.length)
+
+    wrapper.unmount()
+  })
+
   it('rename: pencil click enters inline edit state; Enter commits rename and does not emit update:modelValue', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
 
@@ -111,7 +120,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('rename: blurring the input also commits, without needing Enter', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
     const input = wrapper.get('input')
@@ -123,7 +132,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('rename: Escape cancels without emitting rename', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
     const input = wrapper.get('input')
@@ -136,7 +145,7 @@ describe('ScenarioSwitcher', () => {
 
   // WR-01: an empty/whitespace-only commit is dropped -- no emit at all.
   it('rename: committing an empty or whitespace-only name does not emit rename', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
     const input = wrapper.get('input')
@@ -149,7 +158,7 @@ describe('ScenarioSwitcher', () => {
 
   // WR-01: leading/trailing whitespace is trimmed before emitting.
   it('rename: trims surrounding whitespace before emitting rename', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Rename Scenario A"]').trigger('click')
     const input = wrapper.get('input')
@@ -162,7 +171,7 @@ describe('ScenarioSwitcher', () => {
   // WR-02: a `pendingEditId` matching a real row auto-enters edit state,
   // exactly like a manual pencil-icon click would.
   it('pendingEditId: auto-enters inline edit state for the matching row', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.setProps({ pendingEditId: 'b' })
 
@@ -173,7 +182,7 @@ describe('ScenarioSwitcher', () => {
 
   // WR-02: an unknown pendingEditId (e.g. stale/mismatched) is a no-op.
   it('pendingEditId: does nothing when it does not match any scenario', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.setProps({ pendingEditId: 'does-not-exist' })
 
@@ -181,7 +190,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('duplicate: copy icon emits duplicate(id) and does not emit update:modelValue', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Duplicate Scenario A"]').trigger('click')
 
@@ -190,7 +199,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('share: share icon emits share(id) and does not emit update:modelValue', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Share Scenario A"]').trigger('click')
 
@@ -199,7 +208,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('share affordance carries no disabled binding regardless of scenario count', async () => {
-    const wrapper = await mountSwitcher({
+    const wrapper = mountSwitcher({
       scenarios: [{ id: 'a', name: 'Scenario A', createdAt: '2026-01-01T00:00:00.000Z' }],
       modelValue: 'a'
     })
@@ -209,7 +218,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('delete: trash icon emits delete(id) and does not emit update:modelValue', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="Delete Scenario A"]').trigger('click')
 
@@ -218,7 +227,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('delete affordance is disabled with a discoverable reason when exactly one scenario remains (D-14)', async () => {
-    const wrapper = await mountSwitcher({
+    const wrapper = mountSwitcher({
       scenarios: [{ id: 'a', name: 'Scenario A', createdAt: '2026-01-01T00:00:00.000Z' }],
       modelValue: 'a'
     })
@@ -229,7 +238,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('delete affordance is enabled with no title when 2+ scenarios exist', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     const trash = wrapper.get('[aria-label="Delete Scenario A"]')
     expect(trash.attributes('disabled')).toBeUndefined()
@@ -241,7 +250,7 @@ describe('ScenarioSwitcher', () => {
   // the plus glyph read as "+ + New Scenario". The name still reaches
   // assistive tech through aria-label, which is what this asserts against.
   it('clicking the add button emits create with no payload', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     await wrapper.get('[aria-label="New Scenario"]').trigger('click')
 
@@ -249,7 +258,7 @@ describe('ScenarioSwitcher', () => {
   })
 
   it('every icon-only row button carries the exact aria-label from the Copywriting Contract, interpolating the scenario name', async () => {
-    const wrapper = await mountSwitcher()
+    const wrapper = mountSwitcher()
 
     expect(wrapper.find('[aria-label="Rename Scenario A"]').exists()).toBe(true)
     expect(wrapper.find('[aria-label="Duplicate Scenario A"]').exists()).toBe(true)

@@ -334,12 +334,12 @@ function advanceWeek() {
         </div>
       </div>
 
-      <!-- Phase 7 (D-07): scenario switcher, in its own collapsible segment
-           BELOW the sticky header rather than inside it -- the header row is
-           `main`'s and stays untouched, and a segment that collapses to a
-           single summary line costs nothing on mobile when the user isn't
-           managing scenarios. Rendered from the page's own scope through
-           this slot, so the page keeps ownership of the registry. -->
+      <!-- Phase 7 (D-07): scenario switcher, in its own row BELOW the sticky
+           header rather than inside it -- the header row is `main`'s and
+           stays untouched, and keeping the switcher out of it means the two
+           never compete for horizontal space. Rendered from the page's own
+           scope through this slot, so the page keeps ownership of the
+           registry. -->
       <div class="border-b border-default">
         <slot name="scenario" />
       </div>

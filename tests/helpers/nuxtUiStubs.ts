@@ -57,7 +57,12 @@ export const USelectMenuStub = defineComponent({
     items: { type: Array as PropType<StubItem[]>, default: () => [] },
     modelValue: { type: String, required: false },
     valueKey: { type: String, default: 'value' },
-    labelKey: { type: String, default: 'label' }
+    labelKey: { type: String, default: 'label' },
+    // Declared so tests can assert the theme overrides a component passes --
+    // notably `itemTrailingIcon`, which is how Nuxt UI's own built-in
+    // selected-state check (rendered outside every overridable slot) is
+    // suppressed. Not otherwise interpreted by this stub.
+    ui: { type: Object as PropType<Record<string, string>>, default: () => ({}) }
   },
   emits: ['update:modelValue'],
   setup(props, { slots, emit, attrs }) {

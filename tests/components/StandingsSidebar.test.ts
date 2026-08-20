@@ -334,5 +334,31 @@ describe('StandingsSidebar', () => {
       expect(commitOrdering).toHaveBeenCalledTimes(1)
       expect(commitOrdering).toHaveBeenCalledWith('SEC', unresolvedGroup, expect.arrayContaining([alabama.id, georgia.id]))
     })
+
+    // 08-REVIEW WR-04 (iteration 2): `previewActive` threads straight
+    // through StandingsSidebar -> StandingsTable -> TiebreakerReasoning,
+    // unchanged, replacing the interactive terminus with an explanatory
+    // message during an active share-link preview (where commitOrdering is
+    // a silent no-op in PicksWorkspace.vue).
+    it('replaces the ordering interaction with an explanatory message when previewActive is set, and never calls commitOrdering', async () => {
+      const commitOrdering = vi.fn()
+      const wrapper = mount(StandingsSidebar, {
+        props: {
+          standings: tiedStandings,
+          activeConference: 'SEC',
+          rankings,
+          slateComplete: { 'SEC': true, 'Big Ten': false, 'Big 12': false, 'ACC': false },
+          commitOrdering,
+          previewActive: true
+        }
+      })
+
+      await expandTheOnlyGroup(wrapper)
+
+      expect(wrapper.text()).not.toContain('Nothing separates these')
+      expect(wrapper.find('[role="group"]').exists()).toBe(false)
+      expect(wrapper.text()).toContain('Save a copy of this scenario to set manual tiebreakers.')
+      expect(commitOrdering).not.toHaveBeenCalled()
+    })
   })
 })

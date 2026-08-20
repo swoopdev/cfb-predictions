@@ -34,14 +34,14 @@ describe('PickProgress Component', () => {
   it('should render with initial progress', () => {
     mockProgressOverall.value = { picked: 5, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     expect(wrapper.text()).toContain('5/100 picked')
   })
 
   it('should render text-based format without percentage or bar', () => {
     mockProgressOverall.value = { picked: 25, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     const text = wrapper.text()
 
     expect(text).toContain('25/100 picked')
@@ -53,21 +53,21 @@ describe('PickProgress Component', () => {
   it('should handle zero progress', () => {
     mockProgressOverall.value = { picked: 0, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     expect(wrapper.text()).toContain('0/100 picked')
   })
 
   it('should handle all games picked', () => {
     mockProgressOverall.value = { picked: 100, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     expect(wrapper.text()).toContain('100/100 picked')
   })
 
   it('should render before games load (0/0)', () => {
     mockProgressOverall.value = { picked: 0, total: 0 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     expect(wrapper.text()).toContain('0/0 picked')
   })
 
@@ -75,24 +75,24 @@ describe('PickProgress Component', () => {
     const usePickProgressSpy = usePickProgress as any
 
     mount(PickProgress, {
-      props: { season: 2027 }
+      props: { scenarioId: 'scenario-1', season: 2027 }
     })
 
-    expect(usePickProgressSpy).toHaveBeenCalledWith(2027)
+    expect(usePickProgressSpy).toHaveBeenCalledWith('scenario-1', 2027)
   })
 
   it('should default to season 2026', () => {
     const usePickProgressSpy = usePickProgress as any
 
-    mount(PickProgress)
+    mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
 
-    expect(usePickProgressSpy).toHaveBeenCalledWith(2026)
+    expect(usePickProgressSpy).toHaveBeenCalledWith('scenario-1', 2026)
   })
 
   it('should update reactively when progress changes', async () => {
     mockProgressOverall.value = { picked: 5, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     expect(wrapper.text()).toContain('5/100 picked')
 
     // Update progress
@@ -105,7 +105,7 @@ describe('PickProgress Component', () => {
   it('should render a progress bar track, proportional fill, and centered label', () => {
     mockProgressOverall.value = { picked: 5, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
 
     // Track: muted background at the season bar's 24px height, clipping the fill.
     const track = wrapper.find('div')
@@ -131,7 +131,7 @@ describe('PickProgress Component', () => {
   it('should render as plain text, not a badge component', () => {
     mockProgressOverall.value = { picked: 5, total: 100 }
 
-    const wrapper = mount(PickProgress)
+    const wrapper = mount(PickProgress, { props: { scenarioId: 'scenario-1' } })
     const html = wrapper.html()
 
     // Should not contain UBadge or badge-related HTML

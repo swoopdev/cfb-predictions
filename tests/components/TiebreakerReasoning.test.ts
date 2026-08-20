@@ -575,6 +575,43 @@ describe('ordering gate', () => {
 
     expect(wrapper.find('[role="group"]').exists()).toBe(true)
   })
+
+  // 08-REVIEW WR-04 (iteration 2): during an active share-link preview,
+  // PicksWorkspace.vue's commitOrdering is a silent no-op -- the interactive
+  // terminus must not even be offered, and an explanatory message takes its
+  // place instead.
+  describe('previewActive', () => {
+    it('replaces the interactive terminus with an explanatory message when a preview is active', () => {
+      const g = unresolvedGroup([1, 2, 3])
+      const wrapper = mount(TiebreakerReasoning, {
+        props: { group: g, schoolById: SCHOOLS, slateComplete: true, previewActive: true }
+      })
+
+      expect(wrapper.find('[role="group"]').exists()).toBe(false)
+      expect(wrapper.findAll('button')).toHaveLength(0)
+      expect(wrapper.text()).toContain('Save a copy of this scenario to set manual tiebreakers.')
+    })
+
+    it('defaults to false: the interactive terminus renders unchanged when previewActive is not supplied', () => {
+      const g = unresolvedGroup([1, 2, 3])
+      const wrapper = mount(TiebreakerReasoning, {
+        props: { group: g, schoolById: SCHOOLS, slateComplete: true }
+      })
+
+      expect(wrapper.find('[role="group"]').exists()).toBe(true)
+      expect(wrapper.text()).not.toContain('Save a copy of this scenario to set manual tiebreakers.')
+    })
+
+    it('shows neither the terminus nor the preview message when the ordering gate itself is closed', () => {
+      const g = unresolvedGroup([1, 2, 3])
+      const wrapper = mount(TiebreakerReasoning, {
+        props: { group: g, schoolById: SCHOOLS, slateComplete: false, previewActive: true }
+      })
+
+      expect(wrapper.find('[role="group"]').exists()).toBe(false)
+      expect(wrapper.text()).not.toContain('Save a copy of this scenario to set manual tiebreakers.')
+    })
+  })
 })
 
 describe('assignment', () => {

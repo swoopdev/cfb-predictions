@@ -75,6 +75,9 @@ const games: Game[] = [
 /** A wins, B wins, E wins -- SEC's slate is fully picked. */
 const FULL_PICKS = { [GAME_AC]: A, [GAME_BD]: B, [GAME_EF]: E }
 
+const SCENARIO_ID = 'scenario-1'
+const SEASON = 2026
+
 const FORBIDDEN_WORDS = ['suspended', 'restored', 'paused', 'recovered']
 
 function assertNoSuspensionVocabulary(...values: unknown[]) {
@@ -99,7 +102,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
   })
 
   it('exposes a per-conference slate-completion map alongside standings and rankings', () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = { [GAME_AC]: A, [GAME_BD]: B } // GAME_EF deliberately unpicked
 
     // Big Ten/Big 12/ACC have zero rostered teams in this fixture, so their
@@ -114,7 +117,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
   })
 
   it('committing an ordering produces distinct ranks in standings on the very next evaluation, with no reload', async () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = FULL_PICKS
     await nextTick()
 
@@ -140,7 +143,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
   })
 
   it('clearing a conference pick suspends the ordering: the group reverts to a shared rank, while the storage entry survives', async () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = FULL_PICKS
     await nextTick()
 
@@ -166,12 +169,12 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
     // The storage entry itself is RETAINED, not discarded (06-UI-SPEC.md
     // §0.1's supersession of D-09) -- inspected via a second, independent
     // useManualTiebreakers instance pointed at the same season key.
-    const { decisionsFor } = useManualTiebreakers(2026)
+    const { decisionsFor } = useManualTiebreakers(SCENARIO_ID, SEASON)
     expect(Object.keys(decisionsFor('SEC').value)).toHaveLength(1)
   })
 
   it('§9.3: re-picking the same winner restores the ordering silently -- identical ranks, no announcement anywhere in the lifecycle', async () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = FULL_PICKS
     await nextTick()
 
@@ -206,7 +209,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
     expect(manualAfter).toHaveLength(3)
 
     // No intervening write: still exactly one stored entry for SEC.
-    const { decisionsFor } = useManualTiebreakers(2026)
+    const { decisionsFor } = useManualTiebreakers(SCENARIO_ID, SEASON)
     expect(Object.keys(decisionsFor('SEC').value)).toHaveLength(1)
 
     // (a)/(d): no suspension/restoration vocabulary anywhere across the
@@ -217,7 +220,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
   })
 
   it('changing the tied group while incomplete invalidates the decision on return: never applied, deleted from storage, and the group is offered for ordering again', async () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = FULL_PICKS
     await nextTick()
 
@@ -248,7 +251,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
 
     // Deleted from storage on read (the watchEffect's pruneStale wiring),
     // not merely ignored -- the whole point of D-08's delete-on-read.
-    const { decisionsFor } = useManualTiebreakers(2026)
+    const { decisionsFor } = useManualTiebreakers(SCENARIO_ID, SEASON)
     expect(decisionsFor('SEC').value).toEqual({})
   })
 
@@ -256,7 +259,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
     // Path A: continuously active throughout, then the underlying tied
     // group changes (flipping AC's winner never touches slate completeness
     // -- 06-UI-SPEC.md §9.1 -- so SEC's slate stays complete the whole time).
-    const pathA = useStandings(2026)
+    const pathA = useStandings(SCENARIO_ID, SEASON)
     pathA.picks.value = FULL_PICKS
     await nextTick()
     const groupA = pathA.rankings.value!.SEC!.groups.find(g => g.resolvedBy === 'unresolved')!
@@ -275,7 +278,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
 
     // Path B: suspended (slate goes incomplete) before the group changes,
     // then re-completes with the SAME winners as path A's final state.
-    const pathB = useStandings(2026)
+    const pathB = useStandings(SCENARIO_ID, SEASON)
     pathB.picks.value = FULL_PICKS
     await nextTick()
     const groupB = pathB.rankings.value!.SEC!.groups.find(g => g.resolvedBy === 'unresolved')!
@@ -305,7 +308,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
   })
 
   it('pruning never runs for an incomplete conference -- the decision entry is retained, not deleted, while suspended', async () => {
-    const std = useStandings(2026)
+    const std = useStandings(SCENARIO_ID, SEASON)
     std.picks.value = FULL_PICKS
     await nextTick()
 
@@ -321,7 +324,7 @@ describe('useStandings (Plan 06-07, Task 2)', () => {
     // decided it should -- pruneStale's own early return, driven by this
     // composable's watchEffect passing `slateComplete[conference] === false`
     // straight through, never even reaches the gate 2 comparison.
-    const { decisionsFor } = useManualTiebreakers(2026)
+    const { decisionsFor } = useManualTiebreakers(SCENARIO_ID, SEASON)
     expect(decisionsFor('SEC').value).not.toEqual({})
   })
 })

@@ -56,6 +56,8 @@ function createMockEnvelope(games: Game[]): TeamsEnvelope {
   }
 }
 
+const SCENARIO_ID = 'scenario-1'
+
 describe('usePickProgress', () => {
   let mockPicksRef: any
   let mockGamesQuery: any
@@ -83,7 +85,7 @@ describe('usePickProgress', () => {
     it('should return 0/0 when games data is not loaded', () => {
       mockGamesQuery.data.value = undefined
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.picked).toBe(0)
       expect(progressOverall.value.total).toBe(0)
@@ -93,7 +95,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(50)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.total).toBe(50)
       expect(progressOverall.value.picked).toBe(0)
@@ -107,7 +109,7 @@ describe('usePickProgress', () => {
       mockPicksRef.value[1001] = 2601
       mockPicksRef.value[1002] = 2602
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.picked).toBe(3)
       expect(progressOverall.value.total).toBe(50)
@@ -117,7 +119,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(50)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.picked).toBe(0)
 
@@ -142,7 +144,7 @@ describe('usePickProgress', () => {
       mockPicksRef.value[1000] = 2600
       mockPicksRef.value[1001] = 2601
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
       expect(progressOverall.value.picked).toBe(2)
 
       // Remove a pick
@@ -153,7 +155,7 @@ describe('usePickProgress', () => {
     })
 
     it('should update reactively when games data loads', async () => {
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.total).toBe(0)
 
@@ -174,7 +176,7 @@ describe('usePickProgress', () => {
         mockPicksRef.value[game.id] = 2600
       })
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.picked).toBe(10)
       expect(progressOverall.value.total).toBe(10)
@@ -185,7 +187,7 @@ describe('usePickProgress', () => {
     it('should return 0/0 for a week when games are not loaded', () => {
       mockGamesQuery.data.value = undefined
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
       const progress = progressForWeek(1)
 
       expect(progress.value.picked).toBe(0)
@@ -197,7 +199,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(50)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       const week1Progress = progressForWeek(1)
       const week2Progress = progressForWeek(2)
@@ -217,7 +219,7 @@ describe('usePickProgress', () => {
       mockPicksRef.value[1001] = 2601
       mockPicksRef.value[1002] = 2602
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       const week1Progress = progressForWeek(1)
       const week2Progress = progressForWeek(2)
@@ -230,7 +232,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(30)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
       const week1Progress = progressForWeek(1)
 
       expect(week1Progress.value.picked).toBe(0)
@@ -247,7 +249,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(10)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
       const week99Progress = progressForWeek(99)
 
       expect(week99Progress.value.total).toBe(0)
@@ -264,7 +266,7 @@ describe('usePickProgress', () => {
       mockPicksRef.value[1010] = 2610 // week 2
       mockPicksRef.value[1015] = 2615 // week 2
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       const week1Progress = progressForWeek(1)
       const week2Progress = progressForWeek(2)
@@ -279,7 +281,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(30)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressForWeek } = usePickProgress(2026)
+      const { progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       const progress1 = progressForWeek(1)
       const progress2 = progressForWeek(1)
@@ -298,7 +300,7 @@ describe('usePickProgress', () => {
       // Add pick for a game that doesn't exist in the data
       mockPicksRef.value[9999] = 2600
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       // The pick still gets counted in total picks
       expect(progressOverall.value.picked).toBe(1)
@@ -307,7 +309,7 @@ describe('usePickProgress', () => {
     it('should handle empty games array', () => {
       mockGamesQuery.data.value = createMockEnvelope([])
 
-      const { progressOverall, progressForWeek } = usePickProgress(2026)
+      const { progressOverall, progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.total).toBe(0)
       expect(progressForWeek(1).value.total).toBe(0)
@@ -317,7 +319,7 @@ describe('usePickProgress', () => {
       const games = createMockGames(1000)
       mockGamesQuery.data.value = createMockEnvelope(games)
 
-      const { progressOverall } = usePickProgress(2026)
+      const { progressOverall } = usePickProgress(SCENARIO_ID, 2026)
 
       expect(progressOverall.value.total).toBe(1000)
     })
@@ -326,9 +328,9 @@ describe('usePickProgress', () => {
       const usePicksStorageSpy = usePicksStorage as any
       const useGamesSpy = useGames as any
 
-      usePickProgress(2027)
+      usePickProgress(SCENARIO_ID, 2027)
 
-      expect(usePicksStorageSpy).toHaveBeenCalledWith(2027)
+      expect(usePicksStorageSpy).toHaveBeenCalledWith(SCENARIO_ID, 2027)
       expect(useGamesSpy).toHaveBeenCalledWith(2027)
     })
 
@@ -336,9 +338,9 @@ describe('usePickProgress', () => {
       const usePicksStorageSpy = usePicksStorage as any
       const useGamesSpy = useGames as any
 
-      usePickProgress()
+      usePickProgress(SCENARIO_ID)
 
-      expect(usePicksStorageSpy).toHaveBeenCalledWith(2026)
+      expect(usePicksStorageSpy).toHaveBeenCalledWith(SCENARIO_ID, 2026)
       expect(useGamesSpy).toHaveBeenCalledWith(2026)
     })
   })
@@ -356,7 +358,7 @@ describe('usePickProgress', () => {
         }
       }
 
-      const { progressOverall, progressForWeek } = usePickProgress(2026)
+      const { progressOverall, progressForWeek } = usePickProgress(SCENARIO_ID, 2026)
 
       const week1 = progressForWeek(1)
       const week2 = progressForWeek(2)

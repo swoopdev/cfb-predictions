@@ -37,7 +37,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 3, total: 14 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 1 }
+      props: { scenarioId: 'scenario-1', weekNum: 1 }
     })
 
     expect(wrapper.text()).toContain('3/14 picked')
@@ -47,7 +47,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 7, total: 14 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 2 }
+      props: { scenarioId: 'scenario-1', weekNum: 2 }
     })
 
     const text = wrapper.text()
@@ -59,7 +59,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 2, total: 10 }))
 
     mount(PickProgressWeek, {
-      props: { weekNum: 5 }
+      props: { scenarioId: 'scenario-1', weekNum: 5 }
     })
 
     expect(mockProgressForWeek).toHaveBeenCalledWith(5)
@@ -70,10 +70,10 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 0, total: 0 }))
 
     mount(PickProgressWeek, {
-      props: { weekNum: 1, season: 2027 }
+      props: { scenarioId: 'scenario-1', weekNum: 1, season: 2027 }
     })
 
-    expect(usePickProgressSpy).toHaveBeenCalledWith(2027)
+    expect(usePickProgressSpy).toHaveBeenCalledWith('scenario-1', 2027)
   })
 
   it('should default to season 2026', () => {
@@ -81,17 +81,17 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 0, total: 0 }))
 
     mount(PickProgressWeek, {
-      props: { weekNum: 1 }
+      props: { scenarioId: 'scenario-1', weekNum: 1 }
     })
 
-    expect(usePickProgressSpy).toHaveBeenCalledWith(2026)
+    expect(usePickProgressSpy).toHaveBeenCalledWith('scenario-1', 2026)
   })
 
   it('should handle zero progress for a week', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 0, total: 14 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 3 }
+      props: { scenarioId: 'scenario-1', weekNum: 3 }
     })
 
     expect(wrapper.text()).toContain('0/14 picked')
@@ -101,7 +101,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 14, total: 14 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 4 }
+      props: { scenarioId: 'scenario-1', weekNum: 4 }
     })
 
     expect(wrapper.text()).toContain('14/14 picked')
@@ -111,7 +111,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 0, total: 0 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 15 } // Assuming week 15 has no games
+      props: { scenarioId: 'scenario-1', weekNum: 15 } // Assuming week 15 has no games
     })
 
     expect(wrapper.text()).toContain('0/0 picked')
@@ -122,7 +122,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(mockProgress)
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 1 }
+      props: { scenarioId: 'scenario-1', weekNum: 1 }
     })
 
     expect(wrapper.text()).toContain('3/14 picked')
@@ -138,7 +138,7 @@ describe('PickProgressWeek Component', () => {
     mockProgressForWeek.mockReturnValue(ref({ picked: 5, total: 10 }))
 
     const wrapper = mount(PickProgressWeek, {
-      props: { weekNum: 1 }
+      props: { scenarioId: 'scenario-1', weekNum: 1 }
     })
 
     // Track: muted background, clipping the fill. The week bar is deliberately
@@ -175,9 +175,9 @@ describe('PickProgressWeek Component', () => {
       return ref(progressByWeek[weekNum] || { picked: 0, total: 0 })
     })
 
-    const wrapper1 = mount(PickProgressWeek, { props: { weekNum: 1 } })
-    const wrapper2 = mount(PickProgressWeek, { props: { weekNum: 2 } })
-    const wrapper3 = mount(PickProgressWeek, { props: { weekNum: 3 } })
+    const wrapper1 = mount(PickProgressWeek, { props: { scenarioId: 'scenario-1', weekNum: 1 } })
+    const wrapper2 = mount(PickProgressWeek, { props: { scenarioId: 'scenario-1', weekNum: 2 } })
+    const wrapper3 = mount(PickProgressWeek, { props: { scenarioId: 'scenario-1', weekNum: 3 } })
 
     expect(wrapper1.text()).toContain('5/12 picked')
     expect(wrapper2.text()).toContain('3/14 picked')

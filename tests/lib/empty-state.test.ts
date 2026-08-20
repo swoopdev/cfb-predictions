@@ -38,9 +38,13 @@ describe('determineEmptyStateVariant', () => {
   })
 })
 
-describe('week/[week].vue empty-state copy', () => {
+describe('PicksWorkspace.vue empty-state copy', () => {
+  // Phase 7 (Plan 07-05): the empty-state branches relocated from
+  // app/pages/week/[week].vue into app/components/PicksWorkspace.vue, the
+  // component now mounted with :key="activeScenarioId" -- see 07-05-PLAN.md
+  // Task 2. This source-grounding check follows the copy to its new home.
   const source = readFileSync(
-    fileURLToPath(new URL('../../app/pages/week/[week].vue', import.meta.url)),
+    fileURLToPath(new URL('../../app/components/PicksWorkspace.vue', import.meta.url)),
     'utf-8'
   )
 

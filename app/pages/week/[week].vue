@@ -3,7 +3,7 @@ import type { LocationQueryRaw } from 'vue-router'
 import type { Ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
-import { fillWeekRemaining, clearWeek } from '~/utils/bulkPickOperations'
+import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,7 +17,7 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 
 // Pick state: loaded from localStorage and reactive
 const picks: Ref<Record<number, number>> = usePicksStorage(2026)
-const { markAutoFilled } = useAutoFilledGames(2026)
+const { autoFilled, markAutoFilled } = useAutoFilledGames(2026)
 
 // Conference championship winner picks: `{ conferenceName: winningTeamId }`,
 // separate from `picks` because a championship matchup has no real CFBD
@@ -118,9 +118,21 @@ function handleFillWeek() {
   markAutoFilled(autoFilledIds)
 }
 
+function handleFillSeason() {
+  if (!games.value?.games) return
+  const { newPicks, autoFilledIds } = fillSeasonRemaining(games.value.games, picks.value)
+  picks.value = newPicks
+  markAutoFilled(autoFilledIds)
+}
+
 function handleClearWeek() {
   if (!games.value?.games) return
   picks.value = clearWeek(games.value.games, week.value, picks.value)
+}
+
+function handleClearSeason() {
+  picks.value = clearSeason()
+  autoFilled.value.splice(0) // Also clear provenance tracking
 }
 </script>
 
@@ -178,6 +190,25 @@ function handleClearWeek() {
                   @click="handleClearWeek"
                 >
                   Clear Week
+                </UButton>
+                <!-- Season-wide equivalents, right of their per-week
+                     counterparts (this task) -- no separate progress bar,
+                     no separate row. -->
+                <UButton
+                  :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
+                  variant="ghost"
+                  size="sm"
+                  @click="handleFillSeason"
+                >
+                  Fill Season
+                </UButton>
+                <UButton
+                  :disabled="Object.keys(picks).length === 0"
+                  variant="ghost"
+                  size="sm"
+                  @click="handleClearSeason"
+                >
+                  Clear Season
                 </UButton>
               </div>
             </div>

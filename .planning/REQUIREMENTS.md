@@ -60,18 +60,18 @@
 
 ### Scenarios (SCEN)
 
-- [ ] **SCEN-01**: User can create multiple named prediction scenarios, each with its own independent set of picks
-- [ ] **SCEN-02**: User can switch between saved scenarios
-- [ ] **SCEN-03**: User can rename or delete a saved scenario, with confirmation required for delete
-- [ ] **SCEN-04**: User can duplicate an existing scenario under a new name
-- [ ] **SCEN-05**: No account or login is required to create or save scenarios
+- [x] **SCEN-01**: User can create multiple named prediction scenarios, each with its own independent set of picks
+- [x] **SCEN-02**: User can switch between saved scenarios
+- [x] **SCEN-03**: User can rename or delete a saved scenario, with confirmation required for delete
+- [x] **SCEN-04**: User can duplicate an existing scenario under a new name
+- [x] **SCEN-05**: No account or login is required to create or save scenarios
 
 ### Sharing (SHARE)
 
-- [ ] **SHARE-01**: User can generate a shareable URL that encodes a scenario's picks and any manual tiebreaker overrides
-- [ ] **SHARE-02**: Opening a share link does not silently overwrite the visitor's own existing picks — they see a banner indicating they're viewing a shared scenario, with an option to save a copy
-- [ ] **SHARE-03**: If a share link's schedule fingerprint doesn't match the current dataset, the app reports how many picks applied rather than silently misapplying or dropping them
-- [ ] **SHARE-04**: Incoming share-link payloads are validated before being applied (unknown game ids rejected, size capped) since they are untrusted input
+- [x] **SHARE-01**: User can generate a shareable URL that encodes a scenario's picks and any manual tiebreaker overrides
+- [x] **SHARE-02**: Opening a share link does not silently overwrite the visitor's own existing picks — they see a banner indicating they're viewing a shared scenario, with an option to save a copy
+- [x] **SHARE-03**: If a share link's schedule fingerprint doesn't match the current dataset, the app reports how many picks applied rather than silently misapplying or dropping them
+- [x] **SHARE-04**: Incoming share-link payloads are validated before being applied (unknown game ids rejected, size capped) since they are untrusted input
 
 ## v2 Requirements
 
@@ -153,15 +153,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | TIE-06 | Phase 6 | Pending |
 | TIE-07 | Phase 6 | Pending |
 | TIE-08 | Phase 6 | Complete |
-| SCEN-01 | Phase 7 | Pending |
-| SCEN-02 | Phase 7 | Pending |
-| SCEN-03 | Phase 7 | Pending |
-| SCEN-04 | Phase 7 | Pending |
-| SCEN-05 | Phase 7 | Pending |
-| SHARE-01 | Phase 8 | Pending |
-| SHARE-02 | Phase 8 | Pending |
-| SHARE-03 | Phase 8 | Pending |
-| SHARE-04 | Phase 8 | Pending |
+| SCEN-01 | Phase 7 | Complete |
+| SCEN-02 | Phase 7 | Complete |
+| SCEN-03 | Phase 7 | Complete |
+| SCEN-04 | Phase 7 | Complete |
+| SCEN-05 | Phase 7 | Complete |
+| SHARE-01 | Phase 8 | Complete |
+| SHARE-02 | Phase 8 | Complete |
+| SHARE-03 | Phase 8 | Complete |
+| SHARE-04 | Phase 8 | Complete |
 
 **Coverage:**
 

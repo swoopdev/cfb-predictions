@@ -24,8 +24,8 @@ Requirement count note: REQUIREMENTS.md's own "Coverage" line said 42; a direct 
 - [x] **Phase 4.1: Picks & Persistence — UI Polish** - Progress bars, white picked-card backgrounds, repositioned buttons, conference-grouped game sections (marked complete 2026-08-19)
 - [x] **Phase 5: Standings Engine & UI** - Live conference standings recomputed from picks, with ties visibly flagged (marked complete 2026-08-19; UAT overridden by user, not manually verified — see 05-UAT.md)
 - [x] **Phase 6: Tiebreaker UI & Championships** - Championship matchups and step-by-step tiebreaker reasoning, wired into standings; manual resolution for non-computable ties (marked complete 2026-08-19; UAT overridden by user, not manually verified — see 06-UAT.md)
-- [ ] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required
-- [ ] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks
+- [x] **Phase 7: Named Scenarios** - Multiple independent, named what-if scenarios with no account required (completed 2026-08-20)
+- [x] **Phase 8: Share Links** - Shareable URLs that encode a scenario without clobbering the visitor's own picks (completed 2026-08-20)
 
 ## Phase Details
 
@@ -252,7 +252,22 @@ Plans:
   2. User can rename or delete a scenario (delete requires confirmation), and duplicate an existing scenario under a new name
   3. All of the above works with no login or account
 
-**Plans**: TBD
+**Plans**: 5/5 plans complete
+Plans:
+**Wave 1**
+
+- [x] 07-01-PLAN.md — scenarioKeys.ts + ScenarioMeta type; usePicksStorage/useAutoFilledGames/useManualTiebreakers refactored to (scenarioId, season)
+
+**Wave 2** *(blocked on Wave 1 completion; 07-02/07-03/07-04 run in parallel)*
+
+- [x] 07-02-PLAN.md — usePickProgress/useStandings refactored to (scenarioId, season); scenarioId prop added to PickProgress.vue/PickProgressWeek.vue
+- [x] 07-03-PLAN.md — useScenarios composable: registry, active pointer, D-03 migration, create/rename/duplicate/delete
+- [x] 07-04-PLAN.md — ScenarioSwitcher.vue (USelectMenu) and DeleteScenarioModal.vue (UModal) components
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [x] 07-05-PLAN.md — PicksWorkspace.vue extraction + week/[week].vue wiring: switcher/modal mounted, :key="activeScenarioId" remount boundary closes the Pitfall 1 leak
+
 **UI hint**: yes
 
 ### Phase 8: Share Links
@@ -268,7 +283,20 @@ Plans:
   3. If a share link's schedule fingerprint doesn't match the current dataset, the app reports how many picks applied rather than silently misapplying or dropping them
   4. Malformed or malicious share payloads (unknown game ids, oversized payloads) are rejected rather than applied
 
-**Plans**: TBD
+**Plans**: 3/3 plans complete
+Plans:
+**Wave 1**
+
+- [x] 08-01-PLAN.md — shared/domain/shareLink.ts codec (9-byte header, bitpack, TLV overrides) + hoisted TLV validator
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [x] 08-02-PLAN.md — Share link generation: ScenarioSwitcher Share action, ShareLinkModal, handleShare wiring
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [x] 08-03-PLAN.md — Opening a share link: useSharedPreview, SharedScenarioBanner, PicksWorkspace preview prop, save-a-copy
+
 **UI hint**: yes
 
 ## Progress
@@ -285,5 +313,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Ph
 | 4.1. Picks & Persistence — UI Polish | 1/1 | Complete | 2026-08-19 |
 | 5. Standings Engine & UI | 3/3 | Complete (UAT overridden) | 2026-08-19 |
 | 6. Tiebreaker UI & Championships | 7/7 | Complete (UAT overridden) | 2026-08-19 |
-| 7. Named Scenarios | 0/TBD | Not started | - |
-| 8. Share Links | 0/TBD | Not started | - |
+| 7. Named Scenarios | 5/5 | Complete    | 2026-08-20 |
+| 8. Share Links | 3/3 | Complete   | 2026-08-20 |

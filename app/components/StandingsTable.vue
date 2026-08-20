@@ -7,10 +7,8 @@
 // left untestable).
 import { computed, ref, useId } from 'vue'
 import type { StandingsTeam } from '#shared/types/standings'
-import type { Team } from '#shared/types/schedule'
 import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { championshipFor } from '#shared/domain/tiebreakers/engine'
-import ChampionshipCard from './ChampionshipCard.vue'
 import TiebreakerReasoning from './TiebreakerReasoning.vue'
 
 /**
@@ -64,17 +62,11 @@ const props = withDefaults(defineProps<{
    */
   showHeading?: boolean
   /**
-   * Full team lookup (this task), threaded straight through to
-   * `ChampionshipCard` for logos/colors -- this component holds no team
-   * data of its own beyond the already-ranked `standings` rows it's given.
-   */
-  teamsById?: ReadonlyMap<number, Team>
-  /**
-   * `{ conferenceName: winningTeamId }` (this task), from
-   * `useChampionshipPicksStorage`, threaded straight through to
-   * `ChampionshipCard`, which is the only place that reads or mutates it.
-   * Also read here (display-only, see `displayOverallRecord` below) to
-   * reflect a picked championship result in the standings table itself.
+   * `{ conferenceName: winningTeamId }`, from `useChampionshipPicksStorage`.
+   * The championship pick itself is now made on the week 14 page's own
+   * `ChampionshipCard` grid, not here -- this is read display-only (see
+   * `displayOverallRecord` below) to reflect a picked championship result in
+   * the standings table's overall record.
    */
   championshipPicks?: Record<string, number>
 }>(), {
@@ -82,33 +74,18 @@ const props = withDefaults(defineProps<{
   slateComplete: undefined,
   commitOrdering: undefined,
   showHeading: true,
-  teamsById: undefined,
   championshipPicks: undefined
 })
 
 const headingId = useId()
 
 /**
- * §5.1/Task 3: built from the SAME `standings` rows already passed in --
- * every row already carries `id` and `school`, so `ChampionshipCard` needs
- * no separate teams data source. An empty `standings` array (not-yet-loaded
- * or a genuinely empty conference) yields an empty map, which is exactly the
- * signal `ChampionshipCard`'s loading state reads (see that component's
- * `state` computed).
+ * §7.1: `TiebreakerReasoning`'s own school lookup, built from the SAME
+ * `standings` rows already passed in -- every row already carries `id` and
+ * `school`, so no separate teams data source is needed.
  */
 const schoolById = computed<ReadonlyMap<number, string>>(
   () => new Map(props.standings.map(team => [team.id, team.school]))
-)
-
-/**
- * §10 empty-state predicate: true when any row has at least one picked
- * conference game. A picked conference game always produces exactly one win
- * and one loss for its two participants, so summing `confRecord` per row is
- * equivalent to counting picked conference games directly, without pulling
- * the games slate into this component.
- */
-const hasPickedConferenceGames = computed<boolean>(() =>
-  props.standings.some(team => team.confRecord.wins + team.confRecord.losses > 0)
 )
 
 /**
@@ -306,22 +283,6 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
     >
       {{ conferenceName }}
     </h3>
-
-    <!-- Task 3/§5.1: rendered between the heading and the table, inside this
-         SAME `<section>` -- placing it in `StandingsSidebar` instead would
-         put it above the heading and break the `aria-labelledby` grouping.
-         Guarded by the same zero-teams check as the table itself: no card
-         (and no table) when a conference genuinely has no rows. -->
-    <ChampionshipCard
-      v-if="standings.length > 0"
-      :ranking="ranking"
-      :school-by-id="schoolById"
-      :has-picked-conference-games="hasPickedConferenceGames"
-      :slate-complete="slateComplete ?? false"
-      :conference-name="(conferenceName as ConferenceId)"
-      :teams-by-id="teamsById"
-      :championship-picks="championshipPicks"
-    />
 
     <p
       v-if="standings.length === 0"

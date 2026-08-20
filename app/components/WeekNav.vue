@@ -10,9 +10,8 @@ const emit = defineEmits<{ navigate: [week: number] }>()
 
 const boundary = computed(() => isWeekBoundary(props.week))
 
-// Post-D-15: week 14 was removed from `WEEKS` entirely, so Prev/Next must
-// jump to the nearest NAVIGABLE neighbor (getAdjacentWeek) rather than
-// stepping by ±1, which would land on the now-unreachable week 14.
+// Steps to the nearest NAVIGABLE neighbor in `WEEKS` (getAdjacentWeek)
+// rather than by ±1, so this stays correct if `WEEKS` ever has another gap.
 function goPrev() {
   emit('navigate', getAdjacentWeek(props.week, 'prev'))
 }
@@ -25,12 +24,11 @@ function goNext() {
 // use USelect's default `label-key`/`value-key`, so no extra props needed
 // beyond passing them explicitly for clarity).
 //
-// WR-02: `WEEKS` intentionally excludes 14 (D-15, zero games), but the
-// `/week/14` route still resolves for a direct deep link. Without a
-// matching item, USelect has nothing to bind `picked` to and the trigger
-// renders as unselected even though Prev/Next (getAdjacentWeek) already
-// handle 14 correctly. Synthesize a transient item for any week not in
-// `WEEKS` so the picker always has something to display.
+// WR-02: defensive fallback for any week not in `WEEKS` (e.g. a direct deep
+// link to an out-of-range week). Without a matching item, USelect has
+// nothing to bind `picked` to and the trigger renders as unselected.
+// Synthesize a transient item so the picker always has something to
+// display.
 const weekItems = computed(() => {
   const items = WEEKS.map(w => ({ label: `Week ${w}`, value: w }))
   if (!WEEKS.includes(props.week)) {

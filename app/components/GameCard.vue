@@ -123,7 +123,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 
     <!-- Away team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 mt-2 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
       :class="{
         'border-l-8': pickedTeamId === away.id,
         'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== away.id

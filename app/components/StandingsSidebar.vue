@@ -6,7 +6,6 @@
 // reasoning as StandingsTable's own header note).
 import { computed } from 'vue'
 import type { StandingsResult } from '#shared/types/standings'
-import type { Team } from '#shared/types/schedule'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
 import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
@@ -31,10 +30,10 @@ const props = withDefaults(defineProps<{
    */
   standings: StandingsResult | undefined
   /**
-   * The active conference filter, straight from `?conf=` (Phase 2). `null` /
-   * `undefined` means "All".
+   * The active conference filter(s), straight from `?conf=` (Phase 2, now
+   * multi-select). Empty array / `null` / `undefined` means "All".
    */
-  activeConference?: string | null
+  activeConference?: string[] | null
   /**
    * Output of `useStandings()` (Plan 06-04, TIE-07). `Partial` because a
    * conference is omitted when its tiebreaker resolution threw (see
@@ -62,28 +61,17 @@ const props = withDefaults(defineProps<{
    */
   commitOrdering?: (conference: ConferenceId, group: RankGroup, orderedTeamIds: readonly TeamId[]) => void
   /**
-   * Full team lookup (this task) -- threaded straight through to every
-   * `StandingsTable`/`ChampionshipCard` so the championship matchup can
-   * render team logos/colors, the same way `GameCard` does for the regular
-   * slate. Optional/defaulted to an empty `Map`: the championship picker
-   * simply degrades to its plain-text form (no logos, no picking) rather
-   * than throwing when a caller doesn't have teams loaded yet.
-   */
-  teamsById?: ReadonlyMap<number, Team>
-  /**
-   * `{ conferenceName: winningTeamId }` (this task), from
-   * `useChampionshipPicksStorage`. Mutated directly by `ChampionshipCard`
-   * exactly the way `GameCard` mutates its own `picks` prop -- this
-   * component holds no storage knowledge of its own, same as
-   * `commitOrdering` above.
+   * `{ conferenceName: winningTeamId }`, from `useChampionshipPicksStorage`.
+   * The championship picker itself now lives on the week 14 page, not here
+   * -- this is threaded straight through to `StandingsTable`, display-only,
+   * so a picked result still reflects in the standings' overall record.
    */
   championshipPicks?: Record<string, number>
 }>(), {
-  activeConference: null,
+  activeConference: () => [],
   rankings: undefined,
   slateComplete: undefined,
   commitOrdering: undefined,
-  teamsById: undefined,
   championshipPicks: undefined
 })
 
@@ -111,18 +99,19 @@ function isP4Conference(value: string): value is ConferenceId {
 
 /**
  * T-05-03/T-06-07: `activeConference` originates in a user-controlled URL
- * query param. Anything that is not one of the four P4 conference names — an
- * unknown or hand-edited string, the literal "All" sentinel, or a G5
- * conference that has no standings in v1 — is treated as "no filter" rather
- * than rendering an empty or broken panel.
+ * query param (now multi-select). Anything that is not one of the four P4
+ * conference names — an unknown or hand-edited string, or a G5 conference
+ * that has no standings in v1 — is dropped rather than rendering an empty or
+ * broken panel. Order follows `P4_ORDER`, not selection order, so the panel
+ * stays stable regardless of pick order.
  */
-const selectedConference = computed<ConferenceId | null>(() => {
-  const value = props.activeConference
-  return typeof value === 'string' && isP4Conference(value) ? value : null
+const selectedConferences = computed<ConferenceId[]>(() => {
+  const values = props.activeConference ?? []
+  return P4_ORDER.filter(c => values.includes(c) && isP4Conference(c))
 })
 
 const visibleConferences = computed<ConferenceId[]>(() =>
-  selectedConference.value ? [selectedConference.value] : [...P4_ORDER]
+  selectedConferences.value.length > 0 ? selectedConferences.value : [...P4_ORDER]
 )
 
 /**
@@ -141,10 +130,8 @@ const accordionItems = computed(() =>
  * user's filter.
  */
 const showsUnfilterableNote = computed<boolean>(() =>
-  typeof props.activeConference === 'string'
-  && props.activeConference !== ''
-  && props.activeConference !== 'All'
-  && selectedConference.value === null
+  (props.activeConference?.length ?? 0) > 0
+  && selectedConferences.value.length === 0
 )
 
 // Sidebar open/collapsed state (D-01). Owned by the parent via v-model so a
@@ -171,9 +158,9 @@ const open = defineModel<boolean>('open', { default: true })
     :ui="{
       root: 'shrink-0 data-[state=collapsed]:hidden',
       gap: 'hidden',
-      container: 'static lg:sticky lg:top-6 z-[60] flex h-auto max-h-none lg:max-h-[calc(100vh-6rem)] w-full lg:w-(--sidebar-width) border-s-0 end-auto',
-      inner: 'divide-y divide-default rounded-lg ring ring-default bg-default overflow-hidden',
-      body: 'overflow-y-auto p-3 sm:p-4'
+      container: 'static lg:sticky lg:top-0 z-[60] flex h-auto lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
+      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden',
+      body: 'p-3 sm:p-4'
     }"
   >
     <template #default="{ state }">
@@ -212,7 +199,6 @@ const open = defineModel<boolean>('open', { default: true })
               :slate-complete="slateComplete?.[(item.value as ConferenceId)] ?? false"
               :commit-ordering="commitOrdering"
               :show-heading="false"
-              :teams-by-id="teamsById"
               :championship-picks="championshipPicks"
             />
           </template>

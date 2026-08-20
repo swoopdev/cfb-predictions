@@ -234,11 +234,22 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
   if (props.ranking === undefined) return 'error'
   return 'matchup'
 })
+
+/**
+ * Week 14 placeholder (this task): the card itself is now always visible on
+ * the week 14 page, one per conference, rather than only appearing once
+ * `slateComplete`. Before the conference's own regular season is fully
+ * picked, both matchup slots render as "TBD" instead of the resolved
+ * name/candidate-list presentation below — `pickable`, `primary`,
+ * `secondary` etc. all stay gated on `slateComplete` exactly as before, so
+ * nothing here changes when a real matchup becomes pickable.
+ */
+const isPlaceholder = computed(() => !props.slateComplete)
 </script>
 
 <template>
   <UCard
-    v-if="slateComplete && (state === 'matchup' || state === 'error')"
+    v-if="state !== 'loading'"
     :ui="{
       root: 'relative bg-transparent ring-1 ring-primary overflow-visible mb-4',
       body: 'p-3 sm:p-3'
@@ -261,7 +272,22 @@ const state = computed<'loading' | 'empty' | 'error' | 'matchup'>(() => {
       />
     </div>
 
-    <template v-if="state === 'error'">
+    <!-- Placeholder: the conference's own regular season isn't fully picked
+         yet, so there's nothing real to show -- both slots read "TBD" rather
+         than the card being absent entirely (this task). -->
+    <template v-if="isPlaceholder">
+      <p class="text-base font-semibold text-dimmed pt-2">
+        TBD
+      </p>
+      <p class="text-xs text-dimmed">
+        vs.
+      </p>
+      <p class="text-base font-semibold text-dimmed">
+        TBD
+      </p>
+    </template>
+
+    <template v-else-if="state === 'error'">
       <p class="text-xs font-semibold uppercase tracking-wide text-muted pt-2">
         Tiebreakers unavailable
       </p>

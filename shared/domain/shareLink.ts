@@ -41,6 +41,89 @@ export class ShareLinkTooLargeError extends Error {
 const HEADER_BYTES = 9
 
 /**
+ * Wire versions. `1` is the original uncompressed layout (header followed by
+ * the raw pick bitfield + optional TLV section); `2` is byte-identical except
+ * that everything AFTER the 9-byte header is `deflate-raw`-compressed.
+ *
+ * The header itself is never compressed -- it is only 9 bytes, and keeping it
+ * in the clear means `version`/`gameCount` can be read (and the payload
+ * length-checked) before any decompression is attempted.
+ *
+ * `encodeShareLink` emits whichever of the two is SHORTER, so a v2 link is
+ * never longer than the v1 link for the same scenario, and `decodeShareLink`
+ * still reads v1 codes shared before compression existed.
+ */
+const VERSION_UNCOMPRESSED = 1
+const VERSION_DEFLATED = 2
+
+/**
+ * Hard ceiling on the INFLATED payload, checked while inflating rather than
+ * after. `decodeShareLink` is this app's untrusted-input boundary, and
+ * `deflate-raw` trivially compresses a multi-megabyte run of zero bytes into
+ * a few hundred characters -- without this cap a share link well under
+ * `MAX_FRAGMENT_CHARS` could still expand into an allocation large enough to
+ * hang the tab. 64 KiB is ~200x the largest legitimate payload (a full
+ * 888-game bitfield plus a cap-compliant TLV section is well under 1 KiB).
+ */
+const MAX_INFLATED_BYTES = 64 * 1024
+
+/** True when the browser/runtime exposes the Compression Streams API. */
+function hasCompressionStreams(): boolean {
+  return typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined'
+}
+
+/**
+ * `deflate-raw`-compresses `input`. Returns `null` when the API is
+ * unavailable or the stream errors -- callers fall back to emitting an
+ * uncompressed v1 code, so compression is strictly an optimization and never
+ * a correctness dependency.
+ */
+async function deflateRaw(input: Uint8Array): Promise<Uint8Array | null> {
+  if (!hasCompressionStreams()) return null
+  try {
+    const stream = new Blob([input as BlobPart]).stream().pipeThrough(new CompressionStream('deflate-raw'))
+    return new Uint8Array(await new Response(stream).arrayBuffer())
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Inflates a `deflate-raw` payload, aborting past `MAX_INFLATED_BYTES`.
+ * Returns `null` on any failure (unavailable API, corrupt stream, or the
+ * bomb cap) so the caller degrades to `{status: 'malformed'}` rather than
+ * throwing out of the decode path (D-11).
+ */
+async function inflateRaw(input: Uint8Array): Promise<Uint8Array | null> {
+  if (!hasCompressionStreams()) return null
+  try {
+    const stream = new Blob([input as BlobPart]).stream().pipeThrough(new DecompressionStream('deflate-raw'))
+    const reader = stream.getReader()
+    const chunks: Uint8Array[] = []
+    let total = 0
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      total += value.length
+      if (total > MAX_INFLATED_BYTES) {
+        await reader.cancel()
+        return null
+      }
+      chunks.push(value)
+    }
+    const out = new Uint8Array(total)
+    let offset = 0
+    for (const chunk of chunks) {
+      out.set(chunk, offset)
+      offset += chunk.length
+    }
+    return out
+  } catch {
+    return null
+  }
+}
+
+/**
  * Base64url-encodes raw bytes: builds a binary string via `String.fromCharCode`,
  * `btoa`s it, then substitutes the URL-safe alphabet and strips padding.
  */
@@ -72,7 +155,7 @@ function fromBase64Url(str: string): Uint8Array | null {
 
 /** Writes the 9-byte header: version(u8)=1, season(u16), scheduleHash(u32), gameCount(u16). */
 function writeHeader(view: DataView, season: number, scheduleHashHex: string, gameCount: number): void {
-  view.setUint8(0, 1)
+  view.setUint8(0, VERSION_UNCOMPRESSED)
   view.setUint16(1, season, false)
   view.setUint32(3, parseInt(scheduleHashHex, 16), false)
   view.setUint16(7, gameCount, false)
@@ -126,7 +209,7 @@ export interface EncodeShareLinkParams {
  * inconsistent or oversized payload that `decodeShareLink` would silently
  * reject later with no error ever shown to the sharer.
  */
-export function encodeShareLink(params: EncodeShareLinkParams): string {
+export async function encodeShareLink(params: EncodeShareLinkParams): Promise<string> {
   const sorted = [...params.games].sort((a, b) => a.id - b.id)
   const gameCount = sorted.length
   const bitfieldBytes = Math.ceil((gameCount * 2) / 8)
@@ -157,7 +240,26 @@ export function encodeShareLink(params: EncodeShareLinkParams): string {
     bytes.set(jsonBytes!, tlvOffset + 3)
   }
 
-  const code = toBase64Url(bytes)
+  // Compression (v2): the pick bitfield is fixed-width -- 888 games always
+  // cost 222 bytes (~308 base64url chars) even when only a handful of games
+  // are picked, since every unpicked game still spends its 2 bits. Those runs
+  // of zero bytes are exactly what `deflate-raw` is best at: a 5-pick
+  // scenario drops from ~308 chars to ~24, a 25-pick one to ~76, and even a
+  // fully-picked season to ~188. The uncompressed form is kept whenever
+  // deflate fails to help (or is unavailable), so the emitted code is never
+  // longer than v1 would have been.
+  const payload = bytes.subarray(HEADER_BYTES)
+  const deflated = await deflateRaw(payload)
+
+  let out = bytes
+  if (deflated !== null && deflated.length < payload.length) {
+    out = new Uint8Array(HEADER_BYTES + deflated.length)
+    out.set(bytes.subarray(0, HEADER_BYTES))
+    out.set(deflated, HEADER_BYTES)
+    out[0] = VERSION_DEFLATED
+  }
+
+  const code = toBase64Url(out)
   // WR-02: MAX_FRAGMENT_CHARS's own doc comment above materially understated
   // the worst-case TLV size `invalidation.ts`'s own caps permit -- enforce
   // the budget explicitly here rather than letting it surface later as
@@ -203,19 +305,37 @@ export type DecodeShareLinkResult = DecodedShareLink | { status: 'malformed' }
  * positional (keyed by decision hash, not by array index) so it's applied
  * regardless of hash match.
  */
-export function decodeShareLink(
+export async function decodeShareLink(
   code: string,
   currentGames: readonly Game[],
   currentScheduleHash: string
-): DecodeShareLinkResult {
+): Promise<DecodeShareLinkResult> {
   if (code.length > MAX_FRAGMENT_CHARS) return { status: 'malformed' }
 
-  const bytes = fromBase64Url(code)
-  if (!bytes) return { status: 'malformed' }
-  if (bytes.length < HEADER_BYTES) return { status: 'malformed' }
+  const raw = fromBase64Url(code)
+  if (!raw) return { status: 'malformed' }
+  if (raw.length < HEADER_BYTES) return { status: 'malformed' }
 
-  const header = readHeader(new DataView(bytes.buffer))
-  if (header.version !== 1) return { status: 'malformed' }
+  const header = readHeader(new DataView(raw.buffer))
+  if (header.version !== VERSION_UNCOMPRESSED && header.version !== VERSION_DEFLATED) {
+    return { status: 'malformed' }
+  }
+
+  // A v2 code carries a plaintext header followed by a deflated payload.
+  // Re-materializing it as one contiguous `header + inflated payload` array
+  // means every offset below (and `readTlvOverrides`) stays identical for
+  // both wire versions -- there is exactly one layout to reason about once
+  // this step is done.
+  let bytes: Uint8Array
+  if (header.version === VERSION_DEFLATED) {
+    const inflated = await inflateRaw(raw.subarray(HEADER_BYTES))
+    if (!inflated) return { status: 'malformed' }
+    bytes = new Uint8Array(HEADER_BYTES + inflated.length)
+    bytes.set(raw.subarray(0, HEADER_BYTES))
+    bytes.set(inflated, HEADER_BYTES)
+  } else {
+    bytes = raw
+  }
 
   const bitfieldBytes = Math.ceil((header.gameCount * 2) / 8)
   if (bytes.length < HEADER_BYTES + bitfieldBytes) return { status: 'malformed' }

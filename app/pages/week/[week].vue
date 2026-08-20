@@ -62,7 +62,7 @@ const shareModalOpen = computed({
 // value (matching those composables' own D-07/D-08 corruption disposition)
 // instead of throwing out of a click handler. Zero localStorage writes
 // anywhere in this function (D-07).
-function handleShare(id: string) {
+async function handleShare(id: string) {
   if (!games.value) return
   const target = scenarios.value.find(s => s.id === id)
   if (!target) return
@@ -86,7 +86,7 @@ function handleShare(id: string) {
 
   let code: string
   try {
-    code = encodeShareLink({
+    code = await encodeShareLink({
       games: games.value.games,
       season: 2026,
       scheduleHash: games.value.scheduleHash,

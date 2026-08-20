@@ -48,12 +48,16 @@ export function useSharedPreview(games: Ref<GamesEnvelope | undefined>, hash: Re
 
   watch(
     [shareCode, games],
-    ([code, gamesValue]) => {
+    async ([code, gamesValue]) => {
       if (consumed.value) return
       if (!code || !gamesValue) return
 
-      const result = decodeShareLink(code, gamesValue.games, gamesValue.scheduleHash)
+      // `consumed` is set BEFORE the await, not after: `decodeShareLink` is
+      // async as of the v2 (deflate-raw) wire format, and a `games` refetch
+      // landing while the first decode is still in flight would otherwise
+      // start a second, concurrent decode of the same link.
       consumed.value = true
+      const result = await decodeShareLink(code, gamesValue.games, gamesValue.scheduleHash)
 
       if (result.status === 'malformed') {
         bannerVariant.value = 'malformed'

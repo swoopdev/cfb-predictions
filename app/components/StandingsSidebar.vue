@@ -5,6 +5,7 @@
 // project's vitest config registers no Nuxt auto-import plugin — same
 // reasoning as StandingsTable's own header note).
 import { computed } from 'vue'
+import type { Team } from '#shared/types/schedule'
 import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
@@ -29,6 +30,12 @@ const props = withDefaults(defineProps<{
    * instead).
    */
   standings: StandingsResult | undefined
+  /**
+   * Team lookup for logos (this task) -- threaded straight through to
+   * `StandingsTable`, which is where the logo is actually rendered. This
+   * component performs no team lookup of its own.
+   */
+  teamsById?: Map<number, Team>
   /**
    * The active conference filter(s), straight from `?conf=` (Phase 2, now
    * multi-select). Empty array / `null` / `undefined` means "All".
@@ -68,6 +75,7 @@ const props = withDefaults(defineProps<{
    */
   championshipPicks?: Record<string, number>
 }>(), {
+  teamsById: () => new Map(),
   activeConference: () => [],
   rankings: undefined,
   slateComplete: undefined,
@@ -156,10 +164,10 @@ const open = defineModel<boolean>('open', { default: true })
     aria-label="Conference standings"
     :style="{ '--sidebar-width': '26rem' }"
     :ui="{
-      root: 'shrink-0 data-[state=collapsed]:hidden',
+      root: 'shrink-0 h-auto lg:h-full lg:min-h-screen data-[state=collapsed]:hidden',
       gap: 'hidden',
-      container: 'static lg:sticky lg:top-0 z-[60] flex h-auto lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
-      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden',
+      container: 'static lg:sticky lg:top-0 z-[60] flex h-auto lg:h-full lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
+      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden h-full',
       body: 'p-3 sm:p-4'
     }"
   >
@@ -194,6 +202,7 @@ const open = defineModel<boolean>('open', { default: true })
           <template #body="{ item }">
             <StandingsTable
               :standings="standings?.[(item.value as ConferenceId)] ?? []"
+              :teams-by-id="teamsById"
               :conference-name="item.value"
               :ranking="rankings?.[(item.value as ConferenceId)]"
               :slate-complete="slateComplete?.[(item.value as ConferenceId)] ?? false"

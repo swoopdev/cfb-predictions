@@ -6,6 +6,7 @@
 // auto-import plugin — see GameCard.test.ts's note on why its component was
 // left untestable).
 import { computed, ref, useId } from 'vue'
+import type { Team } from '#shared/types/schedule'
 import type { StandingsTeam } from '#shared/types/standings'
 import type { ConferenceId, ConferenceRanking, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { championshipFor } from '#shared/domain/tiebreakers/engine'
@@ -48,6 +49,15 @@ import TiebreakerReasoning from './TiebreakerReasoning.vue'
  */
 const props = withDefaults(defineProps<{
   standings: readonly StandingsTeam[]
+  /**
+   * Team lookup for logos (this task): `standings` rows don't carry a logo
+   * field (D-01/D-02's display contract is deliberately free of team
+   * metadata the tiebreaker engine doesn't need), so the logo is looked up
+   * by id from the same `teamsById` the rest of the page already resolves,
+   * matching `GameCard`'s own placeholder-shield fallback for a missing
+   * logo.
+   */
+  teamsById?: Map<number, Team>
   conferenceName: string
   ranking?: ConferenceRanking | undefined
   slateComplete?: boolean
@@ -70,6 +80,7 @@ const props = withDefaults(defineProps<{
    */
   championshipPicks?: Record<string, number>
 }>(), {
+  teamsById: () => new Map(),
   ranking: undefined,
   slateComplete: undefined,
   commitOrdering: undefined,
@@ -266,6 +277,12 @@ function markerClass(kind: MarkerKind): string {
 function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
   props.commitOrdering?.(props.conferenceName as ConferenceId, group, order)
 }
+
+const PLACEHOLDER_LOGO = '/logos/placeholder.svg'
+
+function logoFor(team: StandingsTeam): string {
+  return props.teamsById.get(team.id)?.logo ?? PLACEHOLDER_LOGO
+}
 </script>
 
 <template>
@@ -370,7 +387,15 @@ function handleReasoningCommit(group: RankGroup, order: TeamId[]): void {
               scope="row"
               class="py-1.5 pr-2 text-left font-normal text-highlighted"
             >
-              {{ row.team.school }}
+              <div class="flex items-center gap-2">
+                <img
+                  :src="logoFor(row.team)"
+                  alt=""
+                  class="size-5 shrink-0 object-contain"
+                  :class="{ 'dark:brightness-0 dark:invert': logoFor(row.team) === PLACEHOLDER_LOGO }"
+                >
+                <span>{{ row.team.school }}</span>
+              </div>
             </th>
             <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">
               {{ displayOverallRecord(row.team).wins }}-{{ displayOverallRecord(row.team).losses }}

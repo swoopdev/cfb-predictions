@@ -78,6 +78,27 @@ const filteredGames = computed<Game[]>(() =>
   filterGames(rawWeekGames.value, { conf: conf.value, team: teamId.value }, teamsById.value)
 )
 
+// FBS teams with no game this week (this task) -- computed off
+// `rawWeekGames`, never `filteredGames`, since a team's bye is a fact about
+// the week itself, not about the active conf/team filter; the conf/team
+// filter is then applied on top so the bye list still narrows along with
+// the rest of the page. Week 14 (championship week) has no real games at
+// all, so every FBS team would otherwise show as "on bye" there -- the list
+// is suppressed for that week instead.
+const byeTeams = computed<Team[]>(() => {
+  if (isChampionshipWeek.value) return []
+  const playingIds = new Set<number>()
+  for (const game of rawWeekGames.value) {
+    playingIds.add(game.homeId)
+    playingIds.add(game.awayId)
+  }
+  return (teams.value ?? [])
+    .filter(t => t.classification === 'fbs' && !playingIds.has(t.id))
+    .filter(t => conf.value.length === 0 || conf.value.includes(t.conference))
+    .filter(t => teamId.value.length === 0 || teamId.value.includes(t.id))
+    .sort((a, b) => a.school.localeCompare(b.school))
+})
+
 // When teams are selected instead of a conference (D-03: the two filters
 // are mutually exclusive), the standings sidebar should still narrow to
 // just the selected teams' conference(s) rather than showing all four —
@@ -191,7 +212,7 @@ function handleClearSeason() {
          No page-level container/padding here (this task) -- the sidebar
          needs to touch the top and right edge of the screen, so each
          column owns exactly the padding it needs instead. -->
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-0">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-0">
       <div class="min-w-0 flex-1 px-6 lg:px-8 pb-6">
         <!-- Header: week heading, nav, fill/clear and the conference/team
              filter row all live in one sticky block, scoped to this column
@@ -380,6 +401,22 @@ function handleClearSeason() {
               />
             </div>
           </div>
+
+          <!-- Teams with no game this week (this task): one card, not a
+               per-conference grid like the groups above -- byes span every
+               conference at once, so a single card at the end of the slate
+               lists them all together. -->
+          <div v-if="byeTeams.length > 0">
+            <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
+              Byes
+            </h2>
+            <div
+              class="grid gap-4"
+              style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
+            >
+              <ByeCard :teams="byeTeams" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -404,11 +441,12 @@ function handleClearSeason() {
            classes so the two-column layout does not jump when the real
            panel replaces the skeleton. The error branch renders nothing at
            all — the main column has already explained the failure. -->
-      <div class="w-full px-6 pb-6 lg:w-auto lg:shrink-0 lg:px-0 lg:pb-0">
+      <div class="w-full px-6 pb-6 lg:w-auto lg:shrink-0 lg:min-h-screen lg:px-0 lg:pb-0">
         <StandingsSidebar
           v-if="loadState === 'ready'"
           v-model:open="standingsOpen"
           :standings="standings"
+          :teams-by-id="teamsById"
           :active-conference="sidebarConferences"
           :rankings="rankings"
           :slate-complete="slateComplete"

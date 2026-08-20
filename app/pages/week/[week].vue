@@ -6,6 +6,7 @@ import type { ConferenceId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
+import { isWeekBoundary, getAdjacentWeek } from '~/utils/schedule'
 
 const route = useRoute()
 const router = useRouter()
@@ -117,14 +118,24 @@ const sidebarConferences = computed<string[]>(() => {
 
 // D-07, D-14/D-16: games within a week group under their home team's conference
 // (sorted alphabetically), UNLESS a conference filter is active (D-14/D-16), in which case
-// all games involving that conference appear in a single section (D-14/D-16).
+// each SELECTED conference gets its own section rather than being merged
+// into one (this task) -- a game is listed under a selected conference's
+// section if either side belongs to it (matching `filterGames`'s own
+// either-side match), so a cross-conference matchup between two selected
+// conferences appears in both sections rather than being arbitrarily
+// assigned to just the home side's.
 const conferenceGroups = computed(() => {
-  // D-14/D-16: when conference filter is active, show all games in single section
   if (conf.value.length > 0) {
-    return [{
-      conference: `${conf.value.join(', ')} Games`,
-      games: filteredGames.value
-    }]
+    return [...conf.value]
+      .sort((a, b) => a.localeCompare(b))
+      .map(conference => ({
+        conference: `${conference} Games`,
+        games: filteredGames.value.filter(game =>
+          teamsById.value.get(game.homeId)?.conference === conference
+          || teamsById.value.get(game.awayId)?.conference === conference
+        )
+      }))
+      .filter(group => group.games.length > 0)
   }
   // Otherwise, use existing grouping by home team's conference
   return groupByConference(filteredGames.value, teamsById.value)
@@ -149,6 +160,17 @@ const { standings, rankings, slateComplete, commitOrdering } = useStandings(2026
 // SAME `standings`/`rankings`/`slateComplete` the sidebar already computes
 // via `useStandings` (never a second computation of conference standings).
 const isChampionshipWeek = computed(() => week.value === 14)
+
+// Week 14 has no real games to filter by conf/team, so it reuses
+// `sidebarConferences` -- the same conference set the standings sidebar
+// already narrows to for an active conf OR team filter (D-03: mutually
+// exclusive) -- to decide which championship cards to show. An empty
+// `sidebarConferences` means no filter is active, so every P4 conference
+// still renders.
+const visibleP4Conferences = computed<ConferenceId[]>(() => {
+  if (sidebarConferences.value.length === 0) return [...P4_CONFERENCES]
+  return P4_CONFERENCES.filter(conference => sidebarConferences.value.includes(conference))
+})
 
 const championshipSchoolById = computed<Map<ConferenceId, ReadonlyMap<number, string>>>(() => {
   const map = new Map<ConferenceId, ReadonlyMap<number, string>>()
@@ -203,6 +225,14 @@ function handleClearSeason() {
   picks.value = clearSeason()
   autoFilled.value.splice(0) // Also clear provenance tracking
 }
+
+// Advance-week card at the end of the slate (this task): disabled once
+// `week` is already the last navigable entry in `WEEKS`, matching WeekNav's
+// own next-button boundary logic rather than a separate check.
+const nextWeekDisabled = computed(() => isWeekBoundary(week.value).nextDisabled)
+function advanceWeek() {
+  goToWeek(getAdjacentWeek(week.value, 'next'))
+}
 </script>
 
 <template>
@@ -224,27 +254,35 @@ function handleClearSeason() {
         <div
           class="sticky top-0 z-50 bg-default/95 backdrop-blur -mx-6 px-6 lg:-mx-8 lg:px-8 pt-6 pb-4 border-b border-neutral-300 dark:border-neutral-800"
         >
-          <!-- Week heading with per-week progress bar, Fill/Clear Week
-               actions, and navigation, all on one row. Fill/Clear moved here
-               from their own row below the heading (this task) so they sit
-               to the right of the progress bar they act on, rather than
-               occupying a whole separate line. -->
-          <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
-            <!-- Week heading, per-week progress bar, and Fill/Clear Week
-                 actions (D-10, D-02). Fill/Clear sit immediately after the
-                 progress bar they act on, left-aligned with it, rather than
-                 pushed to the far right of the row. -->
-            <div class="flex items-center gap-4 flex-1">
-              <h1 class="text-xl font-semibold">
-                Week {{ week }}
-              </h1>
-              <div class="flex-1 max-w-xs">
-                <PickProgressWeek
-                  :week-num="week"
-                  :games="filteredGames"
-                />
-              </div>
-              <div class="flex gap-2">
+          <!-- Header layout (this task): three rows on mobile -- week nav
+               centered alone on top, conference/team filters side by side
+               below it, then Fill/Clear alongside theme/podium on the
+               bottom row -- collapsing into the single desktop row via
+               `lg:contents` on each row wrapper, with explicit `lg:order-*`
+               on every item so the desktop ordering (nav, filters,
+               Fill/Clear, theme/podium) stays exactly what it was before
+               this task, independent of the mobile DOM grouping. -->
+          <div class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
+            <div class="flex justify-center lg:contents">
+              <!-- Week navigation -->
+              <WeekNav
+                :week="week"
+                class="lg:order-1"
+                @navigate="goToWeek"
+              />
+            </div>
+            <div class="flex flex-nowrap items-center justify-center gap-4 lg:contents">
+              <ConferenceFilter
+                v-model="conf"
+                class="lg:order-2"
+              />
+              <TeamFilter
+                v-model="teamId"
+                class="lg:order-3"
+              />
+            </div>
+            <div class="flex items-center gap-4 lg:contents">
+              <div class="flex gap-2 lg:order-4">
                 <UButton
                   :disabled="filteredGames.filter(g => !(g.id in picks)).length === 0"
                   variant="ghost"
@@ -261,9 +299,6 @@ function handleClearSeason() {
                 >
                   Clear Week
                 </UButton>
-                <!-- Season-wide equivalents, right of their per-week
-                     counterparts (this task) -- no separate progress bar,
-                     no separate row. -->
                 <UButton
                   :disabled="(games?.games ?? []).filter(g => !(g.id in picks)).length === 0"
                   variant="ghost"
@@ -281,27 +316,17 @@ function handleClearSeason() {
                   Clear Season
                 </UButton>
               </div>
-            </div>
-            <!-- Week navigation -->
-            <WeekNav
-              :week="week"
-              @navigate="goToWeek"
-            />
-          </div>
-
-          <div class="flex flex-wrap items-center gap-4">
-            <ConferenceFilter v-model="conf" />
-            <TeamFilter v-model="teamId" />
-            <div class="ml-auto flex items-center gap-2">
-              <UColorModeButton size="xl" />
-              <UButton
-                icon="i-lucide-podium"
-                color="neutral"
-                variant="ghost"
-                size="xl"
-                :aria-label="standingsOpen ? 'Hide standings' : 'Show standings'"
-                @click="standingsOpen = !standingsOpen"
-              />
+              <div class="ml-auto flex items-center gap-2 lg:order-5 lg:ml-auto">
+                <UColorModeButton size="xl" />
+                <UButton
+                  icon="i-lucide-podium"
+                  color="neutral"
+                  variant="ghost"
+                  size="xl"
+                  :aria-label="standingsOpen ? 'Hide standings' : 'Show standings'"
+                  @click="standingsOpen = !standingsOpen"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -341,7 +366,7 @@ function handleClearSeason() {
           style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));"
         >
           <ChampionshipCard
-            v-for="conference in P4_CONFERENCES"
+            v-for="conference in visibleP4Conferences"
             :key="conference"
             :ranking="rankings?.[conference]"
             :school-by-id="championshipSchoolById.get(conference) ?? new Map()"
@@ -382,7 +407,7 @@ function handleClearSeason() {
           class="space-y-8 mt-4"
         >
           <div
-            v-for="group in conferenceGroups"
+            v-for="(group, groupIndex) in conferenceGroups"
             :key="group.conference"
           >
             <h2 class="text-xs font-semibold uppercase tracking-wide text-dimmed mb-3">
@@ -398,6 +423,15 @@ function handleClearSeason() {
                 :game="game"
                 :teams-by-id="teamsById"
                 :picks="picks"
+              />
+              <!-- Advance-week card (this task): when there are no byes,
+                   it joins the last conference group's own grid so it flows
+                   into the same row as the last game cards rather than
+                   starting a new grid/row of its own. -->
+              <AdvanceWeekCard
+                v-if="byeTeams.length === 0 && groupIndex === conferenceGroups.length - 1"
+                :disabled="nextWeekDisabled"
+                @click="advanceWeek"
               />
             </div>
           </div>
@@ -415,6 +449,13 @@ function handleClearSeason() {
               style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"
             >
               <ByeCard :teams="byeTeams" />
+              <!-- Advance-week card (this task): joins the byes grid (the
+                   last row of the slate) so it sits in the same row as the
+                   last card instead of on its own line. -->
+              <AdvanceWeekCard
+                :disabled="nextWeekDisabled"
+                @click="advanceWeek"
+              />
             </div>
           </div>
         </div>

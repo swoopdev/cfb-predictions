@@ -183,6 +183,17 @@ const pillGradient = computed<string | undefined>(() => {
   return `linear-gradient(90deg, ${awayTeam.value.color} 0%, ${homeTeam.value.color} 100%)`
 })
 
+/**
+ * Same two-color split-border technique `GameCard` uses (`.game-card-
+ * gradient-border`, this task): away's color on top, home's on bottom. Both
+ * participants' colors are only known once `homeTeam`/`awayTeam` resolve
+ * (both seeds are a concrete name), so unresolved/placeholder/error states
+ * fall back to a flat neutral border instead of a gradient with nothing
+ * real to show.
+ */
+const awayBorderColor = computed(() => awayTeam.value?.color ?? '#6b7280')
+const homeBorderColor = computed(() => homeTeam.value?.color ?? awayBorderColor.value)
+
 const pickedTeamId = computed<TeamId | undefined>(() => props.championshipPicks?.[props.conferenceName])
 
 function togglePick(teamId: TeamId): void {
@@ -251,8 +262,12 @@ const isPlaceholder = computed(() => !props.slateComplete)
   <UCard
     v-if="state !== 'loading'"
     :ui="{
-      root: 'relative bg-transparent ring-1 ring-primary overflow-visible mb-4',
+      root: 'relative bg-transparent overflow-visible mb-4 rounded-lg game-card-gradient-border',
       body: 'p-3 sm:p-3'
+    }"
+    :style="{
+      '--away-border-color': awayBorderColor,
+      '--home-border-color': homeBorderColor
     }"
   >
     <!-- Same badge treatment `GameCard` uses for its own top-straddling
@@ -261,15 +276,25 @@ const isPlaceholder = computed(() => !props.slateComplete)
          known, the pill's background is a gradient of their two team
          colors instead of the flat `primary` fill -- a same-conference
          color clash (e.g. two red teams) is still legible because the text
-         is white with a shadow, not colored to match either team. -->
+         is white with a shadow, not colored to match either team. Wrapped
+         in the same click-to-reveal `UPopover` as GameCard's own "Conference"
+         / "Neutral" pills (this task) so it explains itself the same way. -->
     <div class="absolute -top-2.5 right-2 z-10">
-      <UBadge
-        :color="pillGradient ? 'neutral' : 'primary'"
-        :variant="pillGradient ? undefined : 'solid'"
-        label="Conference Championship"
-        :class="pillGradient ? 'text-white border-transparent' : undefined"
-        :style="pillGradient ? { backgroundImage: pillGradient, textShadow: '0 1px 2px rgb(0 0 0 / 0.55)' } : undefined"
-      />
+      <UPopover mode="click">
+        <UBadge
+          :color="pillGradient ? 'neutral' : 'primary'"
+          :variant="pillGradient ? undefined : 'solid'"
+          label="Conference Championship"
+          class="cursor-pointer"
+          :class="pillGradient ? 'text-white border-transparent' : undefined"
+          :style="pillGradient ? { backgroundImage: pillGradient, textShadow: '0 1px 2px rgb(0 0 0 / 0.55)' } : undefined"
+        />
+        <template #content>
+          <p class="text-sm p-2 max-w-48">
+            This game decides the conference's champion.
+          </p>
+        </template>
+      </UPopover>
     </div>
 
     <!-- Placeholder: the conference's own regular season isn't fully picked
@@ -462,3 +487,29 @@ const isPlaceholder = computed(() => !props.slateComplete)
     </template>
   </UCard>
 </template>
+
+<style scoped>
+.game-card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--away-border-color) 0%,
+    var(--away-border-color) 50%,
+    var(--home-border-color) 50%,
+    var(--home-border-color) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+</style>

@@ -84,14 +84,16 @@ const props = withDefaults(defineProps<{
 })
 
 /**
- * Display order when no filter is active. Derived from `P4_CONFERENCES`
- * (itself `Object.keys(CONFERENCE_RULES)`) rather than re-listed here, so
- * "which conferences are P4, and in what order" keeps exactly one definition
- * in the codebase. That order is already SEC, Big Ten, Big 12, ACC.
- * `P4_CONFERENCES` is `readonly ConferenceId[]` (Task 1), so this needs no
- * cast to be usable with `includes` below.
+ * Display order when no filter is active (this task: alphabetical -- ACC,
+ * Big 12, Big Ten, SEC -- rather than `P4_CONFERENCES`'s own declaration
+ * order). `P4_CONFERENCES` (itself `Object.keys(CONFERENCE_RULES)`) still
+ * stays the one place P4 membership is defined; this only re-sorts a copy
+ * of it for display, so "which conferences are P4" keeps exactly one
+ * definition while "what order the sidebar lists them in" is this
+ * component's own concern. `P4_CONFERENCES` is `readonly ConferenceId[]`
+ * (Task 1), so this needs no cast to be usable with `includes` below.
  */
-const P4_ORDER = P4_CONFERENCES
+const P4_ORDER: readonly ConferenceId[] = [...P4_CONFERENCES].sort((a, b) => a.localeCompare(b))
 
 /**
  * T-06-07: narrows an arbitrary string to `ConferenceId` by checking
@@ -166,9 +168,10 @@ const open = defineModel<boolean>('open', { default: true })
     :ui="{
       root: 'shrink-0 h-auto lg:h-full lg:min-h-screen data-[state=collapsed]:hidden',
       gap: 'hidden',
-      container: 'static lg:sticky lg:top-0 z-[60] flex h-auto lg:h-full lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
-      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden h-full',
-      body: 'p-3 sm:p-4'
+      container: 'static lg:relative z-[60] flex h-auto lg:h-full lg:min-h-screen w-full lg:w-(--sidebar-width) border-s-0 end-auto',
+      inner: 'divide-y divide-default rounded-lg lg:rounded-none ring ring-default lg:ring-0 lg:border-s lg:border-default bg-default overflow-hidden h-full flex flex-col lg:sticky lg:top-0 lg:max-h-screen',
+      header: 'lg:pt-4 lg:pb-4',
+      body: 'p-3 sm:p-4 overflow-y-auto min-h-0'
     }"
   >
     <template #default="{ state }">

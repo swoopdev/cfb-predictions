@@ -25,7 +25,7 @@ const label = computed(() => {
     label-key="school"
     :placeholder="label"
     :search-input="{ placeholder: 'Search teams…' }"
-    class="w-56 sm:w-64"
+    class="w-[45vw] max-w-44 sm:w-56 lg:w-64"
     :ui="{ content: 'min-w-[16rem]' }"
   >
     <template #default>

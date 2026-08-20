@@ -62,7 +62,7 @@ const label = computed(() => {
     label-key="label"
     :placeholder="label"
     :search-input="false"
-    class="w-56 sm:w-64"
+    class="w-[45vw] max-w-44 sm:w-56 lg:w-64"
     :ui="{ content: 'min-w-[16rem]' }"
   >
     <template #default>

@@ -120,15 +120,36 @@ const championshipParticipants = computed<{ seed1: TeamId, seed2: TeamId } | und
   return { seed1: seed1.teams[0]!, seed2: seed2.teams[0]! }
 })
 
-const championshipWinnerId = computed<TeamId | undefined>(
+const rawChampionshipWinnerId = computed<TeamId | undefined>(
   () => props.championshipPicks?.[props.conferenceName]
 )
+
+/**
+ * A crown/record bump requires the picked winner to still be one of the
+ * two CURRENT championship participants (this task, fixing a bug where the
+ * crown showed up on a row before the regular season -- let alone the
+ * championship game itself -- was decided). `championshipPicks` is keyed
+ * only by conference name, so a stale pick left over from an earlier
+ * scenario/regular-season state (or picked before `championshipParticipants`
+ * had resolved to two concrete teams) must NOT be trusted at face value --
+ * it's only a real result once it matches one of `seed1`/`seed2` for the
+ * CURRENT `ranking`, AND the conference's own regular season (`slateComplete`)
+ * is actually finished -- `ChampionshipCard` itself won't let a pick be made
+ * before then, so a stray value that predates `slateComplete` can only be
+ * stale storage, never a real pick.
+ */
+const championshipWinnerId = computed<TeamId | undefined>(() => {
+  const participants = championshipParticipants.value
+  const winnerId = rawChampionshipWinnerId.value
+  if (!props.slateComplete || !participants || winnerId === undefined) return undefined
+  if (winnerId !== participants.seed1 && winnerId !== participants.seed2) return undefined
+  return winnerId
+})
 
 function displayOverallRecord(team: StandingsTeam): { wins: number, losses: number } {
   const participants = championshipParticipants.value
   const winnerId = championshipWinnerId.value
   if (!participants || winnerId === undefined) return team.overallRecord
-  if (winnerId !== participants.seed1 && winnerId !== participants.seed2) return team.overallRecord
 
   const loserId = winnerId === participants.seed1 ? participants.seed2 : participants.seed1
   if (team.id === winnerId) {
@@ -395,6 +416,17 @@ function logoFor(team: StandingsTeam): string {
                   :class="{ 'dark:brightness-0 dark:invert': logoFor(row.team) === PLACEHOLDER_LOGO }"
                 >
                 <span>{{ row.team.school }}</span>
+                <!-- Crown (this task): marks the team picked to win THIS
+                     conference's championship game (`championshipWinnerId`,
+                     read straight off the same `championshipPicks` prop
+                     `displayOverallRecord` above already reads) -- never a
+                     second "who won" computation of its own. -->
+                <UIcon
+                  v-if="row.team.id === championshipWinnerId"
+                  name="i-lucide-crown"
+                  class="size-4 shrink-0 text-amber-500 dark:text-amber-400"
+                  aria-label="Conference champion (picked)"
+                />
               </div>
             </th>
             <td class="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap text-muted">

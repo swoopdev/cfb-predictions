@@ -146,7 +146,10 @@ describe('PickProgressWeek Component', () => {
     // the flex row it sits in.
     const track = wrapper.find('div')
     const trackClasses = track.classes()
-    expect(trackClasses).toContain('bg-muted')
+    // Track background is `bg-neutral-200 dark:bg-muted`: a bare `bg-muted`
+    // was too close to white to read as a track in light mode.
+    expect(trackClasses).toContain('bg-neutral-200')
+    expect(trackClasses).toContain('dark:bg-muted')
     expect(trackClasses).toContain('h-5')
     expect(trackClasses).toContain('overflow-hidden')
     expect(trackClasses).toContain('shrink-0')
@@ -157,11 +160,13 @@ describe('PickProgressWeek Component', () => {
     expect(fill.attributes('style')).toContain('width: 50%')
     expect(fill.classes()).toContain('transition-all')
 
-    // Label: white text centered over the fill, not the pre-polish slate text.
+    // Label: centered over the fill, using the semantic default text token
+    // rather than a hard-coded white -- the track is light in light mode, so
+    // white text was unreadable over the unfilled portion.
     const label = wrapper.find('span')
     const labelClasses = label.classes()
     expect(labelClasses).toContain('text-xs')
-    expect(labelClasses).toContain('text-white')
+    expect(labelClasses).toContain('text-default')
     expect(label.text()).toBe('5/10 picked')
   })
 

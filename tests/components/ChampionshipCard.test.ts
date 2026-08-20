@@ -178,7 +178,11 @@ describe('ChampionshipCard', () => {
     expect(text.indexOf('Mu')).toBeLessThan(text.indexOf('Zeta'))
   })
 
-  it('renders nothing when no conference games are picked, even with slateComplete forced true', () => {
+  // The card is now ALWAYS visible on the week 14 page -- one per conference,
+  // rendered before anything is picked -- rather than appearing only once the
+  // conference slate completed. "Nothing picked yet" is therefore a visible
+  // placeholder ("TBD vs. TBD"), not an absent element.
+  it('renders a TBD placeholder, not nothing, when no conference games are picked', () => {
     const schoolById = new Map([[1, 'Georgia'], [10, 'Duke'], [20, 'Miami']])
     const wrapper = mount(ChampionshipCard, {
       props: {
@@ -189,11 +193,14 @@ describe('ChampionshipCard', () => {
       }
     })
 
-    expect(wrapper.text()).toBe('')
-    expect(wrapper.find('div').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Two of: Duke / Georgia / Miami')
   })
 
-  it('renders nothing once picks resolve a matchup while the conference slate is still incomplete', () => {
+  // Same change as above, from the other direction: an incomplete slate now
+  // renders the TBD placeholder rather than suppressing the card. The
+  // `slateComplete` gate still governs whether a REAL matchup (names, pickable
+  // rows) is shown -- it just no longer governs whether the card exists.
+  it('renders the TBD placeholder while the conference slate is still incomplete', () => {
     const wrapper = mount(ChampionshipCard, {
       props: {
         ranking: ranking([group({ teams: [1] }), group({ teams: [2] })]),
@@ -203,8 +210,9 @@ describe('ChampionshipCard', () => {
       }
     })
 
-    expect(wrapper.text()).toBe('')
-    expect(wrapper.find('div').exists()).toBe(false)
+    expect(wrapper.text()).toContain('TBD')
+    expect(wrapper.text()).not.toContain('Georgia')
+    expect(wrapper.text()).not.toContain('Alabama')
   })
 
   it('renders the unavailable heading and body, with no seed blocks and no raw exception, when the ranking is undefined but rows exist', () => {
@@ -277,7 +285,14 @@ describe('ChampionshipCard', () => {
     }
   })
 
-  it('uses semantic tokens only -- no bare palette-scale class, no hex literal, no inline color style', () => {
+  // Team colors are now deliberately part of this card's design, exactly as
+  // in `GameCard`: the matchup badge carries a two-color gradient and the card
+  // a split gradient border, both fed by the participants' own team colors as
+  // CSS custom properties. Hex literals and inline color styles are therefore
+  // EXPECTED here now. What still must not appear is a hard-coded Tailwind
+  // palette-scale class (`bg-zinc-800`, `text-red-500`, ...) -- surfaces and
+  // text still come from semantic tokens so the card holds up in both themes.
+  it('uses semantic tokens for surfaces -- no bare palette-scale class', () => {
     const schoolById = new Map([[1, 'Georgia'], [10, 'Duke'], [20, 'Miami'], [30, 'Clemson'], [40, 'NC State']])
     const wrapper = mount(ChampionshipCard, {
       props: {
@@ -294,7 +309,5 @@ describe('ChampionshipCard', () => {
       .filter(Boolean)
 
     expect(classAttrs.some(c => paletteScalePattern.test(c))).toBe(false)
-    expect(wrapper.html()).not.toMatch(/#[0-9a-fA-F]{3,8}\b/)
-    expect(wrapper.html()).not.toMatch(/style="[^"]*color/)
   })
 })

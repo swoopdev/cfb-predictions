@@ -69,6 +69,7 @@ export const USelectMenuStub = defineComponent({
           role: 'option',
           onClick: () => emit('update:modelValue', item[props.valueKey])
         }, [
+          slots['item-leading']?.({ item }),
           slots['item-label']?.({ item }) ?? String(item[props.labelKey]),
           slots['item-trailing']?.({ item })
         ])
@@ -134,7 +135,54 @@ export const UAlertStub = defineComponent({
   }
 })
 
+/**
+ * `UAccordion` stand-in for `StandingsSidebar`. The real component collapses
+ * each conference independently and unmounts hidden panels; this stub renders
+ * every item's trigger label and `#body` slot at once, because these tests
+ * assert on WHICH conferences the sidebar hands to `StandingsTable`, not on
+ * accordion open/close mechanics (Nuxt UI's own tested responsibility).
+ */
+export const UAccordionStub = defineComponent({
+  name: 'UAccordion',
+  inheritAttrs: false,
+  props: {
+    items: { type: Array as PropType<StubItem[]>, default: () => [] }
+  },
+  setup(props, { slots, attrs }) {
+    return () => h('div', { ...attrs }, props.items.map(item =>
+      h('div', { 'key': item.value as string, 'data-accordion-item': item.value as string }, [
+        h('h3', String(item.label)),
+        slots.body?.({ item })
+      ])
+    ))
+  }
+})
+
+/**
+ * `USidebar` stand-in for `StandingsSidebar`. Always renders the default slot
+ * in the `'expanded'` state -- the collapsed/icon state is Nuxt UI's own
+ * behavior, and every assertion in these tests is about the expanded panel's
+ * contents.
+ */
+export const USidebarStub = defineComponent({
+  name: 'USidebar',
+  inheritAttrs: false,
+  props: {
+    open: { type: Boolean, default: true },
+    title: { type: String, required: false }
+  },
+  emits: ['update:open'],
+  setup(props, { slots, attrs }) {
+    return () => h('aside', { ...attrs }, [
+      props.title ? h('h2', props.title) : null,
+      slots.default?.({ state: 'expanded' })
+    ])
+  }
+})
+
 export const nuxtUiTestStubs = {
+  UAccordion: UAccordionStub,
+  USidebar: USidebarStub,
   UButton: UButtonStub,
   UIcon: UIconStub,
   USelectMenu: USelectMenuStub,

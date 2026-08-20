@@ -496,7 +496,12 @@ describe('StandingsTable', () => {
       ]
     }
 
-    it('renders the card above the table when a ranking is supplied', () => {
+    // The championship matchup no longer renders inside the standings table:
+    // it moved to the week 14 page's own `ChampionshipCard` grid, where it is
+    // covered by `tests/components/ChampionshipCard.test.ts`. What the table
+    // still does with championship state is read `championshipPicks`
+    // DISPLAY-ONLY, to reflect a picked title game in the overall record.
+    it('does not render a championship card -- that moved to the week 14 grid', () => {
       const wrapper = mount(StandingsTable, {
         props: {
           standings: [
@@ -509,14 +514,9 @@ describe('StandingsTable', () => {
         }
       })
 
-      const section = wrapper.get('section')
-      const descendants = [...section.element.querySelectorAll('div, table')]
-      const cardIndex = descendants.findIndex(el => el.textContent?.includes('CHAMPIONSHIP GAME'))
-      const tableIndex = descendants.findIndex(el => el.tagName === 'TABLE')
-
-      expect(cardIndex).toBeGreaterThanOrEqual(0)
-      expect(tableIndex).toBeGreaterThan(cardIndex)
-      expect(wrapper.text()).toContain('CHAMPIONSHIP GAME')
+      expect(wrapper.text()).not.toContain('CHAMPIONSHIP GAME')
+      expect(wrapper.find('table').exists()).toBe(true)
+      expect(wrapper.text()).toContain('Alabama')
     })
 
     it('still renders the table when ranking is not supplied', () => {

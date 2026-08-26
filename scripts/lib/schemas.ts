@@ -136,6 +136,90 @@ export function transformGame(raw: unknown): GameOutput {
   }
 }
 
+/**
+ * Raw CFBD `/rankings` shape (one entry per season+week+seasonType). `polls`
+ * holds every poll published that week (AP, Coaches, CFP once it starts) —
+ * selection between them happens in `pickPoll`, not here.
+ */
+export const RawPollRankSchema = z.object({
+  rank: z.number().nullable(),
+  teamId: z.number(),
+  school: z.string()
+})
+
+export const RawPollSchema = z.object({
+  poll: z.string(),
+  ranks: z.array(RawPollRankSchema)
+})
+
+export const RawPollWeekSchema = z.object({
+  season: z.number(),
+  week: z.number(),
+  polls: z.array(RawPollSchema)
+})
+
+/**
+ * Picks the CFP committee poll when present (published from roughly week 9
+ * on), falling back to AP Top 25 — matches the poll-source decision made
+ * when this feature was scoped. Returns `undefined` if neither poll is in
+ * the response (e.g. very early preseason weeks).
+ */
+export function pickPoll(polls: z.infer<typeof RawPollSchema>[]) {
+  return (
+    polls.find(p => p.poll.toLowerCase().includes('playoff committee'))
+    ?? polls.find(p => p.poll === 'AP Top 25')
+  )
+}
+
+export interface RankingsOutput {
+  season: number
+  week: number
+  poll: string
+  rankings: { teamId: number, rank: number }[]
+}
+
+/**
+ * Transforms the latest `PollWeek` entry (already selected by the caller —
+ * `/rankings` with no `week` param returns every week of the season) into
+ * the committed `rankings.json` shape. Drops unranked teams (`rank: null`).
+ */
+export function transformRankings(raw: unknown): RankingsOutput | undefined {
+  const week = RawPollWeekSchema.parse(raw)
+  const poll = pickPoll(week.polls)
+  if (!poll) return undefined
+
+  return {
+    season: week.season,
+    week: week.week,
+    poll: poll.poll,
+    rankings: poll.ranks
+      .filter((r): r is typeof r & { rank: number } => r.rank !== null)
+      .map(r => ({ teamId: r.teamId, rank: r.rank }))
+  }
+}
+
+/**
+ * Raw CFBD `/metrics/wp/pregame` shape — one entry per game with a published
+ * pregame model estimate. Not every game gets one (FCS opponents, games
+ * without enough model inputs), so this is a sparse list keyed by `gameId`.
+ */
+export const RawPregameWinProbabilitySchema = z.object({
+  gameId: z.number(),
+  homeWinProbability: z.number()
+})
+
+export interface WinProbabilityOutput {
+  gameId: number
+  homeWinProbability: number
+}
+
+export function transformWinProbabilities(rawList: unknown[]): WinProbabilityOutput[] {
+  return rawList.map((raw) => {
+    const wp = RawPregameWinProbabilitySchema.parse(raw)
+    return { gameId: wp.gameId, homeWinProbability: wp.homeWinProbability }
+  })
+}
+
 export interface GameFailure {
   gameId: number | undefined
   errors: Record<string, string[] | undefined>

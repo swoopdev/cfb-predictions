@@ -6,5 +6,7 @@
  */
 export const queryKeys = {
   teams: (season: number) => ['season', season, 'teams'] as const,
-  games: (season: number) => ['season', season, 'games'] as const
+  games: (season: number) => ['season', season, 'games'] as const,
+  rankings: (season: number) => ['season', season, 'rankings'] as const,
+  winProbabilities: (season: number) => ['season', season, 'winProbabilities'] as const
 }

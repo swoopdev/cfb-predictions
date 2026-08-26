@@ -5,6 +5,10 @@ import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 const props = defineProps<{
   game: Game
   teamsById: Map<number, Team>
+  /** Current poll rank keyed by team id -- absent (no badge) when a team is unranked. */
+  rankingsByTeamId: Map<number, number>
+  /** Pregame home-team win probability (0-1) -- absent (no badge) when CFBD hasn't published one for this game. */
+  winProbability?: number
   picks: Record<number, number>
 }>()
 
@@ -29,6 +33,19 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
 
 // Pick state computations
 const pickedTeamId = computed(() => props.picks[props.game.id])
+
+const awayRank = computed(() => props.rankingsByTeamId.get(away.value.id))
+const homeRank = computed(() => props.rankingsByTeamId.get(home.value?.id ?? -1))
+
+// Rounded whole-percent win chance per side, derived from the single
+// home-side probability CFBD publishes -- undefined (no badge) when the
+// game has no published estimate at all.
+const awayWinPercent = computed(() =>
+  props.winProbability === undefined ? undefined : Math.round((1 - props.winProbability) * 100)
+)
+const homeWinPercent = computed(() =>
+  props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
+)
 
 const homeBorderColor = computed(() => home.value?.color ?? away.value.color)
 
@@ -175,6 +192,13 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
+          v-if="awayRank"
+          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
+          :style="{
+            color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+          }"
+        >#{{ awayRank }}</span>
+        <span
           class="truncate text-sm"
           :style="{
             color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
@@ -184,6 +208,13 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           }"
           :title="away.school"
         >{{ away.school }}</span>
+        <span
+          v-if="awayWinPercent !== undefined"
+          class="shrink-0 ml-auto text-xs tabular-nums text-dimmed"
+          :style="{
+            color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+          }"
+        >{{ awayWinPercent }}%</span>
       </div>
     </div>
 
@@ -249,6 +280,20 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
           }"
         >@ </span>{{ home?.school }}</span>
+        <span
+          v-if="homeRank"
+          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
+          :style="{
+            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+          }"
+        >#{{ homeRank }}</span>
+        <span
+          v-if="homeWinPercent !== undefined"
+          class="shrink-0 ml-auto text-xs tabular-nums text-dimmed"
+          :style="{
+            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+          }"
+        >{{ homeWinPercent }}%</span>
       </div>
     </div>
   </UCard>

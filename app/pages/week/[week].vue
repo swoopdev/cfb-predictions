@@ -22,6 +22,19 @@ const week = computed(() => Number(route.params.week))
 const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
 const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 
+// Rankings/win-probability data is fetched weekly and may not exist yet for
+// the season (first fetch hasn't run) -- these never gate `loadState`, they
+// just render nothing in GameCard when absent (D- pattern matches the FCS
+// team/logo fallbacks already established for teams/games).
+const { data: pollRankings } = useRankings()
+const { data: winProbabilities } = useWinProbabilities()
+const rankingsByTeamId = computed<Map<number, number>>(() =>
+  new Map((pollRankings.value?.rankings ?? []).map(r => [r.teamId, r.rank]))
+)
+const winProbabilityByGameId = computed<Map<number, number>>(() =>
+  new Map((winProbabilities.value?.probabilities ?? []).map(p => [p.gameId, p.homeWinProbability]))
+)
+
 // Phase 7 (D-07, D-09): scenario registry + active pointer, called exactly
 // once at the page's own unkeyed top level so the switcher survives a
 // scenario switch. `PicksWorkspace` below is the sole reader of
@@ -349,6 +362,8 @@ const nextWeekDisabled = computed(() => isWeekBoundary(week.value).nextDisabled)
       :games="games?.games ?? []"
       :conference-groups="conferenceGroups"
       :teams-by-id="teamsById"
+      :rankings-by-team-id="rankingsByTeamId"
+      :win-probability-by-game-id="winProbabilityByGameId"
       :bye-teams="byeTeams"
       :sidebar-conferences="sidebarConferences"
       :visible-p4-conferences="visibleP4Conferences"

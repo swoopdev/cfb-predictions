@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
     "fetch-data": "tsx scripts/fetch-data.ts",
+    "fetch-weekly-data": "tsx scripts/fetch-weekly-data.ts",
     "test": "vitest run",
     "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json"
   },

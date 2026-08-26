@@ -1,5 +1,7 @@
 import { $fetch } from 'ofetch'
 import type { Game, Team } from '#shared/types/schedule'
+import type { RankingsEnvelope } from '#shared/types/rankings'
+import type { WinProbabilitiesEnvelope } from '#shared/types/winProbability'
 
 /**
  * `$fetch` is imported explicitly from `ofetch` (rather than relying on
@@ -35,4 +37,19 @@ export async function fetchTeams(season: number): Promise<Team[]> {
  */
 export async function fetchGamesEnvelope(season: number): Promise<GamesEnvelope> {
   return await $fetch<GamesEnvelope>(`/data/${season}/games.json`)
+}
+
+/**
+ * `rankings.json`/`win-probabilities.json` are written weekly by
+ * `scripts/fetch-weekly-data.ts` and may not exist yet for a season that
+ * hasn't had its first weekly fetch run — callers must treat a fetch
+ * failure here as "no rankings/win-probability data available" rather than
+ * a hard error.
+ */
+export async function fetchRankings(season: number): Promise<RankingsEnvelope> {
+  return await $fetch<RankingsEnvelope>(`/data/${season}/rankings.json`)
+}
+
+export async function fetchWinProbabilities(season: number): Promise<WinProbabilitiesEnvelope> {
+  return await $fetch<WinProbabilitiesEnvelope>(`/data/${season}/win-probabilities.json`)
 }

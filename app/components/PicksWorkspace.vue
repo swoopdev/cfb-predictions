@@ -45,6 +45,10 @@ interface Props {
   games: Game[]
   conferenceGroups: ConferenceGroup[]
   teamsById: Map<number, Team>
+  /** Current poll rank (AP or CFP committee) keyed by team id -- absent when no rank exists for a team. */
+  rankingsByTeamId: Map<number, number>
+  /** Pregame home-team win probability keyed by game id -- absent when CFBD hasn't published one for a game. */
+  winProbabilityByGameId: Map<number, number>
   /** FBS teams with no game this week, already narrowed by the active filter (computed by the page). */
   byeTeams: Team[]
   /** Conferences the standings sidebar should narrow to, from an active conf OR team filter. */
@@ -435,6 +439,8 @@ function advanceWeek() {
               :key="game.id"
               :game="game"
               :teams-by-id="teamsById"
+              :rankings-by-team-id="rankingsByTeamId"
+              :win-probability="winProbabilityByGameId.get(game.id)"
               :picks="picks"
             />
             <!-- Advance-week card: when there are no byes, it joins the

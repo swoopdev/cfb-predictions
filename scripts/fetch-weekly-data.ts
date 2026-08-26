@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises'
-import { client, getRankings, getPregameWinProbabilities } from 'cfbd'
+import { client, getRankings, getPregameWinProbabilities, getLines } from 'cfbd'
 
-import { transformRankings, transformWinProbabilities, RawPollWeekSchema } from './lib/schemas'
+import { transformRankings, transformWinProbabilities, transformBettingLines, RawPollWeekSchema } from './lib/schemas'
 
 try {
   process.loadEnvFile('.env')
@@ -55,13 +55,29 @@ const winProbabilitiesOutput = {
   probabilities: transformWinProbabilities(rawWinProbs)
 }
 
+const { data: rawBettingGames, error: linesError } = await getLines({
+  query: { year: season, week: rankingsOutput.week }
+})
+if (linesError || !rawBettingGames) {
+  console.error(`Failed to fetch betting lines from CFBD: ${linesError ? JSON.stringify(linesError) : '(no data returned)'}`)
+  process.exit(1)
+}
+
+const bettingLinesOutput = {
+  season,
+  week: rankingsOutput.week,
+  lines: transformBettingLines(rawBettingGames)
+}
+
 const outDir = `public/data/${season}`
 await mkdir(outDir, { recursive: true })
 
 await writeFile(`${outDir}/rankings.json`, JSON.stringify(rankingsOutput, null, 2))
 await writeFile(`${outDir}/win-probabilities.json`, JSON.stringify(winProbabilitiesOutput, null, 2))
+await writeFile(`${outDir}/betting-lines.json`, JSON.stringify(bettingLinesOutput, null, 2))
 
 console.log(
-  `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${rankingsOutput.week}) `
-  + `and ${winProbabilitiesOutput.probabilities.length} win probabilities.`
+  `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${rankingsOutput.week}), `
+  + `${winProbabilitiesOutput.probabilities.length} win probabilities, `
+  + `and ${bettingLinesOutput.lines.length} betting lines.`
 )

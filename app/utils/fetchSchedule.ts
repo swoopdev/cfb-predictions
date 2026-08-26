@@ -2,6 +2,7 @@ import { $fetch } from 'ofetch'
 import type { Game, Team } from '#shared/types/schedule'
 import type { RankingsEnvelope } from '#shared/types/rankings'
 import type { WinProbabilitiesEnvelope } from '#shared/types/winProbability'
+import type { BettingLinesEnvelope } from '#shared/types/bettingLines'
 
 /**
  * `$fetch` is imported explicitly from `ofetch` (rather than relying on
@@ -52,4 +53,8 @@ export async function fetchRankings(season: number): Promise<RankingsEnvelope> {
 
 export async function fetchWinProbabilities(season: number): Promise<WinProbabilitiesEnvelope> {
   return await $fetch<WinProbabilitiesEnvelope>(`/data/${season}/win-probabilities.json`)
+}
+
+export async function fetchBettingLines(season: number): Promise<BettingLinesEnvelope> {
+  return await $fetch<BettingLinesEnvelope>(`/data/${season}/betting-lines.json`)
 }

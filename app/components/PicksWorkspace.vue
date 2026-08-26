@@ -49,6 +49,8 @@ interface Props {
   rankingsByTeamId: Map<number, number>
   /** Pregame home-team win probability keyed by game id -- absent when CFBD hasn't published one for a game. */
   winProbabilityByGameId: Map<number, number>
+  /** Resolved betting line keyed by game id -- absent when no line is published for a game. */
+  bettingLineByGameId: Map<number, { favored: 'home' | 'away' | 'even', spread: number }>
   /** FBS teams with no game this week, already narrowed by the active filter (computed by the page). */
   byeTeams: Team[]
   /** Conferences the standings sidebar should narrow to, from an active conf OR team filter. */
@@ -441,6 +443,7 @@ function advanceWeek() {
               :teams-by-id="teamsById"
               :rankings-by-team-id="rankingsByTeamId"
               :win-probability="winProbabilityByGameId.get(game.id)"
+              :betting-line="bettingLineByGameId.get(game.id)"
               :picks="picks"
             />
             <!-- Advance-week card: when there are no byes, it joins the

@@ -9,6 +9,8 @@ const props = defineProps<{
   rankingsByTeamId: Map<number, number>
   /** Pregame home-team win probability (0-1) -- absent (no badge) when CFBD hasn't published one for this game. */
   winProbability?: number
+  /** Resolved betting line for this game -- absent when no line is published. */
+  bettingLine?: { favored: 'home' | 'away' | 'even', spread: number }
   picks: Record<number, number>
 }>()
 
@@ -46,6 +48,21 @@ const awayWinPercent = computed(() =>
 const homeWinPercent = computed(() =>
   props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
 )
+
+// Spread label per side: "Pick 'em" for both on an even line, "-N" for
+// whichever side `bettingLine.favored` names, nothing for the other side.
+const awaySpreadLabel = computed(() => {
+  if (!props.bettingLine) return undefined
+  if (props.bettingLine.favored === 'even') return 'Pick \'em'
+  if (props.bettingLine.favored === 'away') return `-${props.bettingLine.spread}`
+  return undefined
+})
+const homeSpreadLabel = computed(() => {
+  if (!props.bettingLine) return undefined
+  if (props.bettingLine.favored === 'even') return 'Pick \'em'
+  if (props.bettingLine.favored === 'home') return `-${props.bettingLine.spread}`
+  return undefined
+})
 
 const homeBorderColor = computed(() => home.value?.color ?? away.value.color)
 
@@ -201,16 +218,25 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
           }"
         >#{{ awayRank }}</span>
-        <span
-          class="truncate text-sm"
-          :style="{
-            color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
-          }"
-          :class="{
-            'text-default': pickedTeamId !== away.id
-          }"
-          :title="away.school"
-        >{{ away.school }}</span>
+        <span class="inline-flex min-w-0 flex-1 items-baseline gap-2">
+          <span
+            class="min-w-0 truncate text-sm"
+            :style="{
+              color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+            }"
+            :class="{
+              'text-default': pickedTeamId !== away.id
+            }"
+            :title="away.school"
+          >{{ away.school }}</span>
+          <span
+            v-if="awaySpreadLabel"
+            class="shrink-0 text-xs tabular-nums text-dimmed"
+            :style="{
+              color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+            }"
+          >{{ awaySpreadLabel }}</span>
+        </span>
         <UBadge
           v-if="awayWinPercent !== undefined"
           color="neutral"
@@ -288,16 +314,25 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
           }"
         >#{{ homeRank }}</span>
-        <span
-          class="truncate text-sm"
-          :style="{
-            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
-          }"
-          :class="{
-            'text-default': pickedTeamId !== home?.id
-          }"
-          :title="home?.school"
-        >{{ home?.school }}</span>
+        <span class="inline-flex min-w-0 flex-1 items-baseline gap-2">
+          <span
+            class="min-w-0 truncate text-sm"
+            :style="{
+              color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+            }"
+            :class="{
+              'text-default': pickedTeamId !== home?.id
+            }"
+            :title="home?.school"
+          >{{ home?.school }}</span>
+          <span
+            v-if="homeSpreadLabel"
+            class="shrink-0 text-xs tabular-nums text-dimmed"
+            :style="{
+              color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+            }"
+          >{{ homeSpreadLabel }}</span>
+        </span>
         <UBadge
           v-if="homeWinPercent !== undefined"
           color="neutral"

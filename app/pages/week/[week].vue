@@ -28,11 +28,15 @@ const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 // team/logo fallbacks already established for teams/games).
 const { data: pollRankings } = useRankings()
 const { data: winProbabilities } = useWinProbabilities()
+const { data: bettingLines } = useBettingLines()
 const rankingsByTeamId = computed<Map<number, number>>(() =>
   new Map((pollRankings.value?.rankings ?? []).map(r => [r.teamId, r.rank]))
 )
 const winProbabilityByGameId = computed<Map<number, number>>(() =>
   new Map((winProbabilities.value?.probabilities ?? []).map(p => [p.gameId, p.homeWinProbability]))
+)
+const bettingLineByGameId = computed<Map<number, { favored: 'home' | 'away' | 'even', spread: number }>>(() =>
+  new Map((bettingLines.value?.lines ?? []).map(l => [l.gameId, { favored: l.favored, spread: l.spread }]))
 )
 
 // Phase 7 (D-07, D-09): scenario registry + active pointer, called exactly
@@ -364,6 +368,7 @@ const nextWeekDisabled = computed(() => isWeekBoundary(week.value).nextDisabled)
       :teams-by-id="teamsById"
       :rankings-by-team-id="rankingsByTeamId"
       :win-probability-by-game-id="winProbabilityByGameId"
+      :betting-line-by-game-id="bettingLineByGameId"
       :bye-teams="byeTeams"
       :sidebar-conferences="sidebarConferences"
       :visible-p4-conferences="visibleP4Conferences"

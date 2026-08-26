@@ -220,6 +220,85 @@ export function transformWinProbabilities(rawList: unknown[]): WinProbabilityOut
   })
 }
 
+/**
+ * Raw CFBD `/lines` shape. `lines` holds one entry per betting provider for
+ * a game -- selection between them happens in `pickLine`, not here.
+ */
+export const RawGameLineSchema = z.object({
+  provider: z.string(),
+  spread: z.number().nullable(),
+  formattedSpread: z.string(),
+  overUnder: z.number().nullable()
+})
+
+export const RawBettingGameSchema = z.object({
+  id: z.number(),
+  homeTeam: z.string(),
+  awayTeam: z.string(),
+  lines: z.array(RawGameLineSchema)
+})
+
+/**
+ * Picks a single line per game: prefers a "consensus" provider (CFBD's
+ * blended line across books) when present, otherwise the first provider
+ * returned. Returns `undefined` for a game with no lines published yet.
+ */
+export function pickLine(lines: z.infer<typeof RawGameLineSchema>[]) {
+  return lines.find(l => l.provider.toLowerCase() === 'consensus') ?? lines[0]
+}
+
+export interface BettingLineOutput {
+  gameId: number
+  favored: 'home' | 'away' | 'even'
+  spread: number
+}
+
+/**
+ * Resolves which side `formattedSpread` (e.g. "Florida State -14.5") favors
+ * by matching its leading team name against the game's own `homeTeam`/
+ * `awayTeam` strings — CFBD doesn't document a sign convention for the raw
+ * `spread` field, but `formattedSpread` names the favored team explicitly,
+ * so matching it is more reliable than guessing a sign. `spread === 0` (or
+ * a `formattedSpread` that starts with neither team, e.g. "Pick") is a pick
+ * 'em. Returns `undefined` only when the format is unrecognized in some
+ * other way — better to drop the game than show a guessed favorite.
+ */
+export function pickFavoredSide(
+  line: z.infer<typeof RawGameLineSchema>,
+  homeTeam: string,
+  awayTeam: string
+): { favored: 'home' | 'away' | 'even', spread: number } | undefined {
+  if (line.spread === 0) return { favored: 'even', spread: 0 }
+  if (line.formattedSpread.startsWith(homeTeam)) {
+    return { favored: 'home', spread: Math.abs(line.spread ?? 0) }
+  }
+  if (line.formattedSpread.startsWith(awayTeam)) {
+    return { favored: 'away', spread: Math.abs(line.spread ?? 0) }
+  }
+  if (line.formattedSpread.toLowerCase().includes('pick')) {
+    return { favored: 'even', spread: 0 }
+  }
+  return undefined
+}
+
+/**
+ * Transforms the raw `/lines` response into the committed
+ * `betting-lines.json` shape -- one row per game with a published line whose
+ * favored side `pickFavoredSide` could resolve.
+ */
+export function transformBettingLines(rawList: unknown[]): BettingLineOutput[] {
+  const output: BettingLineOutput[] = []
+  for (const raw of rawList) {
+    const game = RawBettingGameSchema.parse(raw)
+    const line = pickLine(game.lines)
+    if (!line) continue
+    const resolved = pickFavoredSide(line, game.homeTeam, game.awayTeam)
+    if (!resolved) continue
+    output.push({ gameId: game.id, favored: resolved.favored, spread: resolved.spread })
+  }
+  return output
+}
+
 export interface GameFailure {
   gameId: number | undefined
   errors: Record<string, string[] | undefined>

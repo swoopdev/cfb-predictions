@@ -146,9 +146,8 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 
     <!-- Away team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'border-l-8': pickedTeamId === away.id,
         'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== away.id
       }"
       :style="{
@@ -181,6 +180,10 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         />
       </div>
 
+      <!-- "@" slot: blank spacer here so the away row's logo/name lines up
+           with the home row's, where this same-width slot holds the "@". -->
+      <div class="w-3 h-4 shrink-0" />
+
       <!-- Team info -->
       <div class="flex items-center gap-2 min-w-0 flex-1">
         <img
@@ -208,21 +211,21 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           }"
           :title="away.school"
         >{{ away.school }}</span>
-        <span
+        <UBadge
           v-if="awayWinPercent !== undefined"
-          class="shrink-0 ml-auto text-xs tabular-nums text-dimmed"
-          :style="{
-            color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
-          }"
-        >{{ awayWinPercent }}%</span>
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums"
+          :label="`${awayWinPercent}%`"
+        />
       </div>
     </div>
 
     <!-- Home team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'border-l-8': pickedTeamId === home?.id,
         'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== home?.id
       }"
       :style="{
@@ -255,6 +258,19 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         />
       </div>
 
+      <!-- "@" slot: same fixed width as the away row's blank spacer above,
+           so both rows' logos/names start at the same x position instead of
+           "@ " shifting the home team's name text over. -->
+      <div
+        class="w-3 h-4 shrink-0 flex items-center justify-center text-xs text-dimmed"
+        :style="{
+          color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+        }"
+        aria-hidden="true"
+      >
+        @
+      </div>
+
       <!-- Team info -->
       <div class="flex items-center gap-2 min-w-0 flex-1">
         <img
@@ -266,6 +282,13 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
+          v-if="homeRank"
+          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
+          :style="{
+            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+          }"
+        >#{{ homeRank }}</span>
+        <span
           class="truncate text-sm"
           :style="{
             color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
@@ -274,26 +297,15 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             'text-default': pickedTeamId !== home?.id
           }"
           :title="home?.school"
-        ><span
-          class="text-dimmed"
-          :style="{
-            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
-          }"
-        >@ </span>{{ home?.school }}</span>
-        <span
-          v-if="homeRank"
-          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
-          :style="{
-            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
-          }"
-        >#{{ homeRank }}</span>
-        <span
+        >{{ home?.school }}</span>
+        <UBadge
           v-if="homeWinPercent !== undefined"
-          class="shrink-0 ml-auto text-xs tabular-nums text-dimmed"
-          :style="{
-            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
-          }"
-        >{{ homeWinPercent }}%</span>
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums"
+          :label="`${homeWinPercent}%`"
+        />
       </div>
     </div>
   </UCard>

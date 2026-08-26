@@ -30,4 +30,6 @@ export interface Game {
   awayTeam: string
   conferenceGame: boolean
   neutralSite: boolean
+  /** Joins against `venues.json`'s `id` for the game-detail modal's venue row. */
+  venueId: number | null
 }

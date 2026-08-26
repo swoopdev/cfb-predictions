@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { LocationQueryRaw } from 'vue-router'
 import type { Game, Team } from '#shared/types/schedule'
+import type { GameMediaInfo } from '#shared/types/media'
+import type { VenueInfo } from '#shared/types/venues'
+import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { ConferenceId } from '#shared/domain/tiebreakers/types'
 import type { ConferenceDecisions } from '#shared/domain/tiebreakers/invalidation'
 import { P4_CONFERENCES } from '#shared/domain/standings'
@@ -37,6 +40,25 @@ const winProbabilityByGameId = computed<Map<number, number>>(() =>
 )
 const bettingLineByGameId = computed<Map<number, { favored: 'home' | 'away' | 'even', spread: number }>>(() =>
   new Map((bettingLines.value?.lines ?? []).map(l => [l.gameId, { favored: l.favored, spread: l.spread }]))
+)
+
+// Game-detail modal data -- same weekly/one-time fetch, missing-file-
+// tolerant pattern as rankings/win-probabilities/lines above.
+const { data: media } = useMedia()
+const { data: teamRatings } = useTeamRatings()
+const { data: venues } = useVenues()
+const { data: talent } = useTalent()
+const mediaByGameId = computed<Map<number, GameMediaInfo>>(() =>
+  new Map((media.value?.media ?? []).map(m => [m.gameId, m]))
+)
+const venuesById = computed<Map<number, VenueInfo>>(() =>
+  new Map((venues.value?.venues ?? []).map(v => [v.id, v]))
+)
+const teamRatingsByTeamId = computed<Map<number, TeamRatingEntry>>(() =>
+  new Map((teamRatings.value?.ratings ?? []).map(r => [r.teamId, r]))
+)
+const talentByTeamId = computed<Map<number, number>>(() =>
+  new Map((talent.value?.talent ?? []).map(t => [t.teamId, t.talent]))
 )
 
 // Phase 7 (D-07, D-09): scenario registry + active pointer, called exactly
@@ -369,6 +391,10 @@ const nextWeekDisabled = computed(() => isWeekBoundary(week.value).nextDisabled)
       :rankings-by-team-id="rankingsByTeamId"
       :win-probability-by-game-id="winProbabilityByGameId"
       :betting-line-by-game-id="bettingLineByGameId"
+      :media-by-game-id="mediaByGameId"
+      :venues-by-id="venuesById"
+      :team-ratings-by-team-id="teamRatingsByTeamId"
+      :talent-by-team-id="talentByTeamId"
       :bye-teams="byeTeams"
       :sidebar-conferences="sidebarConferences"
       :visible-p4-conferences="visibleP4Conferences"

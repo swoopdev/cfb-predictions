@@ -95,7 +95,8 @@ export const RawGameSchema = z.object({
   awayId: z.number(),
   awayTeam: z.string(),
   conferenceGame: z.boolean(),
-  neutralSite: z.boolean()
+  neutralSite: z.boolean(),
+  venueId: z.number().nullable()
 })
 
 export interface GameOutput {
@@ -108,14 +109,17 @@ export interface GameOutput {
   awayTeam: string
   conferenceGame: boolean
   neutralSite: boolean
+  venueId: number | null
 }
 
 /**
- * Parses `raw` against `RawGameSchema` and returns those 9 fields directly
+ * Parses `raw` against `RawGameSchema` and returns those 10 fields directly
  * from the parse result — zero derivation logic. `conferenceGame` and
  * `seasonType` must never be recomputed by comparing home/away team
  * conferences (DATA-06's constraint, RESEARCH.md Anti-Patterns) — this
- * function copies them straight through.
+ * function copies them straight through. `venueId` joins against the
+ * one-time `venues.json` (`scripts/fetch-data.ts`'s `getVenues()` call) for
+ * the game-detail modal's venue row.
  *
  * Callers should gate on `reportGameFailures` first (mirroring the team
  * path's `reportRequiredFieldFailures`) so a single malformed game doesn't
@@ -132,7 +136,8 @@ export function transformGame(raw: unknown): GameOutput {
     awayId: game.awayId,
     awayTeam: game.awayTeam,
     conferenceGame: game.conferenceGame,
-    neutralSite: game.neutralSite
+    neutralSite: game.neutralSite,
+    venueId: game.venueId
   }
 }
 
@@ -295,6 +300,228 @@ export function transformBettingLines(rawList: unknown[]): BettingLineOutput[] {
     const resolved = pickFavoredSide(line, game.homeTeam, game.awayTeam)
     if (!resolved) continue
     output.push({ gameId: game.id, favored: resolved.favored, spread: resolved.spread })
+  }
+  return output
+}
+
+/**
+ * Builds a school-name -> team-id lookup from the committed `teams.json`
+ * shape. SP+/FPI/Elo/talent all key their rows by team name string (no
+ * `teamId` field on the wire), so every one of those transforms needs this
+ * to resolve back to our canonical team id. Names are CFBD's own `school`
+ * strings on both sides, so an exact match is expected to hold for every
+ * FBS team; a team that doesn't match (should only happen for FCS/non-FBS
+ * rows these endpoints sometimes include) is silently dropped by the caller
+ * rather than guessed at.
+ */
+export function buildTeamIdByName(teams: { id: number, school: string }[]): Map<string, number> {
+  return new Map(teams.map(t => [t.school, t.id]))
+}
+
+/**
+ * Raw CFBD `/media` shape — one entry per game with a published broadcast.
+ */
+export const RawGameMediaSchema = z.object({
+  id: z.number(),
+  mediaType: z.string(),
+  outlet: z.string(),
+  startTime: z.string(),
+  isStartTimeTBD: z.boolean()
+})
+
+export interface GameMediaOutput {
+  gameId: number
+  mediaType: string
+  outlet: string
+  startTime: string
+  isStartTimeTBD: boolean
+}
+
+export function transformMedia(rawList: unknown[]): GameMediaOutput[] {
+  return rawList.map((raw) => {
+    const media = RawGameMediaSchema.parse(raw)
+    return {
+      gameId: media.id,
+      mediaType: media.mediaType,
+      outlet: media.outlet,
+      startTime: media.startTime,
+      isStartTimeTBD: media.isStartTimeTBD
+    }
+  })
+}
+
+/**
+ * Raw CFBD shapes for the four team-rating sources merged into
+ * `team-ratings.json`. Each is keyed by team name on the wire (`/lines`-
+ * style teamId is only present on `/ratings/ats`) — resolved to a
+ * `teamId` via `buildTeamIdByName` in `transformTeamRatings`.
+ */
+export const RawTeamSpSchema = z.object({
+  team: z.string(),
+  rating: z.number(),
+  ranking: z.number().nullable()
+})
+
+export const RawTeamFpiSchema = z.object({
+  team: z.string(),
+  fpi: z.number().nullable(),
+  resumeRanks: z.object({
+    fpi: z.number().nullable()
+  })
+})
+
+export const RawTeamEloSchema = z.object({
+  team: z.string(),
+  elo: z.number().nullable()
+})
+
+export const RawTeamAtsSchema = z.object({
+  teamId: z.number(),
+  atsWins: z.number(),
+  atsLosses: z.number(),
+  atsPushes: z.number()
+})
+
+/**
+ * Merges the four raw rating lists into one row per team, keyed by teamId.
+ * A team present in only some sources (e.g. an FCS team with no SP+ rating,
+ * or a team with no Elo entry yet) still gets a row -- missing fields are
+ * `null`, never a dropped row. Rows that can't resolve to a known teamId
+ * (SP+/FPI/Elo name doesn't match any team in `teamIdByName`) are dropped
+ * for that source only, not the whole merged row.
+ */
+export function transformTeamRatings(
+  rawSp: unknown[],
+  rawFpi: unknown[],
+  rawElo: unknown[],
+  rawAts: unknown[],
+  teamIdByName: Map<string, number>
+) {
+  const byTeamId = new Map<number, {
+    teamId: number
+    spRating: number | null
+    spRanking: number | null
+    fpi: number | null
+    fpiRanking: number | null
+    elo: number | null
+    atsWins: number | null
+    atsLosses: number | null
+    atsPushes: number | null
+  }>()
+
+  function getOrCreate(teamId: number) {
+    let row = byTeamId.get(teamId)
+    if (!row) {
+      row = { teamId, spRating: null, spRanking: null, fpi: null, fpiRanking: null, elo: null, atsWins: null, atsLosses: null, atsPushes: null }
+      byTeamId.set(teamId, row)
+    }
+    return row
+  }
+
+  for (const raw of rawSp) {
+    const sp = RawTeamSpSchema.parse(raw)
+    const teamId = teamIdByName.get(sp.team)
+    if (teamId === undefined) continue
+    const row = getOrCreate(teamId)
+    row.spRating = sp.rating
+    row.spRanking = sp.ranking
+  }
+
+  for (const raw of rawFpi) {
+    const fpi = RawTeamFpiSchema.parse(raw)
+    const teamId = teamIdByName.get(fpi.team)
+    if (teamId === undefined) continue
+    const row = getOrCreate(teamId)
+    row.fpi = fpi.fpi
+    row.fpiRanking = fpi.resumeRanks.fpi
+  }
+
+  for (const raw of rawElo) {
+    const elo = RawTeamEloSchema.parse(raw)
+    const teamId = teamIdByName.get(elo.team)
+    if (teamId === undefined) continue
+    getOrCreate(teamId).elo = elo.elo
+  }
+
+  for (const raw of rawAts) {
+    const ats = RawTeamAtsSchema.parse(raw)
+    const row = getOrCreate(ats.teamId)
+    row.atsWins = ats.atsWins
+    row.atsLosses = ats.atsLosses
+    row.atsPushes = ats.atsPushes
+  }
+
+  return [...byTeamId.values()]
+}
+
+/**
+ * Raw CFBD `/venues` shape — fetched once (Plan-05-style `fetch-data.ts`
+ * addition), not on the weekly cadence.
+ */
+export const RawVenueSchema = z.object({
+  id: z.number().nullable(),
+  name: z.string().nullable(),
+  city: z.string().nullable(),
+  state: z.string().nullable(),
+  capacity: z.number().nullable(),
+  grass: z.boolean().nullable().optional(),
+  dome: z.boolean().nullable().optional()
+})
+
+export interface VenueOutput {
+  id: number
+  name: string | null
+  city: string | null
+  state: string | null
+  capacity: number | null
+  grass: boolean | null
+  dome: boolean | null
+}
+
+/**
+ * Drops any venue with a `null` id (CFBD nullability quirk on this
+ * endpoint) — a venue we can't key by id is useless for the `venueId` join
+ * `weather.json` needs.
+ */
+export function transformVenues(rawList: unknown[]): VenueOutput[] {
+  const output: VenueOutput[] = []
+  for (const raw of rawList) {
+    const v = RawVenueSchema.parse(raw)
+    if (v.id === null) continue
+    output.push({
+      id: v.id,
+      name: v.name,
+      city: v.city,
+      state: v.state,
+      capacity: v.capacity,
+      grass: v.grass ?? null,
+      dome: v.dome ?? null
+    })
+  }
+  return output
+}
+
+/**
+ * Raw CFBD `/talent` shape — fetched once, keyed by team name like
+ * SP+/FPI/Elo above.
+ */
+export const RawTeamTalentSchema = z.object({
+  team: z.string(),
+  talent: z.number()
+})
+
+export interface TeamTalentOutput {
+  teamId: number
+  talent: number
+}
+
+export function transformTalent(rawList: unknown[], teamIdByName: Map<string, number>): TeamTalentOutput[] {
+  const output: TeamTalentOutput[] = []
+  for (const raw of rawList) {
+    const t = RawTeamTalentSchema.parse(raw)
+    const teamId = teamIdByName.get(t.team)
+    if (teamId === undefined) continue
+    output.push({ teamId, talent: t.talent })
   }
   return output
 }

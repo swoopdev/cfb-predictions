@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
+import type { GameMediaInfo } from '#shared/types/media'
+import type { VenueInfo } from '#shared/types/venues'
+import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { computeStandingsPipeline, P4_CONFERENCES } from '#shared/domain/standings'
@@ -51,6 +54,14 @@ interface Props {
   winProbabilityByGameId: Map<number, number>
   /** Resolved betting line keyed by game id -- absent when no line is published for a game. */
   bettingLineByGameId: Map<number, { favored: 'home' | 'away' | 'even', spread: number }>
+  /** TV/streaming broadcast keyed by game id -- game-detail modal data, absent when unpublished. */
+  mediaByGameId: Map<number, GameMediaInfo>
+  /** Venue directory keyed by venue id, joined against each game's own `venueId` for the modal's venue row. */
+  venuesById: Map<number, VenueInfo>
+  /** SP+/FPI/Elo/ATS merged rating keyed by team id -- absent for a team CFBD has no rating for yet. */
+  teamRatingsByTeamId: Map<number, TeamRatingEntry>
+  /** Recruiting talent composite keyed by team id. */
+  talentByTeamId: Map<number, number>
   /** FBS teams with no game this week, already narrowed by the active filter (computed by the page). */
   byeTeams: Team[]
   /** Conferences the standings sidebar should narrow to, from an active conf OR team filter. */
@@ -444,6 +455,10 @@ function advanceWeek() {
               :rankings-by-team-id="rankingsByTeamId"
               :win-probability="winProbabilityByGameId.get(game.id)"
               :betting-line="bettingLineByGameId.get(game.id)"
+              :media="mediaByGameId.get(game.id)"
+              :venues-by-id="venuesById"
+              :team-ratings-by-team-id="teamRatingsByTeamId"
+              :talent-by-team-id="talentByTeamId"
               :picks="picks"
             />
             <!-- Advance-week card: when there are no byes, it joins the

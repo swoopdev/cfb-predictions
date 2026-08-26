@@ -41,7 +41,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/2026/rankings.json public/data/2026/win-probabilities.json public/data/2026/betting-lines.json
+          git add public/data/2026/rankings.json public/data/2026/win-probabilities.json public/data/2026/betting-lines.json public/data/2026/media.json public/data/2026/team-ratings.json
           git diff --staged --quiet && exit 0
           git commit -m "chore: weekly rankings and win probability data"
           git push

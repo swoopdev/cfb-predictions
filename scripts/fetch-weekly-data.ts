@@ -1,7 +1,15 @@
-import { mkdir, writeFile } from 'node:fs/promises'
-import { client, getRankings, getPregameWinProbabilities, getLines } from 'cfbd'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, getSp, getFpi, getElo, getTeamsAts } from 'cfbd'
 
-import { transformRankings, transformWinProbabilities, transformBettingLines, RawPollWeekSchema } from './lib/schemas'
+import {
+  transformRankings,
+  transformWinProbabilities,
+  transformBettingLines,
+  transformMedia,
+  transformTeamRatings,
+  buildTeamIdByName,
+  RawPollWeekSchema
+} from './lib/schemas'
 
 try {
   process.loadEnvFile('.env')
@@ -40,10 +48,9 @@ if (!rankingsOutput) {
   console.error(`No AP or CFP committee poll found for season ${season}, week ${latestWeek.week} — refusing to overwrite committed data.`)
   process.exit(1)
 }
+const week = rankingsOutput.week
 
-const { data: rawWinProbs, error: wpError } = await getPregameWinProbabilities({
-  query: { year: season, week: rankingsOutput.week }
-})
+const { data: rawWinProbs, error: wpError } = await getPregameWinProbabilities({ query: { year: season, week } })
 if (wpError || !rawWinProbs) {
   console.error(`Failed to fetch pregame win probabilities from CFBD: ${wpError ? JSON.stringify(wpError) : '(no data returned)'}`)
   process.exit(1)
@@ -51,13 +58,11 @@ if (wpError || !rawWinProbs) {
 
 const winProbabilitiesOutput = {
   season,
-  week: rankingsOutput.week,
+  week,
   probabilities: transformWinProbabilities(rawWinProbs)
 }
 
-const { data: rawBettingGames, error: linesError } = await getLines({
-  query: { year: season, week: rankingsOutput.week }
-})
+const { data: rawBettingGames, error: linesError } = await getLines({ query: { year: season, week } })
 if (linesError || !rawBettingGames) {
   console.error(`Failed to fetch betting lines from CFBD: ${linesError ? JSON.stringify(linesError) : '(no data returned)'}`)
   process.exit(1)
@@ -65,9 +70,37 @@ if (linesError || !rawBettingGames) {
 
 const bettingLinesOutput = {
   season,
-  week: rankingsOutput.week,
+  week,
   lines: transformBettingLines(rawBettingGames)
 }
+
+// Everything below is enrichment for the collapsible game-detail panel, not
+// core pick/standings data — a flaky endpoint here shouldn't block the
+// rankings/win-probabilities/lines fetch above from committing. Each source
+// warns and falls back to an empty list instead of hard-failing the script.
+async function fetchOrWarn<T>(label: string, fn: () => Promise<{ data?: T[], error?: unknown }>): Promise<T[]> {
+  const { data, error } = await fn()
+  if (error || !data) {
+    console.warn(`Failed to fetch ${label} from CFBD (continuing without it): ${error ? JSON.stringify(error) : '(no data returned)'}`)
+    return []
+  }
+  return data
+}
+
+const rawMedia = await fetchOrWarn('media', () => getMedia({ query: { year: season, week } }))
+const rawSp = await fetchOrWarn('SP+ ratings', () => getSp({ query: { year: season } }))
+const rawFpi = await fetchOrWarn('FPI ratings', () => getFpi({ query: { year: season } }))
+const rawElo = await fetchOrWarn('Elo ratings', () => getElo({ query: { year: season, week } }))
+const rawAts = await fetchOrWarn('ATS records', () => getTeamsAts({ query: { year: season } }))
+
+// SP+/FPI/Elo are keyed by team name on the wire — resolved back to our
+// canonical teamId via the already-committed teams.json, same source CFBD's
+// own school names come from.
+const teamsFile = JSON.parse(await readFile(`public/data/${season}/teams.json`, 'utf-8')) as { teams: { id: number, school: string }[] }
+const teamIdByName = buildTeamIdByName(teamsFile.teams)
+
+const mediaOutput = { season, week, media: transformMedia(rawMedia) }
+const teamRatingsOutput = { season, week, ratings: transformTeamRatings(rawSp, rawFpi, rawElo, rawAts, teamIdByName) }
 
 const outDir = `public/data/${season}`
 await mkdir(outDir, { recursive: true })
@@ -75,9 +108,13 @@ await mkdir(outDir, { recursive: true })
 await writeFile(`${outDir}/rankings.json`, JSON.stringify(rankingsOutput, null, 2))
 await writeFile(`${outDir}/win-probabilities.json`, JSON.stringify(winProbabilitiesOutput, null, 2))
 await writeFile(`${outDir}/betting-lines.json`, JSON.stringify(bettingLinesOutput, null, 2))
+await writeFile(`${outDir}/media.json`, JSON.stringify(mediaOutput, null, 2))
+await writeFile(`${outDir}/team-ratings.json`, JSON.stringify(teamRatingsOutput, null, 2))
 
 console.log(
-  `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${rankingsOutput.week}), `
+  `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${week}), `
   + `${winProbabilitiesOutput.probabilities.length} win probabilities, `
-  + `and ${bettingLinesOutput.lines.length} betting lines.`
+  + `${bettingLinesOutput.lines.length} betting lines, `
+  + `${mediaOutput.media.length} media entries, `
+  + `and ${teamRatingsOutput.ratings.length} team ratings.`
 )

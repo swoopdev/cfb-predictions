@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { Game, Team } from '#shared/types/schedule'
+import type { GameMediaInfo } from '#shared/types/media'
+import type { VenueInfo } from '#shared/types/venues'
+import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 
 const props = defineProps<{
@@ -11,6 +14,14 @@ const props = defineProps<{
   winProbability?: number
   /** Resolved betting line for this game -- absent when no line is published. */
   bettingLine?: { favored: 'home' | 'away' | 'even', spread: number }
+  /** TV/streaming broadcast for this game -- game-detail modal data, absent when unpublished. */
+  media?: GameMediaInfo
+  /** Venue directory keyed by venue id, joined against `game.venueId`. */
+  venuesById: Map<number, VenueInfo>
+  /** SP+/FPI/Elo/ATS merged rating keyed by team id. */
+  teamRatingsByTeamId: Map<number, TeamRatingEntry>
+  /** Recruiting talent composite keyed by team id. */
+  talentByTeamId: Map<number, number>
   picks: Record<number, number>
 }>()
 
@@ -63,6 +74,28 @@ const homeSpreadLabel = computed(() => {
   if (props.bettingLine.favored === 'home') return `-${props.bettingLine.spread}`
   return undefined
 })
+
+// Game-detail modal data: venue joins directly off the game's own venueId
+// now (CFBD's `/games` already returns it -- no weather dependency needed),
+// the rest are direct per-team lookups. `hasDetails` gates whether the
+// "Details" trigger renders at all -- no dead button when there's nothing
+// to show.
+const venue = computed(() => (props.game.venueId != null ? props.venuesById.get(props.game.venueId) : undefined))
+const awayRating = computed(() => props.teamRatingsByTeamId.get(away.value.id))
+const homeRating = computed(() => props.teamRatingsByTeamId.get(home.value?.id ?? -1))
+const awayTalent = computed(() => props.talentByTeamId.get(away.value.id))
+const homeTalent = computed(() => props.talentByTeamId.get(home.value?.id ?? -1))
+
+const hasDetails = computed(() =>
+  !!props.media
+  || !!venue.value
+  || awayRating.value?.spRating != null || homeRating.value?.spRating != null
+  || awayRating.value?.fpi != null || homeRating.value?.fpi != null
+  || awayRating.value?.elo != null || homeRating.value?.elo != null
+  || awayRating.value?.atsWins != null || homeRating.value?.atsWins != null
+  || awayTalent.value !== undefined || homeTalent.value !== undefined
+)
+const detailsOpen = ref(false)
 
 const homeBorderColor = computed(() => home.value?.color ?? away.value.color)
 
@@ -343,7 +376,49 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         />
       </div>
     </div>
+
+    <!-- Details trigger: opens GameDetailsModal instead of an inline
+         collapsible panel -- an inline expand grew every OTHER card in the
+         same grid row to match (grid's default `align-items: stretch`)
+         without showing anything in them, and a modal reads better on
+         mobile besides. Hidden entirely when there's nothing to show. -->
+    <div
+      v-if="hasDetails"
+      class="border-t border-default -mx-3 sm:-mx-3 mt-1 px-3"
+    >
+      <button
+        type="button"
+        class="w-full flex items-center justify-center gap-1 py-1.5 text-xs text-dimmed hover:text-default transition-colors"
+        @click="detailsOpen = true"
+      >
+        <span>Details</span>
+        <UIcon
+          name="lucide:circle-ellipsis"
+          class="w-3 h-3"
+        />
+      </button>
+    </div>
   </UCard>
+
+  <GameDetailsModal
+    v-if="hasDetails"
+    :open="detailsOpen"
+    :away="away"
+    :home="home"
+    :away-rank="awayRank"
+    :home-rank="homeRank"
+    :away-win-percent="awayWinPercent"
+    :home-win-percent="homeWinPercent"
+    :away-spread-label="awaySpreadLabel"
+    :home-spread-label="homeSpreadLabel"
+    :media="media"
+    :venue="venue"
+    :away-rating="awayRating"
+    :home-rating="homeRating"
+    :away-talent="awayTalent"
+    :home-talent="homeTalent"
+    @update:open="v => detailsOpen = v"
+  />
 </template>
 
 <style scoped>

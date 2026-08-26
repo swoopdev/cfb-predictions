@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useId } from 'vue'
 import type { Team } from '#shared/types/schedule'
 import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { VenueInfo } from '#shared/types/venues'
 
@@ -27,6 +29,7 @@ const props = defineProps<{
   homeWinPercent?: number
   awaySpreadLabel?: string
   homeSpreadLabel?: string
+  bettingLine?: BettingLine
   media?: GameMediaInfo
   venue?: VenueInfo
   awayRating?: TeamRatingEntry
@@ -85,6 +88,34 @@ const venueLocationLabel = computed(() => {
   return [cityState, capacity].filter(Boolean).join(' · ') || undefined
 })
 
+// Win-probability donut geometry. Percentage labels used to sit ON the ring
+// (positioned by angle/radius) and keep landing either too close to the
+// stroke to read or clipped at the viewBox edge -- pulled out entirely into
+// a plain legend row below the ring instead (logo + colored percentage per
+// team), which sidesteps the whole problem. Each `<circle>` uses the full
+// circumference as the "gap" half of `stroke-dasharray` (rather than
+// `circumference - segmentLen`) so a segment never grows a second, unwanted
+// arc when its own length exceeds half the circle. Both circles share
+// `transform="rotate(-90 ...)"` so 0% starts at 12 o'clock; the home arc's
+// negative `stroke-dashoffset` picks up exactly where the away arc's
+// segment ends, going clockwise.
+const donut = computed(() => {
+  if (props.awayWinPercent === undefined || props.homeWinPercent === undefined) return undefined
+  const center = 60
+  const r = 48
+  const circumference = 2 * Math.PI * r
+  const awayLen = circumference * (props.awayWinPercent / 100)
+  const homeLen = circumference - awayLen
+  return { center, r, circumference, awayLen, homeLen }
+})
+
+// Unique per instance -- every GameCard on the week grid mounts its own
+// (always-present, `v-if="hasDetails"`) GameDetailsModal, so a hardcoded
+// gradient id would collide across every card's SVG in the same DOM.
+const gradientUid = useId()
+const awayGradientId = `win-donut-away-${gradientUid}`
+const homeGradientId = `win-donut-home-${gradientUid}`
+
 const hasSp = computed(() => props.awayRating?.spRating != null || props.homeRating?.spRating != null)
 const hasFpi = computed(() => props.awayRating?.fpi != null || props.homeRating?.fpi != null)
 const hasElo = computed(() => props.awayRating?.elo != null || props.homeRating?.elo != null)
@@ -92,6 +123,36 @@ const hasAts = computed(() => props.awayRating?.atsWins != null || props.homeRat
 const hasTalent = computed(() => props.awayTalent !== undefined || props.homeTalent !== undefined)
 const hasRatingsTable = computed(() => hasSp.value || hasFpi.value || hasElo.value || hasAts.value || hasTalent.value)
 const hasMeta = computed(() => !!props.media || !!props.venue)
+
+function formatMoneyline(value: number | null | undefined): string {
+  if (value == null) return '—'
+  return value > 0 ? `+${value}` : `${value}`
+}
+
+// Same per-side spread-label shape as `awaySpreadLabel`/`homeSpreadLabel`
+// (computed once in `GameCard.vue` for the current line) applied to the
+// OPENING line instead, so the "Opened" row reads identically to the
+// header's current-line labels.
+function openSpreadLabelFor(side: 'home' | 'away'): string | undefined {
+  const line = props.bettingLine
+  if (!line || line.openFavored === null) return undefined
+  if (line.openFavored === 'even') return 'Pick \'em'
+  return line.openFavored === side ? `-${line.openSpread}` : `+${line.openSpread}`
+}
+const openAwayLabel = computed(() => openSpreadLabelFor('away'))
+const openHomeLabel = computed(() => openSpreadLabelFor('home'))
+
+// Only worth a row when the line actually moved -- an "Opened" row that
+// just repeats the current spread is noise, not information.
+const lineMoved = computed(() => {
+  const line = props.bettingLine
+  if (!line || line.openFavored === null) return false
+  return line.openFavored !== line.favored || line.openSpread !== line.spread
+})
+
+const hasMoneyline = computed(() => props.bettingLine?.homeMoneyline != null || props.bettingLine?.awayMoneyline != null)
+const hasSpread = computed(() => !!props.awaySpreadLabel || !!props.homeSpreadLabel)
+const hasOddsSection = computed(() => hasSpread.value || hasMoneyline.value || lineMoved.value)
 </script>
 
 <template>
@@ -120,19 +181,6 @@ const hasMeta = computed(() => !!props.media || !!props.venue)
                 class="text-dimmed"
               >#{{ awayRank }} </span>{{ away.school }}
             </span>
-            <span
-              v-if="awaySpreadLabel || awayWinPercent !== undefined"
-              class="flex items-center gap-1.5 text-xs text-dimmed"
-            >
-              <span v-if="awaySpreadLabel">{{ awaySpreadLabel }}</span>
-              <UBadge
-                v-if="awayWinPercent !== undefined"
-                color="neutral"
-                variant="subtle"
-                size="sm"
-                :label="`${awayWinPercent}%`"
-              />
-            </span>
           </div>
 
           <span class="text-xs font-medium text-dimmed">@</span>
@@ -150,19 +198,137 @@ const hasMeta = computed(() => !!props.media || !!props.venue)
                 class="text-dimmed"
               >#{{ homeRank }} </span>{{ home?.school }}
             </span>
-            <span
-              v-if="homeSpreadLabel || homeWinPercent !== undefined"
-              class="flex items-center gap-1.5 text-xs text-dimmed"
+          </div>
+        </div>
+
+        <!-- Win probability donut: two-color ring split by each team's
+             pregame win chance. Percentages live in the legend row below
+             the ring, not on it -- text positioned ON a thin ring kept
+             landing too close to the stroke to read cleanly or clipping at
+             the edge, and a legend with each team's own logo next to its
+             number is unambiguous regardless of ring size. Only rendered
+             when a probability exists for this game at all. -->
+        <div v-if="donut">
+          <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-dimmed">
+            Win probability
+          </h3>
+          <div class="flex flex-col items-center gap-3 rounded-lg bg-elevated px-3 py-4">
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 120 120"
             >
-              <span v-if="homeSpreadLabel">{{ homeSpreadLabel }}</span>
-              <UBadge
-                v-if="homeWinPercent !== undefined"
-                color="neutral"
-                variant="subtle"
-                size="sm"
-                :label="`${homeWinPercent}%`"
+              <defs>
+                <linearGradient
+                  :id="awayGradientId"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    :stop-color="away.color"
+                  />
+                  <stop
+                    offset="100%"
+                    :stop-color="away.alternateColor"
+                  />
+                </linearGradient>
+                <linearGradient
+                  :id="homeGradientId"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    :stop-color="home?.color ?? '#6b7280'"
+                  />
+                  <stop
+                    offset="100%"
+                    :stop-color="home?.alternateColor ?? '#6b7280'"
+                  />
+                </linearGradient>
+              </defs>
+              <circle
+                :cx="donut.center"
+                :cy="donut.center"
+                :r="donut.r"
+                fill="none"
+                stroke="currentColor"
+                class="text-default/10"
+                stroke-width="14"
               />
-            </span>
+              <circle
+                :cx="donut.center"
+                :cy="donut.center"
+                :r="donut.r"
+                fill="none"
+                :stroke="`url(#${awayGradientId})`"
+                stroke-width="14"
+                :stroke-dasharray="`${donut.awayLen} ${donut.circumference}`"
+                stroke-dashoffset="0"
+                :transform="`rotate(-90 ${donut.center} ${donut.center})`"
+              />
+              <circle
+                :cx="donut.center"
+                :cy="donut.center"
+                :r="donut.r"
+                fill="none"
+                :stroke="`url(#${homeGradientId})`"
+                stroke-width="14"
+                :stroke-dasharray="`${donut.homeLen} ${donut.circumference}`"
+                :stroke-dashoffset="-donut.awayLen"
+                :transform="`rotate(-90 ${donut.center} ${donut.center})`"
+              />
+            </svg>
+            <div class="flex items-center gap-5">
+              <div class="flex items-center gap-1.5">
+                <img
+                  :src="away.logo"
+                  class="size-4"
+                  :class="{ 'dark:brightness-0 dark:invert': away.logo === '/logos/placeholder.svg' }"
+                  alt=""
+                >
+                <span class="text-sm font-bold tabular-nums text-default">{{ awayWinPercent }}%</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <img
+                  :src="home?.logo"
+                  class="size-4"
+                  :class="{ 'dark:brightness-0 dark:invert': home?.logo === '/logos/placeholder.svg' }"
+                  alt=""
+                >
+                <span class="text-sm font-bold tabular-nums text-default">{{ homeWinPercent }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Odds: current spread, moneyline (win outright), and
+             opening-line movement, all in one comparison table. -->
+        <div v-if="hasOddsSection">
+          <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-dimmed">
+            Odds
+          </h3>
+          <div class="grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-2 rounded-lg bg-elevated px-3 py-2.5 text-sm">
+            <template v-if="hasSpread">
+              <span class="text-dimmed">Spread</span>
+              <span class="text-right tabular-nums">{{ awaySpreadLabel ?? '—' }}</span>
+              <span class="text-right tabular-nums">{{ homeSpreadLabel ?? '—' }}</span>
+            </template>
+            <template v-if="hasMoneyline">
+              <span class="text-dimmed">Moneyline</span>
+              <span class="text-right tabular-nums">{{ formatMoneyline(bettingLine?.awayMoneyline) }}</span>
+              <span class="text-right tabular-nums">{{ formatMoneyline(bettingLine?.homeMoneyline) }}</span>
+            </template>
+            <template v-if="lineMoved">
+              <span class="text-dimmed">Opened</span>
+              <span class="text-right tabular-nums">{{ openAwayLabel ?? '—' }}</span>
+              <span class="text-right tabular-nums">{{ openHomeLabel ?? '—' }}</span>
+            </template>
           </div>
         </div>
 

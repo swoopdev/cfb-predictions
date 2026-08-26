@@ -14,6 +14,12 @@ export interface BettingLine {
   favored: 'home' | 'away' | 'even'
   /** Positive magnitude (e.g. `14.5`), meaningless when `favored` is `'even'`. */
   spread: number
+  /** American odds to win the game outright (e.g. `-180`, `+150`). */
+  homeMoneyline: number | null
+  awayMoneyline: number | null
+  /** Opening line's favored side -- `null` when unknown or the current line is a pick 'em. */
+  openFavored: 'home' | 'away' | 'even' | null
+  openSpread: number | null
 }
 
 export interface BettingLinesEnvelope {

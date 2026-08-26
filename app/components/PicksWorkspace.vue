@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
 import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { StandingsResult } from '#shared/types/standings'
@@ -53,7 +54,7 @@ interface Props {
   /** Pregame home-team win probability keyed by game id -- absent when CFBD hasn't published one for a game. */
   winProbabilityByGameId: Map<number, number>
   /** Resolved betting line keyed by game id -- absent when no line is published for a game. */
-  bettingLineByGameId: Map<number, { favored: 'home' | 'away' | 'even', spread: number }>
+  bettingLineByGameId: Map<number, BettingLine>
   /** TV/streaming broadcast keyed by game id -- game-detail modal data, absent when unpublished. */
   mediaByGameId: Map<number, GameMediaInfo>
   /** Venue directory keyed by venue id, joined against each game's own `venueId` for the modal's venue row. */

@@ -2,6 +2,7 @@
 import type { LocationQueryRaw } from 'vue-router'
 import type { Game, Team } from '#shared/types/schedule'
 import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
 import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { ConferenceId } from '#shared/domain/tiebreakers/types'
@@ -38,8 +39,8 @@ const rankingsByTeamId = computed<Map<number, number>>(() =>
 const winProbabilityByGameId = computed<Map<number, number>>(() =>
   new Map((winProbabilities.value?.probabilities ?? []).map(p => [p.gameId, p.homeWinProbability]))
 )
-const bettingLineByGameId = computed<Map<number, { favored: 'home' | 'away' | 'even', spread: number }>>(() =>
-  new Map((bettingLines.value?.lines ?? []).map(l => [l.gameId, { favored: l.favored, spread: l.spread }]))
+const bettingLineByGameId = computed<Map<number, BettingLine>>(() =>
+  new Map((bettingLines.value?.lines ?? []).map(l => [l.gameId, l]))
 )
 
 // Game-detail modal data -- same weekly/one-time fetch, missing-file-

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Game, Team } from '#shared/types/schedule'
 import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
 import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
@@ -13,7 +14,7 @@ const props = defineProps<{
   /** Pregame home-team win probability (0-1) -- absent (no badge) when CFBD hasn't published one for this game. */
   winProbability?: number
   /** Resolved betting line for this game -- absent when no line is published. */
-  bettingLine?: { favored: 'home' | 'away' | 'even', spread: number }
+  bettingLine?: BettingLine
   /** TV/streaming broadcast for this game -- game-detail modal data, absent when unpublished. */
   media?: GameMediaInfo
   /** Venue directory keyed by venue id, joined against `game.venueId`. */
@@ -60,19 +61,20 @@ const homeWinPercent = computed(() =>
   props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
 )
 
-// Spread label per side: "Pick 'em" for both on an even line, "-N" for
-// whichever side `bettingLine.favored` names, nothing for the other side.
+// Spread label per side: "Pick 'em" for both on an even line, otherwise
+// "-N" for the favored side and "+N" for the other -- a point spread is one
+// number describing both sides of the same line (the underdog's number is
+// always the exact negation of the favorite's, never independently fetched
+// or capable of disagreeing), so both sides always render.
 const awaySpreadLabel = computed(() => {
   if (!props.bettingLine) return undefined
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
-  if (props.bettingLine.favored === 'away') return `-${props.bettingLine.spread}`
-  return undefined
+  return props.bettingLine.favored === 'away' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
 })
 const homeSpreadLabel = computed(() => {
   if (!props.bettingLine) return undefined
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
-  if (props.bettingLine.favored === 'home') return `-${props.bettingLine.spread}`
-  return undefined
+  return props.bettingLine.favored === 'home' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
 })
 
 // Game-detail modal data: venue joins directly off the game's own venueId
@@ -89,6 +91,7 @@ const homeTalent = computed(() => props.talentByTeamId.get(home.value?.id ?? -1)
 const hasDetails = computed(() =>
   !!props.media
   || !!venue.value
+  || !!props.bettingLine
   || awayRating.value?.spRating != null || homeRating.value?.spRating != null
   || awayRating.value?.fpi != null || homeRating.value?.fpi != null
   || awayRating.value?.elo != null || homeRating.value?.elo != null
@@ -411,6 +414,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
     :home-win-percent="homeWinPercent"
     :away-spread-label="awaySpreadLabel"
     :home-spread-label="homeSpreadLabel"
+    :betting-line="bettingLine"
     :media="media"
     :venue="venue"
     :away-rating="awayRating"

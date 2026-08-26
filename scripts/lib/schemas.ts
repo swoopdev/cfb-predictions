@@ -233,7 +233,10 @@ export const RawGameLineSchema = z.object({
   provider: z.string(),
   spread: z.number().nullable(),
   formattedSpread: z.string(),
-  overUnder: z.number().nullable()
+  spreadOpen: z.number().nullable(),
+  overUnder: z.number().nullable(),
+  homeMoneyline: z.number().nullable(),
+  awayMoneyline: z.number().nullable()
 })
 
 export const RawBettingGameSchema = z.object({
@@ -256,6 +259,37 @@ export interface BettingLineOutput {
   gameId: number
   favored: 'home' | 'away' | 'even'
   spread: number
+  homeMoneyline: number | null
+  awayMoneyline: number | null
+  /** Which side was favored at the opening line -- `null` when there's no `spreadOpen`, or the current line is a pick 'em (see `resolveOpenSpread`). */
+  openFavored: 'home' | 'away' | 'even' | null
+  openSpread: number | null
+}
+
+/**
+ * Resolves the opening line's favored side from `spreadOpen`'s sign
+ * relative to the CURRENT `spread`'s sign, rather than assuming an absolute
+ * sign convention (CFBD doesn't document one — same reasoning as
+ * `pickFavoredSide`). `spread` and `spreadOpen` are the same field family on
+ * the same record, so whatever sign `spread` uses to mean "`favored`" is
+ * guaranteed to mean the same thing for `spreadOpen` — if `spreadOpen`
+ * shares that sign, the same side was favored at open (just a different
+ * magnitude); if it's the opposite sign, the favorite flipped since
+ * opening. Undecidable when the current line is a pick 'em (`spread === 0`
+ * has no sign to compare against) — returns `null` rather than guessing.
+ */
+export function resolveOpenSpread(
+  spreadOpen: number | null,
+  currentSpreadRaw: number | null,
+  favored: 'home' | 'away' | 'even'
+): { favored: 'home' | 'away' | 'even', spread: number } | null {
+  if (spreadOpen === null || favored === 'even' || !currentSpreadRaw) return null
+  const signCurrent = Math.sign(currentSpreadRaw)
+  const signOpen = Math.sign(spreadOpen)
+  if (signOpen === 0) return { favored: 'even', spread: 0 }
+  const sameSide = signOpen === signCurrent
+  const otherSide = favored === 'home' ? 'away' : 'home'
+  return { favored: sameSide ? favored : otherSide, spread: Math.abs(spreadOpen) }
 }
 
 /**
@@ -299,7 +333,16 @@ export function transformBettingLines(rawList: unknown[]): BettingLineOutput[] {
     if (!line) continue
     const resolved = pickFavoredSide(line, game.homeTeam, game.awayTeam)
     if (!resolved) continue
-    output.push({ gameId: game.id, favored: resolved.favored, spread: resolved.spread })
+    const open = resolveOpenSpread(line.spreadOpen, line.spread, resolved.favored)
+    output.push({
+      gameId: game.id,
+      favored: resolved.favored,
+      spread: resolved.spread,
+      homeMoneyline: line.homeMoneyline,
+      awayMoneyline: line.awayMoneyline,
+      openFavored: open?.favored ?? null,
+      openSpread: open?.spread ?? null
+    })
   }
   return output
 }

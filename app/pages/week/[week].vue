@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { LocationQueryRaw } from 'vue-router'
 import type { Game, Team } from '#shared/types/schedule'
+import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
+import type { VenueInfo } from '#shared/types/venues'
+import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { ConferenceId } from '#shared/domain/tiebreakers/types'
 import type { ConferenceDecisions } from '#shared/domain/tiebreakers/invalidation'
 import { P4_CONFERENCES } from '#shared/domain/standings'
@@ -21,6 +25,42 @@ const week = computed(() => Number(route.params.week))
 
 const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
 const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
+
+// Rankings/win-probability data is fetched weekly and may not exist yet for
+// the season (first fetch hasn't run) -- these never gate `loadState`, they
+// just render nothing in GameCard when absent (D- pattern matches the FCS
+// team/logo fallbacks already established for teams/games).
+const { data: pollRankings } = useRankings()
+const { data: winProbabilities } = useWinProbabilities()
+const { data: bettingLines } = useBettingLines()
+const rankingsByTeamId = computed<Map<number, number>>(() =>
+  new Map((pollRankings.value?.rankings ?? []).map(r => [r.teamId, r.rank]))
+)
+const winProbabilityByGameId = computed<Map<number, number>>(() =>
+  new Map((winProbabilities.value?.probabilities ?? []).map(p => [p.gameId, p.homeWinProbability]))
+)
+const bettingLineByGameId = computed<Map<number, BettingLine>>(() =>
+  new Map((bettingLines.value?.lines ?? []).map(l => [l.gameId, l]))
+)
+
+// Game-detail modal data -- same weekly/one-time fetch, missing-file-
+// tolerant pattern as rankings/win-probabilities/lines above.
+const { data: media } = useMedia()
+const { data: teamRatings } = useTeamRatings()
+const { data: venues } = useVenues()
+const { data: talent } = useTalent()
+const mediaByGameId = computed<Map<number, GameMediaInfo>>(() =>
+  new Map((media.value?.media ?? []).map(m => [m.gameId, m]))
+)
+const venuesById = computed<Map<number, VenueInfo>>(() =>
+  new Map((venues.value?.venues ?? []).map(v => [v.id, v]))
+)
+const teamRatingsByTeamId = computed<Map<number, TeamRatingEntry>>(() =>
+  new Map((teamRatings.value?.ratings ?? []).map(r => [r.teamId, r]))
+)
+const talentByTeamId = computed<Map<number, number>>(() =>
+  new Map((talent.value?.talent ?? []).map(t => [t.teamId, t.talent]))
+)
 
 // Phase 7 (D-07, D-09): scenario registry + active pointer, called exactly
 // once at the page's own unkeyed top level so the switcher survives a
@@ -349,6 +389,13 @@ const nextWeekDisabled = computed(() => isWeekBoundary(week.value).nextDisabled)
       :games="games?.games ?? []"
       :conference-groups="conferenceGroups"
       :teams-by-id="teamsById"
+      :rankings-by-team-id="rankingsByTeamId"
+      :win-probability-by-game-id="winProbabilityByGameId"
+      :betting-line-by-game-id="bettingLineByGameId"
+      :media-by-game-id="mediaByGameId"
+      :venues-by-id="venuesById"
+      :team-ratings-by-team-id="teamRatingsByTeamId"
+      :talent-by-team-id="talentByTeamId"
       :bye-teams="byeTeams"
       :sidebar-conferences="sidebarConferences"
       :visible-p4-conferences="visibleP4Conferences"

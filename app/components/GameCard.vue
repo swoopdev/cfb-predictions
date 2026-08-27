@@ -1,10 +1,28 @@
 <script setup lang="ts">
 import type { Game, Team } from '#shared/types/schedule'
+import type { GameMediaInfo } from '#shared/types/media'
+import type { BettingLine } from '#shared/types/bettingLines'
+import type { VenueInfo } from '#shared/types/venues'
+import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
 
 const props = defineProps<{
   game: Game
   teamsById: Map<number, Team>
+  /** Current poll rank keyed by team id -- absent (no badge) when a team is unranked. */
+  rankingsByTeamId: Map<number, number>
+  /** Pregame home-team win probability (0-1) -- absent (no badge) when CFBD hasn't published one for this game. */
+  winProbability?: number
+  /** Resolved betting line for this game -- absent when no line is published. */
+  bettingLine?: BettingLine
+  /** TV/streaming broadcast for this game -- game-detail modal data, absent when unpublished. */
+  media?: GameMediaInfo
+  /** Venue directory keyed by venue id, joined against `game.venueId`. */
+  venuesById: Map<number, VenueInfo>
+  /** SP+/FPI/Elo/ATS merged rating keyed by team id. */
+  teamRatingsByTeamId: Map<number, TeamRatingEntry>
+  /** Recruiting talent composite keyed by team id. */
+  talentByTeamId: Map<number, number>
   picks: Record<number, number>
 }>()
 
@@ -29,6 +47,58 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
 
 // Pick state computations
 const pickedTeamId = computed(() => props.picks[props.game.id])
+
+const awayRank = computed(() => props.rankingsByTeamId.get(away.value.id))
+const homeRank = computed(() => props.rankingsByTeamId.get(home.value?.id ?? -1))
+
+// Rounded whole-percent win chance per side, derived from the single
+// home-side probability CFBD publishes -- undefined (no badge) when the
+// game has no published estimate at all.
+const awayWinPercent = computed(() =>
+  props.winProbability === undefined ? undefined : Math.round((1 - props.winProbability) * 100)
+)
+const homeWinPercent = computed(() =>
+  props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
+)
+
+// Spread label per side: "Pick 'em" for both on an even line, otherwise
+// "-N" for the favored side and "+N" for the other -- a point spread is one
+// number describing both sides of the same line (the underdog's number is
+// always the exact negation of the favorite's, never independently fetched
+// or capable of disagreeing), so both sides always render.
+const awaySpreadLabel = computed(() => {
+  if (!props.bettingLine) return undefined
+  if (props.bettingLine.favored === 'even') return 'Pick \'em'
+  return props.bettingLine.favored === 'away' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
+})
+const homeSpreadLabel = computed(() => {
+  if (!props.bettingLine) return undefined
+  if (props.bettingLine.favored === 'even') return 'Pick \'em'
+  return props.bettingLine.favored === 'home' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
+})
+
+// Game-detail modal data: venue joins directly off the game's own venueId
+// now (CFBD's `/games` already returns it -- no weather dependency needed),
+// the rest are direct per-team lookups. `hasDetails` gates whether the
+// "Details" trigger renders at all -- no dead button when there's nothing
+// to show.
+const venue = computed(() => (props.game.venueId != null ? props.venuesById.get(props.game.venueId) : undefined))
+const awayRating = computed(() => props.teamRatingsByTeamId.get(away.value.id))
+const homeRating = computed(() => props.teamRatingsByTeamId.get(home.value?.id ?? -1))
+const awayTalent = computed(() => props.talentByTeamId.get(away.value.id))
+const homeTalent = computed(() => props.talentByTeamId.get(home.value?.id ?? -1))
+
+const hasDetails = computed(() =>
+  !!props.media
+  || !!venue.value
+  || !!props.bettingLine
+  || awayRating.value?.spRating != null || homeRating.value?.spRating != null
+  || awayRating.value?.fpi != null || homeRating.value?.fpi != null
+  || awayRating.value?.elo != null || homeRating.value?.elo != null
+  || awayRating.value?.atsWins != null || homeRating.value?.atsWins != null
+  || awayTalent.value !== undefined || homeTalent.value !== undefined
+)
+const detailsOpen = ref(false)
 
 const homeBorderColor = computed(() => home.value?.color ?? away.value.color)
 
@@ -129,9 +199,8 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
 
     <!-- Away team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'border-l-8': pickedTeamId === away.id,
         'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== away.id
       }"
       :style="{
@@ -164,6 +233,10 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         />
       </div>
 
+      <!-- "@" slot: blank spacer here so the away row's logo/name lines up
+           with the home row's, where this same-width slot holds the "@". -->
+      <div class="w-3 h-4 shrink-0" />
+
       <!-- Team info -->
       <div class="flex items-center gap-2 min-w-0 flex-1">
         <img
@@ -175,23 +248,46 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm"
+          v-if="awayRank"
+          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
           :style="{
             color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
           }"
-          :class="{
-            'text-default': pickedTeamId !== away.id
-          }"
-          :title="away.school"
-        >{{ away.school }}</span>
+        >#{{ awayRank }}</span>
+        <span class="inline-flex min-w-0 flex-1 items-baseline gap-2">
+          <span
+            class="min-w-0 truncate text-sm"
+            :style="{
+              color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+            }"
+            :class="{
+              'text-default': pickedTeamId !== away.id
+            }"
+            :title="away.school"
+          >{{ away.school }}</span>
+          <span
+            v-if="awaySpreadLabel"
+            class="shrink-0 text-xs tabular-nums text-dimmed"
+            :style="{
+              color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
+            }"
+          >{{ awaySpreadLabel }}</span>
+        </span>
+        <UBadge
+          v-if="awayWinPercent !== undefined"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums"
+          :label="`${awayWinPercent}%`"
+        />
       </div>
     </div>
 
     <!-- Home team row (clickable for picking) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 transition-colors"
+      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'border-l-8': pickedTeamId === home?.id,
         'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== home?.id
       }"
       :style="{
@@ -224,6 +320,19 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
         />
       </div>
 
+      <!-- "@" slot: same fixed width as the away row's blank spacer above,
+           so both rows' logos/names start at the same x position instead of
+           "@ " shifting the home team's name text over. -->
+      <div
+        class="w-3 h-4 shrink-0 flex items-center justify-center text-xs text-dimmed"
+        :style="{
+          color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+        }"
+        aria-hidden="true"
+      >
+        @
+      </div>
+
       <!-- Team info -->
       <div class="flex items-center gap-2 min-w-0 flex-1">
         <img
@@ -235,23 +344,85 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           alt=""
         >
         <span
-          class="truncate text-sm"
+          v-if="homeRank"
+          class="shrink-0 text-xs font-semibold tabular-nums text-dimmed"
           :style="{
             color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
           }"
-          :class="{
-            'text-default': pickedTeamId !== home?.id
-          }"
-          :title="home?.school"
-        ><span
-          class="text-dimmed"
-          :style="{
-            color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
-          }"
-        >@ </span>{{ home?.school }}</span>
+        >#{{ homeRank }}</span>
+        <span class="inline-flex min-w-0 flex-1 items-baseline gap-2">
+          <span
+            class="min-w-0 truncate text-sm"
+            :style="{
+              color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+            }"
+            :class="{
+              'text-default': pickedTeamId !== home?.id
+            }"
+            :title="home?.school"
+          >{{ home?.school }}</span>
+          <span
+            v-if="homeSpreadLabel"
+            class="shrink-0 text-xs tabular-nums text-dimmed"
+            :style="{
+              color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
+            }"
+          >{{ homeSpreadLabel }}</span>
+        </span>
+        <UBadge
+          v-if="homeWinPercent !== undefined"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums"
+          :label="`${homeWinPercent}%`"
+        />
       </div>
     </div>
+
+    <!-- Details trigger: opens GameDetailsModal instead of an inline
+         collapsible panel -- an inline expand grew every OTHER card in the
+         same grid row to match (grid's default `align-items: stretch`)
+         without showing anything in them, and a modal reads better on
+         mobile besides. Hidden entirely when there's nothing to show. -->
+    <div
+      v-if="hasDetails"
+      class="border-t border-default -mx-3 sm:-mx-3 mt-1 px-3"
+    >
+      <button
+        type="button"
+        class="w-full flex items-center justify-center gap-1 py-1.5 text-xs text-dimmed hover:text-default transition-colors"
+        @click="detailsOpen = true"
+      >
+        <span>Details</span>
+        <UIcon
+          name="lucide:circle-ellipsis"
+          class="w-3 h-3"
+        />
+      </button>
+    </div>
   </UCard>
+
+  <GameDetailsModal
+    v-if="hasDetails"
+    :open="detailsOpen"
+    :away="away"
+    :home="home"
+    :away-rank="awayRank"
+    :home-rank="homeRank"
+    :away-win-percent="awayWinPercent"
+    :home-win-percent="homeWinPercent"
+    :away-spread-label="awaySpreadLabel"
+    :home-spread-label="homeSpreadLabel"
+    :betting-line="bettingLine"
+    :media="media"
+    :venue="venue"
+    :away-rating="awayRating"
+    :home-rating="homeRating"
+    :away-talent="awayTalent"
+    :home-talent="homeTalent"
+    @update:open="v => detailsOpen = v"
+  />
 </template>
 
 <style scoped>

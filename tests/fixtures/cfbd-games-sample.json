@@ -8,7 +8,8 @@
     "awayId": 2,
     "awayTeam": "Missing Conference U",
     "conferenceGame": false,
-    "neutralSite": false
+    "neutralSite": false,
+    "venueId": 101
   },
   {
     "id": 401628301,
@@ -19,7 +20,8 @@
     "awayId": 3,
     "awayTeam": "No Logo State",
     "conferenceGame": true,
-    "neutralSite": true
+    "neutralSite": true,
+    "venueId": 102
   },
   {
     "id": 401628288,
@@ -30,6 +32,7 @@
     "awayId": 3,
     "awayTeam": "No Logo State",
     "conferenceGame": true,
-    "neutralSite": false
+    "neutralSite": false,
+    "venueId": null
   }
 ]

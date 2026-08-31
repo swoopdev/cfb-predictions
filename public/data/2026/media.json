@@ -80,13 +80,6 @@
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401868016,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-08-27T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
       "gameId": 401868060,
       "mediaType": "web",
       "outlet": "ESPN+",
@@ -2064,8 +2057,8 @@
       "gameId": 401867928,
       "mediaType": "tv",
       "outlet": "NEC Front Row",
-      "startTime": "2026-09-05T04:00:00.000Z",
-      "isStartTimeTBD": true
+      "startTime": "2026-09-05T16:00:00.000Z",
+      "isStartTimeTBD": false
     },
     {
       "gameId": 401906844,
@@ -2666,8 +2659,8 @@
       "gameId": 401869127,
       "mediaType": "web",
       "outlet": "MEAC Network",
-      "startTime": "2026-09-05T04:00:00.000Z",
-      "isStartTimeTBD": true
+      "startTime": "2026-09-05T22:00:00.000Z",
+      "isStartTimeTBD": false
     },
     {
       "gameId": 401868284,
@@ -2737,6 +2730,27 @@
       "mediaType": "web",
       "outlet": "Disney+",
       "startTime": "2026-09-05T19:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401872615,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-08-29T23:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401913104,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-08-29T23:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868158,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-09-06T00:00:00.000Z",
       "isStartTimeTBD": false
     }
   ]

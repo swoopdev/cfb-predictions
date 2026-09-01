@@ -408,10 +408,19 @@ export function transformMedia(rawList: unknown[]): GameMediaOutput[] {
  * style teamId is only present on `/ratings/ats`) — resolved to a
  * `teamId` via `buildTeamIdByName` in `transformTeamRatings`.
  */
+const RawSpSideSchema = z.object({
+  rating: z.number(),
+  ranking: z.number().nullable(),
+  success: z.number().nullable(),
+  explosiveness: z.number().nullable()
+})
+
 export const RawTeamSpSchema = z.object({
   team: z.string(),
   rating: z.number(),
-  ranking: z.number().nullable()
+  ranking: z.number().nullable(),
+  offense: RawSpSideSchema,
+  defense: RawSpSideSchema
 })
 
 export const RawTeamFpiSchema = z.object({
@@ -453,6 +462,8 @@ export function transformTeamRatings(
     teamId: number
     spRating: number | null
     spRanking: number | null
+    spOffense: { rating: number, ranking: number | null, success: number | null, explosiveness: number | null } | null
+    spDefense: { rating: number, ranking: number | null, success: number | null, explosiveness: number | null } | null
     fpi: number | null
     fpiRanking: number | null
     elo: number | null
@@ -464,7 +475,7 @@ export function transformTeamRatings(
   function getOrCreate(teamId: number) {
     let row = byTeamId.get(teamId)
     if (!row) {
-      row = { teamId, spRating: null, spRanking: null, fpi: null, fpiRanking: null, elo: null, atsWins: null, atsLosses: null, atsPushes: null }
+      row = { teamId, spRating: null, spRanking: null, spOffense: null, spDefense: null, fpi: null, fpiRanking: null, elo: null, atsWins: null, atsLosses: null, atsPushes: null }
       byTeamId.set(teamId, row)
     }
     return row
@@ -477,6 +488,8 @@ export function transformTeamRatings(
     const row = getOrCreate(teamId)
     row.spRating = sp.rating
     row.spRanking = sp.ranking
+    row.spOffense = sp.offense
+    row.spDefense = sp.defense
   }
 
   for (const raw of rawFpi) {
@@ -598,4 +611,301 @@ export function reportGameFailures(rawGames: unknown[]): GameFailure[] {
       gameId: (raw as { id?: number }).id,
       errors: z.flattenError(result.error!).fieldErrors
     }))
+}
+
+/**
+ * Raw CFBD `/roster` shape — fetched once (`scripts/fetch-team-data.ts`),
+ * keyed by team NAME on the wire like SP+/FPI/Elo/talent. Unlike those, the
+ * player's own id is a string, not a number.
+ */
+export const RawRosterPlayerSchema = z.object({
+  id: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  team: z.string(),
+  position: z.string().nullable(),
+  jersey: z.number().nullable(),
+  height: z.number().nullable(),
+  weight: z.number().nullable()
+})
+
+export interface RosterPlayerOutput {
+  id: string
+  teamId: number
+  firstName: string
+  lastName: string
+  position: string | null
+  jersey: number | null
+  height: number | null
+  weight: number | null
+}
+
+/**
+ * Drops a player whose `team` name doesn't resolve to a known teamId
+ * (transfer portal entries mid-fetch, or a non-FBS team) rather than
+ * emitting a row with no usable join key.
+ */
+export function transformRoster(rawList: unknown[], teamIdByName: Map<string, number>): RosterPlayerOutput[] {
+  const output: RosterPlayerOutput[] = []
+  for (const raw of rawList) {
+    const p = RawRosterPlayerSchema.parse(raw)
+    const teamId = teamIdByName.get(p.team)
+    if (teamId === undefined) continue
+    output.push({
+      id: p.id,
+      teamId,
+      firstName: p.firstName,
+      lastName: p.lastName,
+      position: p.position,
+      jersey: p.jersey,
+      height: p.height,
+      weight: p.weight
+    })
+  }
+  return output
+}
+
+/**
+ * Raw CFBD `/coaches` shape — one coach with their FULL season-by-season
+ * history (every team, every year they've coached), regardless of the
+ * requested `year` query param. `teamId` lives on each `CoachSeason` entry,
+ * not on the coach record itself, since a coach's team changes across
+ * seasons.
+ */
+const RawCoachSeasonSchema = z.object({
+  teamId: z.number(),
+  year: z.number(),
+  wins: z.number(),
+  losses: z.number(),
+  ties: z.number()
+})
+
+export const RawCoachSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  seasons: z.array(RawCoachSeasonSchema)
+})
+
+export interface CoachOutput {
+  teamId: number
+  firstName: string
+  lastName: string
+  currentSeason: { year: number, wins: number, losses: number, ties: number } | null
+  careerRecord: { wins: number, losses: number, ties: number, firstYear: number, lastYear: number }
+}
+
+/**
+ * One row per team: the coach whose `seasons` array has an entry for
+ * `targetYear`, with that team as `teamId`. `careerRecord` sums the coach's
+ * ENTIRE seasons array (every team, every year on record) -- a whole-career
+ * total, not just the tenure at the current school.
+ *
+ * If two raw coach records both have a `targetYear` entry for the same team
+ * (a mid-season interim replacement, which CFBD represents as two coach
+ * records rather than one), the LAST one encountered in `rawList` wins --
+ * matches this endpoint's own ordering, which lists a season's replacement
+ * coach after the one they replaced.
+ */
+export function transformCoaches(rawList: unknown[], targetYear: number): CoachOutput[] {
+  const byTeamId = new Map<number, CoachOutput>()
+
+  for (const raw of rawList) {
+    const coach = RawCoachSchema.parse(raw)
+    if (coach.seasons.length === 0) continue
+
+    const current = coach.seasons.find(s => s.year === targetYear)
+    if (!current) continue
+
+    const years = coach.seasons.map(s => s.year)
+    const careerRecord = coach.seasons.reduce(
+      (acc, s) => ({
+        wins: acc.wins + s.wins,
+        losses: acc.losses + s.losses,
+        ties: acc.ties + s.ties,
+        firstYear: Math.min(acc.firstYear, s.year),
+        lastYear: Math.max(acc.lastYear, s.year)
+      }),
+      { wins: 0, losses: 0, ties: 0, firstYear: Math.min(...years), lastYear: Math.max(...years) }
+    )
+
+    byTeamId.set(current.teamId, {
+      teamId: current.teamId,
+      firstName: coach.firstName,
+      lastName: coach.lastName,
+      currentSeason: { year: current.year, wins: current.wins, losses: current.losses, ties: current.ties },
+      careerRecord
+    })
+  }
+
+  return [...byTeamId.values()]
+}
+
+/**
+ * Raw CFBD `/recruiting/teams` shape — fetched once, like roster/coaches.
+ * Keyed by team NAME on the wire.
+ */
+export const RawTeamRecruitingSchema = z.object({
+  rank: z.number(),
+  team: z.string(),
+  points: z.number()
+})
+
+export interface RecruitingRankOutput {
+  teamId: number
+  rank: number
+  points: number
+}
+
+export function transformRecruiting(rawList: unknown[], teamIdByName: Map<string, number>): RecruitingRankOutput[] {
+  const output: RecruitingRankOutput[] = []
+  for (const raw of rawList) {
+    const r = RawTeamRecruitingSchema.parse(raw)
+    const teamId = teamIdByName.get(r.team)
+    if (teamId === undefined) continue
+    output.push({ teamId, rank: r.rank, points: r.points })
+  }
+  return output
+}
+
+/**
+ * Raw CFBD `/records` shape. Unlike SP+/FPI/Elo/talent/roster/recruiting,
+ * `teamId` is already on the wire here -- no name resolution needed.
+ */
+const RawRecordSplitSchema = z.object({
+  games: z.number(),
+  wins: z.number(),
+  losses: z.number(),
+  ties: z.number()
+})
+
+export const RawTeamRecordsSchema = z.object({
+  teamId: z.number(),
+  expectedWins: z.number().nullable(),
+  total: RawRecordSplitSchema,
+  conferenceGames: RawRecordSplitSchema,
+  homeGames: RawRecordSplitSchema,
+  awayGames: RawRecordSplitSchema,
+  neutralSiteGames: RawRecordSplitSchema
+})
+
+export interface TeamRecordsOutput {
+  teamId: number
+  expectedWins: number | null
+  total: { games: number, wins: number, losses: number, ties: number }
+  conferenceGames: { games: number, wins: number, losses: number, ties: number }
+  homeGames: { games: number, wins: number, losses: number, ties: number }
+  awayGames: { games: number, wins: number, losses: number, ties: number }
+  neutralSiteGames: { games: number, wins: number, losses: number, ties: number }
+}
+
+export function transformRecords(rawList: unknown[]): TeamRecordsOutput[] {
+  return rawList.map((raw) => {
+    const r = RawTeamRecordsSchema.parse(raw)
+    return {
+      teamId: r.teamId,
+      expectedWins: r.expectedWins,
+      total: r.total,
+      conferenceGames: r.conferenceGames,
+      homeGames: r.homeGames,
+      awayGames: r.awayGames,
+      neutralSiteGames: r.neutralSiteGames
+    }
+  })
+}
+
+/**
+ * Raw CFBD `/stats/season` shape -- one flat row per `statName` per team,
+ * keyed by team NAME. `statValue` is `string | number` on the wire (CFBD
+ * does not document a fixed set of `statName`s or guarantee numeric typing
+ * for all of them).
+ */
+export const RawTeamStatSchema = z.object({
+  team: z.string(),
+  statName: z.string(),
+  statValue: z.union([z.string(), z.number()])
+})
+
+export interface TeamStatsRowOutput {
+  teamId: number
+  stats: Record<string, number | string>
+}
+
+/**
+ * Pivots the flat statName/statValue rows into one row per team. A team
+ * whose name doesn't resolve is dropped for the same reason as every other
+ * name-keyed source here (transfer/FCS name mismatch, not a data error worth
+ * failing the whole fetch over).
+ */
+export function transformTeamStats(rawList: unknown[], teamIdByName: Map<string, number>): TeamStatsRowOutput[] {
+  const byTeamId = new Map<number, TeamStatsRowOutput>()
+  for (const raw of rawList) {
+    const s = RawTeamStatSchema.parse(raw)
+    const teamId = teamIdByName.get(s.team)
+    if (teamId === undefined) continue
+    let row = byTeamId.get(teamId)
+    if (!row) {
+      row = { teamId, stats: {} }
+      byTeamId.set(teamId, row)
+    }
+    row.stats[s.statName] = s.statValue
+  }
+  return [...byTeamId.values()]
+}
+
+/**
+ * Raw CFBD `/stats/player/season` shape -- one flat row per player per
+ * category/statType, keyed by team NAME. Verbatim passthrough plus name
+ * resolution and roster-jersey enrichment; which rows constitute a team's
+ * "stat leaders" is a display decision made downstream by
+ * `app/utils/statLeaders.ts`, not here.
+ */
+export const RawPlayerStatSchema = z.object({
+  playerId: z.string(),
+  player: z.string(),
+  position: z.string(),
+  team: z.string(),
+  category: z.string(),
+  statType: z.string(),
+  stat: z.union([z.string(), z.number()])
+})
+
+export interface PlayerStatOutput {
+  playerId: string
+  player: string
+  teamId: number
+  position: string
+  category: string
+  statType: string
+  stat: number | string
+  jersey: number | null
+}
+
+/**
+ * `jerseyByPlayerId` is the one-time `roster.json`'s ids -- built by the
+ * caller once and passed in, rather than this function re-deriving it, so a
+ * mid-season transfer/walk-on absent from the one-time roster fetch simply
+ * gets `jersey: null` instead of failing the whole row.
+ */
+export function transformPlayerStats(
+  rawList: unknown[],
+  teamIdByName: Map<string, number>,
+  jerseyByPlayerId: Map<string, number | null>
+): PlayerStatOutput[] {
+  const output: PlayerStatOutput[] = []
+  for (const raw of rawList) {
+    const s = RawPlayerStatSchema.parse(raw)
+    const teamId = teamIdByName.get(s.team)
+    if (teamId === undefined) continue
+    output.push({
+      playerId: s.playerId,
+      player: s.player,
+      teamId,
+      position: s.position,
+      category: s.category,
+      statType: s.statType,
+      stat: s.stat,
+      jersey: jerseyByPlayerId.get(s.playerId) ?? null
+    })
+  }
+  return output
 }

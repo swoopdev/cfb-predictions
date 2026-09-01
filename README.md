@@ -2,8 +2,6 @@
 
 Pick the winner of every FBS game on the 2026 college football schedule and watch conference standings and championship-game matchups recompute live — including each power conference's own published tiebreaker procedure.
 
-Modeled on [playoffpredictors.com](https://v2.playoffpredictors.com/football/cfb/), scoped to the regular season and conference championships.
-
 **The core idea:** pick a game, and every downstream consequence — records, conference standings, tiebreakers, championship matchups — updates correctly and instantly. If the standings math or the tiebreaker resolution is wrong, nothing else about the app matters.
 
 ## What it does

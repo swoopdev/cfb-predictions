@@ -68,7 +68,7 @@ const features = [
   <div>
     <AppHeader />
 
-    <Hero />
+    <HeroSection />
 
     <FeaturesSection
       title="How it works"

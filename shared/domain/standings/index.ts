@@ -24,3 +24,5 @@ export type { SlateCompletion } from './slateCompletion'
 
 export { computeStandingsPipeline } from './pipeline'
 export type { StandingsPipelineResult } from './pipeline'
+
+export { reconcilePicks } from './gameCompletion'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { Game, Team } from '#shared/types/schedule'
 import type { GameMediaInfo } from '#shared/types/media'
 import type { BettingLine } from '#shared/types/bettingLines'
@@ -7,7 +7,7 @@ import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
-import { computeStandingsPipeline, P4_CONFERENCES } from '#shared/domain/standings'
+import { computeStandingsPipeline, reconcilePicks, P4_CONFERENCES } from '#shared/domain/standings'
 import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
 import type { ConferenceGroup } from '~/utils/schedule'
 import { getAdjacentWeek } from '~/utils/schedule'
@@ -104,6 +104,18 @@ const emit = defineEmits<{
 // bindings (D-07, the "same GameCard/StandingsSidebar, zero new props"
 // requirement).
 const storedPicks = usePicksStorage(props.scenarioId, props.season)
+
+// Reconciles the REAL scenario's picks against final scores whenever the
+// games list changes (query load, or a later week's scores landing after a
+// weekly re-fetch) -- never a preview's, which is a frozen share-link
+// snapshot, not a live scenario. Compares by reference (`reconcilePicks`
+// returns its input unchanged when nothing needs correcting) so an
+// already-reconciled load is a no-op write.
+watch(() => props.games, (games) => {
+  const reconciled = reconcilePicks(games, storedPicks.value)
+  if (reconciled !== storedPicks.value) storedPicks.value = reconciled
+}, { immediate: true })
+
 const { autoFilled, markAutoFilled } = useAutoFilledGames(props.scenarioId, props.season)
 const {
   standings: storedStandings,

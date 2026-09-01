@@ -5,6 +5,7 @@ import type { BettingLine } from '#shared/types/bettingLines'
 import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
+import { computeSpreadCoverage } from '~/utils/spreadCoverage'
 
 const props = defineProps<{
   game: Game
@@ -79,7 +80,7 @@ const homePoints = computed(() => props.game.homePoints)
 // "-N" for the favored side and "+N" for the other -- a point spread is one
 // number describing both sides of the same line (the underdog's number is
 // always the exact negation of the favorite's, never independently fetched
-// or capable of disagreeing), so both sides always render.
+// or capable of disagreeing), so both sides render pre-kickoff.
 const awaySpreadLabel = computed(() => {
   if (!props.bettingLine) return undefined
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
@@ -90,6 +91,14 @@ const homeSpreadLabel = computed(() => {
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
   return props.bettingLine.favored === 'home' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
 })
+
+// Which side covered the spread, once final -- see computeSpreadCoverage's
+// docblock for the push/no-line/no-score cases it collapses to `undefined`.
+// Gated on `isLocked` here (not inside the pure function) since "final" is
+// this component's own concept, not something the betting-line data carries.
+const spreadCoveredBy = computed<'home' | 'away' | undefined>(() =>
+  isLocked.value ? computeSpreadCoverage(props.bettingLine, homePoints.value, awayPoints.value) : undefined
+)
 
 // Game-detail modal data: venue joins directly off the game's own venueId
 // now (CFBD's `/games` already returns it -- no weather dependency needed),
@@ -292,7 +301,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             :title="away.school"
           >{{ away.school }}</span>
           <span
-            v-if="awaySpreadLabel"
+            v-if="awaySpreadLabel && (!isLocked || spreadCoveredBy === 'away')"
             class="shrink-0 text-xs tabular-nums text-dimmed"
             :style="{
               color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
@@ -398,7 +407,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             :title="home?.school"
           >{{ home?.school }}</span>
           <span
-            v-if="homeSpreadLabel"
+            v-if="homeSpreadLabel && (!isLocked || spreadCoveredBy === 'home')"
             class="shrink-0 text-xs tabular-nums text-dimmed"
             :style="{
               color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined

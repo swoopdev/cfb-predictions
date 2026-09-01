@@ -690,7 +690,6 @@ export interface CoachOutput {
   teamId: number
   firstName: string
   lastName: string
-  currentSeason: { year: number, wins: number, losses: number, ties: number } | null
   careerRecord: { wins: number, losses: number, ties: number, firstYear: number, lastYear: number }
 }
 
@@ -699,6 +698,13 @@ export interface CoachOutput {
  * `targetYear`, with that team as `teamId`. `careerRecord` sums the coach's
  * ENTIRE seasons array (every team, every year on record) -- a whole-career
  * total, not just the tenure at the current school.
+ *
+ * Deliberately does NOT expose the matched `targetYear` entry's own
+ * wins/losses as a "this season" field: verified against the live API that
+ * CFBD's `/coaches` win/loss counts for the CURRENT season lag behind
+ * `/games`/`/records` (a completed, recorded win still read 0-0 on this
+ * endpoint) -- the team page's Record card, sourced from `records.json`, is
+ * the accurate "this season" number and this would only contradict it.
  *
  * If two raw coach records both have a `targetYear` entry for the same team
  * (a mid-season interim replacement, which CFBD represents as two coach
@@ -732,7 +738,6 @@ export function transformCoaches(rawList: unknown[], targetYear: number): CoachO
       teamId: current.teamId,
       firstName: coach.firstName,
       lastName: coach.lastName,
-      currentSeason: { year: current.year, wins: current.wins, losses: current.losses, ties: current.ties },
       careerRecord
     })
   }

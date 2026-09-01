@@ -53,7 +53,6 @@ describe('transformCoaches', () => {
         teamId: 1,
         firstName: 'Ryan',
         lastName: 'Day',
-        currentSeason: { year: 2024, wins: 14, losses: 2, ties: 0 },
         careerRecord: { wins: 25, losses: 4, ties: 0, firstYear: 2023, lastYear: 2024 }
       }
     ])

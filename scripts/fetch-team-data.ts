@@ -43,7 +43,14 @@ if (rosterError || !rawRoster) {
   process.exit(1)
 }
 
-const { data: rawCoaches, error: coachesError } = await getCoaches({ query: { year: season } })
+// No `year` filter -- CFBD truncates a coach's `seasons` array to just the
+// requested year when one is passed, which would silently break
+// `transformCoaches`'s career-total sum (verified against the live API:
+// `{team: 'Eastern Michigan'}` alone returns Chris Creighton's full 13-season
+// history; adding `year: 2026` would return only the 2026 entry). Fetching
+// every coach's full history and filtering to `season` client-side in
+// `transformCoaches` is the only way to get an accurate `careerRecord`.
+const { data: rawCoaches, error: coachesError } = await getCoaches({})
 if (coachesError || !rawCoaches) {
   console.error(`Failed to fetch coaches from CFBD: ${coachesError ? JSON.stringify(coachesError) : '(no data returned)'}`)
   process.exit(1)

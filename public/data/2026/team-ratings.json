@@ -6,6 +6,18 @@
       "teamId": 194,
       "spRating": 32.7,
       "spRanking": 1,
+      "spOffense": {
+        "rating": 41,
+        "ranking": 2,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 8.4,
+        "ranking": 1,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 28.676,
       "fpiRanking": 1,
       "elo": null,
@@ -17,6 +29,18 @@
       "teamId": 2483,
       "spRating": 29.2,
       "spRanking": 2,
+      "spOffense": {
+        "rating": 41.1,
+        "ranking": 1,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 12.2,
+        "ranking": 2,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 25.276,
       "fpiRanking": 4,
       "elo": null,
@@ -28,6 +52,18 @@
       "teamId": 87,
       "spRating": 26.5,
       "spRanking": 3,
+      "spOffense": {
+        "rating": 40.6,
+        "ranking": 3,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 14.3,
+        "ranking": 9,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 25.856,
       "fpiRanking": 3,
       "elo": null,
@@ -39,6 +75,18 @@
       "teamId": 61,
       "spRating": 26.4,
       "spRanking": 4,
+      "spOffense": {
+        "rating": 38.7,
+        "ranking": 5,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 12.9,
+        "ranking": 5,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 24.837,
       "fpiRanking": 5,
       "elo": null,
@@ -50,6 +98,18 @@
       "teamId": 84,
       "spRating": 25.8,
       "spRanking": 5,
+      "spOffense": {
+        "rating": 37.8,
+        "ranking": 7,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 12.5,
+        "ranking": 4,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 23.14,
       "fpiRanking": 6,
       "elo": null,
@@ -61,6 +121,18 @@
       "teamId": 251,
       "spRating": 22.8,
       "spRanking": 6,
+      "spOffense": {
+        "rating": 37.3,
+        "ranking": 9,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 14.9,
+        "ranking": 10,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 26.914,
       "fpiRanking": 2,
       "elo": null,
@@ -72,6 +144,18 @@
       "teamId": 2390,
       "spRating": 22,
       "spRanking": 7,
+      "spOffense": {
+        "rating": 35,
+        "ranking": 12,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 13.3,
+        "ranking": 7,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 21.834,
       "fpiRanking": 7,
       "elo": null,
@@ -83,6 +167,18 @@
       "teamId": 2641,
       "spRating": 21.8,
       "spRanking": 8,
+      "spOffense": {
+        "rating": 36.6,
+        "ranking": 10,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 15,
+        "ranking": 11,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 20.016,
       "fpiRanking": 10,
       "elo": null,
@@ -94,6 +190,18 @@
       "teamId": 245,
       "spRating": 20.9,
       "spRanking": 9,
+      "spOffense": {
+        "rating": 37.6,
+        "ranking": 8,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 16.4,
+        "ranking": 14,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 20.002,
       "fpiRanking": 11,
       "elo": null,
@@ -105,6 +213,18 @@
       "teamId": 99,
       "spRating": 20.4,
       "spRanking": 10,
+      "spOffense": {
+        "rating": 32.6,
+        "ranking": 21,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 12.4,
+        "ranking": 3,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 20.034,
       "fpiRanking": 9,
       "elo": null,
@@ -116,6 +236,18 @@
       "teamId": 201,
       "spRating": 18.8,
       "spRanking": 11,
+      "spOffense": {
+        "rating": 32.1,
+        "ranking": 25,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 13.7,
+        "ranking": 8,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 17.782,
       "fpiRanking": 12,
       "elo": null,
@@ -127,6 +259,18 @@
       "teamId": 30,
       "spRating": 17.7,
       "spRanking": 12,
+      "spOffense": {
+        "rating": 38,
+        "ranking": 6,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 19.9,
+        "ranking": 28,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 13.554,
       "fpiRanking": 18,
       "elo": 1763,
@@ -138,6 +282,18 @@
       "teamId": 333,
       "spRating": 17.6,
       "spRanking": 13,
+      "spOffense": {
+        "rating": 31,
+        "ranking": 32,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 13,
+        "ranking": 6,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 20.126,
       "fpiRanking": 8,
       "elo": null,
@@ -149,6 +305,18 @@
       "teamId": 2633,
       "spRating": 17.3,
       "spRanking": 14,
+      "spOffense": {
+        "rating": 39.3,
+        "ranking": 4,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22.4,
+        "ranking": 44,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 15.058,
       "fpiRanking": 15,
       "elo": null,
@@ -160,6 +328,18 @@
       "teamId": 130,
       "spRating": 17,
       "spRanking": 15,
+      "spOffense": {
+        "rating": 33.2,
+        "ranking": 16,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 15.8,
+        "ranking": 12,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 15.875,
       "fpiRanking": 14,
       "elo": null,
@@ -171,6 +351,18 @@
       "teamId": 145,
       "spRating": 16.5,
       "spRanking": 16,
+      "spOffense": {
+        "rating": 35.2,
+        "ranking": 11,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 19.4,
+        "ranking": 26,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 16.029,
       "fpiRanking": 13,
       "elo": null,
@@ -182,6 +374,18 @@
       "teamId": 213,
       "spRating": 16.2,
       "spRanking": 17,
+      "spOffense": {
+        "rating": 33.9,
+        "ranking": 14,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 18.3,
+        "ranking": 22,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 13.716,
       "fpiRanking": 16,
       "elo": null,
@@ -193,6 +397,18 @@
       "teamId": 264,
       "spRating": 15.8,
       "spRanking": 18,
+      "spOffense": {
+        "rating": 33,
+        "ranking": 18,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 17,
+        "ranking": 17,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 9.893,
       "fpiRanking": 27,
       "elo": null,
@@ -204,6 +420,18 @@
       "teamId": 142,
       "spRating": 15.4,
       "spRanking": 19,
+      "spOffense": {
+        "rating": 32.3,
+        "ranking": 24,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 16.4,
+        "ranking": 14,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 12.18,
       "fpiRanking": 21,
       "elo": null,
@@ -215,6 +443,18 @@
       "teamId": 57,
       "spRating": 15.2,
       "spRanking": 20,
+      "spOffense": {
+        "rating": 30.4,
+        "ranking": 40,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 15.8,
+        "ranking": 12,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 13.575,
       "fpiRanking": 17,
       "elo": null,
@@ -226,6 +466,18 @@
       "teamId": 252,
       "spRating": 14.9,
       "spRanking": 21,
+      "spOffense": {
+        "rating": 32.9,
+        "ranking": 19,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 18.3,
+        "ranking": 22,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 13.125,
       "fpiRanking": 20,
       "elo": null,
@@ -237,6 +489,18 @@
       "teamId": 2294,
       "spRating": 14.6,
       "spRanking": 22,
+      "spOffense": {
+        "rating": 30.8,
+        "ranking": 35,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 16.8,
+        "ranking": 16,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 10.569,
       "fpiRanking": 25,
       "elo": null,
@@ -248,6 +512,18 @@
       "teamId": 228,
       "spRating": 13.1,
       "spRanking": 23,
+      "spOffense": {
+        "rating": 29.8,
+        "ranking": 46,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 17.1,
+        "ranking": 18,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 13.421,
       "fpiRanking": 19,
       "elo": null,
@@ -259,6 +535,18 @@
       "teamId": 2579,
       "spRating": 12.6,
       "spRanking": 24,
+      "spOffense": {
+        "rating": 30.2,
+        "ranking": 41,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 18.1,
+        "ranking": 21,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 11.692,
       "fpiRanking": 23,
       "elo": null,
@@ -270,6 +558,18 @@
       "teamId": 2567,
       "spRating": 12.1,
       "spRanking": 25,
+      "spOffense": {
+        "rating": 32.5,
+        "ranking": 22,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 20.1,
+        "ranking": 29,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 11.117,
       "fpiRanking": 24,
       "elo": null,
@@ -281,6 +581,18 @@
       "teamId": 2,
       "spRating": 11.5,
       "spRanking": 26,
+      "spOffense": {
+        "rating": 28.5,
+        "ranking": 55,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 17.3,
+        "ranking": 19,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 12.007,
       "fpiRanking": 22,
       "elo": null,
@@ -292,6 +604,18 @@
       "teamId": 97,
       "spRating": 11.1,
       "spRanking": 27,
+      "spOffense": {
+        "rating": 30.7,
+        "ranking": 38,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 19.8,
+        "ranking": 27,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 9.454,
       "fpiRanking": 28,
       "elo": null,
@@ -303,6 +627,18 @@
       "teamId": 356,
       "spRating": 10.4,
       "spRanking": 28,
+      "spOffense": {
+        "rating": 32,
+        "ranking": 26,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22.1,
+        "ranking": 41,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 6.315,
       "fpiRanking": 38,
       "elo": null,
@@ -314,6 +650,18 @@
       "teamId": 238,
       "spRating": 9.8,
       "spRanking": 29,
+      "spOffense": {
+        "rating": 33.3,
+        "ranking": 15,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 24.2,
+        "ranking": 56,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 8.986,
       "fpiRanking": 29,
       "elo": null,
@@ -325,6 +673,18 @@
       "teamId": 254,
       "spRating": 9.8,
       "spRanking": 29,
+      "spOffense": {
+        "rating": 31.9,
+        "ranking": 27,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22.1,
+        "ranking": 41,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 8.451,
       "fpiRanking": 31,
       "elo": null,
@@ -336,6 +696,18 @@
       "teamId": 12,
       "spRating": 9.5,
       "spRanking": 31,
+      "spOffense": {
+        "rating": 31.1,
+        "ranking": 31,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 21.2,
+        "ranking": 35,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 7.155,
       "fpiRanking": 34,
       "elo": null,
@@ -347,6 +719,18 @@
       "teamId": 2628,
       "spRating": 9.4,
       "spRanking": 32,
+      "spOffense": {
+        "rating": 31.4,
+        "ranking": 29,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 21.8,
+        "ranking": 37,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.77,
       "fpiRanking": 43,
       "elo": 1598,
@@ -358,6 +742,18 @@
       "teamId": 158,
       "spRating": 9.3,
       "spRanking": 33,
+      "spOffense": {
+        "rating": 30,
+        "ranking": 42,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 20.7,
+        "ranking": 31,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 8.842,
       "fpiRanking": 30,
       "elo": null,
@@ -369,6 +765,18 @@
       "teamId": 2306,
       "spRating": 9.2,
       "spRanking": 34,
+      "spOffense": {
+        "rating": 32.5,
+        "ranking": 22,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.6,
+        "ranking": 50,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 5.057,
       "fpiRanking": 41,
       "elo": null,
@@ -380,6 +788,18 @@
       "teamId": 52,
       "spRating": 9.1,
       "spRanking": 35,
+      "spOffense": {
+        "rating": 29.8,
+        "ranking": 46,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 20.4,
+        "ranking": 30,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 7.969,
       "fpiRanking": 32,
       "elo": 1559,
@@ -391,6 +811,18 @@
       "teamId": 259,
       "spRating": 8.6,
       "spRanking": 36,
+      "spOffense": {
+        "rating": 30.7,
+        "ranking": 38,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 21.9,
+        "ranking": 38,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 7.384,
       "fpiRanking": 33,
       "elo": null,
@@ -402,6 +834,18 @@
       "teamId": 258,
       "spRating": 8.1,
       "spRanking": 37,
+      "spOffense": {
+        "rating": 26.9,
+        "ranking": 62,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 18.9,
+        "ranking": 24,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 10.405,
       "fpiRanking": 26,
       "elo": 1652,
@@ -413,6 +857,18 @@
       "teamId": 248,
       "spRating": 7.4,
       "spRanking": 38,
+      "spOffense": {
+        "rating": 30.9,
+        "ranking": 34,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.1,
+        "ranking": 46,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 7.12,
       "fpiRanking": 35,
       "elo": null,
@@ -424,6 +880,18 @@
       "teamId": 197,
       "spRating": 6.9,
       "spRanking": 39,
+      "spOffense": {
+        "rating": 29.9,
+        "ranking": 44,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.4,
+        "ranking": 48,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 3.345,
       "fpiRanking": 53,
       "elo": null,
@@ -435,6 +903,18 @@
       "teamId": 135,
       "spRating": 6.2,
       "spRanking": 40,
+      "spOffense": {
+        "rating": 25.7,
+        "ranking": 69,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 19,
+        "ranking": 25,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.612,
       "fpiRanking": 61,
       "elo": null,
@@ -446,6 +926,18 @@
       "teamId": 221,
       "spRating": 6.2,
       "spRanking": 40,
+      "spOffense": {
+        "rating": 30,
+        "ranking": 42,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.9,
+        "ranking": 54,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 6.616,
       "fpiRanking": 36,
       "elo": null,
@@ -457,6 +949,18 @@
       "teamId": 59,
       "spRating": 5.9,
       "spRanking": 42,
+      "spOffense": {
+        "rating": 28.7,
+        "ranking": 54,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.4,
+        "ranking": 48,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.186,
       "fpiRanking": 48,
       "elo": null,
@@ -468,6 +972,18 @@
       "teamId": 152,
       "spRating": 5.7,
       "spRanking": 43,
+      "spOffense": {
+        "rating": 31,
+        "ranking": 32,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 24.9,
+        "ranking": 59,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -1.435,
       "fpiRanking": 76,
       "elo": 1509,
@@ -479,6 +995,18 @@
       "teamId": 8,
       "spRating": 5.6,
       "spRanking": 44,
+      "spOffense": {
+        "rating": 34.4,
+        "ranking": 13,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29,
+        "ranking": 90,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.396,
       "fpiRanking": 47,
       "elo": null,
@@ -490,6 +1018,18 @@
       "teamId": 150,
       "spRating": 5.6,
       "spRanking": 44,
+      "spOffense": {
+        "rating": 32.8,
+        "ranking": 20,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27.6,
+        "ranking": 81,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 3.547,
       "fpiRanking": 51,
       "elo": null,
@@ -501,6 +1041,18 @@
       "teamId": 26,
       "spRating": 5.4,
       "spRanking": 46,
+      "spOffense": {
+        "rating": 29.1,
+        "ranking": 48,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.7,
+        "ranking": 51,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.472,
       "fpiRanking": 62,
       "elo": null,
@@ -512,6 +1064,18 @@
       "teamId": 120,
       "spRating": 5.2,
       "spRanking": 47,
+      "spOffense": {
+        "rating": 26.8,
+        "ranking": 63,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22,
+        "ranking": 39,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 1.024,
       "fpiRanking": 59,
       "elo": null,
@@ -523,6 +1087,18 @@
       "teamId": 96,
       "spRating": 5.2,
       "spRanking": 47,
+      "spOffense": {
+        "rating": 26.3,
+        "ranking": 65,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 21.1,
+        "ranking": 34,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 5.366,
       "fpiRanking": 40,
       "elo": null,
@@ -534,6 +1110,18 @@
       "teamId": 77,
       "spRating": 5.1,
       "spRanking": 49,
+      "spOffense": {
+        "rating": 25.3,
+        "ranking": 71,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 20.7,
+        "ranking": 31,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 1.414,
       "fpiRanking": 58,
       "elo": null,
@@ -545,6 +1133,18 @@
       "teamId": 68,
       "spRating": 5.1,
       "spRanking": 49,
+      "spOffense": {
+        "rating": 29,
+        "ranking": 49,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.7,
+        "ranking": 51,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.045,
       "fpiRanking": 50,
       "elo": null,
@@ -556,6 +1156,18 @@
       "teamId": 9,
       "spRating": 4.9,
       "spRanking": 51,
+      "spOffense": {
+        "rating": 27.4,
+        "ranking": 61,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22,
+        "ranking": 39,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.76,
       "fpiRanking": 44,
       "elo": null,
@@ -567,6 +1179,18 @@
       "teamId": 344,
       "spRating": 4.8,
       "spRanking": 52,
+      "spOffense": {
+        "rating": 30.8,
+        "ranking": 35,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.5,
+        "ranking": 74,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.082,
       "fpiRanking": 49,
       "elo": null,
@@ -578,6 +1202,18 @@
       "teamId": 239,
       "spRating": 3.8,
       "spRanking": 53,
+      "spOffense": {
+        "rating": 31.9,
+        "ranking": 27,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28.8,
+        "ranking": 89,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 6.518,
       "fpiRanking": 37,
       "elo": null,
@@ -589,6 +1225,18 @@
       "teamId": 275,
       "spRating": 3.8,
       "spRanking": 53,
+      "spOffense": {
+        "rating": 21.6,
+        "ranking": 100,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 17.5,
+        "ranking": 20,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.818,
       "fpiRanking": 42,
       "elo": null,
@@ -600,6 +1248,18 @@
       "teamId": 2439,
       "spRating": 3.6,
       "spRanking": 55,
+      "spOffense": {
+        "rating": 31.4,
+        "ranking": 29,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28,
+        "ranking": 84,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.382,
       "fpiRanking": 67,
       "elo": 1566,
@@ -611,6 +1271,18 @@
       "teamId": 153,
       "spRating": 3.5,
       "spRanking": 56,
+      "spOffense": {
+        "rating": 24.3,
+        "ranking": 79,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 21.2,
+        "ranking": 35,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 5.91,
       "fpiRanking": 39,
       "elo": 1395,
@@ -622,6 +1294,18 @@
       "teamId": 154,
       "spRating": 3.4,
       "spRanking": 57,
+      "spOffense": {
+        "rating": 24.2,
+        "ranking": 80,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 20.7,
+        "ranking": 31,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 3.379,
       "fpiRanking": 52,
       "elo": null,
@@ -633,6 +1317,18 @@
       "teamId": 2305,
       "spRating": 3.3,
       "spRanking": 58,
+      "spOffense": {
+        "rating": 28.8,
+        "ranking": 52,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.1,
+        "ranking": 69,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 2.759,
       "fpiRanking": 54,
       "elo": null,
@@ -644,6 +1340,18 @@
       "teamId": 2132,
       "spRating": 3,
       "spRanking": 59,
+      "spOffense": {
+        "rating": 28.9,
+        "ranking": 51,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.1,
+        "ranking": 69,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.406,
       "fpiRanking": 46,
       "elo": null,
@@ -655,6 +1363,18 @@
       "teamId": 25,
       "spRating": 3,
       "spRanking": 59,
+      "spOffense": {
+        "rating": 28.8,
+        "ranking": 52,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.5,
+        "ranking": 64,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.884,
       "fpiRanking": 60,
       "elo": null,
@@ -666,6 +1386,18 @@
       "teamId": 164,
       "spRating": 2.7,
       "spRanking": 61,
+      "spOffense": {
+        "rating": 30.8,
+        "ranking": 35,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28.2,
+        "ranking": 86,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.153,
       "fpiRanking": 66,
       "elo": null,
@@ -677,6 +1409,18 @@
       "teamId": 127,
       "spRating": 2.2,
       "spRanking": 62,
+      "spOffense": {
+        "rating": 27.7,
+        "ranking": 58,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.1,
+        "ranking": 61,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.281,
       "fpiRanking": 63,
       "elo": null,
@@ -688,6 +1432,18 @@
       "teamId": 2116,
       "spRating": 1.7,
       "spRanking": 63,
+      "spOffense": {
+        "rating": 24.2,
+        "ranking": 80,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22.3,
+        "ranking": 43,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 2.116,
       "fpiRanking": 56,
       "elo": null,
@@ -699,6 +1455,18 @@
       "teamId": 2426,
       "spRating": 1.2,
       "spRanking": 64,
+      "spOffense": {
+        "rating": 27.8,
+        "ranking": 57,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.8,
+        "ranking": 77,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.712,
       "fpiRanking": 69,
       "elo": null,
@@ -710,6 +1478,18 @@
       "teamId": 21,
       "spRating": 0.7,
       "spRanking": 65,
+      "spOffense": {
+        "rating": 24.1,
+        "ranking": 85,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 24,
+        "ranking": 55,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 1.426,
       "fpiRanking": 57,
       "elo": null,
@@ -721,6 +1501,18 @@
       "teamId": 38,
       "spRating": 0.7,
       "spRanking": 65,
+      "spOffense": {
+        "rating": 26.1,
+        "ranking": 66,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25,
+        "ranking": 60,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 4.546,
       "fpiRanking": 45,
       "elo": null,
@@ -732,6 +1524,18 @@
       "teamId": 235,
       "spRating": 0.3,
       "spRanking": 67,
+      "spOffense": {
+        "rating": 29,
+        "ranking": 49,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29.2,
+        "ranking": 92,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.02,
       "fpiRanking": 65,
       "elo": 1541,
@@ -743,6 +1547,18 @@
       "teamId": 167,
       "spRating": 0,
       "spRanking": 68,
+      "spOffense": {
+        "rating": 25.6,
+        "ranking": 70,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.1,
+        "ranking": 69,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -3.531,
       "fpiRanking": 81,
       "elo": null,
@@ -754,6 +1570,18 @@
       "teamId": 66,
       "spRating": -0.4,
       "spRanking": 69,
+      "spOffense": {
+        "rating": 22.4,
+        "ranking": 96,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.2,
+        "ranking": 47,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.943,
       "fpiRanking": 72,
       "elo": null,
@@ -765,6 +1593,18 @@
       "teamId": 256,
       "spRating": -0.9,
       "spRanking": 70,
+      "spOffense": {
+        "rating": 26.7,
+        "ranking": 64,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27.2,
+        "ranking": 79,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -2.026,
       "fpiRanking": 77,
       "elo": null,
@@ -776,6 +1616,18 @@
       "teamId": 2636,
       "spRating": -1.1,
       "spRanking": 71,
+      "spOffense": {
+        "rating": 29.9,
+        "ranking": 44,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 31.1,
+        "ranking": 101,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -5.31,
       "fpiRanking": 89,
       "elo": null,
@@ -787,6 +1639,18 @@
       "teamId": 277,
       "spRating": -1.3,
       "spRanking": 72,
+      "spOffense": {
+        "rating": 25.3,
+        "ranking": 71,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.6,
+        "ranking": 75,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 0.197,
       "fpiRanking": 64,
       "elo": null,
@@ -798,6 +1662,18 @@
       "teamId": 278,
       "spRating": -1.4,
       "spRanking": 73,
+      "spOffense": {
+        "rating": 21,
+        "ranking": 103,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 22.4,
+        "ranking": 44,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -2.498,
       "fpiRanking": 78,
       "elo": null,
@@ -809,6 +1685,18 @@
       "teamId": 58,
       "spRating": -1.7,
       "spRanking": 74,
+      "spOffense": {
+        "rating": 28.1,
+        "ranking": 56,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29.6,
+        "ranking": 94,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.949,
       "fpiRanking": 73,
       "elo": null,
@@ -820,6 +1708,18 @@
       "teamId": 2449,
       "spRating": -1.8,
       "spRanking": 75,
+      "spOffense": {
+        "rating": 24.1,
+        "ranking": 85,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.9,
+        "ranking": 68,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -1.237,
       "fpiRanking": 75,
       "elo": 1562,
@@ -831,6 +1731,18 @@
       "teamId": 183,
       "spRating": -1.9,
       "spRanking": 76,
+      "spOffense": {
+        "rating": 23.3,
+        "ranking": 90,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.6,
+        "ranking": 65,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.808,
       "fpiRanking": 70,
       "elo": null,
@@ -842,6 +1754,18 @@
       "teamId": 326,
       "spRating": -2.1,
       "spRanking": 77,
+      "spOffense": {
+        "rating": 33.2,
+        "ranking": 16,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35.4,
+        "ranking": 124,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.26,
       "fpiRanking": 85,
       "elo": null,
@@ -853,6 +1777,18 @@
       "teamId": 2509,
       "spRating": -2.2,
       "spRanking": 78,
+      "spOffense": {
+        "rating": 24.2,
+        "ranking": 80,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27,
+        "ranking": 78,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.929,
       "fpiRanking": 71,
       "elo": null,
@@ -864,6 +1800,18 @@
       "teamId": 24,
       "spRating": -2.3,
       "spRanking": 79,
+      "spOffense": {
+        "rating": 22.5,
+        "ranking": 94,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 24.2,
+        "ranking": 56,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -1.192,
       "fpiRanking": 74,
       "elo": 1408,
@@ -875,6 +1823,18 @@
       "teamId": 151,
       "spRating": -2.3,
       "spRanking": 79,
+      "spOffense": {
+        "rating": 24.1,
+        "ranking": 85,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.3,
+        "ranking": 73,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -0.564,
       "fpiRanking": 68,
       "elo": null,
@@ -886,6 +1846,18 @@
       "teamId": 349,
       "spRating": -2.4,
       "spRanking": 81,
+      "spOffense": {
+        "rating": 24.8,
+        "ranking": 74,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27.2,
+        "ranking": 79,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -5.63,
       "fpiRanking": 90,
       "elo": null,
@@ -897,6 +1869,18 @@
       "teamId": 103,
       "spRating": -2.5,
       "spRanking": 82,
+      "spOffense": {
+        "rating": 24.7,
+        "ranking": 77,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27.7,
+        "ranking": 82,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -2.668,
       "fpiRanking": 79,
       "elo": null,
@@ -908,6 +1892,18 @@
       "teamId": 62,
       "spRating": -2.6,
       "spRanking": 83,
+      "spOffense": {
+        "rating": 25.9,
+        "ranking": 68,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29.1,
+        "ranking": 91,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.027,
       "fpiRanking": 82,
       "elo": 1454,
@@ -919,6 +1915,18 @@
       "teamId": 2005,
       "spRating": -3.2,
       "spRanking": 84,
+      "spOffense": {
+        "rating": 24.8,
+        "ranking": 74,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28.1,
+        "ranking": 85,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -6.842,
       "fpiRanking": 94,
       "elo": null,
@@ -930,6 +1938,18 @@
       "teamId": 193,
       "spRating": -4,
       "spRanking": 85,
+      "spOffense": {
+        "rating": 19.2,
+        "ranking": 112,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 23.8,
+        "ranking": 53,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -6.994,
       "fpiRanking": 95,
       "elo": null,
@@ -941,6 +1961,18 @@
       "teamId": 265,
       "spRating": -4.3,
       "spRanking": 86,
+      "spOffense": {
+        "rating": 20.4,
+        "ranking": 107,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 24.6,
+        "ranking": 58,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.054,
       "fpiRanking": 84,
       "elo": null,
@@ -952,6 +1984,18 @@
       "teamId": 2655,
       "spRating": -4.3,
       "spRanking": 86,
+      "spOffense": {
+        "rating": 22.8,
+        "ranking": 91,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 27.7,
+        "ranking": 82,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": 2.251,
       "fpiRanking": 55,
       "elo": null,
@@ -963,6 +2007,18 @@
       "teamId": 2335,
       "spRating": -5.3,
       "spRanking": 88,
+      "spOffense": {
+        "rating": 26,
+        "ranking": 67,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 31.1,
+        "ranking": 101,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -7.748,
       "fpiRanking": 97,
       "elo": null,
@@ -974,6 +2030,18 @@
       "teamId": 204,
       "spRating": -5.6,
       "spRanking": 89,
+      "spOffense": {
+        "rating": 21.2,
+        "ranking": 101,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.1,
+        "ranking": 69,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.101,
       "fpiRanking": 99,
       "elo": null,
@@ -985,6 +2053,18 @@
       "teamId": 2711,
       "spRating": -6,
       "spRanking": 90,
+      "spOffense": {
+        "rating": 19.6,
+        "ranking": 109,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.2,
+        "ranking": 62,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.037,
       "fpiRanking": 83,
       "elo": null,
@@ -996,6 +2076,18 @@
       "teamId": 2226,
       "spRating": -6.1,
       "spRanking": 91,
+      "spOffense": {
+        "rating": 27.7,
+        "ranking": 58,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.3,
+        "ranking": 116,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -11.256,
       "fpiRanking": 113,
       "elo": null,
@@ -1007,6 +2099,18 @@
       "teamId": 202,
       "spRating": -6.1,
       "spRanking": 91,
+      "spOffense": {
+        "rating": 24.2,
+        "ranking": 80,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 30.9,
+        "ranking": 99,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.963,
       "fpiRanking": 104,
       "elo": null,
@@ -1018,6 +2122,18 @@
       "teamId": 295,
       "spRating": -6.9,
       "spRanking": 93,
+      "spOffense": {
+        "rating": 19.6,
+        "ranking": 109,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.8,
+        "ranking": 67,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.435,
       "fpiRanking": 86,
       "elo": null,
@@ -1029,6 +2145,18 @@
       "teamId": 98,
       "spRating": -7.3,
       "spRanking": 94,
+      "spOffense": {
+        "rating": 24.2,
+        "ranking": 80,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 32,
+        "ranking": 104,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -4.859,
       "fpiRanking": 87,
       "elo": null,
@@ -1040,6 +2168,18 @@
       "teamId": 55,
       "spRating": -7.8,
       "spRanking": 95,
+      "spOffense": {
+        "rating": 24.8,
+        "ranking": 74,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 32,
+        "ranking": 104,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -13.934,
       "fpiRanking": 123,
       "elo": 1432,
@@ -1051,6 +2191,18 @@
       "teamId": 328,
       "spRating": -7.9,
       "spRanking": 96,
+      "spOffense": {
+        "rating": 23.4,
+        "ranking": 89,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 30.8,
+        "ranking": 98,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -6.707,
       "fpiRanking": 93,
       "elo": null,
@@ -1062,6 +2214,18 @@
       "teamId": 2653,
       "spRating": -8,
       "spRanking": 97,
+      "spOffense": {
+        "rating": 22.5,
+        "ranking": 94,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 30.7,
+        "ranking": 97,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -7.359,
       "fpiRanking": 96,
       "elo": null,
@@ -1073,6 +2237,18 @@
       "teamId": 276,
       "spRating": -8.2,
       "spRanking": 98,
+      "spOffense": {
+        "rating": 27.6,
+        "ranking": 60,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 36,
+        "ranking": 127,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.786,
       "fpiRanking": 103,
       "elo": null,
@@ -1084,6 +2260,18 @@
       "teamId": 2348,
       "spRating": -9.1,
       "spRanking": 99,
+      "spOffense": {
+        "rating": 21.9,
+        "ranking": 99,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 31,
+        "ranking": 100,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -9.556,
       "fpiRanking": 107,
       "elo": null,
@@ -1095,6 +2283,18 @@
       "teamId": 218,
       "spRating": -9.1,
       "spRanking": 99,
+      "spOffense": {
+        "rating": 25,
+        "ranking": 73,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.4,
+        "ranking": 117,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.6,
       "fpiRanking": 101,
       "elo": null,
@@ -1106,6 +2306,18 @@
       "teamId": 2649,
       "spRating": -9.1,
       "spRanking": 99,
+      "spOffense": {
+        "rating": 17.9,
+        "ranking": 114,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 26.6,
+        "ranking": 75,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -2.972,
       "fpiRanking": 80,
       "elo": null,
@@ -1117,6 +2329,18 @@
       "teamId": 309,
       "spRating": -10.6,
       "spRanking": 102,
+      "spOffense": {
+        "rating": 24.4,
+        "ranking": 78,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.6,
+        "ranking": 119,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.278,
       "fpiRanking": 100,
       "elo": null,
@@ -1128,6 +2352,18 @@
       "teamId": 290,
       "spRating": -10.8,
       "spRanking": 103,
+      "spOffense": {
+        "rating": 22.7,
+        "ranking": 93,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.5,
+        "ranking": 110,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -8.701,
       "fpiRanking": 102,
       "elo": null,
@@ -1139,6 +2375,18 @@
       "teamId": 2751,
       "spRating": -10.8,
       "spRanking": 103,
+      "spOffense": {
+        "rating": 15.5,
+        "ranking": 122,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.6,
+        "ranking": 65,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -13.069,
       "fpiRanking": 120,
       "elo": null,
@@ -1150,6 +2398,18 @@
       "teamId": 249,
       "spRating": -11.6,
       "spRanking": 105,
+      "spOffense": {
+        "rating": 23.7,
+        "ranking": 88,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35,
+        "ranking": 121,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -6.401,
       "fpiRanking": 91,
       "elo": null,
@@ -1161,6 +2421,18 @@
       "teamId": 2032,
       "spRating": -11.6,
       "spRanking": 105,
+      "spOffense": {
+        "rating": 22.1,
+        "ranking": 97,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.8,
+        "ranking": 113,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -9.153,
       "fpiRanking": 106,
       "elo": null,
@@ -1172,6 +2444,18 @@
       "teamId": 36,
       "spRating": -11.6,
       "spRanking": 105,
+      "spOffense": {
+        "rating": 16.8,
+        "ranking": 118,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28.3,
+        "ranking": 87,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -12.364,
       "fpiRanking": 117,
       "elo": null,
@@ -1183,6 +2467,18 @@
       "teamId": 2440,
       "spRating": -11.7,
       "spRanking": 108,
+      "spOffense": {
+        "rating": 17.6,
+        "ranking": 116,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29.7,
+        "ranking": 95,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -11.931,
       "fpiRanking": 115,
       "elo": null,
@@ -1194,6 +2490,18 @@
       "teamId": 195,
       "spRating": -11.8,
       "spRanking": 109,
+      "spOffense": {
+        "rating": 14.1,
+        "ranking": 132,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 25.3,
+        "ranking": 63,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -7.957,
       "fpiRanking": 98,
       "elo": null,
@@ -1205,6 +2513,18 @@
       "teamId": 41,
       "spRating": -11.9,
       "spRanking": 110,
+      "spOffense": {
+        "rating": 19.9,
+        "ranking": 108,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 32.4,
+        "ranking": 107,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -11.163,
       "fpiRanking": 112,
       "elo": null,
@@ -1216,6 +2536,18 @@
       "teamId": 2026,
       "spRating": -12.7,
       "spRanking": 111,
+      "spOffense": {
+        "rating": 20.8,
+        "ranking": 104,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.9,
+        "ranking": 114,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -9.767,
       "fpiRanking": 108,
       "elo": null,
@@ -1227,6 +2559,18 @@
       "teamId": 2084,
       "spRating": -12.7,
       "spRanking": 111,
+      "spOffense": {
+        "rating": 15.3,
+        "ranking": 124,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 28.5,
+        "ranking": 88,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -10.782,
       "fpiRanking": 111,
       "elo": null,
@@ -1238,6 +2582,18 @@
       "teamId": 338,
       "spRating": -12.9,
       "spRanking": 113,
+      "spOffense": {
+        "rating": 19.5,
+        "ranking": 111,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 31.8,
+        "ranking": 103,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -9.012,
       "fpiRanking": 105,
       "elo": null,
@@ -1249,6 +2605,18 @@
       "teamId": 48,
       "spRating": -12.9,
       "spRanking": 113,
+      "spOffense": {
+        "rating": 22.8,
+        "ranking": 91,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35.4,
+        "ranking": 124,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -6.555,
       "fpiRanking": 92,
       "elo": null,
@@ -1260,6 +2628,18 @@
       "teamId": 2229,
       "spRating": -14.5,
       "spRanking": 115,
+      "spOffense": {
+        "rating": 21.1,
+        "ranking": 102,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35.3,
+        "ranking": 123,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -12.58,
       "fpiRanking": 118,
       "elo": null,
@@ -1271,6 +2651,18 @@
       "teamId": 6,
       "spRating": -14.6,
       "spRanking": 116,
+      "spOffense": {
+        "rating": 22,
+        "ranking": 98,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35.9,
+        "ranking": 126,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -10.531,
       "fpiRanking": 110,
       "elo": null,
@@ -1282,6 +2674,18 @@
       "teamId": 324,
       "spRating": -14.7,
       "spRanking": 117,
+      "spOffense": {
+        "rating": 20.6,
+        "ranking": 105,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.8,
+        "ranking": 120,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -12.093,
       "fpiRanking": 116,
       "elo": null,
@@ -1293,6 +2697,18 @@
       "teamId": 189,
       "spRating": -15,
       "spRanking": 118,
+      "spOffense": {
+        "rating": 13.9,
+        "ranking": 133,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 29.2,
+        "ranking": 92,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -13.682,
       "fpiRanking": 122,
       "elo": null,
@@ -1304,6 +2720,18 @@
       "teamId": 2117,
       "spRating": -15.1,
       "spRanking": 119,
+      "spOffense": {
+        "rating": 15.5,
+        "ranking": 122,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 30.4,
+        "ranking": 96,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -12.806,
       "fpiRanking": 119,
       "elo": null,
@@ -1315,6 +2743,18 @@
       "teamId": 242,
       "spRating": -15.3,
       "spRanking": 120,
+      "spOffense": {
+        "rating": 16.7,
+        "ranking": 119,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 32.5,
+        "ranking": 108,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -13.439,
       "fpiRanking": 121,
       "elo": null,
@@ -1326,6 +2766,18 @@
       "teamId": 23,
       "spRating": -15.7,
       "spRanking": 121,
+      "spOffense": {
+        "rating": 18.3,
+        "ranking": 113,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.5,
+        "ranking": 110,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -11.845,
       "fpiRanking": 114,
       "elo": 1395,
@@ -1337,6 +2789,18 @@
       "teamId": 2199,
       "spRating": -16.1,
       "spRanking": 122,
+      "spOffense": {
+        "rating": 17.2,
+        "ranking": 117,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.4,
+        "ranking": 109,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -15.067,
       "fpiRanking": 127,
       "elo": 1350,
@@ -1348,6 +2812,18 @@
       "teamId": 2459,
       "spRating": -17.2,
       "spRanking": 123,
+      "spOffense": {
+        "rating": 15.2,
+        "ranking": 125,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 32.1,
+        "ranking": 106,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -14.51,
       "fpiRanking": 125,
       "elo": null,
@@ -1359,6 +2835,18 @@
       "teamId": 5,
       "spRating": -17.5,
       "spRanking": 124,
+      "spOffense": {
+        "rating": 20.6,
+        "ranking": 105,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 37.6,
+        "ranking": 130,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -15.451,
       "fpiRanking": 129,
       "elo": null,
@@ -1370,6 +2858,18 @@
       "teamId": 166,
       "spRating": -18.5,
       "spRanking": 125,
+      "spOffense": {
+        "rating": 15.9,
+        "ranking": 121,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.4,
+        "ranking": 117,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -14.005,
       "fpiRanking": 124,
       "elo": 1259,
@@ -1381,6 +2881,18 @@
       "teamId": 2623,
       "spRating": -19.1,
       "spRanking": 126,
+      "spOffense": {
+        "rating": 16.4,
+        "ranking": 120,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 35.1,
+        "ranking": 122,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -10.255,
       "fpiRanking": 109,
       "elo": null,
@@ -1392,6 +2904,18 @@
       "teamId": 2638,
       "spRating": -19.3,
       "spRanking": 127,
+      "spOffense": {
+        "rating": 15.2,
+        "ranking": 125,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 34.1,
+        "ranking": 115,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -16.605,
       "fpiRanking": 131,
       "elo": null,
@@ -1403,6 +2927,18 @@
       "teamId": 2572,
       "spRating": -20.7,
       "spRanking": 128,
+      "spOffense": {
+        "rating": 17.8,
+        "ranking": 115,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 38,
+        "ranking": 131,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -5.053,
       "fpiRanking": 88,
       "elo": null,
@@ -1414,6 +2950,18 @@
       "teamId": 2309,
       "spRating": -22.4,
       "spRanking": 129,
+      "spOffense": {
+        "rating": 14.7,
+        "ranking": 128,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 36.6,
+        "ranking": 128,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -17.891,
       "fpiRanking": 134,
       "elo": null,
@@ -1425,6 +2973,18 @@
       "teamId": 2006,
       "spRating": -22.9,
       "spRanking": 130,
+      "spOffense": {
+        "rating": 11.3,
+        "ranking": 137,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 33.6,
+        "ranking": 112,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -16.854,
       "fpiRanking": 132,
       "elo": null,
@@ -1436,6 +2996,18 @@
       "teamId": 16,
       "spRating": -23.4,
       "spRanking": 131,
+      "spOffense": {
+        "rating": 14.7,
+        "ranking": 128,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 38.2,
+        "ranking": 133,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -20.836,
       "fpiRanking": 138,
       "elo": 1476,
@@ -1447,6 +3019,18 @@
       "teamId": 2429,
       "spRating": -24.1,
       "spRanking": 132,
+      "spOffense": {
+        "rating": 14.5,
+        "ranking": 130,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 38.1,
+        "ranking": 132,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -14.583,
       "fpiRanking": 126,
       "elo": null,
@@ -1458,6 +3042,18 @@
       "teamId": 2050,
       "spRating": -25.1,
       "spRanking": 133,
+      "spOffense": {
+        "rating": 12.2,
+        "ranking": 135,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 36.7,
+        "ranking": 129,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -17.282,
       "fpiRanking": 133,
       "elo": null,
@@ -1469,6 +3065,18 @@
       "teamId": 2534,
       "spRating": -26,
       "spRanking": 134,
+      "spOffense": {
+        "rating": 14.2,
+        "ranking": 131,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 39.8,
+        "ranking": 134,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -18.422,
       "fpiRanking": 135,
       "elo": null,
@@ -1480,6 +3088,18 @@
       "teamId": 2393,
       "spRating": -26.5,
       "spRanking": 135,
+      "spOffense": {
+        "rating": 13.8,
+        "ranking": 134,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 40.5,
+        "ranking": 136,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -16.066,
       "fpiRanking": 130,
       "elo": null,
@@ -1491,6 +3111,18 @@
       "teamId": 2433,
       "spRating": -28.9,
       "spRanking": 136,
+      "spOffense": {
+        "rating": 11.9,
+        "ranking": 136,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 40.1,
+        "ranking": 135,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -19.255,
       "fpiRanking": 137,
       "elo": null,
@@ -1502,6 +3134,18 @@
       "teamId": 2247,
       "spRating": -29.3,
       "spRanking": 137,
+      "spOffense": {
+        "rating": 14.8,
+        "ranking": 127,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 43.4,
+        "ranking": 138,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -15.225,
       "fpiRanking": 128,
       "elo": null,
@@ -1513,6 +3157,18 @@
       "teamId": 113,
       "spRating": -32.9,
       "spRanking": 138,
+      "spOffense": {
+        "rating": 8.8,
+        "ranking": 138,
+        "success": null,
+        "explosiveness": null
+      },
+      "spDefense": {
+        "rating": 41.2,
+        "ranking": 137,
+        "success": null,
+        "explosiveness": null
+      },
       "fpi": -18.834,
       "fpiRanking": 136,
       "elo": null,
@@ -1524,6 +3180,8 @@
       "teamId": 2000,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1535,6 +3193,8 @@
       "teamId": 2010,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1546,6 +3206,8 @@
       "teamId": 2011,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1557,6 +3219,8 @@
       "teamId": 2803,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1568,6 +3232,8 @@
       "teamId": 2083,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1579,6 +3245,8 @@
       "teamId": 13,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1590,6 +3258,8 @@
       "teamId": 2097,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1601,6 +3271,8 @@
       "teamId": 2115,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1612,6 +3284,8 @@
       "teamId": 2142,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1623,6 +3297,8 @@
       "teamId": 2198,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1634,6 +3310,8 @@
       "teamId": 331,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1645,6 +3323,8 @@
       "teamId": 2193,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1656,6 +3336,8 @@
       "teamId": 2837,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1667,6 +3349,8 @@
       "teamId": 2230,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1678,6 +3362,8 @@
       "teamId": 107,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1689,6 +3375,8 @@
       "teamId": 47,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1700,6 +3388,8 @@
       "teamId": 70,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1711,6 +3401,8 @@
       "teamId": 304,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1722,6 +3414,8 @@
       "teamId": 282,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1733,6 +3427,8 @@
       "teamId": 2296,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1744,6 +3440,8 @@
       "teamId": 2320,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1755,6 +3453,8 @@
       "teamId": 2329,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1766,6 +3466,8 @@
       "teamId": 2368,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1777,6 +3479,8 @@
       "teamId": 2377,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1788,6 +3492,8 @@
       "teamId": 2382,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1799,6 +3505,8 @@
       "teamId": 2771,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1810,6 +3518,8 @@
       "teamId": 2405,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1821,6 +3531,8 @@
       "teamId": 149,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1832,6 +3544,8 @@
       "teamId": 147,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1843,6 +3557,8 @@
       "teamId": 2415,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1854,6 +3570,8 @@
       "teamId": 160,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1865,6 +3583,8 @@
       "teamId": 2441,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1876,6 +3596,8 @@
       "teamId": 2453,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1887,6 +3609,8 @@
       "teamId": 2448,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1898,6 +3622,8 @@
       "teamId": 2428,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1909,6 +3635,8 @@
       "teamId": 2464,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1920,6 +3648,8 @@
       "teamId": 2458,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1931,6 +3661,8 @@
       "teamId": 2502,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1942,6 +3674,8 @@
       "teamId": 2504,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1953,6 +3687,8 @@
       "teamId": 227,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1964,6 +3700,8 @@
       "teamId": 257,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1975,6 +3713,8 @@
       "teamId": 2523,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1986,6 +3726,8 @@
       "teamId": 2535,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -1997,6 +3739,8 @@
       "teamId": 233,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2008,6 +3752,8 @@
       "teamId": 2571,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2019,6 +3765,8 @@
       "teamId": 2546,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2030,6 +3778,8 @@
       "teamId": 2582,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2041,6 +3791,8 @@
       "teamId": 253,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2052,6 +3804,8 @@
       "teamId": 2617,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2063,6 +3817,8 @@
       "teamId": 56,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2074,6 +3830,8 @@
       "teamId": 284,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2085,6 +3843,8 @@
       "teamId": 2627,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2096,6 +3856,8 @@
       "teamId": 2634,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2107,6 +3869,8 @@
       "teamId": 2635,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2118,6 +3882,8 @@
       "teamId": 2640,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2129,6 +3895,8 @@
       "teamId": 2643,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2140,6 +3908,8 @@
       "teamId": 399,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2151,6 +3921,8 @@
       "teamId": 302,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2162,6 +3934,8 @@
       "teamId": 3101,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2173,6 +3947,8 @@
       "teamId": 222,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2184,6 +3960,8 @@
       "teamId": 2678,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2195,6 +3973,8 @@
       "teamId": 2681,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2206,6 +3986,8 @@
       "teamId": 2692,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2217,6 +3999,8 @@
       "teamId": 2717,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2228,6 +4012,8 @@
       "teamId": 2729,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
@@ -2239,6 +4025,8 @@
       "teamId": 2747,
       "spRating": null,
       "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
       "fpi": null,
       "fpiRanking": null,
       "elo": null,

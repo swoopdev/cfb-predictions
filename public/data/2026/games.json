@@ -78,21 +78,6 @@
       "awayPoints": 17
     },
     {
-      "id": 401864570,
-      "week": 1,
-      "seasonType": "regular",
-      "homeId": 52,
-      "homeTeam": "Florida State",
-      "awayId": 166,
-      "awayTeam": "New Mexico State",
-      "conferenceGame": false,
-      "neutralSite": false,
-      "venueId": 3697,
-      "completed": true,
-      "homePoints": 34,
-      "awayPoints": 17
-    },
-    {
       "id": 401858201,
       "week": 1,
       "seasonType": "regular",
@@ -106,6 +91,21 @@
       "completed": true,
       "homePoints": 37,
       "awayPoints": 27
+    },
+    {
+      "id": 401864570,
+      "week": 1,
+      "seasonType": "regular",
+      "homeId": 52,
+      "homeTeam": "Florida State",
+      "awayId": 166,
+      "awayTeam": "New Mexico State",
+      "conferenceGame": false,
+      "neutralSite": false,
+      "venueId": 3697,
+      "completed": true,
+      "homePoints": 34,
+      "awayPoints": 17
     },
     {
       "id": 401862693,
@@ -378,21 +378,6 @@
       "awayPoints": null
     },
     {
-      "id": 401858206,
-      "week": 1,
-      "seasonType": "regular",
-      "homeId": 24,
-      "homeTeam": "Stanford",
-      "awayId": 2390,
-      "awayTeam": "Miami",
-      "conferenceGame": true,
-      "neutralSite": false,
-      "venueId": 3940,
-      "completed": false,
-      "homePoints": null,
-      "awayPoints": null
-    },
-    {
       "id": 401858436,
       "week": 1,
       "seasonType": "regular",
@@ -403,6 +388,21 @@
       "conferenceGame": false,
       "neutralSite": false,
       "venueId": 477,
+      "completed": false,
+      "homePoints": null,
+      "awayPoints": null
+    },
+    {
+      "id": 401858206,
+      "week": 1,
+      "seasonType": "regular",
+      "homeId": 24,
+      "homeTeam": "Stanford",
+      "awayId": 2390,
+      "awayTeam": "Miami",
+      "conferenceGame": true,
+      "neutralSite": false,
+      "venueId": 3940,
       "completed": false,
       "homePoints": null,
       "awayPoints": null

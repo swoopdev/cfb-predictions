@@ -350,6 +350,14 @@ function advanceWeek() {
               </UButton>
             </div>
             <div class="ml-auto flex items-center gap-2 lg:order-5 lg:ml-auto">
+              <UButton
+                to="/teams"
+                icon="i-lucide-search"
+                color="neutral"
+                variant="ghost"
+                size="xl"
+                aria-label="Browse teams"
+              />
               <UColorModeButton size="xl" />
               <UButton
                 icon="i-lucide-podium"

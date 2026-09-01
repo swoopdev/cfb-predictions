@@ -13,5 +13,10 @@ export const queryKeys = {
   media: (season: number) => ['season', season, 'media'] as const,
   teamRatings: (season: number) => ['season', season, 'teamRatings'] as const,
   venues: (season: number) => ['season', season, 'venues'] as const,
-  talent: (season: number) => ['season', season, 'talent'] as const
+  talent: (season: number) => ['season', season, 'talent'] as const,
+  coaches: (season: number) => ['season', season, 'coaches'] as const,
+  recruiting: (season: number) => ['season', season, 'recruiting'] as const,
+  records: (season: number) => ['season', season, 'records'] as const,
+  teamStats: (season: number) => ['season', season, 'teamStats'] as const,
+  playerStats: (season: number) => ['season', season, 'playerStats'] as const
 }

@@ -94,6 +94,10 @@ const loadState = computed<'loading' | 'error' | 'ready'>(() => {
 
 <template>
   <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-4 flex justify-center sm:justify-start">
+      <BrandMark />
+    </div>
+
     <UButton
       to="/teams"
       icon="i-lucide-arrow-left"

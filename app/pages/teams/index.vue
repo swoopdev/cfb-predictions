@@ -30,6 +30,10 @@ const filteredTeams = computed(() => {
 
 <template>
   <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-4 flex justify-center sm:justify-start">
+      <BrandMark />
+    </div>
+
     <div class="mb-6 flex items-center justify-between gap-4">
       <h1 class="text-xl font-semibold">
         Teams

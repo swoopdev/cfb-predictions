@@ -277,6 +277,13 @@ function advanceWeek() {
        the padding it needs instead. -->
   <div class="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-0">
     <div class="min-w-0 flex-1 px-6 lg:px-8 pb-6">
+      <!-- Brand mark, non-sticky -- consistent branding with the homepage
+           without duplicating AppHeader's full nav (this page already has
+           its own week/filter/fill-clear controls immediately below). -->
+      <div class="flex justify-center pt-4 lg:justify-start">
+        <BrandMark />
+      </div>
+
       <!-- Header: scenario switcher, week nav, fill/clear and the
            conference/team filter row all live in one sticky block on
            desktop, scoped to this column only — the standings sidebar is a

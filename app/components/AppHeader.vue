@@ -39,17 +39,7 @@ const items = ref<NavigationMenuItem[]>([
     }"
   >
     <template #left>
-      <NuxtLink
-        to="/"
-        class="flex shrink-0 items-center gap-2"
-      >
-        <img
-          src="/favicon.png"
-          alt=""
-          class="size-7"
-        >
-        <span class="font-script text-2xl text-primary">Saturday Central</span>
-      </NuxtLink>
+      <BrandMark />
     </template>
 
     <UNavigationMenu

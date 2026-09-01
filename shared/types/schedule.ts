@@ -32,4 +32,8 @@ export interface Game {
   neutralSite: boolean
   /** Joins against `venues.json`'s `id` for the game-detail modal's venue row. */
   venueId: number | null
+  /** Final once true — picks lock and `homePoints`/`awayPoints` become the score to display. */
+  completed: boolean
+  homePoints: number | null
+  awayPoints: number | null
 }

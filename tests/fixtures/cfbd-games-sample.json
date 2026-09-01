@@ -9,7 +9,10 @@
     "awayTeam": "Missing Conference U",
     "conferenceGame": false,
     "neutralSite": false,
-    "venueId": 101
+    "venueId": 101,
+    "completed": true,
+    "homePoints": 42,
+    "awayPoints": 10
   },
   {
     "id": 401628301,
@@ -21,7 +24,10 @@
     "awayTeam": "No Logo State",
     "conferenceGame": true,
     "neutralSite": true,
-    "venueId": 102
+    "venueId": 102,
+    "completed": false,
+    "homePoints": null,
+    "awayPoints": null
   },
   {
     "id": 401628288,
@@ -33,6 +39,9 @@
     "awayTeam": "No Logo State",
     "conferenceGame": true,
     "neutralSite": false,
-    "venueId": null
+    "venueId": null,
+    "completed": false,
+    "homePoints": null,
+    "awayPoints": null
   }
 ]

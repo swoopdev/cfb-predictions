@@ -96,7 +96,10 @@ export const RawGameSchema = z.object({
   awayTeam: z.string(),
   conferenceGame: z.boolean(),
   neutralSite: z.boolean(),
-  venueId: z.number().nullable()
+  venueId: z.number().nullable(),
+  completed: z.boolean(),
+  homePoints: z.number().nullable(),
+  awayPoints: z.number().nullable()
 })
 
 export interface GameOutput {
@@ -110,10 +113,13 @@ export interface GameOutput {
   conferenceGame: boolean
   neutralSite: boolean
   venueId: number | null
+  completed: boolean
+  homePoints: number | null
+  awayPoints: number | null
 }
 
 /**
- * Parses `raw` against `RawGameSchema` and returns those 10 fields directly
+ * Parses `raw` against `RawGameSchema` and returns those fields directly
  * from the parse result — zero derivation logic. `conferenceGame` and
  * `seasonType` must never be recomputed by comparing home/away team
  * conferences (DATA-06's constraint, RESEARCH.md Anti-Patterns) — this
@@ -137,7 +143,10 @@ export function transformGame(raw: unknown): GameOutput {
     awayTeam: game.awayTeam,
     conferenceGame: game.conferenceGame,
     neutralSite: game.neutralSite,
-    venueId: game.venueId
+    venueId: game.venueId,
+    completed: game.completed,
+    homePoints: game.homePoints,
+    awayPoints: game.awayPoints
   }
 }
 

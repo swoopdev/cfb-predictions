@@ -87,7 +87,11 @@ export function game(
     awayId,
     awayTeam: schoolById.get(awayId) ?? `Team ${awayId}`,
     conferenceGame,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   }
 }
 
@@ -244,7 +248,11 @@ function accGame(id: number, homeId: number, awayId: number): Game {
     awayId,
     awayTeam: accSchoolById.get(awayId) ?? `Team ${awayId}`,
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   }
 }
 

@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, getSp, getFpi, getElo, getTeamsAts } from 'cfbd'
+import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, getSp, getFpi, getElo, getTeamsAts, getGames } from 'cfbd'
 
 import {
   transformRankings,
@@ -7,9 +7,12 @@ import {
   transformBettingLines,
   transformMedia,
   transformTeamRatings,
+  transformGame,
   buildTeamIdByName,
-  RawPollWeekSchema
+  RawPollWeekSchema,
+  reportGameFailures
 } from './lib/schemas'
+import { computeScheduleHash } from './lib/schedule-hash'
 
 try {
   process.loadEnvFile('.env')
@@ -74,6 +77,30 @@ const bettingLinesOutput = {
   lines: transformBettingLines(rawBettingGames)
 }
 
+// Re-fetches the full season's games (not just `week`) so `completed` /
+// `homePoints` / `awayPoints` refresh for every game that finished since the
+// last run, not only the current week's — CFBD backfills final scores
+// against a game's original week number, not "this week". Core data (gates
+// the whole run) rather than the soft-fail enrichment below: picks locking
+// and score display both depend on it.
+const { data: rawGames, error: gamesError } = await getGames({ query: { year: season, classification: 'fbs' } })
+if (gamesError || !rawGames) {
+  console.error(`Failed to fetch games from CFBD: ${gamesError ? JSON.stringify(gamesError) : '(no data returned)'}`)
+  process.exit(1)
+}
+if (rawGames.length === 0) {
+  console.error(`CFBD returned 0 games for season ${season} — refusing to overwrite committed data.`)
+  process.exit(1)
+}
+const gameFailures = reportGameFailures(rawGames)
+if (gameFailures.length > 0) {
+  console.error(JSON.stringify(gameFailures, null, 2))
+  process.exit(1)
+}
+const games = rawGames.map(raw => transformGame(raw))
+const scheduleHash = computeScheduleHash(games.map(g => g.id))
+const gamesOutput = { season, scheduleHash, games }
+
 // Everything below is enrichment for the collapsible game-detail panel, not
 // core pick/standings data — a flaky endpoint here shouldn't block the
 // rankings/win-probabilities/lines fetch above from committing. Each source
@@ -110,11 +137,15 @@ await writeFile(`${outDir}/win-probabilities.json`, JSON.stringify(winProbabilit
 await writeFile(`${outDir}/betting-lines.json`, JSON.stringify(bettingLinesOutput, null, 2))
 await writeFile(`${outDir}/media.json`, JSON.stringify(mediaOutput, null, 2))
 await writeFile(`${outDir}/team-ratings.json`, JSON.stringify(teamRatingsOutput, null, 2))
+await writeFile(`${outDir}/games.json`, JSON.stringify(gamesOutput, null, 2))
+
+const completedCount = games.filter(g => g.completed).length
 
 console.log(
   `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${week}), `
   + `${winProbabilitiesOutput.probabilities.length} win probabilities, `
   + `${bettingLinesOutput.lines.length} betting lines, `
   + `${mediaOutput.media.length} media entries, `
-  + `and ${teamRatingsOutput.ratings.length} team ratings.`
+  + `${teamRatingsOutput.ratings.length} team ratings, `
+  + `and ${games.length} games (${completedCount} completed).`
 )

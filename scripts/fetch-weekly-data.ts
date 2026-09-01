@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, getSp, getFpi, getElo, getTeamsAts, getGames } from 'cfbd'
+import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, getSp, getFpi, getElo, getTeamsAts, getGames, getRecords, getTeamStats, getPlayerSeasonStats } from 'cfbd'
 
 import {
   transformRankings,
@@ -8,9 +8,13 @@ import {
   transformMedia,
   transformTeamRatings,
   transformGame,
+  transformRecords,
+  transformTeamStats,
+  transformPlayerStats,
   buildTeamIdByName,
   RawPollWeekSchema,
-  reportGameFailures
+  reportGameFailures,
+  type RosterPlayerOutput
 } from './lib/schemas'
 import { computeScheduleHash } from './lib/schedule-hash'
 
@@ -119,15 +123,33 @@ const rawSp = await fetchOrWarn('SP+ ratings', () => getSp({ query: { year: seas
 const rawFpi = await fetchOrWarn('FPI ratings', () => getFpi({ query: { year: season } }))
 const rawElo = await fetchOrWarn('Elo ratings', () => getElo({ query: { year: season, week } }))
 const rawAts = await fetchOrWarn('ATS records', () => getTeamsAts({ query: { year: season } }))
+const rawRecords = await fetchOrWarn('records', () => getRecords({ query: { year: season } }))
+const rawTeamStats = await fetchOrWarn('team stats', () => getTeamStats({ query: { year: season, classification: 'fbs' } }))
+const rawPlayerStats = await fetchOrWarn('player season stats', () => getPlayerSeasonStats({ query: { year: season } }))
 
-// SP+/FPI/Elo are keyed by team name on the wire — resolved back to our
-// canonical teamId via the already-committed teams.json, same source CFBD's
-// own school names come from.
+// SP+/FPI/Elo/team-stats/player-stats are keyed by team name on the wire —
+// resolved back to our canonical teamId via the already-committed
+// teams.json, same source CFBD's own school names come from.
 const teamsFile = JSON.parse(await readFile(`public/data/${season}/teams.json`, 'utf-8')) as { teams: { id: number, school: string }[] }
 const teamIdByName = buildTeamIdByName(teamsFile.teams)
 
+// Player-stats jersey enrichment reads the one-time roster.json
+// (`fetch-team-data.ts`'s output) rather than requiring it -- a team page
+// still works without jerseys (falls back to `null`) if that script hasn't
+// been run yet, same soft-fail posture as the rest of this block.
+let jerseyByPlayerId = new Map<string, number | null>()
+try {
+  const rosterFile = JSON.parse(await readFile(`public/data/${season}/roster.json`, 'utf-8')) as { roster: RosterPlayerOutput[] }
+  jerseyByPlayerId = new Map(rosterFile.roster.map(p => [p.id, p.jersey]))
+} catch {
+  console.warn('roster.json not found (continuing without jersey enrichment) — run `pnpm fetch-team-data` first for that.')
+}
+
 const mediaOutput = { season, week, media: transformMedia(rawMedia) }
 const teamRatingsOutput = { season, week, ratings: transformTeamRatings(rawSp, rawFpi, rawElo, rawAts, teamIdByName) }
+const recordsOutput = { season, records: transformRecords(rawRecords) }
+const teamStatsOutput = { season, week, teamStats: transformTeamStats(rawTeamStats, teamIdByName) }
+const playerStatsOutput = { season, week, playerStats: transformPlayerStats(rawPlayerStats, teamIdByName, jerseyByPlayerId) }
 
 const outDir = `public/data/${season}`
 await mkdir(outDir, { recursive: true })
@@ -138,6 +160,9 @@ await writeFile(`${outDir}/betting-lines.json`, JSON.stringify(bettingLinesOutpu
 await writeFile(`${outDir}/media.json`, JSON.stringify(mediaOutput, null, 2))
 await writeFile(`${outDir}/team-ratings.json`, JSON.stringify(teamRatingsOutput, null, 2))
 await writeFile(`${outDir}/games.json`, JSON.stringify(gamesOutput, null, 2))
+await writeFile(`${outDir}/records.json`, JSON.stringify(recordsOutput, null, 2))
+await writeFile(`${outDir}/team-stats.json`, JSON.stringify(teamStatsOutput, null, 2))
+await writeFile(`${outDir}/player-stats.json`, JSON.stringify(playerStatsOutput, null, 2))
 
 const completedCount = games.filter(g => g.completed).length
 
@@ -147,5 +172,8 @@ console.log(
   + `${bettingLinesOutput.lines.length} betting lines, `
   + `${mediaOutput.media.length} media entries, `
   + `${teamRatingsOutput.ratings.length} team ratings, `
-  + `and ${games.length} games (${completedCount} completed).`
+  + `${games.length} games (${completedCount} completed), `
+  + `${recordsOutput.records.length} team records, `
+  + `${teamStatsOutput.teamStats.length} team stat rows, `
+  + `and ${playerStatsOutput.playerStats.length} player stat rows.`
 )

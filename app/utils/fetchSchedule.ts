@@ -7,6 +7,11 @@ import type { MediaEnvelope } from '#shared/types/media'
 import type { TeamRatingsEnvelope } from '#shared/types/teamRatings'
 import type { VenuesEnvelope } from '#shared/types/venues'
 import type { TalentEnvelope } from '#shared/types/talent'
+import type { CoachesEnvelope } from '#shared/types/coaches'
+import type { RecruitingEnvelope } from '#shared/types/recruiting'
+import type { RecordsEnvelope } from '#shared/types/records'
+import type { TeamStatsEnvelope } from '#shared/types/teamStats'
+import type { PlayerStatsEnvelope } from '#shared/types/playerStats'
 
 /**
  * `$fetch` is imported explicitly from `ofetch` (rather than relying on
@@ -82,4 +87,28 @@ export async function fetchVenues(season: number): Promise<VenuesEnvelope> {
 
 export async function fetchTalent(season: number): Promise<TalentEnvelope> {
   return await $fetch<TalentEnvelope>(`/data/${season}/talent.json`)
+}
+
+export async function fetchCoaches(season: number): Promise<CoachesEnvelope> {
+  return await $fetch<CoachesEnvelope>(`/data/${season}/coaches.json`)
+}
+
+export async function fetchRecruiting(season: number): Promise<RecruitingEnvelope> {
+  return await $fetch<RecruitingEnvelope>(`/data/${season}/recruiting.json`)
+}
+
+/**
+ * `records.json`/`team-stats.json`/`player-stats.json` are written weekly,
+ * same missing-file tolerance as rankings/win-probabilities/lines above.
+ */
+export async function fetchRecords(season: number): Promise<RecordsEnvelope> {
+  return await $fetch<RecordsEnvelope>(`/data/${season}/records.json`)
+}
+
+export async function fetchTeamStats(season: number): Promise<TeamStatsEnvelope> {
+  return await $fetch<TeamStatsEnvelope>(`/data/${season}/team-stats.json`)
+}
+
+export async function fetchPlayerStats(season: number): Promise<PlayerStatsEnvelope> {
+  return await $fetch<PlayerStatsEnvelope>(`/data/${season}/player-stats.json`)
 }

@@ -1,64 +1,80 @@
-# Nuxt Starter Template
+# CFB Predictions
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+Pick the winner of every FBS game on the 2026 college football schedule and watch conference standings and championship-game matchups recompute live — including each power conference's own published tiebreaker procedure.
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+Modeled on [playoffpredictors.com](https://v2.playoffpredictors.com/football/cfb/), scoped to the regular season and conference championships.
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+**The core idea:** pick a game, and every downstream consequence — records, conference standings, tiebreakers, championship matchups — updates correctly and instantly. If the standings math or the tiebreaker resolution is wrong, nothing else about the app matters.
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
+## What it does
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+- **Pick every game** on the schedule, week by week, filterable by conference or team
+- **Conference standings recompute live** as picks change, including each Power 4 conference's real tiebreaker procedure (head-to-head, common-opponent records, CFP-style ranking steps) — not a simplified approximation
+- **Conference championship matchups** resolve automatically once a conference's slate is fully picked
+- **Once a game finishes**, the pick locks to the actual result and the final score displays in place of the win-probability badge — an against-the-spread cover is shown too, on whichever side actually covered
+- **Multiple named scenarios** can be kept side by side in the same browser, each with its own picks
+- **Share a scenario** via a link — the recipient sees a live preview of those picks before deciding whether to save a copy
+- Nothing leaves the browser: no account, no server, no backend at all
 
-## Quick Start
+## Tech stack
 
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
-```
+| | |
+|---|---|
+| Framework | [Nuxt 4](https://nuxt.com) (SPA mode — `ssr: false`, static `nuxt generate`) |
+| UI | [Nuxt UI 4](https://ui.nuxt.com) + Tailwind CSS 4 |
+| Data fetching | [TanStack Query](https://tanstack.com/query) (`@tanstack/vue-query`) |
+| Persistence | `localStorage` via VueUse's `useStorage` — picks are client state, not server state |
+| Language | TypeScript |
+| Schedule/team data | [CollegeFootballData (CFBD)](https://collegefootballdata.com/) API, fetched at build/commit time — never called from the browser |
+| Testing | Vitest |
 
-## Deploy your own
+There is no backend, no database, and no runtime API key — the whole app is static files, and the schedule/rankings/odds data is plain JSON committed to the repo.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
-
-## Setup
-
-Make sure to install the dependencies:
+## Getting started
 
 ```bash
 pnpm install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
 pnpm dev
 ```
 
-## Production
+The dev server needs the committed data in `public/data/2026/` to already exist (see [Data pipeline](#data-pipeline) below) — it's checked into the repo, so a fresh clone works out of the box without any API key.
 
-Build the application for production:
+## Data pipeline
 
-```bash
-pnpm build
+The app never talks to CFBD directly. Two scripts fetch from CFBD and commit plain JSON to `public/data/2026/`, which the app then reads like any other static asset:
+
+| Script | Cadence | What it writes |
+|---|---|---|
+| `pnpm fetch-data 2026` | One-time per season | `teams.json`, `games.json`, `venues.json`, `talent.json`, `coverage.json` |
+| `pnpm fetch-weekly-data 2026` | Weekly (automated) | `rankings.json`, `win-probabilities.json`, `betting-lines.json`, `media.json`, `team-ratings.json` — plus `games.json` again, so final scores and completion status refresh as the season is played |
+
+Both require a `CFBD_API_KEY` in a local `.env` file:
+
+```
+CFBD_API_KEY=your_key_here
 ```
 
-Locally preview production build:
+Get a free key at [collegefootballdata.com](https://collegefootballdata.com/). `fetch-weekly-data` runs automatically every Monday morning via [`.github/workflows/weekly-data.yml`](.github/workflows/weekly-data.yml), which commits the refreshed JSON straight to the repo — that's what keeps live scores, rankings, and odds current without anyone running a script by hand.
+
+## Architecture notes
+
+- **`shared/domain/`** holds every piece of standings and tiebreaker logic as pure, framework-free TypeScript — one implementation, imported by every UI component and test that needs it (`shared/domain/standings`, `shared/domain/tiebreakers`). This is deliberate: the tiebreaker math is the one thing in this app that has to be exactly right, so it lives somewhere it can be tested in complete isolation from Vue.
+- **`shared/types/`** is the committed-JSON contract — every `public/data/2026/*.json` shape has a matching type here.
+- **`scripts/lib/schemas.ts`** validates (via Zod) and transforms CFBD's raw API responses into those committed shapes. A fetch script hard-fails before writing anything if the response doesn't validate — bad data never gets silently committed.
+- Picks are namespaced per scenario in `localStorage`; standings are a pure function of `(games, teams, picks)`, recomputed on every pick rather than incrementally maintained.
+
+## Scripts
 
 ```bash
-pnpm preview
+pnpm dev # start the dev server
+pnpm build # production build (static output)
+pnpm preview # preview the production build locally
+pnpm test # run the test suite (Vitest)
+pnpm lint # eslint
+pnpm typecheck # nuxt typecheck (app + composables)
+pnpm typecheck:scripts # typecheck the fetch scripts separately (their own tsconfig)
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Deployment
 
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+Static output (`pnpm build` → `.output/public`) — no server, no runtime environment variables. `CFBD_API_KEY` is only ever used locally or by the weekly GitHub Action, never shipped to the client. Cloudflare Pages is the intended target (best free tier for a pure static asset bundle at this size), though no deploy is wired up in this repo yet.

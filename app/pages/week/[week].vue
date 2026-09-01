@@ -23,6 +23,21 @@ const router = useRouter()
 // (RESEARCH.md Pitfall 3: string/number comparison silently matches nothing).
 const week = computed(() => Number(route.params.week))
 
+// Reactive getters so the title updates if the user navigates between weeks
+// client-side (RESEARCH.md's SPA navigation never remounts this page).
+useSeoMeta({
+  title: () => week.value === 14 ? 'Conference Championships' : `Week ${week.value} Predictions`,
+  ogTitle: () => week.value === 14
+    ? 'Conference Championships | Saturday Central'
+    : `Week ${week.value} Predictions | Saturday Central`,
+  description: () => week.value === 14
+    ? 'Pick the winner of every 2026 conference championship game, resolved from your regular-season predictions.'
+    : `Pick the winner of every 2026 college football game in week ${week.value}, and watch conference standings update live.`,
+  ogDescription: () => week.value === 14
+    ? 'Pick the winner of every 2026 conference championship game, resolved from your regular-season predictions.'
+    : `Pick the winner of every 2026 college football game in week ${week.value}, and watch conference standings update live.`
+})
+
 const { data: teams, isPending: teamsPending, isError: teamsError } = useTeams()
 const { data: games, isPending: gamesPending, isError: gamesError } = useGames()
 

@@ -1,18 +1,31 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
+import { WEEKS } from '~/utils/schedule'
 
 const items = ref<NavigationMenuItem[]>([
   {
-    label: 'How It Works',
-    to: '/#how-it-works'
+    label: 'View Teams',
+    to: '/teams'
   },
   {
-    label: 'Standings & Tiebreakers',
-    to: '/#standings'
+    label: 'Pick Games',
+    to: '/week/1'
   },
   {
-    label: 'Scenarios & Sharing',
-    to: '/#scenarios'
+    label: 'Pick by Week',
+    children: WEEKS.filter(week => week !== 14).map(week => ({
+      label: `Week ${week}`,
+      to: `/week/${week}`
+    }))
+  },
+  {
+    label: 'Pick by Conference',
+    ui: { childList: 'grid-cols-3' },
+    children: KNOWN_CONFERENCES.map(conference => ({
+      label: conference,
+      to: `/week/1?conf=${encodeURIComponent(conference)}`
+    }))
   }
 ])
 </script>
@@ -21,16 +34,21 @@ const items = ref<NavigationMenuItem[]>([
   <UHeader
     :ui="{
       left: 'lg:flex-none flex items-center gap-1.5',
-      center: 'hidden lg:flex flex-1 justify-center',
+      center: 'hidden lg:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2',
       right: 'lg:flex-none flex items-center justify-end gap-1.5'
     }"
   >
     <template #left>
       <NuxtLink
         to="/"
-        class="flex shrink-0 items-center"
+        class="flex shrink-0 items-center gap-2"
       >
-        <span class="text-2xl font-bold italic tracking-tighter">Saturday Central</span>
+        <img
+          src="/favicon.png"
+          alt=""
+          class="size-7"
+        >
+        <span class="font-script text-2xl text-primary">Saturday Central</span>
       </NuxtLink>
     </template>
 
@@ -39,21 +57,12 @@ const items = ref<NavigationMenuItem[]>([
       variant="link"
       :ui="{
         link: 'font-medium',
-        childList: 'grid grid-cols-1 gap-1'
+        childList: 'grid grid-cols-4 gap-1'
       }"
     />
 
     <template #right>
       <UColorModeButton />
-
-      <UButton
-        label="Predict the Season"
-        trailing-icon="i-lucide-arrow-right"
-        color="primary"
-        variant="solid"
-        to="/week/1"
-        class="hidden lg:inline-flex"
-      />
     </template>
 
     <template #body>
@@ -61,16 +70,6 @@ const items = ref<NavigationMenuItem[]>([
         :items="items"
         orientation="vertical"
         class="w-full"
-      />
-
-      <UButton
-        label="Predict the Season"
-        icon="i-lucide-arrow-right"
-        color="primary"
-        variant="solid"
-        to="/week/1"
-        block
-        class="mt-4"
       />
     </template>
   </UHeader>

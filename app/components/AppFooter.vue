@@ -8,26 +8,34 @@ const columns = [{
     label: 'Weekly Schedule',
     to: '/week/1'
   }, {
+    label: 'Championship Week',
+    to: '/week/14'
+  }]
+}, {
+  label: 'Conferences',
+  children: [{
+    label: 'SEC',
+    to: '/week/1?conf=SEC'
+  }, {
+    label: 'Big Ten',
+    to: '/week/1?conf=Big%20Ten'
+  }, {
+    label: 'Big 12',
+    to: '/week/1?conf=Big%2012'
+  }, {
+    label: 'ACC',
+    to: '/week/1?conf=ACC'
+  }]
+}, {
+  label: 'Site',
+  children: [{
+    label: 'Home',
+    to: '/'
+  }, {
     label: 'Team Pages',
     to: '/teams'
   }]
-}, {
-  label: 'How It Works',
-  children: [{
-    label: 'Conference Standings',
-    to: '/#standings'
-  }, {
-    label: 'Tiebreaker Rules',
-    to: '/#standings'
-  }, {
-    label: 'Scenarios & Sharing',
-    to: '/#scenarios'
-  }]
 }]
-
-const socialLinks = [
-  { icon: 'i-simple-icons-x', label: 'X' }
-]
 </script>
 
 <template>
@@ -51,19 +59,6 @@ const socialLinks = [
         <p class="text-muted text-xs">
           © {{ new Date().getFullYear() }} Saturday Central. All rights reserved.
         </p>
-
-        <div class="flex items-center gap-1 pt-1">
-          <UButton
-            v-for="social in socialLinks"
-            :key="social.label"
-            :icon="social.icon"
-            :aria-label="social.label"
-            to="#"
-            color="neutral"
-            variant="ghost"
-            size="sm"
-          />
-        </div>
       </div>
     </template>
 

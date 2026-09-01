@@ -1,4 +1,4 @@
-name: weekly-data
+name: daily-data
 
 on:
   schedule:
@@ -6,11 +6,15 @@ on:
     # (rest of the season). GitHub Actions cron has no timezone support, so
     # this drifts by an hour after the fall DST change rather than staying
     # pinned to 6am local.
-    - cron: '0 11 * * 1'
+    #
+    # Daily cadence costs ~12 CFBD calls/run (one per endpoint fetch-weekly-
+    # data.ts makes) x 30 days = ~360 calls/month, comfortably under the
+    # free tier's 1,000/month cap -- see https://collegefootballdata.com/api-tiers.
+    - cron: '0 11 * * *'
   workflow_dispatch:
 
 jobs:
-  fetch-weekly-data:
+  fetch-daily-data:
     runs-on: ubuntu-latest
 
     permissions:
@@ -32,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Fetch weekly data
+      - name: Fetch daily data
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: pnpm fetch-weekly-data 2026
@@ -43,5 +47,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/data/2026/rankings.json public/data/2026/win-probabilities.json public/data/2026/betting-lines.json public/data/2026/media.json public/data/2026/team-ratings.json public/data/2026/games.json public/data/2026/records.json public/data/2026/team-stats.json public/data/2026/player-stats.json
           git diff --staged --quiet && exit 0
-          git commit -m "chore: weekly rankings and win probability data"
+          git commit -m "chore: daily rankings, scores, and win probability data"
           git push

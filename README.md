@@ -44,7 +44,7 @@ The app never talks to CFBD directly. Two scripts fetch from CFBD and commit pla
 | Script | Cadence | What it writes |
 |---|---|---|
 | `pnpm fetch-data 2026` | One-time per season | `teams.json`, `games.json`, `venues.json`, `talent.json`, `coverage.json` |
-| `pnpm fetch-weekly-data 2026` | Weekly (automated) | `rankings.json`, `win-probabilities.json`, `betting-lines.json`, `media.json`, `team-ratings.json` — plus `games.json` again, so final scores and completion status refresh as the season is played |
+| `pnpm fetch-weekly-data 2026` | Daily (automated) | `rankings.json`, `win-probabilities.json`, `betting-lines.json`, `media.json`, `team-ratings.json` — plus `games.json` again, so final scores and completion status refresh as the season is played |
 
 Both require a `CFBD_API_KEY` in a local `.env` file:
 
@@ -52,7 +52,7 @@ Both require a `CFBD_API_KEY` in a local `.env` file:
 CFBD_API_KEY=your_key_here
 ```
 
-Get a free key at [collegefootballdata.com](https://collegefootballdata.com/). `fetch-weekly-data` runs automatically every Monday morning via [`.github/workflows/weekly-data.yml`](.github/workflows/weekly-data.yml), which commits the refreshed JSON straight to the repo — that's what keeps live scores, rankings, and odds current without anyone running a script by hand.
+Get a free key at [collegefootballdata.com](https://collegefootballdata.com/). `fetch-weekly-data` runs automatically every morning via [`.github/workflows/daily-data.yml`](.github/workflows/daily-data.yml), which commits the refreshed JSON straight to the repo — that's what keeps live scores, rankings, and odds current without anyone running a script by hand. At ~12 CFBD calls per run, daily cadence costs ~360 calls/month, well under the free tier's 1,000/month limit ([details](https://collegefootballdata.com/api-tiers)).
 
 ## Architecture notes
 

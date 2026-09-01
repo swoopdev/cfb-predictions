@@ -27,6 +27,21 @@ const { data: playerStats } = usePlayerStats()
 const teamsById = computed(() => new Map((teams.value ?? []).map(t => [t.id, t])))
 const team = computed(() => teamsById.value.get(teamId.value))
 
+// Reactive getters: `team` resolves after `useTeams()`'s query settles, so
+// the title/description flip from the generic fallback to the real team the
+// moment data loads instead of staying stuck on the former.
+useSeoMeta({
+  title: () => team.value ? `${team.value.school} ${team.value.mascot ?? 'Football'}` : 'Team',
+  ogTitle: () => team.value ? `${team.value.school} ${team.value.mascot ?? 'Football'} | Saturday Central` : 'Team | Saturday Central',
+  description: () => team.value
+    ? `Predict every 2026 game on ${team.value.school}'s schedule and see how it plays into the ${team.value.conference} standings and tiebreakers.`
+    : 'Predict every 2026 game on this team\'s schedule and see how it plays into the conference standings and tiebreakers.',
+  ogDescription: () => team.value
+    ? `Predict every 2026 game on ${team.value.school}'s schedule and see how it plays into the ${team.value.conference} standings and tiebreakers.`
+    : 'Predict every 2026 game on this team\'s schedule and see how it plays into the conference standings and tiebreakers.',
+  ogImage: () => team.value?.logo
+})
+
 const coach = computed(() => coaches.value?.coaches.find(c => c.teamId === teamId.value))
 const record = computed(() => records.value?.records.find(r => r.teamId === teamId.value))
 const recruit = computed(() => recruiting.value?.recruiting.find(r => r.teamId === teamId.value))
@@ -79,6 +94,10 @@ const loadState = computed<'loading' | 'error' | 'ready'>(() => {
 
 <template>
   <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-4 flex justify-center sm:justify-start">
+      <BrandMark />
+    </div>
+
     <UButton
       to="/teams"
       icon="i-lucide-arrow-left"

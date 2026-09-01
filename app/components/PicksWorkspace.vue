@@ -277,13 +277,22 @@ function advanceWeek() {
        the padding it needs instead. -->
   <div class="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-0">
     <div class="min-w-0 flex-1 px-6 lg:px-8 pb-6">
+      <!-- Brand mark, non-sticky -- consistent branding with the homepage
+           without duplicating AppHeader's full nav (this page already has
+           its own week/filter/fill-clear controls immediately below). -->
+      <div class="flex justify-center pt-4 lg:justify-start">
+        <BrandMark />
+      </div>
+
       <!-- Header: scenario switcher, week nav, fill/clear and the
-           conference/team filter row all live in one sticky block, scoped
-           to this column only — the standings sidebar is a flex sibling
-           that starts at the very top of the page, not pushed down below
-           the header. -->
+           conference/team filter row all live in one sticky block on
+           desktop, scoped to this column only — the standings sidebar is a
+           flex sibling that starts at the very top of the page, not pushed
+           down below the header. On mobile, only the week-nav row (below)
+           stays sticky — the filter and Fill/Clear rows scroll away with
+           the page instead of permanently eating screen space. -->
       <div
-        class="sticky top-0 z-50 bg-default/95 backdrop-blur -mx-6 px-6 lg:-mx-8 lg:px-8 pt-6 pb-4 border-b border-neutral-300 dark:border-neutral-800"
+        class="lg:sticky lg:top-0 lg:z-50 lg:bg-default/95 lg:backdrop-blur -mx-6 px-6 lg:-mx-8 lg:px-8 pt-6 pb-4 border-b border-neutral-300 dark:border-neutral-800"
       >
         <!-- Header layout: three rows on mobile -- week nav centered alone
              on top, conference/team filters side by side below it, then
@@ -296,7 +305,7 @@ function advanceWeek() {
              switcher lives in its own collapsible segment BELOW this bar,
              so it never competes with these controls for space. -->
         <div class="flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
-          <div class="flex justify-center lg:contents">
+          <div class="sticky top-0 z-40 -mx-6 flex justify-center bg-default/95 px-6 pb-3 backdrop-blur lg:contents">
             <!-- Week navigation -->
             <WeekNav
               :week="week"

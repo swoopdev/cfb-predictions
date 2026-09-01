@@ -2,6 +2,13 @@
 import { computed, ref } from 'vue'
 import { useTeams } from '~/composables/useTeams'
 
+useSeoMeta({
+  title: 'All FBS Teams',
+  ogTitle: 'All FBS Teams | Saturday Central',
+  description: 'Browse every FBS college football team in the 2026 season — logos, conferences, and a link to start predicting their games.',
+  ogDescription: 'Browse every FBS college football team in the 2026 season — logos, conferences, and a link to start predicting their games.'
+})
+
 const { data: teams, isPending, isError } = useTeams()
 
 const search = ref('')
@@ -23,6 +30,10 @@ const filteredTeams = computed(() => {
 
 <template>
   <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-4 flex justify-center sm:justify-start">
+      <BrandMark />
+    </div>
+
     <div class="mb-6 flex items-center justify-between gap-4">
       <h1 class="text-xl font-semibold">
         Teams

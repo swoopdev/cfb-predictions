@@ -26,7 +26,7 @@ const missingConferenceTeam = rawTeams.find(t => (t as { id: number }).id === 2)
 const noLogoTeam = rawTeams.find(t => (t as { id: number }).id === 3)!
 
 const TEAM_OUTPUT_KEYS = ['id', 'school', 'mascot', 'abbreviation', 'conference', 'classification', 'color', 'alternateColor'].sort()
-const GAME_OUTPUT_KEYS = ['id', 'week', 'seasonType', 'homeId', 'homeTeam', 'awayId', 'awayTeam', 'conferenceGame', 'neutralSite', 'venueId'].sort()
+const GAME_OUTPUT_KEYS = ['id', 'week', 'seasonType', 'homeId', 'homeTeam', 'awayId', 'awayTeam', 'conferenceGame', 'neutralSite', 'venueId', 'completed', 'homePoints', 'awayPoints'].sort()
 
 describe('team transform', () => {
   it('returns exactly the 8 TeamOutput fields matching the well-formed fixture verbatim', () => {
@@ -55,7 +55,7 @@ describe('team transform', () => {
 })
 
 describe('game transform', () => {
-  it('returns exactly the 10 GameOutput fields matching each fixture game verbatim', () => {
+  it('returns exactly the 13 GameOutput fields matching each fixture game verbatim', () => {
     for (const raw of rawGames) {
       const output = transformGame(raw)
       expect(Object.keys(output).sort()).toEqual(GAME_OUTPUT_KEYS)

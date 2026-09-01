@@ -32,7 +32,11 @@ const mockGames: Game[] = [
     awayId: 2,
     awayTeam: 'Team B',
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   },
   {
     id: 102,
@@ -43,7 +47,11 @@ const mockGames: Game[] = [
     awayId: 4,
     awayTeam: 'Team D',
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   },
   {
     id: 103,
@@ -54,7 +62,11 @@ const mockGames: Game[] = [
     awayId: 6,
     awayTeam: 'Team F',
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   },
   // Week 2 games
   {
@@ -66,7 +78,11 @@ const mockGames: Game[] = [
     awayId: 3,
     awayTeam: 'Team C',
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   },
   {
     id: 202,
@@ -77,7 +93,11 @@ const mockGames: Game[] = [
     awayId: 5,
     awayTeam: 'Team E',
     conferenceGame: true,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   }
 ]
 

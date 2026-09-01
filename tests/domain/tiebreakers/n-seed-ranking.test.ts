@@ -279,12 +279,12 @@ describe('synthetic fixtures (do not depend on the generated slate)', () => {
   it('produces N single-team sole-candidate groups when every team has a distinct record', () => {
     const teamIds = new Set<TeamId>([201, 202, 203, 204])
     const conferenceGames: Game[] = [
-      { id: 1, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 202, awayTeam: 'B', conferenceGame: true, neutralSite: false },
-      { id: 2, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 203, awayTeam: 'C', conferenceGame: true, neutralSite: false },
-      { id: 3, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false },
-      { id: 4, week: 2, seasonType: 'regular', homeId: 202, homeTeam: 'B', awayId: 203, awayTeam: 'C', conferenceGame: true, neutralSite: false },
-      { id: 5, week: 2, seasonType: 'regular', homeId: 202, homeTeam: 'B', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false },
-      { id: 6, week: 2, seasonType: 'regular', homeId: 203, homeTeam: 'C', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false }
+      { id: 1, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 202, awayTeam: 'B', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null },
+      { id: 2, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 203, awayTeam: 'C', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null },
+      { id: 3, week: 1, seasonType: 'regular', homeId: 201, homeTeam: 'A', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null },
+      { id: 4, week: 2, seasonType: 'regular', homeId: 202, homeTeam: 'B', awayId: 203, awayTeam: 'C', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null },
+      { id: 5, week: 2, seasonType: 'regular', homeId: 202, homeTeam: 'B', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null },
+      { id: 6, week: 2, seasonType: 'regular', homeId: 203, homeTeam: 'C', awayId: 204, awayTeam: 'D', conferenceGame: true, neutralSite: false, venueId: null, completed: false, homePoints: null, awayPoints: null }
     ]
     // 201: 3-0, 202: 2-1, 203: 1-2, 204: 0-3 -- all distinct win percentages.
     const outcomes = new Map<number, TeamId>([[1, 201], [2, 201], [3, 201], [4, 202], [5, 202], [6, 203]])

@@ -5,6 +5,7 @@ import type { BettingLine } from '#shared/types/bettingLines'
 import type { VenueInfo } from '#shared/types/venues'
 import type { TeamRatingEntry } from '#shared/types/teamRatings'
 import { validateTeamContrast, applyContrastFilter } from '~/utils/teamContrast'
+import { computeSpreadCoverage } from '~/utils/spreadCoverage'
 
 const props = defineProps<{
   game: Game
@@ -48,24 +49,38 @@ const away = computed(() => props.teamsById.get(props.game.awayId) ?? {
 // Pick state computations
 const pickedTeamId = computed(() => props.picks[props.game.id])
 
+// Locked once CFBD reports the game final: no more editing this pick, and
+// the win-probability badge below is replaced by the actual score. Whether
+// `pickedTeamId` matches the actual winner is decided upstream, by
+// `reconcilePicks` -- this component only ever renders whatever's already
+// in `picks`, same as an in-progress game.
+const isLocked = computed(() => props.game.completed)
+
 const awayRank = computed(() => props.rankingsByTeamId.get(away.value.id))
 const homeRank = computed(() => props.rankingsByTeamId.get(home.value?.id ?? -1))
 
 // Rounded whole-percent win chance per side, derived from the single
 // home-side probability CFBD publishes -- undefined (no badge) when the
-// game has no published estimate at all.
+// game has no published estimate at all. Suppressed once locked -- the
+// score badge takes over that slot.
 const awayWinPercent = computed(() =>
-  props.winProbability === undefined ? undefined : Math.round((1 - props.winProbability) * 100)
+  isLocked.value || props.winProbability === undefined ? undefined : Math.round((1 - props.winProbability) * 100)
 )
 const homeWinPercent = computed(() =>
-  props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
+  isLocked.value || props.winProbability === undefined ? undefined : Math.round(props.winProbability * 100)
 )
+
+// Final score per side -- only meaningful once `isLocked`, but read
+// unconditionally since `game.homePoints`/`awayPoints` are always present
+// on the prop (`null` pre-kickoff).
+const awayPoints = computed(() => props.game.awayPoints)
+const homePoints = computed(() => props.game.homePoints)
 
 // Spread label per side: "Pick 'em" for both on an even line, otherwise
 // "-N" for the favored side and "+N" for the other -- a point spread is one
 // number describing both sides of the same line (the underdog's number is
 // always the exact negation of the favorite's, never independently fetched
-// or capable of disagreeing), so both sides always render.
+// or capable of disagreeing), so both sides render pre-kickoff.
 const awaySpreadLabel = computed(() => {
   if (!props.bettingLine) return undefined
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
@@ -76,6 +91,14 @@ const homeSpreadLabel = computed(() => {
   if (props.bettingLine.favored === 'even') return 'Pick \'em'
   return props.bettingLine.favored === 'home' ? `-${props.bettingLine.spread}` : `+${props.bettingLine.spread}`
 })
+
+// Which side covered the spread, once final -- see computeSpreadCoverage's
+// docblock for the push/no-line/no-score cases it collapses to `undefined`.
+// Gated on `isLocked` here (not inside the pure function) since "final" is
+// this component's own concept, not something the betting-line data carries.
+const spreadCoveredBy = computed<'home' | 'away' | undefined>(() =>
+  isLocked.value ? computeSpreadCoverage(props.bettingLine, homePoints.value, awayPoints.value) : undefined
+)
 
 // Game-detail modal data: venue joins directly off the game's own venueId
 // now (CFBD's `/games` already returns it -- no weather dependency needed),
@@ -127,8 +150,11 @@ const awaySecondaryTextColor = computed(() =>
   getTextColorForBackground(away.value?.alternateColor ?? '#ffffff')
 )
 
-// Toggle pick: sets or clears the pick for this game
+// Toggle pick: sets or clears the pick for this game. No-op once locked --
+// `reconcilePicks` (PicksWorkspace.vue) already owns what the pick is at
+// that point.
 function togglePick(teamId: number) {
+  if (isLocked.value) return
   if (pickedTeamId.value === teamId) {
     // eslint-disable-next-line vue/no-mutating-props, @typescript-eslint/no-dynamic-delete
     delete props.picks[props.game.id]
@@ -158,11 +184,18 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
       '--home-border-color': homeBorderColor
     }"
   >
-    <!-- Badges (neutral site, conference game) - stacked, straddling top edge -->
+    <!-- Badges (final, neutral site, conference game) - stacked, straddling top edge -->
     <div
-      v-if="game.neutralSite || game.conferenceGame"
+      v-if="isLocked || game.neutralSite || game.conferenceGame"
       class="absolute -top-2.5 right-2 flex flex-row items-center gap-1 z-10"
     >
+      <UBadge
+        v-if="isLocked"
+        color="neutral"
+        variant="solid"
+        label="Final"
+        icon="lucide:lock"
+      />
       <UPopover
         v-if="game.conferenceGame"
         mode="click"
@@ -197,11 +230,11 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
       </UPopover>
     </div>
 
-    <!-- Away team row (clickable for picking) -->
+    <!-- Away team row (clickable for picking, locked once the game is final) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
+      class="flex items-center gap-2 user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== away.id
+        'cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': !isLocked && pickedTeamId !== away.id
       }"
       :style="{
         ...(pickedTeamId === away.id ? {
@@ -210,12 +243,14 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           ...applyContrastFilter(awayContrast)
         } : {})
       }"
-      :tabindex="0"
-      :aria-label="pickedTeamId === away.id
-        ? `Clear pick: ${away.school}`
-        : `Pick ${away.school} over ${home?.school}`
+      :tabindex="isLocked ? undefined : 0"
+      :aria-label="isLocked
+        ? `${away.school}: final score ${awayPoints}`
+        : (pickedTeamId === away.id
+          ? `Clear pick: ${away.school}`
+          : `Pick ${away.school} over ${home?.school}`)
       "
-      role="button"
+      :role="isLocked ? undefined : 'button'"
       @click="togglePick(away.id)"
       @keydown="handleTeamKeydown(away.id, $event)"
     >
@@ -266,7 +301,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             :title="away.school"
           >{{ away.school }}</span>
           <span
-            v-if="awaySpreadLabel"
+            v-if="awaySpreadLabel && (!isLocked || spreadCoveredBy === 'away')"
             class="shrink-0 text-xs tabular-nums text-dimmed"
             :style="{
               color: pickedTeamId === away.id ? awaySecondaryTextColor : undefined
@@ -274,7 +309,15 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           >{{ awaySpreadLabel }}</span>
         </span>
         <UBadge
-          v-if="awayWinPercent !== undefined"
+          v-if="isLocked && awayPoints !== null"
+          :color="awayPoints > (homePoints ?? -1) ? 'primary' : 'neutral'"
+          :variant="awayPoints > (homePoints ?? -1) ? 'solid' : 'subtle'"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums font-semibold"
+          :label="`${awayPoints}`"
+        />
+        <UBadge
+          v-else-if="awayWinPercent !== undefined"
           color="neutral"
           variant="subtle"
           size="sm"
@@ -284,11 +327,11 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
       </div>
     </div>
 
-    <!-- Home team row (clickable for picking) -->
+    <!-- Home team row (clickable for picking, locked once the game is final) -->
     <div
-      class="flex items-center gap-2 cursor-pointer user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
+      class="flex items-center gap-2 user-select-none rounded px-2 py-3 border-l-8 border-transparent transition-colors"
       :class="{
-        'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': pickedTeamId !== home?.id
+        'cursor-pointer hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50': !isLocked && pickedTeamId !== home?.id
       }"
       :style="{
         ...(pickedTeamId === home?.id ? {
@@ -297,12 +340,14 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           ...applyContrastFilter(homeContrast)
         } : {})
       }"
-      :tabindex="0"
-      :aria-label="pickedTeamId === home?.id
-        ? `Clear pick: ${home?.school}`
-        : `Pick ${home?.school} over ${away.school}`
+      :tabindex="isLocked ? undefined : 0"
+      :aria-label="isLocked
+        ? `${home?.school}: final score ${homePoints}`
+        : (pickedTeamId === home?.id
+          ? `Clear pick: ${home?.school}`
+          : `Pick ${home?.school} over ${away.school}`)
       "
-      role="button"
+      :role="isLocked ? undefined : 'button'"
       @click="togglePick(home!.id)"
       @keydown="handleTeamKeydown(home!.id, $event)"
     >
@@ -362,7 +407,7 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
             :title="home?.school"
           >{{ home?.school }}</span>
           <span
-            v-if="homeSpreadLabel"
+            v-if="homeSpreadLabel && (!isLocked || spreadCoveredBy === 'home')"
             class="shrink-0 text-xs tabular-nums text-dimmed"
             :style="{
               color: pickedTeamId === home?.id ? homeSecondaryTextColor : undefined
@@ -370,7 +415,15 @@ function handleTeamKeydown(teamId: number, event: KeyboardEvent) {
           >{{ homeSpreadLabel }}</span>
         </span>
         <UBadge
-          v-if="homeWinPercent !== undefined"
+          v-if="isLocked && homePoints !== null"
+          :color="homePoints > (awayPoints ?? -1) ? 'primary' : 'neutral'"
+          :variant="homePoints > (awayPoints ?? -1) ? 'solid' : 'subtle'"
+          size="sm"
+          class="ml-auto shrink-0 tabular-nums font-semibold"
+          :label="`${homePoints}`"
+        />
+        <UBadge
+          v-else-if="homeWinPercent !== undefined"
           color="neutral"
           variant="subtle"
           size="sm"

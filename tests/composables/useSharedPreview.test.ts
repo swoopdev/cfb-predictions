@@ -16,7 +16,11 @@ function makeGame(id: number, homeId: number, awayId: number): Game {
     awayId,
     awayTeam: `Team${awayId}`,
     conferenceGame: false,
-    neutralSite: false
+    neutralSite: false,
+    venueId: null,
+    completed: false,
+    homePoints: null,
+    awayPoints: null
   }
 }
 

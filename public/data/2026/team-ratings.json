@@ -435,9 +435,9 @@
       "fpi": 12.18,
       "fpiRanking": 21,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 57,
@@ -641,10 +641,10 @@
       },
       "fpi": 6.315,
       "fpiRanking": 38,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1597,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 238,
@@ -688,9 +688,9 @@
       "fpi": 8.451,
       "fpiRanking": 31,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 12,
@@ -918,9 +918,9 @@
       "fpi": 0.612,
       "fpiRanking": 61,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 221,
@@ -963,10 +963,10 @@
       },
       "fpi": 4.186,
       "fpiRanking": 48,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1555,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 152,
@@ -1308,10 +1308,10 @@
       },
       "fpi": 3.379,
       "fpiRanking": 52,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1540,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 2305,
@@ -1400,10 +1400,10 @@
       },
       "fpi": -0.153,
       "fpiRanking": 66,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1408,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 127,
@@ -1447,9 +1447,9 @@
       "fpi": 2.116,
       "fpiRanking": 56,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 2426,
@@ -1515,10 +1515,10 @@
       },
       "fpi": 4.546,
       "fpiRanking": 45,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1404,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 235,
@@ -2574,9 +2574,9 @@
       "fpi": -10.782,
       "fpiRanking": 111,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 338,
@@ -2597,9 +2597,9 @@
       "fpi": -9.012,
       "fpiRanking": 105,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 48,
@@ -2620,9 +2620,9 @@
       "fpi": -6.555,
       "fpiRanking": 92,
       "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 2229,
@@ -2849,10 +2849,10 @@
       },
       "fpi": -15.451,
       "fpiRanking": 129,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1409,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 166,
@@ -2987,10 +2987,10 @@
       },
       "fpi": -16.854,
       "fpiRanking": 132,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 905,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 16,
@@ -3171,10 +3171,10 @@
       },
       "fpi": -18.834,
       "fpiRanking": 136,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1049,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 2000,
@@ -3204,6 +3204,32 @@
     },
     {
       "teamId": 2011,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
+    },
+    {
+      "teamId": 2029,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
+    },
+    {
+      "teamId": 2065,
       "spRating": null,
       "spRanking": null,
       "spOffense": null,
@@ -3291,6 +3317,19 @@
       "elo": null,
       "atsWins": 1,
       "atsLosses": 0,
+      "atsPushes": 0
+    },
+    {
+      "teamId": 2197,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 1,
       "atsPushes": 0
     },
     {
@@ -3394,7 +3433,7 @@
       "fpiRanking": null,
       "elo": null,
       "atsWins": 0,
-      "atsLosses": 1,
+      "atsLosses": 2,
       "atsPushes": 0
     },
     {
@@ -3463,6 +3502,19 @@
       "atsPushes": 0
     },
     {
+      "teamId": 2815,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 0,
+      "atsPushes": 1
+    },
+    {
       "teamId": 2368,
       "spRating": null,
       "spRanking": null,
@@ -3511,7 +3563,7 @@
       "fpiRanking": null,
       "elo": null,
       "atsWins": 0,
-      "atsLosses": 1,
+      "atsLosses": 2,
       "atsPushes": 0
     },
     {
@@ -3731,7 +3783,7 @@
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
-      "atsWins": 0,
+      "atsWins": 1,
       "atsLosses": 1,
       "atsPushes": 0
     },
@@ -3788,6 +3840,19 @@
       "atsPushes": 0
     },
     {
+      "teamId": 79,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
+    },
+    {
       "teamId": 253,
       "spRating": null,
       "spRanking": null,
@@ -3838,6 +3903,19 @@
       "atsWins": 0,
       "atsLosses": 1,
       "atsPushes": 0
+    },
+    {
+      "teamId": 2619,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 0,
+      "atsPushes": 1
     },
     {
       "teamId": 2627,
@@ -3913,7 +3991,7 @@
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
-      "atsWins": 1,
+      "atsWins": 2,
       "atsLosses": 0,
       "atsPushes": 0
     },
@@ -4006,6 +4084,19 @@
       "elo": null,
       "atsWins": 1,
       "atsLosses": 0,
+      "atsPushes": 0
+    },
+    {
+      "teamId": 2698,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 1,
       "atsPushes": 0
     },
     {

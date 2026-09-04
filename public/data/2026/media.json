@@ -2752,6 +2752,55 @@
       "outlet": "ESPN+",
       "startTime": "2026-09-06T00:00:00.000Z",
       "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858208,
+      "mediaType": "web",
+      "outlet": "ACCNX",
+      "startTime": "2026-09-05T16:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858209,
+      "mediaType": "web",
+      "outlet": "ACCNX",
+      "startTime": "2026-09-05T19:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856660,
+      "mediaType": "radio",
+      "outlet": "ERADM",
+      "startTime": "2026-09-05T23:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858211,
+      "mediaType": "web",
+      "outlet": "ACCNX",
+      "startTime": "2026-09-05T23:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856661,
+      "mediaType": "radio",
+      "outlet": "ERADM",
+      "startTime": "2026-09-06T23:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401867875,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-09-05T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868119,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-09-06T00:30:00.000Z",
+      "isStartTimeTBD": false
     }
   ]
 }

@@ -66,10 +66,10 @@
       },
       "fpi": 25.856,
       "fpiRanking": 3,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 2041,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 61,
@@ -365,10 +365,10 @@
       },
       "fpi": 16.029,
       "fpiRanking": 14,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1837,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 213,
@@ -411,10 +411,10 @@
       },
       "fpi": 9.893,
       "fpiRanking": 28,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1764,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 142,
@@ -618,10 +618,10 @@
       },
       "fpi": 9.454,
       "fpiRanking": 29,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1668,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 356,
@@ -1239,10 +1239,10 @@
       },
       "fpi": 4.818,
       "fpiRanking": 45,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1455,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
     },
     {
       "teamId": 2439,
@@ -1975,10 +1975,10 @@
       },
       "fpi": -4.054,
       "fpiRanking": 80,
-      "elo": null,
-      "atsWins": null,
-      "atsLosses": null,
-      "atsPushes": null
+      "elo": 1599,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
     },
     {
       "teamId": 2655,
@@ -3541,6 +3541,19 @@
       "atsPushes": 0
     },
     {
+      "teamId": 50,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 1,
+      "atsLosses": 0,
+      "atsPushes": 0
+    },
+    {
       "teamId": 2230,
       "spRating": null,
       "spRanking": null,
@@ -4108,7 +4121,7 @@
       "fpi": null,
       "fpiRanking": null,
       "elo": null,
-      "atsWins": 1,
+      "atsWins": 2,
       "atsLosses": 0,
       "atsPushes": 0
     },
@@ -4205,6 +4218,19 @@
     },
     {
       "teamId": 2545,
+      "spRating": null,
+      "spRanking": null,
+      "spOffense": null,
+      "spDefense": null,
+      "fpi": null,
+      "fpiRanking": null,
+      "elo": null,
+      "atsWins": 0,
+      "atsLosses": 1,
+      "atsPushes": 0
+    },
+    {
+      "teamId": 2569,
       "spRating": null,
       "spRanking": null,
       "spOffense": null,
@@ -4408,7 +4434,7 @@
       "fpiRanking": null,
       "elo": null,
       "atsWins": 1,
-      "atsLosses": 0,
+      "atsLosses": 1,
       "atsPushes": 0
     },
     {

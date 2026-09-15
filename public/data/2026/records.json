@@ -3,7 +3,7 @@
   "records": [
     {
       "teamId": 2,
-      "expectedWins": 1.5245250463485718,
+      "expectedWins": 1.3130481541156769,
       "total": {
         "games": 2,
         "wins": 2,
@@ -71,7 +71,7 @@
     },
     {
       "teamId": 5,
-      "expectedWins": 1.049954116344452,
+      "expectedWins": 0.9891293048858643,
       "total": {
         "games": 2,
         "wins": 1,
@@ -105,7 +105,7 @@
     },
     {
       "teamId": 6,
-      "expectedWins": 1.3679268956184387,
+      "expectedWins": 1.337026059627533,
       "total": {
         "games": 2,
         "wins": 1,
@@ -173,7 +173,7 @@
     },
     {
       "teamId": 8,
-      "expectedWins": 0.9992408156394958,
+      "expectedWins": 1.0043731927871704,
       "total": {
         "games": 2,
         "wins": 1,
@@ -207,7 +207,7 @@
     },
     {
       "teamId": 9,
-      "expectedWins": 0.9943103194236755,
+      "expectedWins": 1.009797990322113,
       "total": {
         "games": 2,
         "wins": 1,
@@ -275,7 +275,7 @@
     },
     {
       "teamId": 12,
-      "expectedWins": 1.032364845275879,
+      "expectedWins": 1.0082225799560547,
       "total": {
         "games": 2,
         "wins": 1,
@@ -309,7 +309,7 @@
     },
     {
       "teamId": 13,
-      "expectedWins": 1.5312644839286804,
+      "expectedWins": 1.6225383281707764,
       "total": {
         "games": 3,
         "wins": 2,
@@ -343,7 +343,7 @@
     },
     {
       "teamId": 16,
-      "expectedWins": 1.0929839611053467,
+      "expectedWins": 1.10032057762146,
       "total": {
         "games": 3,
         "wins": 1,
@@ -445,7 +445,7 @@
     },
     {
       "teamId": 21,
-      "expectedWins": 0.9667387008666992,
+      "expectedWins": 0.9711961150169373,
       "total": {
         "games": 2,
         "wins": 1,
@@ -479,7 +479,7 @@
     },
     {
       "teamId": 23,
-      "expectedWins": 1.9577402789145708,
+      "expectedWins": 1.9749518632888794,
       "total": {
         "games": 3,
         "wins": 2,
@@ -547,7 +547,7 @@
     },
     {
       "teamId": 25,
-      "expectedWins": 0.5664975233376026,
+      "expectedWins": 0.5419560074806213,
       "total": {
         "games": 2,
         "wins": 1,
@@ -581,7 +581,7 @@
     },
     {
       "teamId": 26,
-      "expectedWins": 1.9763939194381237,
+      "expectedWins": 1.9974139332771301,
       "total": {
         "games": 2,
         "wins": 2,
@@ -649,7 +649,7 @@
     },
     {
       "teamId": 30,
-      "expectedWins": 2.966376483440399,
+      "expectedWins": 2.931723177433014,
       "total": {
         "games": 3,
         "wins": 3,
@@ -751,7 +751,7 @@
     },
     {
       "teamId": 36,
-      "expectedWins": 1.9878835082054138,
+      "expectedWins": 1.9798805117607117,
       "total": {
         "games": 2,
         "wins": 2,
@@ -853,7 +853,7 @@
     },
     {
       "teamId": 41,
-      "expectedWins": 1.0507646203041077,
+      "expectedWins": 1.0204077269881964,
       "total": {
         "games": 2,
         "wins": 1,
@@ -955,7 +955,7 @@
     },
     {
       "teamId": 47,
-      "expectedWins": 0.9675909876823425,
+      "expectedWins": 1.014137625694275,
       "total": {
         "games": 3,
         "wins": 1,
@@ -989,7 +989,7 @@
     },
     {
       "teamId": 48,
-      "expectedWins": 0.9933909773826599,
+      "expectedWins": 1.0300962328910828,
       "total": {
         "games": 2,
         "wins": 1,
@@ -1057,7 +1057,7 @@
     },
     {
       "teamId": 50,
-      "expectedWins": 0.9636069536209106,
+      "expectedWins": 0.9654158437624574,
       "total": {
         "games": 3,
         "wins": 1,
@@ -1091,7 +1091,7 @@
     },
     {
       "teamId": 52,
-      "expectedWins": 1.1387359648942947,
+      "expectedWins": 1.0382414534687996,
       "total": {
         "games": 2,
         "wins": 1,
@@ -1125,7 +1125,7 @@
     },
     {
       "teamId": 55,
-      "expectedWins": 1.7274809181690216,
+      "expectedWins": 1.7705626487731934,
       "total": {
         "games": 3,
         "wins": 1,
@@ -1159,7 +1159,7 @@
     },
     {
       "teamId": 56,
-      "expectedWins": 1.0160675048828125,
+      "expectedWins": 1.0078954696655273,
       "total": {
         "games": 3,
         "wins": 1,
@@ -1193,7 +1193,7 @@
     },
     {
       "teamId": 57,
-      "expectedWins": 1.9702288508415222,
+      "expectedWins": 1.9763710498809814,
       "total": {
         "games": 2,
         "wins": 2,
@@ -1227,7 +1227,7 @@
     },
     {
       "teamId": 58,
-      "expectedWins": 1.4200455248355865,
+      "expectedWins": 1.6378820836544037,
       "total": {
         "games": 2,
         "wins": 2,
@@ -1261,7 +1261,7 @@
     },
     {
       "teamId": 59,
-      "expectedWins": 0.4703349699266255,
+      "expectedWins": 0.47424924932420254,
       "total": {
         "games": 2,
         "wins": 0,
@@ -1295,7 +1295,7 @@
     },
     {
       "teamId": 60,
-      "expectedWins": 0.05977344512939453,
+      "expectedWins": 0.14029699563980103,
       "total": {
         "games": 3,
         "wins": 0,
@@ -1363,7 +1363,7 @@
     },
     {
       "teamId": 62,
-      "expectedWins": 0.9111026003956795,
+      "expectedWins": 0.9851092211902142,
       "total": {
         "games": 3,
         "wins": 1,
@@ -1465,7 +1465,7 @@
     },
     {
       "teamId": 66,
-      "expectedWins": 1.3811417818069458,
+      "expectedWins": 1.5878750383853912,
       "total": {
         "games": 2,
         "wins": 1,
@@ -1533,7 +1533,7 @@
     },
     {
       "teamId": 68,
-      "expectedWins": 1.018159031867981,
+      "expectedWins": 1.0176158547401428,
       "total": {
         "games": 2,
         "wins": 1,
@@ -1567,7 +1567,7 @@
     },
     {
       "teamId": 70,
-      "expectedWins": 0.41524693882092834,
+      "expectedWins": 0.41678849793970585,
       "total": {
         "games": 3,
         "wins": 0,
@@ -1703,7 +1703,7 @@
     },
     {
       "teamId": 77,
-      "expectedWins": 0.9064313173294067,
+      "expectedWins": 0.9755688905715942,
       "total": {
         "games": 1,
         "wins": 1,
@@ -1737,7 +1737,7 @@
     },
     {
       "teamId": 79,
-      "expectedWins": 1.99512080848217,
+      "expectedWins": 2.190108237788081,
       "total": {
         "games": 3,
         "wins": 2,
@@ -1873,7 +1873,7 @@
     },
     {
       "teamId": 84,
-      "expectedWins": 1.9941574335098267,
+      "expectedWins": 1.9890964031219482,
       "total": {
         "games": 2,
         "wins": 2,
@@ -2043,7 +2043,7 @@
     },
     {
       "teamId": 93,
-      "expectedWins": 1.1451188176870346,
+      "expectedWins": 0.9936932474374771,
       "total": {
         "games": 3,
         "wins": 1,
@@ -2077,7 +2077,7 @@
     },
     {
       "teamId": 96,
-      "expectedWins": 0.9834052920341492,
+      "expectedWins": 0.9882584810256958,
       "total": {
         "games": 2,
         "wins": 1,
@@ -2111,7 +2111,7 @@
     },
     {
       "teamId": 97,
-      "expectedWins": 1.2676727771759033,
+      "expectedWins": 1.3358217477798462,
       "total": {
         "games": 2,
         "wins": 1,
@@ -2145,7 +2145,7 @@
     },
     {
       "teamId": 98,
-      "expectedWins": 0.057516276836395264,
+      "expectedWins": 0.05898880958557129,
       "total": {
         "games": 2,
         "wins": 0,
@@ -2179,7 +2179,7 @@
     },
     {
       "teamId": 99,
-      "expectedWins": 1.9764108061790466,
+      "expectedWins": 1.9418087005615234,
       "total": {
         "games": 2,
         "wins": 2,
@@ -2247,7 +2247,7 @@
     },
     {
       "teamId": 103,
-      "expectedWins": 0.1696358174085617,
+      "expectedWins": 0.39843451976776123,
       "total": {
         "games": 2,
         "wins": 1,
@@ -2281,7 +2281,7 @@
     },
     {
       "teamId": 107,
-      "expectedWins": 0.01278597116470337,
+      "expectedWins": 0.013296723365783691,
       "total": {
         "games": 3,
         "wins": 0,
@@ -2451,7 +2451,7 @@
     },
     {
       "teamId": 113,
-      "expectedWins": 1.9915581941604614,
+      "expectedWins": 1.9888649610802531,
       "total": {
         "games": 2,
         "wins": 2,
@@ -2553,7 +2553,7 @@
     },
     {
       "teamId": 119,
-      "expectedWins": 0.5772504806518555,
+      "expectedWins": 0.5744717121124268,
       "total": {
         "games": 3,
         "wins": 0,
@@ -2587,7 +2587,7 @@
     },
     {
       "teamId": 120,
-      "expectedWins": 1.923572301864624,
+      "expectedWins": 1.9539291951805353,
       "total": {
         "games": 2,
         "wins": 2,
@@ -2757,7 +2757,7 @@
     },
     {
       "teamId": 127,
-      "expectedWins": 1.527692198753357,
+      "expectedWins": 1.7766456604003906,
       "total": {
         "games": 2,
         "wins": 2,
@@ -2791,7 +2791,7 @@
     },
     {
       "teamId": 128,
-      "expectedWins": 0.004396677017211914,
+      "expectedWins": 0.003668665885925293,
       "total": {
         "games": 3,
         "wins": 0,
@@ -2859,7 +2859,7 @@
     },
     {
       "teamId": 130,
-      "expectedWins": 1.4844944477081299,
+      "expectedWins": 1.3913689255714417,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3131,7 +3131,7 @@
     },
     {
       "teamId": 142,
-      "expectedWins": 1.9189270436763763,
+      "expectedWins": 1.9884298355318606,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3199,7 +3199,7 @@
     },
     {
       "teamId": 145,
-      "expectedWins": 1.7113173007965088,
+      "expectedWins": 1.643168330192566,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3267,7 +3267,7 @@
     },
     {
       "teamId": 147,
-      "expectedWins": 2.990459864027798,
+      "expectedWins": 2.977567944675684,
       "total": {
         "games": 3,
         "wins": 3,
@@ -3301,7 +3301,7 @@
     },
     {
       "teamId": 149,
-      "expectedWins": 2.3793721795082092,
+      "expectedWins": 2.48305082321167,
       "total": {
         "games": 3,
         "wins": 3,
@@ -3335,7 +3335,7 @@
     },
     {
       "teamId": 150,
-      "expectedWins": 1.80241197347641,
+      "expectedWins": 1.9189774096012115,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3369,7 +3369,7 @@
     },
     {
       "teamId": 151,
-      "expectedWins": 0.3057936131954193,
+      "expectedWins": 0.2841816246509552,
       "total": {
         "games": 2,
         "wins": 0,
@@ -3437,7 +3437,7 @@
     },
     {
       "teamId": 153,
-      "expectedWins": 1.617266595363617,
+      "expectedWins": 1.4240447282791138,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3505,7 +3505,7 @@
     },
     {
       "teamId": 155,
-      "expectedWins": 2.9680888783186674,
+      "expectedWins": 2.9671570789068937,
       "total": {
         "games": 3,
         "wins": 3,
@@ -3539,7 +3539,7 @@
     },
     {
       "teamId": 158,
-      "expectedWins": 1.9781625270843506,
+      "expectedWins": 1.9860047698020935,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3607,7 +3607,7 @@
     },
     {
       "teamId": 160,
-      "expectedWins": 0.47692379355430603,
+      "expectedWins": 0.4669579267501831,
       "total": {
         "games": 3,
         "wins": 1,
@@ -3709,7 +3709,7 @@
     },
     {
       "teamId": 164,
-      "expectedWins": 0.8417623788118362,
+      "expectedWins": 0.6116236420348287,
       "total": {
         "games": 2,
         "wins": 0,
@@ -3743,7 +3743,7 @@
     },
     {
       "teamId": 166,
-      "expectedWins": 1.1257171630859375,
+      "expectedWins": 1.0462204217910767,
       "total": {
         "games": 3,
         "wins": 1,
@@ -3777,7 +3777,7 @@
     },
     {
       "teamId": 167,
-      "expectedWins": 1.9932624697685242,
+      "expectedWins": 1.9927074909210205,
       "total": {
         "games": 2,
         "wins": 2,
@@ -3981,7 +3981,7 @@
     },
     {
       "teamId": 183,
-      "expectedWins": 1.4493795037269592,
+      "expectedWins": 1.4503149390220642,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4083,7 +4083,7 @@
     },
     {
       "teamId": 189,
-      "expectedWins": 0.3158380687236786,
+      "expectedWins": 0.48050764203071594,
       "total": {
         "games": 2,
         "wins": 0,
@@ -4185,7 +4185,7 @@
     },
     {
       "teamId": 194,
-      "expectedWins": 1.6962348818778992,
+      "expectedWins": 1.8383851796388626,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4219,7 +4219,7 @@
     },
     {
       "teamId": 195,
-      "expectedWins": 0.31001511216163635,
+      "expectedWins": 0.3201872706413269,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4287,7 +4287,7 @@
     },
     {
       "teamId": 197,
-      "expectedWins": 0.2477077841758728,
+      "expectedWins": 0.6806748509407043,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4389,7 +4389,7 @@
     },
     {
       "teamId": 201,
-      "expectedWins": 1.1529690623283386,
+      "expectedWins": 1.1100823283195496,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4423,7 +4423,7 @@
     },
     {
       "teamId": 202,
-      "expectedWins": 1.3249751329421997,
+      "expectedWins": 1.3613091111183167,
       "total": {
         "games": 2,
         "wins": 2,
@@ -4491,7 +4491,7 @@
     },
     {
       "teamId": 204,
-      "expectedWins": 0.2032446414232254,
+      "expectedWins": 0.02520972490310669,
       "total": {
         "games": 2,
         "wins": 0,
@@ -4627,7 +4627,7 @@
     },
     {
       "teamId": 213,
-      "expectedWins": 1.9376869648694992,
+      "expectedWins": 1.9670767709612846,
       "total": {
         "games": 2,
         "wins": 2,
@@ -4729,7 +4729,7 @@
     },
     {
       "teamId": 218,
-      "expectedWins": 1.0567115098237991,
+      "expectedWins": 1.0273217037320137,
       "total": {
         "games": 2,
         "wins": 1,
@@ -4797,7 +4797,7 @@
     },
     {
       "teamId": 221,
-      "expectedWins": 1.9004292488098145,
+      "expectedWins": 1.9727570414543152,
       "total": {
         "games": 2,
         "wins": 2,
@@ -4831,7 +4831,7 @@
     },
     {
       "teamId": 222,
-      "expectedWins": 1.446813941001892,
+      "expectedWins": 1.5170997977256775,
       "total": {
         "games": 3,
         "wins": 1,
@@ -4933,7 +4933,7 @@
     },
     {
       "teamId": 227,
-      "expectedWins": 1.9292761646211147,
+      "expectedWins": 1.95108394138515,
       "total": {
         "games": 3,
         "wins": 2,
@@ -4967,7 +4967,7 @@
     },
     {
       "teamId": 228,
-      "expectedWins": 0.8580453395843506,
+      "expectedWins": 0.9539416432380676,
       "total": {
         "games": 2,
         "wins": 1,
@@ -5001,7 +5001,7 @@
     },
     {
       "teamId": 231,
-      "expectedWins": 1.6515009701251984,
+      "expectedWins": 1.8127988278865814,
       "total": {
         "games": 3,
         "wins": 2,
@@ -5035,7 +5035,7 @@
     },
     {
       "teamId": 233,
-      "expectedWins": 2.976609335280955,
+      "expectedWins": 2.980867904610932,
       "total": {
         "games": 3,
         "wins": 3,
@@ -5069,7 +5069,7 @@
     },
     {
       "teamId": 235,
-      "expectedWins": 1.9674420021474361,
+      "expectedWins": 1.989883117377758,
       "total": {
         "games": 3,
         "wins": 2,
@@ -5103,7 +5103,7 @@
     },
     {
       "teamId": 236,
-      "expectedWins": 1.2802577912807465,
+      "expectedWins": 1.2398247569799423,
       "total": {
         "games": 3,
         "wins": 1,
@@ -5171,7 +5171,7 @@
     },
     {
       "teamId": 238,
-      "expectedWins": 1.9624031782150269,
+      "expectedWins": 1.9281944036483765,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5205,7 +5205,7 @@
     },
     {
       "teamId": 239,
-      "expectedWins": 1.4295769333839417,
+      "expectedWins": 1.6415407955646515,
       "total": {
         "games": 2,
         "wins": 1,
@@ -5273,7 +5273,7 @@
     },
     {
       "teamId": 242,
-      "expectedWins": 1.0092292428016663,
+      "expectedWins": 1.0044877529144287,
       "total": {
         "games": 2,
         "wins": 1,
@@ -5307,7 +5307,7 @@
     },
     {
       "teamId": 245,
-      "expectedWins": 1.9894953966140747,
+      "expectedWins": 1.97352796792984,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5409,7 +5409,7 @@
     },
     {
       "teamId": 248,
-      "expectedWins": 1.9549829959869385,
+      "expectedWins": 1.9670612215995789,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5443,7 +5443,7 @@
     },
     {
       "teamId": 249,
-      "expectedWins": 0.9951195120811462,
+      "expectedWins": 1.0001805424690247,
       "total": {
         "games": 2,
         "wins": 1,
@@ -5477,7 +5477,7 @@
     },
     {
       "teamId": 251,
-      "expectedWins": 1.222518801689148,
+      "expectedWins": 1.0785506814718246,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5511,7 +5511,7 @@
     },
     {
       "teamId": 252,
-      "expectedWins": 1.9505406618118286,
+      "expectedWins": 1.973340630531311,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5545,7 +5545,7 @@
     },
     {
       "teamId": 253,
-      "expectedWins": 1.5190455913543701,
+      "expectedWins": 1.4818305373191833,
       "total": {
         "games": 3,
         "wins": 1,
@@ -5579,7 +5579,7 @@
     },
     {
       "teamId": 254,
-      "expectedWins": 1.9943974018096924,
+      "expectedWins": 1.9905623197555542,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5647,7 +5647,7 @@
     },
     {
       "teamId": 256,
-      "expectedWins": 1.9560796022415161,
+      "expectedWins": 1.959581971168518,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5681,7 +5681,7 @@
     },
     {
       "teamId": 257,
-      "expectedWins": 1.5942374467849731,
+      "expectedWins": 1.6041285991668701,
       "total": {
         "games": 3,
         "wins": 2,
@@ -5749,7 +5749,7 @@
     },
     {
       "teamId": 259,
-      "expectedWins": 1.8740940690040588,
+      "expectedWins": 1.9748685359954834,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5851,7 +5851,7 @@
     },
     {
       "teamId": 264,
-      "expectedWins": 1.7739055752754211,
+      "expectedWins": 1.8371924757957458,
       "total": {
         "games": 2,
         "wins": 2,
@@ -5885,7 +5885,7 @@
     },
     {
       "teamId": 265,
-      "expectedWins": 0.046408236026763916,
+      "expectedWins": 0.022861719131469727,
       "total": {
         "games": 2,
         "wins": 0,
@@ -6089,7 +6089,7 @@
     },
     {
       "teamId": 275,
-      "expectedWins": 1.0747302770614624,
+      "expectedWins": 1.0840436816215515,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6157,7 +6157,7 @@
     },
     {
       "teamId": 277,
-      "expectedWins": 1.8731111884117126,
+      "expectedWins": 1.883714199066162,
       "total": {
         "games": 2,
         "wins": 2,
@@ -6191,7 +6191,7 @@
     },
     {
       "teamId": 278,
-      "expectedWins": 1.0217666029930115,
+      "expectedWins": 1.0509794354438782,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6225,7 +6225,7 @@
     },
     {
       "teamId": 282,
-      "expectedWins": 1.0131274461746216,
+      "expectedWins": 0.532772496342659,
       "total": {
         "games": 3,
         "wins": 1,
@@ -6259,7 +6259,7 @@
     },
     {
       "teamId": 284,
-      "expectedWins": 1.7536530452780426,
+      "expectedWins": 1.7259246921166778,
       "total": {
         "games": 3,
         "wins": 1,
@@ -6327,7 +6327,7 @@
     },
     {
       "teamId": 290,
-      "expectedWins": 1.1335622072219849,
+      "expectedWins": 1.0451141595840454,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6395,7 +6395,7 @@
     },
     {
       "teamId": 292,
-      "expectedWins": 1.4744569063186646,
+      "expectedWins": 1.2947998642921448,
       "total": {
         "games": 3,
         "wins": 1,
@@ -6463,7 +6463,7 @@
     },
     {
       "teamId": 295,
-      "expectedWins": 1.091191291809082,
+      "expectedWins": 0.8810713291168213,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6531,7 +6531,7 @@
     },
     {
       "teamId": 301,
-      "expectedWins": 0.02662320528179407,
+      "expectedWins": 0.025774137116968632,
       "total": {
         "games": 2,
         "wins": 0,
@@ -6565,7 +6565,7 @@
     },
     {
       "teamId": 302,
-      "expectedWins": 1.3978862008079886,
+      "expectedWins": 1.3554672440513968,
       "total": {
         "games": 3,
         "wins": 2,
@@ -6599,7 +6599,7 @@
     },
     {
       "teamId": 304,
-      "expectedWins": 2.346593499183655,
+      "expectedWins": 2.7270752787590027,
       "total": {
         "games": 3,
         "wins": 3,
@@ -6701,7 +6701,7 @@
     },
     {
       "teamId": 309,
-      "expectedWins": 0.9861389994621277,
+      "expectedWins": 0.9931040406227112,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6735,7 +6735,7 @@
     },
     {
       "teamId": 311,
-      "expectedWins": 0.5752441883087158,
+      "expectedWins": 0.8997031450271606,
       "total": {
         "games": 3,
         "wins": 1,
@@ -6837,7 +6837,7 @@
     },
     {
       "teamId": 322,
-      "expectedWins": 0.21402031183242798,
+      "expectedWins": 0.2225719839334488,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6905,7 +6905,7 @@
     },
     {
       "teamId": 324,
-      "expectedWins": 1.1105209589004517,
+      "expectedWins": 1.0987051129341125,
       "total": {
         "games": 2,
         "wins": 1,
@@ -6939,7 +6939,7 @@
     },
     {
       "teamId": 326,
-      "expectedWins": 0.618045449256897,
+      "expectedWins": 0.4798693358898163,
       "total": {
         "games": 2,
         "wins": 0,
@@ -6973,7 +6973,7 @@
     },
     {
       "teamId": 328,
-      "expectedWins": 0.8309721946716309,
+      "expectedWins": 0.392816424369812,
       "total": {
         "games": 2,
         "wins": 0,
@@ -7041,7 +7041,7 @@
     },
     {
       "teamId": 331,
-      "expectedWins": 1.3137065768241882,
+      "expectedWins": 1.304440200328827,
       "total": {
         "games": 3,
         "wins": 1,
@@ -7177,7 +7177,7 @@
     },
     {
       "teamId": 338,
-      "expectedWins": 0.9909650087356567,
+      "expectedWins": 0.9955492755398154,
       "total": {
         "games": 2,
         "wins": 1,
@@ -7347,7 +7347,7 @@
     },
     {
       "teamId": 349,
-      "expectedWins": 1.4595567286014557,
+      "expectedWins": 1.3585674464702606,
       "total": {
         "games": 2,
         "wins": 1,
@@ -7483,7 +7483,7 @@
     },
     {
       "teamId": 356,
-      "expectedWins": 1.0258255004882812,
+      "expectedWins": 0.9658338129520416,
       "total": {
         "games": 2,
         "wins": 1,
@@ -8027,7 +8027,7 @@
     },
     {
       "teamId": 399,
-      "expectedWins": 1.8421231475658715,
+      "expectedWins": 1.8830816149711609,
       "total": {
         "games": 3,
         "wins": 2,
@@ -8877,7 +8877,7 @@
     },
     {
       "teamId": 613,
-      "expectedWins": 0.6237420439720154,
+      "expectedWins": 0.8462561815977097,
       "total": {
         "games": 3,
         "wins": 2,
@@ -8945,7 +8945,7 @@
     },
     {
       "teamId": 2000,
-      "expectedWins": 0.42913033068180084,
+      "expectedWins": 0.25019391626119614,
       "total": {
         "games": 3,
         "wins": 0,
@@ -9047,7 +9047,7 @@
     },
     {
       "teamId": 2005,
-      "expectedWins": 1.798738956451416,
+      "expectedWins": 1.7431424260139465,
       "total": {
         "games": 2,
         "wins": 1,
@@ -9115,7 +9115,7 @@
     },
     {
       "teamId": 2010,
-      "expectedWins": 2.3400660157203674,
+      "expectedWins": 2.313158392906189,
       "total": {
         "games": 3,
         "wins": 2,
@@ -9149,7 +9149,7 @@
     },
     {
       "teamId": 2011,
-      "expectedWins": 1.6205970644950867,
+      "expectedWins": 1.7370217442512512,
       "total": {
         "games": 3,
         "wins": 2,
@@ -9183,7 +9183,7 @@
     },
     {
       "teamId": 2013,
-      "expectedWins": 0.04331082105636597,
+      "expectedWins": 0.0552980899810791,
       "total": {
         "games": 3,
         "wins": 1,
@@ -9251,7 +9251,7 @@
     },
     {
       "teamId": 2016,
-      "expectedWins": 1.382139891386032,
+      "expectedWins": 1.2395756542682648,
       "total": {
         "games": 3,
         "wins": 2,
@@ -9489,7 +9489,7 @@
     },
     {
       "teamId": 2026,
-      "expectedWins": 1.690083533525467,
+      "expectedWins": 1.711695522069931,
       "total": {
         "games": 2,
         "wins": 2,
@@ -9557,7 +9557,7 @@
     },
     {
       "teamId": 2029,
-      "expectedWins": 1.570532113313675,
+      "expectedWins": 1.6207541525363922,
       "total": {
         "games": 3,
         "wins": 1,
@@ -9591,7 +9591,7 @@
     },
     {
       "teamId": 2032,
-      "expectedWins": 1.0149065852165222,
+      "expectedWins": 1.007396936416626,
       "total": {
         "games": 2,
         "wins": 1,
@@ -9829,7 +9829,7 @@
     },
     {
       "teamId": 2046,
-      "expectedWins": 2.0203996300697327,
+      "expectedWins": 2.0154386162757874,
       "total": {
         "games": 3,
         "wins": 2,
@@ -9931,7 +9931,7 @@
     },
     {
       "teamId": 2050,
-      "expectedWins": 1.004660189151764,
+      "expectedWins": 1.0124031901359558,
       "total": {
         "games": 2,
         "wins": 1,
@@ -10067,7 +10067,7 @@
     },
     {
       "teamId": 2065,
-      "expectedWins": 0.9909505248069763,
+      "expectedWins": 1.0136470198631287,
       "total": {
         "games": 2,
         "wins": 1,
@@ -10203,7 +10203,7 @@
     },
     {
       "teamId": 2075,
-      "expectedWins": 0.08818495273590088,
+      "expectedWins": 0.0439571738243103,
       "total": {
         "games": 2,
         "wins": 0,
@@ -10271,7 +10271,7 @@
     },
     {
       "teamId": 2083,
-      "expectedWins": 1.2237518876791,
+      "expectedWins": 1.3549675941467285,
       "total": {
         "games": 3,
         "wins": 1,
@@ -10305,7 +10305,7 @@
     },
     {
       "teamId": 2084,
-      "expectedWins": 0.9628463387489319,
+      "expectedWins": 0.9391478896141052,
       "total": {
         "games": 2,
         "wins": 1,
@@ -10373,7 +10373,7 @@
     },
     {
       "teamId": 2086,
-      "expectedWins": 0.9862666726112366,
+      "expectedWins": 0.9911817908287048,
       "total": {
         "games": 3,
         "wins": 2,
@@ -10441,7 +10441,7 @@
     },
     {
       "teamId": 2097,
-      "expectedWins": 1.4652883857488632,
+      "expectedWins": 1.187223494052887,
       "total": {
         "games": 3,
         "wins": 2,
@@ -10679,7 +10679,7 @@
     },
     {
       "teamId": 2110,
-      "expectedWins": 1.8793496508151293,
+      "expectedWins": 2.006675093434751,
       "total": {
         "games": 3,
         "wins": 2,
@@ -10747,7 +10747,7 @@
     },
     {
       "teamId": 2116,
-      "expectedWins": 1.0711523294448853,
+      "expectedWins": 0.9843000769615173,
       "total": {
         "games": 2,
         "wins": 1,
@@ -10781,7 +10781,7 @@
     },
     {
       "teamId": 2117,
-      "expectedWins": 0.9183393716812134,
+      "expectedWins": 0.9378334283828735,
       "total": {
         "games": 2,
         "wins": 1,
@@ -10849,7 +10849,7 @@
     },
     {
       "teamId": 2119,
-      "expectedWins": 0.008249759674072266,
+      "expectedWins": 0.0036262869834899902,
       "total": {
         "games": 3,
         "wins": 1,
@@ -10883,7 +10883,7 @@
     },
     {
       "teamId": 2120,
-      "expectedWins": 0.09014713764190674,
+      "expectedWins": 0,
       "total": {
         "games": 2,
         "wins": 0,
@@ -10951,7 +10951,7 @@
     },
     {
       "teamId": 2122,
-      "expectedWins": 0,
+      "expectedWins": 0.0029031038284301758,
       "total": {
         "games": 2,
         "wins": 1,
@@ -11019,7 +11019,7 @@
     },
     {
       "teamId": 2127,
-      "expectedWins": 0.3525453805923462,
+      "expectedWins": 0.3369517922401428,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11121,7 +11121,7 @@
     },
     {
       "teamId": 2130,
-      "expectedWins": 1.0114716105163097,
+      "expectedWins": 1.0040909377858043,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11155,7 +11155,7 @@
     },
     {
       "teamId": 2132,
-      "expectedWins": 1.9834486246109009,
+      "expectedWins": 1.9919732213020325,
       "total": {
         "games": 2,
         "wins": 2,
@@ -11257,7 +11257,7 @@
     },
     {
       "teamId": 2142,
-      "expectedWins": 2.0316430777311325,
+      "expectedWins": 2.006310686469078,
       "total": {
         "games": 3,
         "wins": 2,
@@ -11325,7 +11325,7 @@
     },
     {
       "teamId": 2148,
-      "expectedWins": 0.9726186618208885,
+      "expectedWins": 0.9684564061462879,
       "total": {
         "games": 2,
         "wins": 2,
@@ -11461,7 +11461,7 @@
     },
     {
       "teamId": 2166,
-      "expectedWins": 1.0112479515373707,
+      "expectedWins": 0.8871275410056114,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11495,7 +11495,7 @@
     },
     {
       "teamId": 2168,
-      "expectedWins": 1.9865720868110657,
+      "expectedWins": 1.9905234575271606,
       "total": {
         "games": 2,
         "wins": 2,
@@ -11529,7 +11529,7 @@
     },
     {
       "teamId": 2169,
-      "expectedWins": 2.2160093784332275,
+      "expectedWins": 2.0881537795066833,
       "total": {
         "games": 3,
         "wins": 2,
@@ -11631,7 +11631,7 @@
     },
     {
       "teamId": 2175,
-      "expectedWins": 0.06666266918182373,
+      "expectedWins": 0.1949453353881836,
       "total": {
         "games": 2,
         "wins": 1,
@@ -11665,7 +11665,7 @@
     },
     {
       "teamId": 2181,
-      "expectedWins": 0.3898054361343384,
+      "expectedWins": 0.1672912985086441,
       "total": {
         "games": 3,
         "wins": 0,
@@ -11801,7 +11801,7 @@
     },
     {
       "teamId": 2193,
-      "expectedWins": 1.2192902117967606,
+      "expectedWins": 1.3396122753620148,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11869,7 +11869,7 @@
     },
     {
       "teamId": 2197,
-      "expectedWins": 1.1867934614419937,
+      "expectedWins": 1.580026850104332,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11903,7 +11903,7 @@
     },
     {
       "teamId": 2198,
-      "expectedWins": 1.0073131918907166,
+      "expectedWins": 1.0134063959121704,
       "total": {
         "games": 3,
         "wins": 1,
@@ -11937,7 +11937,7 @@
     },
     {
       "teamId": 2199,
-      "expectedWins": 0.9169155638664961,
+      "expectedWins": 0.9108020663261414,
       "total": {
         "games": 3,
         "wins": 1,
@@ -12073,7 +12073,7 @@
     },
     {
       "teamId": 2207,
-      "expectedWins": 0.04938983917236328,
+      "expectedWins": 0.10202944278717041,
       "total": {
         "games": 2,
         "wins": 0,
@@ -12107,7 +12107,7 @@
     },
     {
       "teamId": 2210,
-      "expectedWins": 1.9769689626991749,
+      "expectedWins": 1.9659312553703785,
       "total": {
         "games": 3,
         "wins": 2,
@@ -12345,7 +12345,7 @@
     },
     {
       "teamId": 2226,
-      "expectedWins": 0.9744892120361328,
+      "expectedWins": 0.9996058940887451,
       "total": {
         "games": 2,
         "wins": 1,
@@ -12379,7 +12379,7 @@
     },
     {
       "teamId": 2229,
-      "expectedWins": 1.094358742237091,
+      "expectedWins": 1.0005095601081848,
       "total": {
         "games": 2,
         "wins": 1,
@@ -12413,7 +12413,7 @@
     },
     {
       "teamId": 2230,
-      "expectedWins": 0.06537432968616486,
+      "expectedWins": 0.07191474735736847,
       "total": {
         "games": 3,
         "wins": 0,
@@ -12617,7 +12617,7 @@
     },
     {
       "teamId": 2241,
-      "expectedWins": 0.487684428691864,
+      "expectedWins": 0.3859984278678894,
       "total": {
         "games": 3,
         "wins": 0,
@@ -12685,7 +12685,7 @@
     },
     {
       "teamId": 2247,
-      "expectedWins": 1.992191195487976,
+      "expectedWins": 1.9876069286838174,
       "total": {
         "games": 2,
         "wins": 2,
@@ -12889,7 +12889,7 @@
     },
     {
       "teamId": 2261,
-      "expectedWins": 1.2080100774765015,
+      "expectedWins": 1.1508199572563171,
       "total": {
         "games": 3,
         "wins": 1,
@@ -13093,7 +13093,7 @@
     },
     {
       "teamId": 2277,
-      "expectedWins": 1.5750721395015717,
+      "expectedWins": 1.8802163824439049,
       "total": {
         "games": 3,
         "wins": 2,
@@ -13229,7 +13229,7 @@
     },
     {
       "teamId": 2287,
-      "expectedWins": 2.6715349555015564,
+      "expectedWins": 2.666404753923416,
       "total": {
         "games": 3,
         "wins": 3,
@@ -13331,7 +13331,7 @@
     },
     {
       "teamId": 2294,
-      "expectedWins": 1.5809268355369568,
+      "expectedWins": 1.3911458551883698,
       "total": {
         "games": 2,
         "wins": 2,
@@ -13365,7 +13365,7 @@
     },
     {
       "teamId": 2296,
-      "expectedWins": 1.9013914614915848,
+      "expectedWins": 1.871204324066639,
       "total": {
         "games": 2,
         "wins": 2,
@@ -13467,7 +13467,7 @@
     },
     {
       "teamId": 2305,
-      "expectedWins": 1.0648933947086334,
+      "expectedWins": 0.9977133362554014,
       "total": {
         "games": 2,
         "wins": 1,
@@ -13501,7 +13501,7 @@
     },
     {
       "teamId": 2306,
-      "expectedWins": 1.9695777893066406,
+      "expectedWins": 1.9883604645729065,
       "total": {
         "games": 2,
         "wins": 2,
@@ -13535,7 +13535,7 @@
     },
     {
       "teamId": 2309,
-      "expectedWins": 0.9884620904922485,
+      "expectedWins": 0.9656332731246948,
       "total": {
         "games": 2,
         "wins": 1,
@@ -13705,7 +13705,7 @@
     },
     {
       "teamId": 2320,
-      "expectedWins": 1.644118929747492,
+      "expectedWins": 1.8557507004588842,
       "total": {
         "games": 3,
         "wins": 2,
@@ -13739,7 +13739,7 @@
     },
     {
       "teamId": 2323,
-      "expectedWins": 0.03680509328842163,
+      "expectedWins": 0.04900002479553223,
       "total": {
         "games": 3,
         "wins": 0,
@@ -13875,7 +13875,7 @@
     },
     {
       "teamId": 2335,
-      "expectedWins": 0.8611754179000854,
+      "expectedWins": 0.9288002848625183,
       "total": {
         "games": 2,
         "wins": 1,
@@ -13943,7 +13943,7 @@
     },
     {
       "teamId": 2339,
-      "expectedWins": 0.0770156979560852,
+      "expectedWins": 0.00036716461181640625,
       "total": {
         "games": 2,
         "wins": 0,
@@ -13977,7 +13977,7 @@
     },
     {
       "teamId": 2341,
-      "expectedWins": 0.015490833204239607,
+      "expectedWins": 0.015028417110443115,
       "total": {
         "games": 3,
         "wins": 0,
@@ -14011,7 +14011,7 @@
     },
     {
       "teamId": 2348,
-      "expectedWins": 1.0145424008369446,
+      "expectedWins": 1.0459951162338257,
       "total": {
         "games": 2,
         "wins": 1,
@@ -14181,7 +14181,7 @@
     },
     {
       "teamId": 2368,
-      "expectedWins": 1.8797789216041565,
+      "expectedWins": 1.4273737519979477,
       "total": {
         "games": 3,
         "wins": 1,
@@ -14317,7 +14317,7 @@
     },
     {
       "teamId": 2377,
-      "expectedWins": 1.4703965336084366,
+      "expectedWins": 1.3606566669186577,
       "total": {
         "games": 3,
         "wins": 1,
@@ -14351,7 +14351,7 @@
     },
     {
       "teamId": 2382,
-      "expectedWins": 2.212713986635208,
+      "expectedWins": 2.051416128873825,
       "total": {
         "games": 3,
         "wins": 2,
@@ -14419,7 +14419,7 @@
     },
     {
       "teamId": 2385,
-      "expectedWins": 0.011246085166931152,
+      "expectedWins": 0.022173821926116943,
       "total": {
         "games": 3,
         "wins": 0,
@@ -14623,7 +14623,7 @@
     },
     {
       "teamId": 2396,
-      "expectedWins": 0.031314730644226074,
+      "expectedWins": 0.01039963960647583,
       "total": {
         "games": 3,
         "wins": 0,
@@ -14725,7 +14725,7 @@
     },
     {
       "teamId": 2400,
-      "expectedWins": 0.9438750147819519,
+      "expectedWins": 1.0137667059898376,
       "total": {
         "games": 3,
         "wins": 1,
@@ -14861,7 +14861,7 @@
     },
     {
       "teamId": 2405,
-      "expectedWins": 1.3150759935379028,
+      "expectedWins": 1.3738693594932556,
       "total": {
         "games": 3,
         "wins": 1,
@@ -14895,7 +14895,7 @@
     },
     {
       "teamId": 2413,
-      "expectedWins": 1.2127155363559723,
+      "expectedWins": 1.1552872508764267,
       "total": {
         "games": 3,
         "wins": 1,
@@ -14929,7 +14929,7 @@
     },
     {
       "teamId": 2415,
-      "expectedWins": 1.491197645664215,
+      "expectedWins": 1.707663744688034,
       "total": {
         "games": 3,
         "wins": 2,
@@ -15065,7 +15065,7 @@
     },
     {
       "teamId": 2426,
-      "expectedWins": 1.0175771713256836,
+      "expectedWins": 0.9863182902336121,
       "total": {
         "games": 2,
         "wins": 1,
@@ -15099,7 +15099,7 @@
     },
     {
       "teamId": 2428,
-      "expectedWins": 1.7772988677024841,
+      "expectedWins": 1.8590261936187744,
       "total": {
         "games": 3,
         "wins": 2,
@@ -15133,7 +15133,7 @@
     },
     {
       "teamId": 2429,
-      "expectedWins": 0.2587306499481201,
+      "expectedWins": 0.08815495669841766,
       "total": {
         "games": 2,
         "wins": 0,
@@ -15167,7 +15167,7 @@
     },
     {
       "teamId": 2433,
-      "expectedWins": 0.01858687400817871,
+      "expectedWins": 0.07941168546676636,
       "total": {
         "games": 2,
         "wins": 0,
@@ -15235,7 +15235,7 @@
     },
     {
       "teamId": 2439,
-      "expectedWins": 1.0490832589566708,
+      "expectedWins": 1.0122758112847805,
       "total": {
         "games": 3,
         "wins": 1,
@@ -15269,7 +15269,7 @@
     },
     {
       "teamId": 2440,
-      "expectedWins": 1.0020769787952304,
+      "expectedWins": 0.9972570659592748,
       "total": {
         "games": 2,
         "wins": 1,
@@ -15303,7 +15303,7 @@
     },
     {
       "teamId": 2441,
-      "expectedWins": 0.8592702150344849,
+      "expectedWins": 0.9209537506103516,
       "total": {
         "games": 3,
         "wins": 1,
@@ -15405,7 +15405,7 @@
     },
     {
       "teamId": 2447,
-      "expectedWins": 1.5435856580734253,
+      "expectedWins": 1.7261568307876587,
       "total": {
         "games": 3,
         "wins": 2,
@@ -15439,7 +15439,7 @@
     },
     {
       "teamId": 2448,
-      "expectedWins": 0.6941691040992737,
+      "expectedWins": 0.3433360755443573,
       "total": {
         "games": 3,
         "wins": 0,
@@ -15473,7 +15473,7 @@
     },
     {
       "teamId": 2449,
-      "expectedWins": 2.152820646762848,
+      "expectedWins": 2.147321045398712,
       "total": {
         "games": 3,
         "wins": 3,
@@ -15507,7 +15507,7 @@
     },
     {
       "teamId": 2450,
-      "expectedWins": 1.0325968861579895,
+      "expectedWins": 1.141010582447052,
       "total": {
         "games": 3,
         "wins": 1,
@@ -15541,7 +15541,7 @@
     },
     {
       "teamId": 2453,
-      "expectedWins": 1.5107937157154083,
+      "expectedWins": 1.3674997687339783,
       "total": {
         "games": 3,
         "wins": 1,
@@ -15575,7 +15575,7 @@
     },
     {
       "teamId": 2458,
-      "expectedWins": 0.9585338970646262,
+      "expectedWins": 0.9673638520762324,
       "total": {
         "games": 3,
         "wins": 0,
@@ -15609,7 +15609,7 @@
     },
     {
       "teamId": 2459,
-      "expectedWins": 0.3327929973602295,
+      "expectedWins": 0.33792319893836975,
       "total": {
         "games": 2,
         "wins": 0,
@@ -15643,7 +15643,7 @@
     },
     {
       "teamId": 2460,
-      "expectedWins": 1.081947922706604,
+      "expectedWins": 1.034159779548645,
       "total": {
         "games": 2,
         "wins": 1,
@@ -15677,7 +15677,7 @@
     },
     {
       "teamId": 2464,
-      "expectedWins": 1.3050106167793274,
+      "expectedWins": 1.5477378964424133,
       "total": {
         "games": 3,
         "wins": 2,
@@ -15711,7 +15711,7 @@
     },
     {
       "teamId": 2466,
-      "expectedWins": 0.5317796468734741,
+      "expectedWins": 0.5521357655525208,
       "total": {
         "games": 3,
         "wins": 0,
@@ -15813,7 +15813,7 @@
     },
     {
       "teamId": 2477,
-      "expectedWins": 0.7910808026790619,
+      "expectedWins": 0.8460627943277359,
       "total": {
         "games": 2,
         "wins": 1,
@@ -15847,7 +15847,7 @@
     },
     {
       "teamId": 2483,
-      "expectedWins": 1.6941145658493042,
+      "expectedWins": 1.2565160393714905,
       "total": {
         "games": 2,
         "wins": 1,
@@ -15949,7 +15949,7 @@
     },
     {
       "teamId": 2502,
-      "expectedWins": 0.6681792009621859,
+      "expectedWins": 0.7087268102914095,
       "total": {
         "games": 3,
         "wins": 0,
@@ -15983,7 +15983,7 @@
     },
     {
       "teamId": 2504,
-      "expectedWins": 0.9930350184440613,
+      "expectedWins": 0.9925480484962463,
       "total": {
         "games": 3,
         "wins": 1,
@@ -16017,7 +16017,7 @@
     },
     {
       "teamId": 2506,
-      "expectedWins": 0.9599720239639282,
+      "expectedWins": 0.9486689567565918,
       "total": {
         "games": 2,
         "wins": 1,
@@ -16187,7 +16187,7 @@
     },
     {
       "teamId": 2523,
-      "expectedWins": 1.9419668167829514,
+      "expectedWins": 1.9363890662789345,
       "total": {
         "games": 3,
         "wins": 2,
@@ -16289,7 +16289,7 @@
     },
     {
       "teamId": 2529,
-      "expectedWins": 0.050813913345336914,
+      "expectedWins": 0.03303259611129761,
       "total": {
         "games": 2,
         "wins": 0,
@@ -16357,7 +16357,7 @@
     },
     {
       "teamId": 2534,
-      "expectedWins": 0.7609260082244873,
+      "expectedWins": 0.6375409960746765,
       "total": {
         "games": 2,
         "wins": 0,
@@ -16391,7 +16391,7 @@
     },
     {
       "teamId": 2535,
-      "expectedWins": 0.16632910072803497,
+      "expectedWins": 0.02098149247467518,
       "total": {
         "games": 3,
         "wins": 0,
@@ -16459,7 +16459,7 @@
     },
     {
       "teamId": 2545,
-      "expectedWins": 0.9344057440757751,
+      "expectedWins": 0.7614878788590431,
       "total": {
         "games": 3,
         "wins": 1,
@@ -16493,7 +16493,7 @@
     },
     {
       "teamId": 2546,
-      "expectedWins": 0.7077693939208984,
+      "expectedWins": 0.8524495214223862,
       "total": {
         "games": 3,
         "wins": 1,
@@ -16731,7 +16731,7 @@
     },
     {
       "teamId": 2567,
-      "expectedWins": 1.8318960517644882,
+      "expectedWins": 1.9493700787425041,
       "total": {
         "games": 2,
         "wins": 2,
@@ -16799,7 +16799,7 @@
     },
     {
       "teamId": 2569,
-      "expectedWins": 2.9857980012893677,
+      "expectedWins": 2.972001842223108,
       "total": {
         "games": 3,
         "wins": 3,
@@ -16867,7 +16867,7 @@
     },
     {
       "teamId": 2571,
-      "expectedWins": 2.080344080924988,
+      "expectedWins": 2.0112065076828003,
       "total": {
         "games": 3,
         "wins": 2,
@@ -16901,7 +16901,7 @@
     },
     {
       "teamId": 2572,
-      "expectedWins": 0.9960022568702698,
+      "expectedWins": 1.0054981708526611,
       "total": {
         "games": 2,
         "wins": 1,
@@ -16935,7 +16935,7 @@
     },
     {
       "teamId": 2579,
-      "expectedWins": 1.9838930368423462,
+      "expectedWins": 1.9849426746368408,
       "total": {
         "games": 2,
         "wins": 2,
@@ -16969,7 +16969,7 @@
     },
     {
       "teamId": 2582,
-      "expectedWins": 1.3439652919769287,
+      "expectedWins": 1.1988092064857483,
       "total": {
         "games": 3,
         "wins": 1,
@@ -17003,7 +17003,7 @@
     },
     {
       "teamId": 2583,
-      "expectedWins": 0,
+      "expectedWins": 0.028608202934265137,
       "total": {
         "games": 1,
         "wins": 0,
@@ -17275,7 +17275,7 @@
     },
     {
       "teamId": 2617,
-      "expectedWins": 2.8344148695468903,
+      "expectedWins": 2.875020612613298,
       "total": {
         "games": 3,
         "wins": 3,
@@ -17309,7 +17309,7 @@
     },
     {
       "teamId": 2619,
-      "expectedWins": 0.9111680388450623,
+      "expectedWins": 0.8947513103485107,
       "total": {
         "games": 3,
         "wins": 1,
@@ -17343,7 +17343,7 @@
     },
     {
       "teamId": 2623,
-      "expectedWins": 1.00123131275177,
+      "expectedWins": 1.0017110705375671,
       "total": {
         "games": 2,
         "wins": 1,
@@ -17377,7 +17377,7 @@
     },
     {
       "teamId": 2627,
-      "expectedWins": 2.3250434696674347,
+      "expectedWins": 2.1603738963603973,
       "total": {
         "games": 3,
         "wins": 3,
@@ -17411,7 +17411,7 @@
     },
     {
       "teamId": 2628,
-      "expectedWins": 1.36679345369339,
+      "expectedWins": 1.560015320777893,
       "total": {
         "games": 2,
         "wins": 1,
@@ -17445,7 +17445,7 @@
     },
     {
       "teamId": 2630,
-      "expectedWins": 1.147560954093933,
+      "expectedWins": 1.0194028606638312,
       "total": {
         "games": 3,
         "wins": 1,
@@ -17479,7 +17479,7 @@
     },
     {
       "teamId": 2633,
-      "expectedWins": 1.9890596638433635,
+      "expectedWins": 1.9851453844457865,
       "total": {
         "games": 2,
         "wins": 2,
@@ -17513,7 +17513,7 @@
     },
     {
       "teamId": 2634,
-      "expectedWins": 0.17096810042858124,
+      "expectedWins": 0.2024313136935234,
       "total": {
         "games": 3,
         "wins": 0,
@@ -17547,7 +17547,7 @@
     },
     {
       "teamId": 2635,
-      "expectedWins": 2.380847781896591,
+      "expectedWins": 2.398512080311775,
       "total": {
         "games": 3,
         "wins": 3,
@@ -17581,7 +17581,7 @@
     },
     {
       "teamId": 2636,
-      "expectedWins": 1.4218688607215881,
+      "expectedWins": 1.5613637864589691,
       "total": {
         "games": 2,
         "wins": 2,
@@ -17615,7 +17615,7 @@
     },
     {
       "teamId": 2638,
-      "expectedWins": 0.9549951553344727,
+      "expectedWins": 0.9916347861289978,
       "total": {
         "games": 2,
         "wins": 1,
@@ -17683,7 +17683,7 @@
     },
     {
       "teamId": 2640,
-      "expectedWins": 1.0879976749420166,
+      "expectedWins": 1.0513580441474915,
       "total": {
         "games": 3,
         "wins": 1,
@@ -17717,7 +17717,7 @@
     },
     {
       "teamId": 2641,
-      "expectedWins": 1.82488451898098,
+      "expectedWins": 1.9908412098884583,
       "total": {
         "games": 2,
         "wins": 2,
@@ -17751,7 +17751,7 @@
     },
     {
       "teamId": 2643,
-      "expectedWins": 1.5146564841270447,
+      "expectedWins": 1.744406834244728,
       "total": {
         "games": 3,
         "wins": 1,
@@ -17819,7 +17819,7 @@
     },
     {
       "teamId": 2646,
-      "expectedWins": 0.004883170127868652,
+      "expectedWins": 0,
       "total": {
         "games": 2,
         "wins": 0,
@@ -17853,7 +17853,7 @@
     },
     {
       "teamId": 2649,
-      "expectedWins": 1.4600769877433777,
+      "expectedWins": 1.205128014087677,
       "total": {
         "games": 2,
         "wins": 1,
@@ -17921,7 +17921,7 @@
     },
     {
       "teamId": 2653,
-      "expectedWins": 1.894067406654358,
+      "expectedWins": 2,
       "total": {
         "games": 2,
         "wins": 2,
@@ -17989,7 +17989,7 @@
     },
     {
       "teamId": 2655,
-      "expectedWins": 0.7165478467941284,
+      "expectedWins": 0.6996362805366516,
       "total": {
         "games": 2,
         "wins": 1,
@@ -18159,7 +18159,7 @@
     },
     {
       "teamId": 2674,
-      "expectedWins": 1.0105342864990234,
+      "expectedWins": 1.0773792266845703,
       "total": {
         "games": 2,
         "wins": 1,
@@ -18227,7 +18227,7 @@
     },
     {
       "teamId": 2678,
-      "expectedWins": 0.21677447855472565,
+      "expectedWins": 0.12539947032928467,
       "total": {
         "games": 3,
         "wins": 0,
@@ -18261,7 +18261,7 @@
     },
     {
       "teamId": 2681,
-      "expectedWins": 1.0702473670244217,
+      "expectedWins": 1.0451157316565514,
       "total": {
         "games": 3,
         "wins": 1,
@@ -18465,7 +18465,7 @@
     },
     {
       "teamId": 2692,
-      "expectedWins": 0.12566566467285156,
+      "expectedWins": 0.058113276958465576,
       "total": {
         "games": 3,
         "wins": 1,
@@ -18533,7 +18533,7 @@
     },
     {
       "teamId": 2698,
-      "expectedWins": 0.009034991264343262,
+      "expectedWins": 0.011878371238708496,
       "total": {
         "games": 3,
         "wins": 0,
@@ -18737,7 +18737,7 @@
     },
     {
       "teamId": 2707,
-      "expectedWins": 0.01629626750946045,
+      "expectedWins": 0.020560622215270996,
       "total": {
         "games": 2,
         "wins": 1,
@@ -18771,7 +18771,7 @@
     },
     {
       "teamId": 2710,
-      "expectedWins": 1.0135181546211243,
+      "expectedWins": 1.0032240748405457,
       "total": {
         "games": 3,
         "wins": 1,
@@ -18805,7 +18805,7 @@
     },
     {
       "teamId": 2711,
-      "expectedWins": 1.3496440649032593,
+      "expectedWins": 1.4856563210487366,
       "total": {
         "games": 2,
         "wins": 1,
@@ -18873,7 +18873,7 @@
     },
     {
       "teamId": 2717,
-      "expectedWins": 1.3413193225860596,
+      "expectedWins": 1.4706723392009735,
       "total": {
         "games": 3,
         "wins": 1,
@@ -19009,7 +19009,7 @@
     },
     {
       "teamId": 2729,
-      "expectedWins": 0.7986916303634644,
+      "expectedWins": 0.8984521627426147,
       "total": {
         "games": 3,
         "wins": 2,
@@ -19111,7 +19111,7 @@
     },
     {
       "teamId": 2736,
-      "expectedWins": 0.004990518093109131,
+      "expectedWins": 0.0059223175048828125,
       "total": {
         "games": 3,
         "wins": 0,
@@ -19383,7 +19383,7 @@
     },
     {
       "teamId": 2747,
-      "expectedWins": 1.6567436456680298,
+      "expectedWins": 1.662489414215088,
       "total": {
         "games": 3,
         "wins": 2,
@@ -19519,7 +19519,7 @@
     },
     {
       "teamId": 2754,
-      "expectedWins": 2.0013421773910522,
+      "expectedWins": 1.9964889883995056,
       "total": {
         "games": 3,
         "wins": 2,
@@ -19553,7 +19553,7 @@
     },
     {
       "teamId": 2755,
-      "expectedWins": 1.9757564663887024,
+      "expectedWins": 1.9803799390792847,
       "total": {
         "games": 3,
         "wins": 2,
@@ -19655,7 +19655,7 @@
     },
     {
       "teamId": 2771,
-      "expectedWins": 0.9422431029379368,
+      "expectedWins": 0.6087432075291872,
       "total": {
         "games": 3,
         "wins": 1,
@@ -19927,7 +19927,7 @@
     },
     {
       "teamId": 2803,
-      "expectedWins": 1.7969934684224427,
+      "expectedWins": 1.795823791064322,
       "total": {
         "games": 3,
         "wins": 2,
@@ -20131,7 +20131,7 @@
     },
     {
       "teamId": 2815,
-      "expectedWins": 1.1184548735618591,
+      "expectedWins": 1.07949697971344,
       "total": {
         "games": 3,
         "wins": 1,
@@ -20318,40 +20318,6 @@
         "games": 1,
         "wins": 0,
         "losses": 1,
-        "ties": 0
-      },
-      "awayGames": {
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "ties": 0
-      },
-      "neutralSiteGames": {
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "ties": 0
-      }
-    },
-    {
-      "teamId": 2824,
-      "expectedWins": 0.020822644233703613,
-      "total": {
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "ties": 0
-      },
-      "conferenceGames": {
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "ties": 0
-      },
-      "homeGames": {
-        "games": 1,
-        "wins": 1,
-        "losses": 0,
         "ties": 0
       },
       "awayGames": {
@@ -20607,7 +20573,7 @@
     },
     {
       "teamId": 2837,
-      "expectedWins": 1.121912658214569,
+      "expectedWins": 1.1489644050598145,
       "total": {
         "games": 3,
         "wins": 1,
@@ -20675,7 +20641,7 @@
     },
     {
       "teamId": 2839,
-      "expectedWins": 0.0005824565887451172,
+      "expectedWins": 0.00014442205429077148,
       "total": {
         "games": 3,
         "wins": 2,
@@ -20709,7 +20675,7 @@
     },
     {
       "teamId": 2842,
-      "expectedWins": 0.047870635986328125,
+      "expectedWins": 0.05917370319366455,
       "total": {
         "games": 3,
         "wins": 0,
@@ -21321,7 +21287,7 @@
     },
     {
       "teamId": 2900,
-      "expectedWins": 1.9287164807319641,
+      "expectedWins": 1.9294444918632507,
       "total": {
         "games": 3,
         "wins": 2,
@@ -21457,7 +21423,7 @@
     },
     {
       "teamId": 2916,
-      "expectedWins": 1.2863277196884155,
+      "expectedWins": 1.1029290556907654,
       "total": {
         "games": 2,
         "wins": 1,
@@ -22103,7 +22069,7 @@
     },
     {
       "teamId": 2986,
-      "expectedWins": 0.008544743061065674,
+      "expectedWins": 0.009476542472839355,
       "total": {
         "games": 3,
         "wins": 0,
@@ -22205,7 +22171,7 @@
     },
     {
       "teamId": 3101,
-      "expectedWins": 0.037595510482788086,
+      "expectedWins": 0.043991162441670895,
       "total": {
         "games": 3,
         "wins": 0,
@@ -22579,7 +22545,7 @@
     },
     {
       "teamId": 110242,
-      "expectedWins": 1.8028133492916822,
+      "expectedWins": 1.7636657673865557,
       "total": {
         "games": 2,
         "wins": 2,
@@ -22783,7 +22749,7 @@
     },
     {
       "teamId": 112334,
-      "expectedWins": 0.061230361461639404,
+      "expectedWins": 0.4434003233909607,
       "total": {
         "games": 1,
         "wins": 0,
@@ -23089,7 +23055,7 @@
     },
     {
       "teamId": 127991,
-      "expectedWins": 0.984954196959734,
+      "expectedWins": 0.9926891000941396,
       "total": {
         "games": 3,
         "wins": 3,

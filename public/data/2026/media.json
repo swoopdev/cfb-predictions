@@ -1849,6 +1849,20 @@
       "outlet": "ESPN2",
       "startTime": "2026-09-19T19:30:00.000Z",
       "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856796,
+      "mediaType": "tv",
+      "outlet": "FOX",
+      "startTime": "2026-09-19T23:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858232,
+      "mediaType": "tv",
+      "outlet": "FS1",
+      "startTime": "2026-09-19T23:30:00.000Z",
+      "isStartTimeTBD": false
     }
   ]
 }

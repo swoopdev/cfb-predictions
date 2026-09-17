@@ -255,13 +255,13 @@
       "openSpread": 21
     },
     {
-      "gameId": 401856800,
+      "gameId": 401869948,
       "favored": "home",
-      "spread": 18,
-      "homeMoneyline": -1500,
-      "awayMoneyline": 775,
+      "spread": 3,
+      "homeMoneyline": -175,
+      "awayMoneyline": 150,
       "openFavored": "home",
-      "openSpread": 20.5
+      "openSpread": 3.5
     },
     {
       "gameId": 401856799,
@@ -280,6 +280,15 @@
       "awayMoneyline": 470,
       "openFavored": "home",
       "openSpread": 14
+    },
+    {
+      "gameId": 401856798,
+      "favored": "home",
+      "spread": 24,
+      "homeMoneyline": -2200,
+      "awayMoneyline": 1000,
+      "openFavored": "home",
+      "openSpread": 23
     },
     {
       "gameId": 401862776,
@@ -345,15 +354,6 @@
       "openSpread": 6.5
     },
     {
-      "gameId": 401869948,
-      "favored": "home",
-      "spread": 3,
-      "homeMoneyline": -180,
-      "awayMoneyline": 150,
-      "openFavored": "home",
-      "openSpread": 2.5
-    },
-    {
       "gameId": 401856695,
       "favored": "home",
       "spread": 3.5,
@@ -399,15 +399,6 @@
       "openSpread": 42.5
     },
     {
-      "gameId": 401860889,
-      "favored": "home",
-      "spread": 3,
-      "homeMoneyline": -150,
-      "awayMoneyline": 130,
-      "openFavored": "home",
-      "openSpread": 3
-    },
-    {
       "gameId": 401871047,
       "favored": "away",
       "spread": 3.5,
@@ -417,9 +408,18 @@
       "openSpread": 4.5
     },
     {
+      "gameId": 401856800,
+      "favored": "home",
+      "spread": 18,
+      "homeMoneyline": -1500,
+      "awayMoneyline": 775,
+      "openFavored": "home",
+      "openSpread": 20.5
+    },
+    {
       "gameId": 401864574,
       "favored": "home",
-      "spread": 17.5,
+      "spread": 17,
       "homeMoneyline": -1600,
       "awayMoneyline": 800,
       "openFavored": "home",
@@ -444,13 +444,13 @@
       "openSpread": 17.5
     },
     {
-      "gameId": 401856798,
+      "gameId": 401860889,
       "favored": "home",
-      "spread": 23.5,
-      "homeMoneyline": -2200,
-      "awayMoneyline": 1000,
+      "spread": 3,
+      "homeMoneyline": -148,
+      "awayMoneyline": 124,
       "openFavored": "home",
-      "openSpread": 23
+      "openSpread": 3
     },
     {
       "gameId": 401860887,

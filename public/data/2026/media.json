@@ -153,7 +153,7 @@
       "gameId": 401868094,
       "mediaType": "tv",
       "outlet": "ESPN",
-      "startTime": "2026-10-03T01:30:00.000Z",
+      "startTime": "2026-10-03T02:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
@@ -1736,6 +1736,27 @@
       "mediaType": "tv",
       "outlet": "ABC",
       "startTime": "2026-10-03T23:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858250,
+      "mediaType": "web",
+      "outlet": "Disney+",
+      "startTime": "2026-10-03T16:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856710,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-10-03T19:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856818,
+      "mediaType": "web",
+      "outlet": "Disney+",
+      "startTime": "2026-10-03T23:00:00.000Z",
       "isStartTimeTBD": false
     }
   ]

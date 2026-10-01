@@ -14179,7 +14179,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "7",
+      "stat": "8",
       "jersey": 7
     },
     {
@@ -14209,7 +14209,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "28",
+      "stat": "29",
       "jersey": 7
     },
     {
@@ -74309,7 +74309,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "9",
+      "stat": "8",
       "jersey": 3
     },
     {
@@ -78221,76 +78221,6 @@
       "statType": "YPC",
       "stat": "4.1",
       "jersey": 4
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "PD",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "QB HUR",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "SACKS",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "SOLO",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "TD",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "TFL",
-      "stat": "0",
-      "jersey": 34
-    },
-    {
-      "playerId": "4873277",
-      "player": "Armon Mason",
-      "teamId": 228,
-      "position": "DE",
-      "category": "defensive",
-      "statType": "TOT",
-      "stat": "1",
-      "jersey": 34
     },
     {
       "playerId": "4873418",
@@ -91149,7 +91079,7 @@
       "position": "DT",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "6",
+      "stat": "7",
       "jersey": 90
     },
     {
@@ -107429,7 +107359,7 @@
       "position": "DE",
       "category": "defensive",
       "statType": "SACKS",
-      "stat": "6.5",
+      "stat": "7",
       "jersey": 1
     },
     {
@@ -107439,7 +107369,7 @@
       "position": "DE",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "7",
+      "stat": "8",
       "jersey": 1
     },
     {
@@ -107459,7 +107389,7 @@
       "position": "DE",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "8.5",
+      "stat": "9.0",
       "jersey": 1
     },
     {
@@ -107509,7 +107439,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "11",
+      "stat": "10",
       "jersey": 5
     },
     {
@@ -107529,7 +107459,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "1",
+      "stat": "1.5",
       "jersey": 5
     },
     {
@@ -107539,7 +107469,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "22",
+      "stat": "24",
       "jersey": 5
     },
     {
@@ -124159,7 +124089,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "6",
+      "stat": "5",
       "jersey": 1
     },
     {
@@ -144049,7 +143979,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "11",
+      "stat": "10",
       "jersey": 0
     },
     {
@@ -147119,7 +147049,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "15",
+      "stat": "13",
       "jersey": 47
     },
     {
@@ -149689,7 +149619,7 @@
       "position": "DE",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "5",
+      "stat": "6",
       "jersey": 48
     },
     {
@@ -220839,7 +220769,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "18",
+      "stat": "17",
       "jersey": 2
     },
     {
@@ -224181,6 +224111,76 @@
       "statType": "YPC",
       "stat": "4.7",
       "jersey": 22
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "PD",
+      "stat": "0",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "QB HUR",
+      "stat": "1",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "SACKS",
+      "stat": "0",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "SOLO",
+      "stat": "0",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "TFL",
+      "stat": "0",
+      "jersey": 99
+    },
+    {
+      "playerId": "5121586",
+      "player": "Markus Strong",
+      "teamId": 228,
+      "position": "DT",
+      "category": "defensive",
+      "statType": "TOT",
+      "stat": "0",
+      "jersey": 99
     },
     {
       "playerId": "5121601",
@@ -239039,7 +239039,7 @@
       "position": "DE",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "1",
+      "stat": "2",
       "jersey": 49
     },
     {
@@ -240409,7 +240409,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "0",
+      "stat": "0.5",
       "jersey": 2
     },
     {
@@ -240419,7 +240419,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "8",
+      "stat": "10",
       "jersey": 2
     },
     {
@@ -240429,7 +240429,7 @@
       "position": "CB",
       "category": "interceptions",
       "statType": "AVG",
-      "stat": "1.0",
+      "stat": "2.0",
       "jersey": 2
     },
     {
@@ -240459,7 +240459,7 @@
       "position": "CB",
       "category": "interceptions",
       "statType": "YDS",
-      "stat": "1",
+      "stat": "2",
       "jersey": 2
     },
     {
@@ -250149,7 +250149,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "REC",
-      "stat": "2",
+      "stat": "3",
       "jersey": 8
     },
     {
@@ -250169,7 +250169,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "5",
+      "stat": "6",
       "jersey": 8
     },
     {
@@ -250179,7 +250179,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "2.5",
+      "stat": "2.0",
       "jersey": 8
     },
     {
@@ -341083,56 +341083,6 @@
       "jersey": 4
     },
     {
-      "playerId": "5158940",
-      "player": "Naeem Burroughs",
-      "teamId": 228,
-      "position": "WR",
-      "category": "receiving",
-      "statType": "LONG",
-      "stat": "1",
-      "jersey": 0
-    },
-    {
-      "playerId": "5158940",
-      "player": "Naeem Burroughs",
-      "teamId": 228,
-      "position": "WR",
-      "category": "receiving",
-      "statType": "REC",
-      "stat": "1",
-      "jersey": 0
-    },
-    {
-      "playerId": "5158940",
-      "player": "Naeem Burroughs",
-      "teamId": 228,
-      "position": "WR",
-      "category": "receiving",
-      "statType": "TD",
-      "stat": "0",
-      "jersey": 0
-    },
-    {
-      "playerId": "5158940",
-      "player": "Naeem Burroughs",
-      "teamId": 228,
-      "position": "WR",
-      "category": "receiving",
-      "statType": "YDS",
-      "stat": "1",
-      "jersey": 0
-    },
-    {
-      "playerId": "5158940",
-      "player": "Naeem Burroughs",
-      "teamId": 228,
-      "position": "WR",
-      "category": "receiving",
-      "statType": "YPR",
-      "stat": "1.0",
-      "jersey": 0
-    },
-    {
       "playerId": "5158944",
       "player": "Elias Coke",
       "teamId": 164,
@@ -355679,7 +355629,7 @@
       "position": "DT",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "2",
+      "stat": "1",
       "jersey": 88
     },
     {
@@ -389479,7 +389429,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "16",
+      "stat": "17",
       "jersey": 6
     },
     {
@@ -436009,7 +435959,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SACKS",
-      "stat": "1.5",
+      "stat": "1",
       "jersey": 10
     },
     {
@@ -436039,7 +435989,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "1.5",
+      "stat": "1",
       "jersey": 10
     },
     {
@@ -487929,7 +487879,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "PD",
-      "stat": "1",
+      "stat": "2",
       "jersey": 6
     },
     {
@@ -487939,7 +487889,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "3",
+      "stat": "4",
       "jersey": 6
     },
     {
@@ -585199,7 +585149,7 @@
       "position": "DT",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "6",
+      "stat": "7",
       "jersey": 56
     },
     {

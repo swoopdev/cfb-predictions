@@ -230,7 +230,7 @@
       "gameId": 401868276,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-03T17:00:00.000Z",
+      "startTime": "2026-10-03T16:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
@@ -489,7 +489,7 @@
       "gameId": 401862787,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-03T19:30:00.000Z",
+      "startTime": "2026-10-03T15:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
@@ -1820,6 +1820,13 @@
       "mediaType": "web",
       "outlet": "SIAC Network",
       "startTime": "2026-10-03T22:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856710,
+      "mediaType": "radio",
+      "outlet": "ERADM",
+      "startTime": "2026-10-03T19:30:00.000Z",
       "isStartTimeTBD": false
     }
   ]

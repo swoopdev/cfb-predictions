@@ -3,6 +3,10 @@
   "week": 5,
   "probabilities": [
     {
+      "gameId": 401868053,
+      "homeWinProbability": 0.582
+    },
+    {
       "gameId": 401862791,
       "homeWinProbability": 0.582
     },
@@ -12,7 +16,7 @@
     },
     {
       "gameId": 401856817,
-      "homeWinProbability": 0.609
+      "homeWinProbability": 0.595
     },
     {
       "gameId": 401868064,
@@ -20,7 +24,7 @@
     },
     {
       "gameId": 401866431,
-      "homeWinProbability": 0.079
+      "homeWinProbability": 0.074
     },
     {
       "gameId": 401868328,
@@ -28,7 +32,7 @@
     },
     {
       "gameId": 401860898,
-      "homeWinProbability": 0.899
+      "homeWinProbability": 0.911
     },
     {
       "gameId": 401866653,
@@ -36,7 +40,11 @@
     },
     {
       "gameId": 401866432,
-      "homeWinProbability": 0.176
+      "homeWinProbability": 0.185
+    },
+    {
+      "gameId": 401868077,
+      "homeWinProbability": 0.622
     },
     {
       "gameId": 401867899,
@@ -44,7 +52,7 @@
     },
     {
       "gameId": 401866430,
-      "homeWinProbability": 0.673
+      "homeWinProbability": 0.685
     },
     {
       "gameId": 401868173,
@@ -56,19 +64,19 @@
     },
     {
       "gameId": 401858249,
-      "homeWinProbability": 0.128
+      "homeWinProbability": 0.143
     },
     {
       "gameId": 401869942,
-      "homeWinProbability": 0.459
+      "homeWinProbability": 0.445
     },
     {
       "gameId": 401856821,
-      "homeWinProbability": 0.185
+      "homeWinProbability": 0.176
     },
     {
       "gameId": 401860899,
-      "homeWinProbability": 0.327
+      "homeWinProbability": 0.315
     },
     {
       "gameId": 401867819,
@@ -76,7 +84,7 @@
     },
     {
       "gameId": 401867835,
-      "homeWinProbability": 0.698
+      "homeWinProbability": 0.755
     },
     {
       "gameId": 401871050,
@@ -87,8 +95,16 @@
       "homeWinProbability": 0.352
     },
     {
+      "gameId": 401868143,
+      "homeWinProbability": 0.541
+    },
+    {
       "gameId": 401868339,
       "homeWinProbability": 0.582
+    },
+    {
+      "gameId": 401868248,
+      "homeWinProbability": 0.234
     },
     {
       "gameId": 401862790,
@@ -96,7 +112,7 @@
     },
     {
       "gameId": 401858253,
-      "homeWinProbability": 0.432
+      "homeWinProbability": 0.473
     },
     {
       "gameId": 401868375,
@@ -104,11 +120,11 @@
     },
     {
       "gameId": 401867828,
-      "homeWinProbability": 0.302
+      "homeWinProbability": 0.279
     },
     {
       "gameId": 401856705,
-      "homeWinProbability": 0.958
+      "homeWinProbability": 0.961
     },
     {
       "gameId": 401869956,
@@ -123,24 +139,40 @@
       "homeWinProbability": 0.256
     },
     {
+      "gameId": 401867840,
+      "homeWinProbability": 0.622
+    },
+    {
       "gameId": 401864513,
       "homeWinProbability": 0.582
     },
     {
       "gameId": 401856819,
-      "homeWinProbability": 0.776
+      "homeWinProbability": 0.766
+    },
+    {
+      "gameId": 401869151,
+      "homeWinProbability": 0.541
     },
     {
       "gameId": 401868094,
       "homeWinProbability": 0.159
     },
     {
+      "gameId": 401868104,
+      "homeWinProbability": 0.673
+    },
+    {
       "gameId": 401858472,
       "homeWinProbability": 0.755
     },
     {
+      "gameId": 401867848,
+      "homeWinProbability": 0.459
+    },
+    {
       "gameId": 401858473,
-      "homeWinProbability": 0.159
+      "homeWinProbability": 0.167
     },
     {
       "gameId": 401856822,
@@ -152,11 +184,11 @@
     },
     {
       "gameId": 401869962,
-      "homeWinProbability": 0.905
+      "homeWinProbability": 0.893
     },
     {
       "gameId": 401856807,
-      "homeWinProbability": 0.916
+      "homeWinProbability": 0.921
     },
     {
       "gameId": 401866434,
@@ -164,7 +196,11 @@
     },
     {
       "gameId": 401868029,
-      "homeWinProbability": 0.327
+      "homeWinProbability": 0.34
+    },
+    {
+      "gameId": 401869131,
+      "homeWinProbability": 0.998
     },
     {
       "gameId": 401868010,
@@ -172,15 +208,15 @@
     },
     {
       "gameId": 401867910,
-      "homeWinProbability": 0.744
+      "homeWinProbability": 0.721
     },
     {
       "gameId": 401869932,
-      "homeWinProbability": 0.673
+      "homeWinProbability": 0.66
     },
     {
       "gameId": 401869842,
-      "homeWinProbability": 0.459
+      "homeWinProbability": 0.473
     },
     {
       "gameId": 401856706,
@@ -192,15 +228,15 @@
     },
     {
       "gameId": 401866433,
-      "homeWinProbability": 0.648
+      "homeWinProbability": 0.66
     },
     {
       "gameId": 401866477,
-      "homeWinProbability": 0.824
+      "homeWinProbability": 0.796
     },
     {
       "gameId": 401858474,
-      "homeWinProbability": 0.352
+      "homeWinProbability": 0.34
     },
     {
       "gameId": 401856707,
@@ -208,7 +244,7 @@
     },
     {
       "gameId": 401868965,
-      "homeWinProbability": 0.034
+      "homeWinProbability": 0.025
     },
     {
       "gameId": 401856708,
@@ -228,7 +264,7 @@
     },
     {
       "gameId": 401858248,
-      "homeWinProbability": 0.405
+      "homeWinProbability": 0.418
     },
     {
       "gameId": 401858475,
@@ -240,7 +276,7 @@
     },
     {
       "gameId": 401864514,
-      "homeWinProbability": 0.94
+      "homeWinProbability": 0.944
     },
     {
       "gameId": 401871049,
@@ -248,11 +284,11 @@
     },
     {
       "gameId": 401858250,
-      "homeWinProbability": 0.069
+      "homeWinProbability": 0.074
     },
     {
       "gameId": 401866657,
-      "homeWinProbability": 0.279
+      "homeWinProbability": 0.234
     },
     {
       "gameId": 401867869,
@@ -264,15 +300,15 @@
     },
     {
       "gameId": 401858476,
-      "homeWinProbability": 0.418
+      "homeWinProbability": 0.432
     },
     {
       "gameId": 401868276,
-      "homeWinProbability": 0.046
+      "homeWinProbability": 0.025
     },
     {
       "gameId": 401866654,
-      "homeWinProbability": 0.595
+      "homeWinProbability": 0.609
     },
     {
       "gameId": 401862788,
@@ -284,7 +320,7 @@
     },
     {
       "gameId": 401858477,
-      "homeWinProbability": 0.046
+      "homeWinProbability": 0.049
     },
     {
       "gameId": 401868220,
@@ -292,7 +328,7 @@
     },
     {
       "gameId": 401860900,
-      "homeWinProbability": 0.302
+      "homeWinProbability": 0.256
     },
     {
       "gameId": 401858246,
@@ -304,7 +340,7 @@
     },
     {
       "gameId": 401856709,
-      "homeWinProbability": 0.582
+      "homeWinProbability": 0.568
     },
     {
       "gameId": 401867986,
@@ -312,7 +348,11 @@
     },
     {
       "gameId": 401867859,
-      "homeWinProbability": 0.899
+      "homeWinProbability": 0.886
+    },
+    {
+      "gameId": 401868936,
+      "homeWinProbability": 0.595
     },
     {
       "gameId": 401867891,
@@ -320,11 +360,19 @@
     },
     {
       "gameId": 401862792,
-      "homeWinProbability": 0.66
+      "homeWinProbability": 0.648
+    },
+    {
+      "gameId": 401868309,
+      "homeWinProbability": 0.886
     },
     {
       "gameId": 401868264,
-      "homeWinProbability": 0.143
+      "homeWinProbability": 0.194
+    },
+    {
+      "gameId": 401867688,
+      "homeWinProbability": 1
     },
     {
       "gameId": 401856818,
@@ -332,7 +380,7 @@
     },
     {
       "gameId": 401856710,
-      "homeWinProbability": 0.685
+      "homeWinProbability": 0.673
     },
     {
       "gameId": 401856711,
@@ -351,24 +399,32 @@
       "homeWinProbability": 0.568
     },
     {
+      "gameId": 401868086,
+      "homeWinProbability": 0.744
+    },
+    {
       "gameId": 401858252,
-      "homeWinProbability": 0.315
+      "homeWinProbability": 0.327
     },
     {
       "gameId": 401858247,
-      "homeWinProbability": 0.582
+      "homeWinProbability": 0.555
     },
     {
       "gameId": 401858478,
       "homeWinProbability": 0.733
     },
     {
+      "gameId": 401868160,
+      "homeWinProbability": 0.159
+    },
+    {
       "gameId": 401867967,
-      "homeWinProbability": 0.766
+      "homeWinProbability": 0.841
     },
     {
       "gameId": 401858245,
-      "homeWinProbability": 0.568
+      "homeWinProbability": 0.541
     },
     {
       "gameId": 401868381,
@@ -376,11 +432,15 @@
     },
     {
       "gameId": 401858251,
-      "homeWinProbability": 0.833
+      "homeWinProbability": 0.841
     },
     {
       "gameId": 401860921,
       "homeWinProbability": 0.555
+    },
+    {
+      "gameId": 401868391,
+      "homeWinProbability": 0.256
     },
     {
       "gameId": 401868197,
@@ -392,7 +452,7 @@
     },
     {
       "gameId": 401858479,
-      "homeWinProbability": 0.744
+      "homeWinProbability": 0.733
     },
     {
       "gameId": 401870840,

@@ -1562,6 +1562,20 @@
       "outlet": "ESPNU",
       "startTime": "2026-10-10T23:30:00.000Z",
       "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858481,
+      "mediaType": "tv",
+      "outlet": "Fox",
+      "startTime": "2026-10-10T16:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856825,
+      "mediaType": "tv",
+      "outlet": "Fox",
+      "startTime": "2026-10-10T19:30:00.000Z",
+      "isStartTimeTBD": false
     }
   ]
 }

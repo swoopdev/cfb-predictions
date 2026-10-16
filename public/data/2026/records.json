@@ -71,22 +71,22 @@
     },
     {
       "teamId": 5,
-      "expectedWins": 3.008581280708313,
+      "expectedWins": 3.690837562084198,
       "total": {
-        "games": 6,
-        "wins": 3,
+        "games": 7,
+        "wins": 4,
         "losses": 3,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 2,
-        "wins": 1,
+        "games": 3,
+        "wins": 2,
         "losses": 1,
         "ties": 0
       },
       "homeGames": {
-        "games": 3,
-        "wins": 3,
+        "games": 4,
+        "wins": 4,
         "losses": 0,
         "ties": 0
       },
@@ -753,15 +753,15 @@
       "teamId": 36,
       "expectedWins": 2.292859062552452,
       "total": {
-        "games": 5,
+        "games": 6,
         "wins": 2,
-        "losses": 3,
+        "losses": 4,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 1,
+        "games": 2,
         "wins": 0,
-        "losses": 1,
+        "losses": 2,
         "ties": 0
       },
       "homeGames": {
@@ -771,9 +771,9 @@
         "ties": 0
       },
       "awayGames": {
-        "games": 1,
+        "games": 2,
         "wins": 0,
-        "losses": 1,
+        "losses": 2,
         "ties": 0
       },
       "neutralSiteGames": {
@@ -3369,17 +3369,17 @@
     },
     {
       "teamId": 151,
-      "expectedWins": 2.330813854932785,
+      "expectedWins": 2.6485575735569,
       "total": {
-        "games": 5,
+        "games": 6,
         "wins": 3,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 1,
+        "games": 2,
         "wins": 1,
-        "losses": 0,
+        "losses": 1,
         "ties": 0
       },
       "homeGames": {
@@ -3389,9 +3389,9 @@
         "ties": 0
       },
       "awayGames": {
-        "games": 2,
+        "games": 3,
         "wins": 1,
-        "losses": 1,
+        "losses": 2,
         "ties": 0
       },
       "neutralSiteGames": {
@@ -6327,16 +6327,16 @@
     },
     {
       "teamId": 290,
-      "expectedWins": 2.6947872787714005,
+      "expectedWins": 3.674455054104328,
       "total": {
-        "games": 6,
-        "wins": 2,
+        "games": 7,
+        "wins": 3,
         "losses": 4,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 2,
-        "wins": 1,
+        "games": 3,
+        "wins": 2,
         "losses": 1,
         "ties": 0
       },
@@ -6347,8 +6347,8 @@
         "ties": 0
       },
       "awayGames": {
-        "games": 3,
-        "wins": 1,
+        "games": 4,
+        "wins": 2,
         "losses": 2,
         "ties": 0
       },
@@ -6463,23 +6463,23 @@
     },
     {
       "teamId": 295,
-      "expectedWins": 2.151989422738552,
+      "expectedWins": 2.1723216474056244,
       "total": {
-        "games": 6,
+        "games": 7,
         "wins": 2,
-        "losses": 4,
+        "losses": 5,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 3,
+        "games": 4,
         "wins": 1,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "homeGames": {
-        "games": 3,
+        "games": 4,
         "wins": 1,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "awayGames": {
@@ -6805,21 +6805,21 @@
       "teamId": 319,
       "expectedWins": null,
       "total": {
-        "games": 6,
+        "games": 7,
         "wins": 3,
-        "losses": 3,
+        "losses": 4,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 6,
+        "games": 7,
         "wins": 3,
-        "losses": 3,
+        "losses": 4,
         "ties": 0
       },
       "homeGames": {
-        "games": 3,
+        "games": 4,
         "wins": 1,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "awayGames": {
@@ -6939,22 +6939,22 @@
     },
     {
       "teamId": 326,
-      "expectedWins": 2.935551196336746,
+      "expectedWins": 3.935551196336746,
       "total": {
-        "games": 5,
-        "wins": 2,
+        "games": 6,
+        "wins": 3,
         "losses": 3,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 1,
-        "wins": 0,
+        "games": 2,
+        "wins": 1,
         "losses": 1,
         "ties": 0
       },
       "homeGames": {
-        "games": 3,
-        "wins": 2,
+        "games": 4,
+        "wins": 3,
         "losses": 1,
         "ties": 0
       },
@@ -11769,14 +11769,14 @@
       "teamId": 2191,
       "expectedWins": null,
       "total": {
-        "games": 6,
-        "wins": 5,
+        "games": 7,
+        "wins": 6,
         "losses": 1,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 6,
-        "wins": 5,
+        "games": 7,
+        "wins": 6,
         "losses": 1,
         "ties": 0
       },
@@ -11787,8 +11787,8 @@
         "ties": 0
       },
       "awayGames": {
-        "games": 3,
-        "wins": 3,
+        "games": 4,
+        "wins": 4,
         "losses": 0,
         "ties": 0
       },
@@ -17889,20 +17889,20 @@
       "teamId": 2651,
       "expectedWins": null,
       "total": {
-        "games": 5,
-        "wins": 4,
+        "games": 6,
+        "wins": 5,
         "losses": 1,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 2,
-        "wins": 2,
+        "games": 3,
+        "wins": 3,
         "losses": 0,
         "ties": 0
       },
       "homeGames": {
-        "games": 2,
-        "wins": 2,
+        "games": 3,
+        "wins": 3,
         "losses": 0,
         "ties": 0
       },
@@ -19827,15 +19827,15 @@
       "teamId": 2790,
       "expectedWins": null,
       "total": {
-        "games": 5,
+        "games": 6,
         "wins": 0,
-        "losses": 5,
+        "losses": 6,
         "ties": 0
       },
       "conferenceGames": {
-        "games": 2,
+        "games": 3,
         "wins": 0,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "homeGames": {
@@ -19845,9 +19845,9 @@
         "ties": 0
       },
       "awayGames": {
-        "games": 2,
+        "games": 3,
         "wins": 0,
-        "losses": 2,
+        "losses": 3,
         "ties": 0
       },
       "neutralSiteGames": {

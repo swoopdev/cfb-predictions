@@ -1,1951 +1,1881 @@
 {
   "season": 2026,
-  "week": 9,
+  "week": 10,
   "media": [
     {
-      "gameId": 401860908,
+      "gameId": 401871073,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401860912,
       "mediaType": "tv",
       "outlet": "CW",
-      "startTime": "2026-11-01T02:00:00.000Z",
+      "startTime": "2026-11-08T03:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401867880,
+      "gameId": 401867976,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401867956,
+      "gameId": 401867957,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401867963,
+      "gameId": 401867862,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
+      "startTime": "2026-11-07T23:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401856847,
-      "mediaType": "tv",
-      "outlet": "Fox",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871071,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-10-27T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871072,
-      "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-28T00:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871058,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-10-28T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871057,
-      "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-29T00:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401862813,
-      "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-30T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856844,
+      "gameId": 401858288,
       "mediaType": "tv",
       "outlet": "ESPN",
-      "startTime": "2026-10-30T23:30:00.000Z",
+      "startTime": "2026-11-07T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401866451,
+      "gameId": 401862818,
       "mediaType": "tv",
       "outlet": "ESPN2",
-      "startTime": "2026-10-31T02:30:00.000Z",
+      "startTime": "2026-11-07T00:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401860924,
+      "gameId": 401858510,
+      "mediaType": "tv",
+      "outlet": "FOX",
+      "startTime": "2026-11-07T01:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401864533,
+      "mediaType": "tv",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-07T02:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856855,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-11-07T03:15:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401864534,
+      "mediaType": "web",
+      "outlet": "MW+",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858292,
+      "mediaType": "tv",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401862820,
+      "mediaType": "tv",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401860911,
       "mediaType": "tv",
       "outlet": "USA Net",
-      "startTime": "2026-11-01T03:00:00.000Z",
+      "startTime": "2026-11-07T23:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401864529,
-      "mediaType": "web",
-      "outlet": "MW+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866452,
+      "gameId": 401871075,
       "mediaType": "tv",
       "outlet": "CBSSN",
-      "startTime": "2026-10-31T16:00:00.000Z",
+      "startTime": "2026-11-08T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401861966,
-      "mediaType": "web",
-      "outlet": "MW+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856734,
-      "mediaType": "tv",
-      "outlet": "ABC",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401860910,
-      "mediaType": "tv",
-      "outlet": "USA Net",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401864531,
-      "mediaType": "web",
-      "outlet": "MW+",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871059,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401860909,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401860908,
-      "mediaType": "tv",
-      "outlet": "The CW Network",
-      "startTime": "2026-11-01T02:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401864530,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-11-01T02:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867969,
-      "mediaType": "tv",
-      "outlet": "ESPNU",
-      "startTime": "2026-10-29T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867838,
-      "mediaType": "tv",
-      "outlet": "ESPNU",
-      "startTime": "2026-10-30T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867809,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867823,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867932,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867995,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869154,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868030,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867831,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868004,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868026,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868215,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868258,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868342,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867851,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867861,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868175,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868190,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868199,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868378,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868107,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868165,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868183,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868312,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868384,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869139,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868349,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868056,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868089,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868098,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868267,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868320,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868136,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T21:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869134,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868147,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868388,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868251,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-11-01T00:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906941,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906917,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858282,
-      "mediaType": "radio",
-      "outlet": "ERADM",
-      "startTime": "2026-10-31T23:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856734,
-      "mediaType": "web",
-      "outlet": "Disney+",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856737,
-      "mediaType": "web",
-      "outlet": "Disney+",
-      "startTime": "2026-10-31T23:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868126,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858502,
-      "mediaType": "tv",
-      "outlet": "Fox",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858278,
-      "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858277,
-      "mediaType": "tv",
-      "outlet": "ACC Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858279,
-      "mediaType": "tv",
-      "outlet": "CW",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858503,
-      "mediaType": "tv",
-      "outlet": "FS1",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401862816,
-      "mediaType": "tv",
-      "outlet": "ESPNU",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858507,
-      "mediaType": "tv",
-      "outlet": "BTN",
-      "startTime": "2026-10-31T16:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856735,
-      "mediaType": "tv",
-      "outlet": "SEC Network",
-      "startTime": "2026-10-31T16:45:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871096,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856846,
-      "mediaType": "tv",
-      "outlet": "TNT",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869944,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401862815,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871097,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858283,
-      "mediaType": "tv",
-      "outlet": "ACC Network",
-      "startTime": "2026-10-31T19:15:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856843,
-      "mediaType": "tv",
-      "outlet": "Fox",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858501,
-      "mediaType": "tv",
-      "outlet": "CBS",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856845,
-      "mediaType": "tv",
-      "outlet": "FS1",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401871095,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856736,
-      "mediaType": "tv",
-      "outlet": "SEC Network",
-      "startTime": "2026-10-31T20:15:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869846,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T22:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856847,
-      "mediaType": "tv",
-      "outlet": "FS1",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858280,
-      "mediaType": "tv",
-      "outlet": "ACC Network",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858509,
+      "gameId": 401858291,
       "mediaType": "tv",
       "outlet": "NBC",
-      "startTime": "2026-10-31T23:30:00.000Z",
+      "startTime": "2026-11-08T00:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401858281,
+      "gameId": 401862823,
       "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-31T23:30:00.000Z",
+      "outlet": "CBS",
+      "startTime": "2026-11-08T00:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401856733,
+      "gameId": 401860913,
       "mediaType": "tv",
-      "outlet": "SEC Network",
-      "startTime": "2026-10-31T23:45:00.000Z",
+      "outlet": "USA Net",
+      "startTime": "2026-11-08T02:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401858504,
+      "gameId": 401860912,
       "mediaType": "tv",
-      "outlet": "BTN",
-      "startTime": "2026-11-01T00:00:00.000Z",
+      "outlet": "The CW Network",
+      "startTime": "2026-11-08T03:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401862814,
+      "gameId": 401864535,
       "mediaType": "tv",
-      "outlet": "ESPNU",
-      "startTime": "2026-11-01T00:00:00.000Z",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-08T03:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401866675,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866676,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866677,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867926,
-      "mediaType": "tv",
-      "outlet": "NEC Front Row",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869154,
-      "mediaType": "tv",
-      "outlet": "SportsNet PIT",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869154,
-      "mediaType": "tv",
-      "outlet": "NEC Front Row",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866678,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866679,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866680,
-      "mediaType": "tv",
-      "outlet": "MNMT",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866680,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868231,
-      "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868223,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868081,
-      "mediaType": "web",
-      "outlet": "Scripps Sports",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868296,
-      "mediaType": "web",
-      "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401867887,
+      "gameId": 401867964,
       "mediaType": "tv",
       "outlet": "ESPNU",
-      "startTime": "2026-10-31T20:00:00.000Z",
+      "startTime": "2026-11-06T00:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401868089,
-      "mediaType": "web",
-      "outlet": "Scripps Sports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906977,
-      "mediaType": "web",
-      "outlet": "SIAC Network",
-      "startTime": "2026-10-29T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906138,
-      "mediaType": "web",
-      "outlet": "Hudl.com",
-      "startTime": "2026-10-30T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908398,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T02:05:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906533,
-      "mediaType": "web",
-      "outlet": "Wright.Media",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906609,
-      "mediaType": "web",
-      "outlet": "MEC TV",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906887,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907490,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907509,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907533,
-      "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907550,
-      "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907557,
-      "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907869,
-      "mediaType": "web",
-      "outlet": "Empire 8 Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908074,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908169,
-      "mediaType": "web",
-      "outlet": "MACtv",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908177,
-      "mediaType": "web",
-      "outlet": "MACtv",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908629,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908636,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908696,
-      "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908884,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908958,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908964,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908975,
-      "mediaType": "web",
-      "outlet": "TCNJ Athletics",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401873235,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401873410,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906056,
-      "mediaType": "web",
-      "outlet": "CIAA Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906124,
-      "mediaType": "web",
-      "outlet": "FSUBroncos.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906132,
-      "mediaType": "web",
-      "outlet": "CIAA Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906143,
-      "mediaType": "web",
-      "outlet": "CIAA Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906955,
-      "mediaType": "web",
-      "outlet": "SIAC Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907011,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907210,
-      "mediaType": "web",
-      "outlet": "GLVC Sports Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401868081,
+      "gameId": 401867810,
       "mediaType": "web",
       "outlet": "ESPN+",
-      "startTime": "2026-10-31T19:00:00.000Z",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907374,
+      "gameId": 401867839,
       "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907481,
+      "gameId": 401867922,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907585,
+      "gameId": 401868005,
       "mediaType": "web",
-      "outlet": "MEC TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907600,
+      "gameId": 401868268,
       "mediaType": "web",
-      "outlet": "MEC TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907628,
+      "gameId": 401868020,
       "mediaType": "web",
-      "outlet": "LackawannaFalcons.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T17:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907650,
+      "gameId": 401867824,
       "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907720,
+      "gameId": 401867832,
       "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907743,
+      "gameId": 401867904,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907752,
+      "gameId": 401867996,
       "mediaType": "web",
-      "outlet": "HWSathletics.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907755,
+      "gameId": 401868031,
       "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907829,
+      "gameId": 401868038,
       "mediaType": "web",
-      "outlet": "CCIW Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907859,
+      "gameId": 401868216,
       "mediaType": "web",
-      "outlet": "Red Dragon Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907947,
+      "gameId": 401868224,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908055,
+      "gameId": 401868259,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908187,
+      "gameId": 401868343,
       "mediaType": "web",
-      "outlet": "MACtv",
-      "startTime": "2026-11-01T18:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908266,
+      "gameId": 401868350,
       "mediaType": "web",
-      "outlet": "MACtv",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908310,
+      "gameId": 401868399,
       "mediaType": "web",
-      "outlet": "MACtv",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908314,
+      "gameId": 401868191,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908344,
+      "gameId": 401867852,
       "mediaType": "web",
-      "outlet": "Centennial Conference TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908349,
+      "gameId": 401867872,
       "mediaType": "web",
-      "outlet": "Centennial Conference TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908357,
+      "gameId": 401868176,
       "mediaType": "web",
-      "outlet": "Centennial Conference TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908505,
+      "gameId": 401868252,
       "mediaType": "web",
-      "outlet": "UMAC Sports Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908512,
+      "gameId": 401868379,
       "mediaType": "web",
-      "outlet": "Hudl.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908614,
+      "gameId": 401872617,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908648,
+      "gameId": 401868393,
       "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908681,
+      "gameId": 401868116,
       "mediaType": "web",
-      "outlet": "DepauwTigers.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908710,
+      "gameId": 401868184,
       "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908742,
+      "gameId": 401868200,
       "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908746,
+      "gameId": 401868313,
       "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T21:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908754,
+      "gameId": 401869153,
       "mediaType": "web",
-      "outlet": "MIAC Sports Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T21:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908830,
+      "gameId": 401868068,
       "mediaType": "web",
-      "outlet": "NSN",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908871,
+      "gameId": 401868090,
       "mediaType": "web",
-      "outlet": "NSN",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908916,
+      "gameId": 401868137,
       "mediaType": "web",
-      "outlet": "NSN",
-      "startTime": "2026-10-31T17:30:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908936,
+      "gameId": 401869140,
       "mediaType": "web",
-      "outlet": "Hudl.com",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908970,
+      "gameId": 401868108,
       "mediaType": "web",
-      "outlet": "North Coast Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T23:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908982,
+      "gameId": 401868057,
       "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-08T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401909031,
+      "gameId": 401868152,
       "mediaType": "web",
-      "outlet": "PAC Digital Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-08T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401909138,
+      "gameId": 401868321,
       "mediaType": "web",
-      "outlet": "North Coast Network",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-08T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401909145,
+      "gameId": 401906918,
       "mediaType": "web",
-      "outlet": "BattlingBishops.com",
-      "startTime": "2026-10-31T18:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907543,
+      "gameId": 401906942,
       "mediaType": "web",
-      "outlet": "ESUWarriors.com",
-      "startTime": "2026-10-31T17:05:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908222,
+      "gameId": 401907336,
       "mediaType": "web",
-      "outlet": "Team 1 Sports",
-      "startTime": "2026-10-31T17:30:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908229,
-      "mediaType": "web",
-      "outlet": "Indiana SRN",
-      "startTime": "2026-10-31T17:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908911,
-      "mediaType": "web",
-      "outlet": "NSN",
-      "startTime": "2026-10-31T17:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401873400,
-      "mediaType": "web",
-      "outlet": "RockfordRegents.com",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906558,
-      "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906564,
-      "mediaType": "web",
-      "outlet": "Hudl.com",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906600,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906908,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906927,
-      "mediaType": "web",
-      "outlet": "SIAC Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907201,
-      "mediaType": "web",
-      "outlet": "GLVC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907217,
-      "mediaType": "web",
-      "outlet": "GLVC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907225,
-      "mediaType": "web",
-      "outlet": "GLVC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907328,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907343,
-      "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907352,
-      "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907472,
-      "mediaType": "web",
-      "outlet": "North Coast Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907501,
-      "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907640,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907714,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907722,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907765,
-      "mediaType": "web",
-      "outlet": "Roll Rivers Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907786,
-      "mediaType": "web",
-      "outlet": "CCIW Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907817,
-      "mediaType": "web",
-      "outlet": "CCIW Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907824,
-      "mediaType": "web",
-      "outlet": "CCIW Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908090,
-      "mediaType": "web",
-      "outlet": "Empire 8 Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908147,
-      "mediaType": "web",
-      "outlet": "Duhawks.com",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908153,
-      "mediaType": "web",
-      "outlet": "Roll Rivers Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908262,
-      "mediaType": "web",
-      "outlet": "Indiana SRN",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908282,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908289,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908392,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908414,
-      "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908496,
-      "mediaType": "web",
-      "outlet": "UMAC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908802,
-      "mediaType": "web",
-      "outlet": "MIAC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908851,
-      "mediaType": "web",
-      "outlet": "BoxCast TV",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908864,
-      "mediaType": "web",
-      "outlet": "MIAC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908895,
-      "mediaType": "web",
-      "outlet": "MIAC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908905,
-      "mediaType": "web",
-      "outlet": "MIAC Sports Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401909104,
-      "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906523,
-      "mediaType": "web",
-      "outlet": "Team 1 Sports",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906542,
-      "mediaType": "web",
-      "outlet": "GAC Sports Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906551,
-      "mediaType": "web",
-      "outlet": "GAC Sports Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907117,
-      "mediaType": "web",
-      "outlet": "RMAC Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907127,
-      "mediaType": "web",
-      "outlet": "RMAC Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907135,
-      "mediaType": "web",
-      "outlet": "RMAC Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907160,
-      "mediaType": "web",
-      "outlet": "RMAC Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907326,
-      "mediaType": "web",
-      "outlet": "SIAC Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907361,
-      "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907379,
-      "mediaType": "web",
-      "outlet": "MIAA Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907689,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908253,
-      "mediaType": "web",
-      "outlet": "Roll Rivers Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908323,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908720,
-      "mediaType": "web",
-      "outlet": "Hudl.com",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401909050,
-      "mediaType": "web",
-      "outlet": "PAC Digital Network",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907662,
-      "mediaType": "web",
-      "outlet": "Centennial Conference TV",
-      "startTime": "2026-10-31T19:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907291,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908409,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908432,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T19:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908440,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908447,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T20:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907524,
-      "mediaType": "web",
-      "outlet": "PSAC Sports Digital Network",
-      "startTime": "2026-10-31T22:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401909045,
-      "mediaType": "web",
-      "outlet": "KDKA+",
-      "startTime": "2026-10-31T22:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401909045,
-      "mediaType": "web",
-      "outlet": "YouTube",
-      "startTime": "2026-10-31T22:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401906935,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907282,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907701,
-      "mediaType": "web",
-      "outlet": "Midco Sports Plus",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908308,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908403,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908858,
-      "mediaType": "web",
-      "outlet": "NSN",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401909025,
-      "mediaType": "web",
-      "outlet": "PAC Digital Network",
-      "startTime": "2026-10-31T23:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907303,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-11-01T00:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401907321,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-11-01T00:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908458,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-11-01T01:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401908452,
-      "mediaType": "web",
-      "outlet": "FloSports",
-      "startTime": "2026-11-01T02:05:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858279,
-      "mediaType": "web",
-      "outlet": "ESPN Unlmtd",
-      "startTime": "2026-10-31T16:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858508,
-      "mediaType": "tv",
-      "outlet": "BTN",
-      "startTime": "2026-10-31T20:15:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401860908,
-      "mediaType": "web",
-      "outlet": "ESPN Unlmtd",
-      "startTime": "2026-11-01T02:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401862812,
-      "mediaType": "tv",
-      "outlet": "ESPN",
-      "startTime": "2026-10-29T23:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401869963,
-      "mediaType": "tv",
-      "outlet": "ESPN2",
-      "startTime": "2026-10-29T23:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401859185,
+      "gameId": 401856849,
       "mediaType": "tv",
       "outlet": "ABC",
-      "startTime": "2026-10-31T16:00:00.000Z",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401856842,
+      "gameId": 401856743,
       "mediaType": "tv",
       "outlet": "ESPN",
-      "startTime": "2026-10-31T16:00:00.000Z",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401858505,
+      "gameId": 401856854,
+      "mediaType": "tv",
+      "outlet": "TNT",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856854,
+      "mediaType": "web",
+      "outlet": "HBO Max",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856850,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-07T20:45:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856856,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-11-08T02:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858512,
+      "mediaType": "tv",
+      "outlet": "Fox",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856851,
+      "mediaType": "tv",
+      "outlet": "Fox",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858516,
+      "mediaType": "tv",
+      "outlet": "FS1",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858513,
+      "mediaType": "tv",
+      "outlet": "Fox",
+      "startTime": "2026-11-08T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858511,
       "mediaType": "web",
       "outlet": "Peacock",
-      "startTime": "2026-10-31T19:30:00.000Z",
+      "startTime": "2026-11-08T00:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401856848,
+      "gameId": 401868153,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868166,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-08T00:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868082,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401860912,
+      "mediaType": "web",
+      "outlet": "ESPN Unlmtd",
+      "startTime": "2026-11-08T03:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858510,
       "mediaType": "tv",
-      "outlet": "ESPN",
-      "startTime": "2026-10-31T19:45:00.000Z",
+      "outlet": "Fox",
+      "startTime": "2026-11-07T01:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401858284,
+      "gameId": 401866453,
       "mediaType": "tv",
       "outlet": "ESPN2",
-      "startTime": "2026-10-31T19:45:00.000Z",
+      "startTime": "2026-11-04T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401858506,
-      "mediaType": "tv",
-      "outlet": "BTN",
-      "startTime": "2026-10-31T20:15:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858282,
-      "mediaType": "tv",
-      "outlet": "ABC",
-      "startTime": "2026-10-31T23:30:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401856737,
+      "gameId": 401866454,
       "mediaType": "tv",
       "outlet": "ESPN",
-      "startTime": "2026-10-31T23:30:00.000Z",
+      "startTime": "2026-11-04T01:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401856735,
-      "mediaType": "radio",
-      "outlet": "ERADM",
-      "startTime": "2026-10-31T16:45:00.000Z",
+      "gameId": 401866455,
+      "mediaType": "tv",
+      "outlet": "ESPNU",
+      "startTime": "2026-11-05T00:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401868362,
+      "gameId": 401866457,
+      "mediaType": "tv",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-05T00:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866456,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-05T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401862817,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-11-06T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401869964,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-06T01:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858285,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858289,
+      "mediaType": "tv",
+      "outlet": "ACC Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401862822,
+      "mediaType": "tv",
+      "outlet": "ESPNU",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858517,
+      "mediaType": "tv",
+      "outlet": "BTN",
+      "startTime": "2026-11-07T21:15:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858286,
+      "mediaType": "tv",
+      "outlet": "CW",
+      "startTime": "2026-11-07T17:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858515,
+      "mediaType": "tv",
+      "outlet": "BTN",
+      "startTime": "2026-11-07T17:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856738,
+      "mediaType": "tv",
+      "outlet": "SEC Network",
+      "startTime": "2026-11-07T17:45:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401869945,
       "mediaType": "web",
-      "outlet": "SWAC TV",
-      "startTime": "2026-10-31T19:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T18:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401868938,
+      "gameId": 401869927,
       "mediaType": "web",
-      "outlet": "SWAC TV",
-      "startTime": "2026-10-31T19:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T19:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401868956,
+      "gameId": 401856744,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401869936,
       "mediaType": "web",
-      "outlet": "SWAC TV",
-      "startTime": "2026-11-01T00:30:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401908041,
+      "gameId": 401856740,
+      "mediaType": "tv",
+      "outlet": "ABC",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858290,
+      "mediaType": "tv",
+      "outlet": "ACC Network",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401862819,
       "mediaType": "web",
-      "outlet": "WIAC Network",
-      "startTime": "2026-10-31T16:30:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907969,
+      "gameId": 401869951,
       "mediaType": "web",
-      "outlet": "BoxCast TV",
-      "startTime": "2026-10-31T17:00:00.000Z",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:30:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907514,
+      "gameId": 401871076,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401862821,
+      "mediaType": "tv",
+      "outlet": "ESPNU",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401871074,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401871098,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856742,
+      "mediaType": "tv",
+      "outlet": "SEC Network",
+      "startTime": "2026-11-07T21:15:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401869968,
+      "mediaType": "web",
+      "outlet": "ESPN+",
+      "startTime": "2026-11-07T22:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856745,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-11-07T23:15:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858291,
+      "mediaType": "web",
+      "outlet": "Peacock",
+      "startTime": "2026-11-08T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856741,
+      "mediaType": "tv",
+      "outlet": "ABC",
+      "startTime": "2026-11-08T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856852,
+      "mediaType": "tv",
+      "outlet": "ESPN2",
+      "startTime": "2026-11-08T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858287,
+      "mediaType": "tv",
+      "outlet": "ACC Network",
+      "startTime": "2026-11-08T00:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856739,
+      "mediaType": "tv",
+      "outlet": "SEC Network",
+      "startTime": "2026-11-08T00:45:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401870795,
+      "mediaType": "tv",
+      "outlet": "ESPNU",
+      "startTime": "2026-11-08T01:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401864532,
+      "mediaType": "tv",
+      "outlet": "FS1",
+      "startTime": "2026-11-08T02:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401856744,
+      "mediaType": "tv",
+      "outlet": "ESPN",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858514,
+      "mediaType": "tv",
+      "outlet": "CBS",
+      "startTime": "2026-11-07T20:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866681,
       "mediaType": "web",
       "outlet": "FloSports",
-      "startTime": "2026-10-31T18:00:00.000Z",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907960,
+      "gameId": 401866682,
       "mediaType": "web",
-      "outlet": "WIAC Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907982,
-      "mediaType": "web",
-      "outlet": "WIAC Network",
-      "startTime": "2026-10-31T18:00:00.000Z",
+      "gameId": 401867914,
+      "mediaType": "tv",
+      "outlet": "NEC Front Row",
+      "startTime": "2026-11-07T17:00:00.000Z",
       "isStartTimeTBD": false
     },
     {
-      "gameId": 401907892,
+      "gameId": 401867922,
+      "mediaType": "tv",
+      "outlet": "NEC Front Row",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401867933,
+      "mediaType": "tv",
+      "outlet": "NEC Front Row",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868232,
       "mediaType": "web",
-      "outlet": "WIAC Network",
-      "startTime": "2026-11-01T00:00:00.000Z",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866683,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866684,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866686,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401867904,
+      "mediaType": "tv",
+      "outlet": "NEC Front Row",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866685,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401867852,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868116,
+      "mediaType": "web",
+      "outlet": "Scripps Sports",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868302,
+      "mediaType": "web",
+      "outlet": "SWAC TV",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868331,
+      "mediaType": "web",
+      "outlet": "SWAC TV",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868363,
+      "mediaType": "web",
+      "outlet": "SWAC TV",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868939,
+      "mediaType": "web",
+      "outlet": "SWAC TV",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868945,
+      "mediaType": "web",
+      "outlet": "SWAC TV",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401868082,
+      "mediaType": "web",
+      "outlet": "Scripps Sports",
+      "startTime": "2026-11-07T22:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908463,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-08T03:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908441,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-08T03:03:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908453,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-08T01:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907283,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-08T00:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908971,
+      "mediaType": "web",
+      "outlet": "North Coast Network",
+      "startTime": "2026-11-08T00:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907491,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907502,
+      "mediaType": "web",
+      "outlet": "Golden Bear Sports Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907663,
+      "mediaType": "web",
+      "outlet": "Centennial Conference TV",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907877,
+      "mediaType": "web",
+      "outlet": "Empire 8 Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908358,
+      "mediaType": "web",
+      "outlet": "Centennial Conference TV",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908615,
+      "mediaType": "web",
+      "outlet": "SuriverHawks.com",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906125,
+      "mediaType": "web",
+      "outlet": "BSUBulldogs.com",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906144,
+      "mediaType": "web",
+      "outlet": "CIAA Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906999,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907473,
+      "mediaType": "web",
+      "outlet": "BattlingBishops.com",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907482,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907544,
+      "mediaType": "web",
+      "outlet": "PSAC Sports Digital Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907562,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907629,
+      "mediaType": "web",
+      "outlet": "PSAC Sports Digital Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907753,
+      "mediaType": "web",
+      "outlet": "UMAC Sports Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907787,
+      "mediaType": "web",
+      "outlet": "CCIW Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907830,
+      "mediaType": "web",
+      "outlet": "CCIW Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907842,
+      "mediaType": "web",
+      "outlet": "CCIW Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907860,
+      "mediaType": "web",
+      "outlet": "Empire 8 Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907970,
+      "mediaType": "web",
+      "outlet": "Empire 8 Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908075,
+      "mediaType": "web",
+      "outlet": "HWSathletics.com",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908087,
+      "mediaType": "web",
+      "outlet": "Empire 8 Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908099,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908109,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908170,
+      "mediaType": "web",
+      "outlet": "MACtv",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908200,
+      "mediaType": "web",
+      "outlet": "MACtv",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908337,
+      "mediaType": "web",
+      "outlet": "Centennial Conference TV",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908350,
+      "mediaType": "web",
+      "outlet": "Centennial Conference TV",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908630,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908682,
+      "mediaType": "web",
+      "outlet": "Oberlin Sports Network",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908702,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908715,
+      "mediaType": "web",
+      "outlet": "Saints Athletics",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908736,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908743,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908795,
+      "mediaType": "web",
+      "outlet": "MIAC Sports Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908803,
+      "mediaType": "web",
+      "outlet": "MIAC Sports Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908885,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908906,
+      "mediaType": "web",
+      "outlet": "MIAC Sports Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908930,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908937,
+      "mediaType": "web",
+      "outlet": "Hudl.com",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908194,
+      "mediaType": "web",
+      "outlet": "MACtv",
+      "startTime": "2026-11-07T17:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908270,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T18:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908912,
+      "mediaType": "web",
+      "outlet": "NSN",
+      "startTime": "2026-11-07T17:30:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401873411,
+      "mediaType": "web",
+      "outlet": "KeanAthletics.com",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906057,
+      "mediaType": "web",
+      "outlet": "Team 1 Sports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906574,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906593,
+      "mediaType": "web",
+      "outlet": "GLVC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906888,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906909,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906948,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907107,
+      "mediaType": "web",
+      "outlet": "RMAC Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907202,
+      "mediaType": "web",
+      "outlet": "GLVC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907211,
+      "mediaType": "web",
+      "outlet": "GLVC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907237,
+      "mediaType": "web",
+      "outlet": "GLVC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907296,
+      "mediaType": "web",
+      "outlet": "SIAC Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907586,
+      "mediaType": "web",
+      "outlet": "MEC TV",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907594,
+      "mediaType": "web",
+      "outlet": "MEC TV",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907613,
+      "mediaType": "web",
+      "outlet": "MEC TV",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907711,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907715,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907766,
+      "mediaType": "web",
+      "outlet": "Duhawks.com",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907836,
+      "mediaType": "web",
+      "outlet": "CCIW Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908056,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908083,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908148,
+      "mediaType": "web",
+      "outlet": "Central Dutch Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908178,
+      "mediaType": "web",
+      "outlet": "MACtv",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908297,
+      "mediaType": "web",
+      "outlet": "MACtv",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908384,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908404,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908497,
+      "mediaType": "web",
+      "outlet": "UMAC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908506,
+      "mediaType": "web",
+      "outlet": "UMAC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908513,
+      "mediaType": "web",
+      "outlet": "UMAC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908697,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908815,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908822,
+      "mediaType": "web",
+      "outlet": "MIAC Sports Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908831,
+      "mediaType": "web",
+      "outlet": "NSN",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908852,
+      "mediaType": "web",
+      "outlet": "BenuEagles.com",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908859,
+      "mediaType": "web",
+      "outlet": "NSN",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908896,
+      "mediaType": "web",
+      "outlet": "MIAC Sports Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908902,
+      "mediaType": "web",
+      "outlet": "NSN",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908924,
+      "mediaType": "web",
+      "outlet": "NSN",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908961,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909026,
+      "mediaType": "web",
+      "outlet": "PAC Digital Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909038,
+      "mediaType": "web",
+      "outlet": "PAC Digital Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909069,
+      "mediaType": "web",
+      "outlet": "PAC Digital Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909105,
+      "mediaType": "web",
+      "outlet": "BoxCast TV",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909135,
+      "mediaType": "web",
+      "outlet": "North Coast Network",
+      "startTime": "2026-11-07T18:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906524,
+      "mediaType": "web",
+      "outlet": "GAC Sports Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906534,
+      "mediaType": "web",
+      "outlet": "GAC Sports Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906543,
+      "mediaType": "web",
+      "outlet": "GAC Sports Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906577,
+      "mediaType": "web",
+      "outlet": "YouTube",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906601,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906928,
+      "mediaType": "web",
+      "outlet": "SIAC Network",
+      "startTime": "2026-11-07T23:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907136,
+      "mediaType": "web",
+      "outlet": "RMAC Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907304,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907353,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907362,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907369,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907534,
+      "mediaType": "web",
+      "outlet": "PSAC Sports Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907641,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907683,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907690,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907706,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907723,
+      "mediaType": "web",
+      "outlet": "Midco Sports Plus",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907756,
+      "mediaType": "web",
+      "outlet": "PSAC Sports Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908154,
+      "mediaType": "web",
+      "outlet": "Roll Rivers Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908250,
+      "mediaType": "web",
+      "outlet": "Team 1 Sports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908283,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908290,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908317,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908375,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909032,
+      "mediaType": "web",
+      "outlet": "PAC Digital Network",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401906204,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T19:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907118,
+      "mediaType": "web",
+      "outlet": "RMAC Digital Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907245,
+      "mediaType": "web",
+      "outlet": "GLVC Sports Network",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907344,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907355,
+      "mediaType": "web",
+      "outlet": "SIAC Network",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907380,
+      "mediaType": "web",
+      "outlet": "MIAA Digital Network",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401909073,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T20:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401873236,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907148,
+      "mediaType": "web",
+      "outlet": "RMAC Digital Network",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907322,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907329,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401907551,
+      "mediaType": "web",
+      "outlet": "Rock Athletics Digital Network",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908399,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908410,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401908459,
+      "mediaType": "web",
+      "outlet": "FloSports",
+      "startTime": "2026-11-07T21:00:00.000Z",
       "isStartTimeTBD": false
     }
   ]

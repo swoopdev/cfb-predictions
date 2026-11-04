@@ -3,6 +3,24 @@
   "week": 10,
   "lines": [
     {
+      "gameId": 401858514,
+      "favored": "home",
+      "spread": 7.5,
+      "homeMoneyline": -305,
+      "awayMoneyline": 245,
+      "openFavored": "home",
+      "openSpread": 6
+    },
+    {
+      "gameId": 401858291,
+      "favored": "home",
+      "spread": 5.5,
+      "homeMoneyline": -205,
+      "awayMoneyline": 170,
+      "openFavored": "home",
+      "openSpread": 6.5
+    },
+    {
       "gameId": 401856741,
       "favored": "away",
       "spread": 3.5,
@@ -21,22 +39,13 @@
       "openSpread": 3.5
     },
     {
-      "gameId": 401858291,
+      "gameId": 401856849,
       "favored": "home",
       "spread": 5.5,
-      "homeMoneyline": -205,
-      "awayMoneyline": 170,
+      "homeMoneyline": -198,
+      "awayMoneyline": 164,
       "openFavored": "home",
-      "openSpread": 6.5
-    },
-    {
-      "gameId": 401858514,
-      "favored": "home",
-      "spread": 7,
-      "homeMoneyline": -278,
-      "awayMoneyline": 225,
-      "openFavored": "home",
-      "openSpread": 6
+      "openSpread": 3
     },
     {
       "gameId": 401858511,
@@ -48,22 +57,13 @@
       "openSpread": 16.5
     },
     {
-      "gameId": 401856849,
+      "gameId": 401858513,
       "favored": "home",
-      "spread": 5.5,
-      "homeMoneyline": -205,
-      "awayMoneyline": 170,
+      "spread": 3,
+      "homeMoneyline": -142,
+      "awayMoneyline": 120,
       "openFavored": "home",
-      "openSpread": 3
-    },
-    {
-      "gameId": 401856739,
-      "favored": "home",
-      "spread": 6,
-      "homeMoneyline": -238,
-      "awayMoneyline": 195,
-      "openFavored": "home",
-      "openSpread": 4
+      "openSpread": 2.5
     },
     {
       "gameId": 401862823,
@@ -75,13 +75,13 @@
       "openSpread": 6
     },
     {
-      "gameId": 401858513,
+      "gameId": 401856739,
       "favored": "home",
-      "spread": 2.5,
-      "homeMoneyline": -135,
-      "awayMoneyline": 114,
+      "spread": 6.5,
+      "homeMoneyline": -238,
+      "awayMoneyline": 195,
       "openFavored": "home",
-      "openSpread": 2.5
+      "openSpread": 4
     },
     {
       "gameId": 401858288,
@@ -120,22 +120,31 @@
       "openSpread": 6.5
     },
     {
+      "gameId": 401862819,
+      "favored": "home",
+      "spread": 8.5,
+      "homeMoneyline": -345,
+      "awayMoneyline": 275,
+      "openFavored": "home",
+      "openSpread": 10
+    },
+    {
       "gameId": 401866453,
       "favored": "away",
-      "spread": 13.5,
-      "homeMoneyline": 425,
-      "awayMoneyline": -575,
+      "spread": 12.5,
+      "homeMoneyline": 380,
+      "awayMoneyline": -500,
       "openFavored": "away",
       "openSpread": 12.5
     },
     {
-      "gameId": 401860913,
-      "favored": "away",
-      "spread": 2.5,
-      "homeMoneyline": 114,
-      "awayMoneyline": -135,
-      "openFavored": "away",
-      "openSpread": 2.5
+      "gameId": 401856855,
+      "favored": "home",
+      "spread": 8.5,
+      "homeMoneyline": -345,
+      "awayMoneyline": 275,
+      "openFavored": "home",
+      "openSpread": 9.5
     },
     {
       "gameId": 401860911,
@@ -147,15 +156,6 @@
       "openSpread": 19.5
     },
     {
-      "gameId": 401862818,
-      "favored": "home",
-      "spread": 1.5,
-      "homeMoneyline": -125,
-      "awayMoneyline": 105,
-      "openFavored": "away",
-      "openSpread": 1.5
-    },
-    {
       "gameId": 401862822,
       "favored": "away",
       "spread": 1.5,
@@ -165,13 +165,40 @@
       "openSpread": 3
     },
     {
+      "gameId": 401856851,
+      "favored": "home",
+      "spread": 10.5,
+      "homeMoneyline": -440,
+      "awayMoneyline": 340,
+      "openFavored": "home",
+      "openSpread": 10.5
+    },
+    {
+      "gameId": 401858515,
+      "favored": "home",
+      "spread": 6,
+      "homeMoneyline": -225,
+      "awayMoneyline": 185,
+      "openFavored": "home",
+      "openSpread": 7
+    },
+    {
       "gameId": 401869968,
       "favored": "home",
-      "spread": 8.5,
+      "spread": 7.5,
       "homeMoneyline": -325,
       "awayMoneyline": 260,
       "openFavored": "home",
       "openSpread": 5.5
+    },
+    {
+      "gameId": 401869927,
+      "favored": "home",
+      "spread": 5.5,
+      "homeMoneyline": -218,
+      "awayMoneyline": 180,
+      "openFavored": "home",
+      "openSpread": 3.5
     },
     {
       "gameId": 401858285,
@@ -181,15 +208,6 @@
       "awayMoneyline": -142,
       "openFavored": "away",
       "openSpread": 1.5
-    },
-    {
-      "gameId": 401864533,
-      "favored": "away",
-      "spread": 9.5,
-      "homeMoneyline": 310,
-      "awayMoneyline": -395,
-      "openFavored": "away",
-      "openSpread": 12.5
     },
     {
       "gameId": 401862817,
@@ -210,22 +228,22 @@
       "openSpread": 13.5
     },
     {
-      "gameId": 401856855,
+      "gameId": 401862818,
       "favored": "home",
-      "spread": 8.5,
-      "homeMoneyline": -345,
-      "awayMoneyline": 275,
-      "openFavored": "home",
-      "openSpread": 9.5
+      "spread": 2.5,
+      "homeMoneyline": -130,
+      "awayMoneyline": 110,
+      "openFavored": "away",
+      "openSpread": 1.5
     },
     {
-      "gameId": 401869964,
-      "favored": "away",
-      "spread": 14.5,
-      "homeMoneyline": 470,
-      "awayMoneyline": -650,
-      "openFavored": "away",
-      "openSpread": 15.5
+      "gameId": 401864534,
+      "favored": "home",
+      "spread": 10,
+      "homeMoneyline": -395,
+      "awayMoneyline": 310,
+      "openFavored": "home",
+      "openSpread": 11.5
     },
     {
       "gameId": 401871075,
@@ -264,13 +282,31 @@
       "openSpread": 7
     },
     {
-      "gameId": 401869927,
+      "gameId": 401862821,
       "favored": "home",
-      "spread": 5.5,
-      "homeMoneyline": -205,
-      "awayMoneyline": 170,
+      "spread": 17.5,
+      "homeMoneyline": -900,
+      "awayMoneyline": 600,
       "openFavored": "home",
-      "openSpread": 3.5
+      "openSpread": 16.5
+    },
+    {
+      "gameId": 401866456,
+      "favored": "home",
+      "spread": 1.5,
+      "homeMoneyline": -118,
+      "awayMoneyline": -102,
+      "openFavored": "home",
+      "openSpread": 1.5
+    },
+    {
+      "gameId": 401856744,
+      "favored": "home",
+      "spread": 7,
+      "homeMoneyline": -278,
+      "awayMoneyline": 225,
+      "openFavored": "home",
+      "openSpread": 6.5
     },
     {
       "gameId": 401856853,
@@ -280,15 +316,6 @@
       "awayMoneyline": 295,
       "openFavored": "home",
       "openSpread": 9.5
-    },
-    {
-      "gameId": 401856850,
-      "favored": "home",
-      "spread": 2.5,
-      "homeMoneyline": -142,
-      "awayMoneyline": 120,
-      "openFavored": "home",
-      "openSpread": 2.5
     },
     {
       "gameId": 401871098,
@@ -309,31 +336,22 @@
       "openSpread": 12.5
     },
     {
-      "gameId": 401864534,
+      "gameId": 401860912,
       "favored": "home",
-      "spread": 10,
-      "homeMoneyline": -395,
-      "awayMoneyline": 310,
+      "spread": 6.5,
+      "homeMoneyline": -250,
+      "awayMoneyline": 205,
       "openFavored": "home",
-      "openSpread": 11.5
+      "openSpread": 8.5
     },
     {
-      "gameId": 401862821,
+      "gameId": 401856850,
       "favored": "home",
-      "spread": 16.5,
-      "homeMoneyline": -900,
-      "awayMoneyline": 600,
+      "spread": 3,
+      "homeMoneyline": -148,
+      "awayMoneyline": 124,
       "openFavored": "home",
-      "openSpread": 16.5
-    },
-    {
-      "gameId": 401866457,
-      "favored": "away",
-      "spread": 25.5,
-      "homeMoneyline": 1300,
-      "awayMoneyline": -2800,
-      "openFavored": "away",
-      "openSpread": 26.5
+      "openSpread": 2.5
     },
     {
       "gameId": 401858289,
@@ -345,31 +363,13 @@
       "openSpread": 6.5
     },
     {
-      "gameId": 401856744,
-      "favored": "home",
-      "spread": 7,
-      "homeMoneyline": -290,
-      "awayMoneyline": 235,
-      "openFavored": "home",
-      "openSpread": 6.5
-    },
-    {
-      "gameId": 401856851,
-      "favored": "home",
-      "spread": 11.5,
-      "homeMoneyline": -440,
-      "awayMoneyline": 340,
-      "openFavored": "home",
-      "openSpread": 10.5
-    },
-    {
-      "gameId": 401866456,
-      "favored": "home",
-      "spread": 1.5,
-      "homeMoneyline": -120,
-      "awayMoneyline": 100,
-      "openFavored": "home",
-      "openSpread": 1.5
+      "gameId": 401869964,
+      "favored": "away",
+      "spread": 14.5,
+      "homeMoneyline": 470,
+      "awayMoneyline": -650,
+      "openFavored": "away",
+      "openSpread": 15.5
     },
     {
       "gameId": 401856738,
@@ -381,13 +381,13 @@
       "openSpread": 12.5
     },
     {
-      "gameId": 401858515,
-      "favored": "home",
-      "spread": 6.5,
-      "homeMoneyline": -245,
-      "awayMoneyline": 200,
-      "openFavored": "home",
-      "openSpread": 7
+      "gameId": 401866457,
+      "favored": "away",
+      "spread": 25.5,
+      "homeMoneyline": 1400,
+      "awayMoneyline": -3200,
+      "openFavored": "away",
+      "openSpread": 26.5
     },
     {
       "gameId": 401862820,
@@ -399,13 +399,13 @@
       "openSpread": 7.5
     },
     {
-      "gameId": 401860912,
-      "favored": "home",
-      "spread": 6.5,
-      "homeMoneyline": -250,
-      "awayMoneyline": 205,
-      "openFavored": "home",
-      "openSpread": 8.5
+      "gameId": 401860913,
+      "favored": "away",
+      "spread": 2.5,
+      "homeMoneyline": 110,
+      "awayMoneyline": -130,
+      "openFavored": "away",
+      "openSpread": 2.5
     },
     {
       "gameId": 401864535,
@@ -417,13 +417,13 @@
       "openSpread": 8.5
     },
     {
-      "gameId": 401862819,
-      "favored": "home",
-      "spread": 10,
-      "homeMoneyline": -380,
-      "awayMoneyline": 300,
-      "openFavored": "home",
-      "openSpread": 10
+      "gameId": 401864533,
+      "favored": "away",
+      "spread": 9.5,
+      "homeMoneyline": 295,
+      "awayMoneyline": -375,
+      "openFavored": "away",
+      "openSpread": 12.5
     },
     {
       "gameId": 401871074,
@@ -435,15 +435,6 @@
       "openSpread": 4.5
     },
     {
-      "gameId": 401856856,
-      "favored": "home",
-      "spread": 16.5,
-      "homeMoneyline": -900,
-      "awayMoneyline": 600,
-      "openFavored": "home",
-      "openSpread": 17.5
-    },
-    {
       "gameId": 401869951,
       "favored": "home",
       "spread": 10.5,
@@ -451,15 +442,6 @@
       "awayMoneyline": 310,
       "openFavored": "home",
       "openSpread": 8.5
-    },
-    {
-      "gameId": 401858517,
-      "favored": "home",
-      "spread": 17.5,
-      "homeMoneyline": -900,
-      "awayMoneyline": 600,
-      "openFavored": "home",
-      "openSpread": 16.5
     },
     {
       "gameId": 401869936,
@@ -480,24 +462,6 @@
       "openSpread": 6
     },
     {
-      "gameId": 401856854,
-      "favored": "away",
-      "spread": 4.5,
-      "homeMoneyline": 180,
-      "awayMoneyline": -218,
-      "openFavored": "away",
-      "openSpread": 6.5
-    },
-    {
-      "gameId": 401866454,
-      "favored": "home",
-      "spread": 6,
-      "homeMoneyline": -230,
-      "awayMoneyline": 190,
-      "openFavored": "home",
-      "openSpread": 6.5
-    },
-    {
       "gameId": 401856852,
       "favored": "home",
       "spread": 3,
@@ -516,13 +480,22 @@
       "openSpread": 3
     },
     {
-      "gameId": 401858516,
+      "gameId": 401858517,
       "favored": "home",
-      "spread": 2.5,
-      "homeMoneyline": -122,
-      "awayMoneyline": 102,
+      "spread": 16.5,
+      "homeMoneyline": -900,
+      "awayMoneyline": 600,
       "openFavored": "home",
-      "openSpread": 2.5
+      "openSpread": 16.5
+    },
+    {
+      "gameId": 401866454,
+      "favored": "home",
+      "spread": 6.5,
+      "homeMoneyline": -265,
+      "awayMoneyline": 215,
+      "openFavored": "home",
+      "openSpread": 6.5
     },
     {
       "gameId": 401864532,
@@ -534,13 +507,31 @@
       "openSpread": 11.5
     },
     {
-      "gameId": 401866455,
+      "gameId": 401858516,
       "favored": "home",
-      "spread": 3,
-      "homeMoneyline": -155,
-      "awayMoneyline": 130,
+      "spread": 2.5,
+      "homeMoneyline": -130,
+      "awayMoneyline": 110,
       "openFavored": "home",
-      "openSpread": 4.5
+      "openSpread": 2.5
+    },
+    {
+      "gameId": 401856856,
+      "favored": "home",
+      "spread": 17.5,
+      "homeMoneyline": -900,
+      "awayMoneyline": 600,
+      "openFavored": "home",
+      "openSpread": 17.5
+    },
+    {
+      "gameId": 401856854,
+      "favored": "away",
+      "spread": 5.5,
+      "homeMoneyline": 180,
+      "awayMoneyline": -218,
+      "openFavored": "away",
+      "openSpread": 6.5
     },
     {
       "gameId": 401856742,
@@ -552,13 +543,31 @@
       "openSpread": 3
     },
     {
-      "gameId": 401871076,
+      "gameId": 401866455,
       "favored": "home",
+      "spread": 2.5,
+      "homeMoneyline": -142,
+      "awayMoneyline": 120,
+      "openFavored": "home",
+      "openSpread": 4.5
+    },
+    {
+      "gameId": 401871076,
+      "favored": "away",
       "spread": 1.5,
-      "homeMoneyline": -112,
-      "awayMoneyline": -108,
+      "homeMoneyline": -108,
+      "awayMoneyline": -112,
       "openFavored": "home",
       "openSpread": 1.5
+    },
+    {
+      "gameId": 401867964,
+      "favored": "away",
+      "spread": 15.5,
+      "homeMoneyline": 554,
+      "awayMoneyline": -900,
+      "openFavored": "away",
+      "openSpread": 15.5
     }
   ]
 }

@@ -917,6 +917,36 @@
       "player": "Hunter Smith",
       "teamId": 218,
       "position": "RB",
+      "category": "fumbles",
+      "statType": "FUM",
+      "stat": "1",
+      "jersey": 29
+    },
+    {
+      "playerId": "4258419",
+      "player": "Hunter Smith",
+      "teamId": 218,
+      "position": "RB",
+      "category": "fumbles",
+      "statType": "LOST",
+      "stat": "1",
+      "jersey": 29
+    },
+    {
+      "playerId": "4258419",
+      "player": "Hunter Smith",
+      "teamId": 218,
+      "position": "RB",
+      "category": "fumbles",
+      "statType": "REC",
+      "stat": "0",
+      "jersey": 29
+    },
+    {
+      "playerId": "4258419",
+      "player": "Hunter Smith",
+      "teamId": 218,
+      "position": "RB",
       "category": "kickReturns",
       "statType": "AVG",
       "stat": "18.0",
@@ -1019,7 +1049,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "34",
+      "stat": "35",
       "jersey": 29
     },
     {
@@ -1049,7 +1079,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "130",
+      "stat": "138",
       "jersey": 29
     },
     {
@@ -1059,7 +1089,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "3.8",
+      "stat": "3.9",
       "jersey": 29
     },
     {
@@ -18439,7 +18469,7 @@
       "position": "QB",
       "category": "receiving",
       "statType": "REC",
-      "stat": "3",
+      "stat": "6",
       "jersey": 11
     },
     {
@@ -18449,7 +18479,7 @@
       "position": "QB",
       "category": "receiving",
       "statType": "TD",
-      "stat": "0",
+      "stat": "1",
       "jersey": 11
     },
     {
@@ -18459,7 +18489,7 @@
       "position": "QB",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "59",
+      "stat": "103",
       "jersey": 11
     },
     {
@@ -18469,7 +18499,7 @@
       "position": "QB",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "19.7",
+      "stat": "17.2",
       "jersey": 11
     },
     {
@@ -18479,7 +18509,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "126",
+      "stat": "137",
       "jersey": 11
     },
     {
@@ -18509,7 +18539,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "690",
+      "stat": "728",
       "jersey": 11
     },
     {
@@ -18519,7 +18549,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "5.5",
+      "stat": "5.3",
       "jersey": 11
     },
     {
@@ -20039,7 +20069,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "21",
+      "stat": "26",
       "jersey": 17
     },
     {
@@ -20069,7 +20099,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "28",
+      "stat": "34",
       "jersey": 17
     },
     {
@@ -42007,9 +42037,59 @@
       "player": "Jovanni Bermudez",
       "teamId": 218,
       "position": "WR",
+      "category": "kickReturns",
+      "statType": "AVG",
+      "stat": "-1.5",
+      "jersey": 17
+    },
+    {
+      "playerId": "4726152",
+      "player": "Jovanni Bermudez",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "LONG",
+      "stat": "1",
+      "jersey": 17
+    },
+    {
+      "playerId": "4726152",
+      "player": "Jovanni Bermudez",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "NO",
+      "stat": "2",
+      "jersey": 17
+    },
+    {
+      "playerId": "4726152",
+      "player": "Jovanni Bermudez",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 17
+    },
+    {
+      "playerId": "4726152",
+      "player": "Jovanni Bermudez",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "YDS",
+      "stat": "-3",
+      "jersey": 17
+    },
+    {
+      "playerId": "4726152",
+      "player": "Jovanni Bermudez",
+      "teamId": 218,
+      "position": "WR",
       "category": "puntReturns",
       "statType": "AVG",
-      "stat": "24.2",
+      "stat": "22.3",
       "jersey": 17
     },
     {
@@ -42029,7 +42109,7 @@
       "position": "WR",
       "category": "puntReturns",
       "statType": "NO",
-      "stat": "12",
+      "stat": "13",
       "jersey": 17
     },
     {
@@ -62469,7 +62549,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "11",
+      "stat": "13",
       "jersey": 5
     },
     {
@@ -62499,7 +62579,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "47",
+      "stat": "59",
       "jersey": 5
     },
     {
@@ -62509,7 +62589,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "4.3",
+      "stat": "4.5",
       "jersey": 5
     },
     {
@@ -73229,7 +73309,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "10",
+      "stat": "12",
       "jersey": 30
     },
     {
@@ -73259,7 +73339,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "22",
+      "stat": "25",
       "jersey": 30
     },
     {
@@ -97283,6 +97363,56 @@
       "jersey": 86
     },
     {
+      "playerId": "4875583",
+      "player": "Reis Stocksdale",
+      "teamId": 218,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "LONG",
+      "stat": "9",
+      "jersey": 86
+    },
+    {
+      "playerId": "4875583",
+      "player": "Reis Stocksdale",
+      "teamId": 218,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "REC",
+      "stat": "1",
+      "jersey": 86
+    },
+    {
+      "playerId": "4875583",
+      "player": "Reis Stocksdale",
+      "teamId": 218,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 86
+    },
+    {
+      "playerId": "4875583",
+      "player": "Reis Stocksdale",
+      "teamId": 218,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "YDS",
+      "stat": "9",
+      "jersey": 86
+    },
+    {
+      "playerId": "4875583",
+      "player": "Reis Stocksdale",
+      "teamId": 218,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "YPR",
+      "stat": "9.0",
+      "jersey": 86
+    },
+    {
       "playerId": "4875604",
       "player": "Phoenix Jackson",
       "teamId": 8,
@@ -101249,7 +101379,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "14",
+      "stat": "16",
       "jersey": 15
     },
     {
@@ -109689,7 +109819,7 @@
       "position": "TE",
       "category": "receiving",
       "statType": "REC",
-      "stat": "5",
+      "stat": "6",
       "jersey": 18
     },
     {
@@ -109709,7 +109839,7 @@
       "position": "TE",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "48",
+      "stat": "55",
       "jersey": 18
     },
     {
@@ -109719,7 +109849,7 @@
       "position": "TE",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "9.6",
+      "stat": "9.2",
       "jersey": 18
     },
     {
@@ -120629,7 +120759,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "25",
+      "stat": "26",
       "jersey": 33
     },
     {
@@ -120659,7 +120789,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "60",
+      "stat": "61",
       "jersey": 33
     },
     {
@@ -127059,7 +127189,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "0",
+      "stat": "1",
       "jersey": 0
     },
     {
@@ -127079,7 +127209,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "9",
+      "stat": "10",
       "jersey": 0
     },
     {
@@ -127109,7 +127239,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "19",
+      "stat": "20",
       "jersey": 0
     },
     {
@@ -127989,7 +128119,7 @@
       "position": "P",
       "category": "punting",
       "statType": "NO",
-      "stat": "36",
+      "stat": "38",
       "jersey": 29
     },
     {
@@ -128009,7 +128139,7 @@
       "position": "P",
       "category": "punting",
       "statType": "YDS",
-      "stat": "1591",
+      "stat": "1670",
       "jersey": 29
     },
     {
@@ -128019,7 +128149,7 @@
       "position": "P",
       "category": "punting",
       "statType": "YPP",
-      "stat": "44.2",
+      "stat": "43.9",
       "jersey": 29
     },
     {
@@ -149989,7 +150119,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "44",
+      "stat": "50",
       "jersey": 24
     },
     {
@@ -150019,7 +150149,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "64",
+      "stat": "72",
       "jersey": 24
     },
     {
@@ -154179,7 +154309,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "7",
+      "stat": "9",
       "jersey": 19
     },
     {
@@ -154199,7 +154329,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "0",
+      "stat": "1",
       "jersey": 19
     },
     {
@@ -154209,7 +154339,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "10",
+      "stat": "12",
       "jersey": 19
     },
     {
@@ -167869,7 +167999,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "ATT",
-      "stat": "53",
+      "stat": "70",
       "jersey": 14
     },
     {
@@ -167879,7 +168009,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "COMPLETIONS",
-      "stat": "28",
+      "stat": "37",
       "jersey": 14
     },
     {
@@ -167889,7 +168019,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "INT",
-      "stat": "2",
+      "stat": "3",
       "jersey": 14
     },
     {
@@ -167899,7 +168029,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "PCT",
-      "stat": "0.528",
+      "stat": "0.529",
       "jersey": 14
     },
     {
@@ -167909,7 +168039,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "TD",
-      "stat": "4",
+      "stat": "6",
       "jersey": 14
     },
     {
@@ -167919,7 +168049,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YDS",
-      "stat": "302",
+      "stat": "412",
       "jersey": 14
     },
     {
@@ -167929,7 +168059,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YPA",
-      "stat": "5.7",
+      "stat": "5.9",
       "jersey": 14
     },
     {
@@ -167939,7 +168069,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "26",
+      "stat": "36",
       "jersey": 14
     },
     {
@@ -167969,7 +168099,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "80",
+      "stat": "129",
       "jersey": 14
     },
     {
@@ -167979,7 +168109,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "3.1",
+      "stat": "3.6",
       "jersey": 14
     },
     {
@@ -213949,7 +214079,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "0",
+      "stat": "1",
       "jersey": 7
     },
     {
@@ -213969,7 +214099,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "38",
+      "stat": "43",
       "jersey": 7
     },
     {
@@ -213989,7 +214119,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "5.0",
+      "stat": "6.0",
       "jersey": 7
     },
     {
@@ -213999,7 +214129,37 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "67",
+      "stat": "73",
+      "jersey": 7
+    },
+    {
+      "playerId": "5082374",
+      "player": "AJ Brown",
+      "teamId": 242,
+      "position": "S",
+      "category": "fumbles",
+      "statType": "FUM",
+      "stat": "0",
+      "jersey": 7
+    },
+    {
+      "playerId": "5082374",
+      "player": "AJ Brown",
+      "teamId": 242,
+      "position": "S",
+      "category": "fumbles",
+      "statType": "LOST",
+      "stat": "0",
+      "jersey": 7
+    },
+    {
+      "playerId": "5082374",
+      "player": "AJ Brown",
+      "teamId": 242,
+      "position": "S",
+      "category": "fumbles",
+      "statType": "REC",
+      "stat": "1",
       "jersey": 7
     },
     {
@@ -215689,7 +215849,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "31",
+      "stat": "33",
       "jersey": 54
     },
     {
@@ -215719,7 +215879,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "65",
+      "stat": "68",
       "jersey": 54
     },
     {
@@ -223099,7 +223259,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "2",
+      "stat": "4",
       "jersey": 13
     },
     {
@@ -223119,7 +223279,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "1.0",
+      "stat": "2.0",
       "jersey": 13
     },
     {
@@ -223129,7 +223289,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "9",
+      "stat": "13",
       "jersey": 13
     },
     {
@@ -230869,7 +231029,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "12",
+      "stat": "14",
       "jersey": 8
     },
     {
@@ -230899,7 +231059,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "24",
+      "stat": "27",
       "jersey": 8
     },
     {
@@ -241079,7 +241239,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "LONG",
-      "stat": "40",
+      "stat": "47",
       "jersey": 13
     },
     {
@@ -241089,7 +241249,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "REC",
-      "stat": "8",
+      "stat": "11",
       "jersey": 13
     },
     {
@@ -241099,7 +241259,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "TD",
-      "stat": "2",
+      "stat": "3",
       "jersey": 13
     },
     {
@@ -241109,7 +241269,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "92",
+      "stat": "154",
       "jersey": 13
     },
     {
@@ -241119,7 +241279,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "11.5",
+      "stat": "14.0",
       "jersey": 13
     },
     {
@@ -241129,7 +241289,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "25",
+      "stat": "31",
       "jersey": 13
     },
     {
@@ -241159,7 +241319,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "185",
+      "stat": "201",
       "jersey": 13
     },
     {
@@ -241169,7 +241329,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "7.4",
+      "stat": "6.5",
       "jersey": 13
     },
     {
@@ -243467,6 +243627,76 @@
       "player": "Jayce Freeman",
       "teamId": 218,
       "position": "WR",
+      "category": "defensive",
+      "statType": "PD",
+      "stat": "0",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "QB HUR",
+      "stat": "0",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "SACKS",
+      "stat": "0",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "SOLO",
+      "stat": "2",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "TFL",
+      "stat": "1",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
+      "category": "defensive",
+      "statType": "TOT",
+      "stat": "2",
+      "jersey": 10
+    },
+    {
+      "playerId": "5087747",
+      "player": "Jayce Freeman",
+      "teamId": 218,
+      "position": "WR",
       "category": "receiving",
       "statType": "LONG",
       "stat": "39",
@@ -243479,7 +243709,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "REC",
-      "stat": "24",
+      "stat": "26",
       "jersey": 10
     },
     {
@@ -243489,7 +243719,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "TD",
-      "stat": "3",
+      "stat": "4",
       "jersey": 10
     },
     {
@@ -243499,7 +243729,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "347",
+      "stat": "378",
       "jersey": 10
     },
     {
@@ -246417,6 +246647,56 @@
       "player": "Colin Chase",
       "teamId": 218,
       "position": "WR",
+      "category": "kickReturns",
+      "statType": "AVG",
+      "stat": "0",
+      "jersey": 1
+    },
+    {
+      "playerId": "5089003",
+      "player": "Colin Chase",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "LONG",
+      "stat": "0",
+      "jersey": 1
+    },
+    {
+      "playerId": "5089003",
+      "player": "Colin Chase",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "NO",
+      "stat": "0",
+      "jersey": 1
+    },
+    {
+      "playerId": "5089003",
+      "player": "Colin Chase",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 1
+    },
+    {
+      "playerId": "5089003",
+      "player": "Colin Chase",
+      "teamId": 218,
+      "position": "WR",
+      "category": "kickReturns",
+      "statType": "YDS",
+      "stat": "-13",
+      "jersey": 1
+    },
+    {
+      "playerId": "5089003",
+      "player": "Colin Chase",
+      "teamId": 218,
+      "position": "WR",
       "category": "passing",
       "statType": "ATT",
       "stat": "4",
@@ -246499,7 +246779,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "REC",
-      "stat": "26",
+      "stat": "30",
       "jersey": 1
     },
     {
@@ -246509,7 +246789,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "TD",
-      "stat": "2",
+      "stat": "3",
       "jersey": 1
     },
     {
@@ -246519,7 +246799,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "395",
+      "stat": "449",
       "jersey": 1
     },
     {
@@ -246529,7 +246809,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "15.2",
+      "stat": "15.0",
       "jersey": 1
     },
     {
@@ -246539,7 +246819,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "7",
+      "stat": "11",
       "jersey": 1
     },
     {
@@ -246549,7 +246829,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "LONG",
-      "stat": "20",
+      "stat": "42",
       "jersey": 1
     },
     {
@@ -246569,7 +246849,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "77",
+      "stat": "137",
       "jersey": 1
     },
     {
@@ -246579,7 +246859,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "11.0",
+      "stat": "12.5",
       "jersey": 1
     },
     {
@@ -251039,7 +251319,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "4",
+      "stat": "8",
       "jersey": 14
     },
     {
@@ -251069,7 +251349,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "13",
+      "stat": "17",
       "jersey": 14
     },
     {
@@ -256899,7 +257179,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "8",
+      "stat": "9",
       "jersey": 98
     },
     {
@@ -256929,7 +257209,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "18",
+      "stat": "20",
       "jersey": 98
     },
     {
@@ -262049,7 +262329,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "13",
+      "stat": "18",
       "jersey": 18
     },
     {
@@ -262079,7 +262359,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "20",
+      "stat": "26",
       "jersey": 18
     },
     {
@@ -264599,7 +264879,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "40",
+      "stat": "44",
       "jersey": 3
     },
     {
@@ -264619,7 +264899,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "10.5",
+      "stat": "11.5",
       "jersey": 3
     },
     {
@@ -264629,7 +264909,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "57",
+      "stat": "63",
       "jersey": 3
     },
     {
@@ -264639,7 +264919,7 @@
       "position": "S",
       "category": "fumbles",
       "statType": "FUM",
-      "stat": "0",
+      "stat": "1",
       "jersey": 3
     },
     {
@@ -264649,7 +264929,7 @@
       "position": "S",
       "category": "fumbles",
       "statType": "LOST",
-      "stat": "0",
+      "stat": "1",
       "jersey": 3
     },
     {
@@ -264669,7 +264949,7 @@
       "position": "S",
       "category": "interceptions",
       "statType": "AVG",
-      "stat": "0.0",
+      "stat": "11.5",
       "jersey": 3
     },
     {
@@ -264679,7 +264959,7 @@
       "position": "S",
       "category": "interceptions",
       "statType": "INT",
-      "stat": "1",
+      "stat": "2",
       "jersey": 3
     },
     {
@@ -264699,7 +264979,7 @@
       "position": "S",
       "category": "interceptions",
       "statType": "YDS",
-      "stat": "0",
+      "stat": "23",
       "jersey": 3
     },
     {
@@ -281159,7 +281439,7 @@
       "position": "P",
       "category": "punting",
       "statType": "NO",
-      "stat": "38",
+      "stat": "40",
       "jersey": 7
     },
     {
@@ -281179,7 +281459,7 @@
       "position": "P",
       "category": "punting",
       "statType": "YDS",
-      "stat": "1602",
+      "stat": "1677",
       "jersey": 7
     },
     {
@@ -281189,7 +281469,7 @@
       "position": "P",
       "category": "punting",
       "statType": "YPP",
-      "stat": "42.2",
+      "stat": "41.9",
       "jersey": 7
     },
     {
@@ -301199,7 +301479,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "21",
+      "stat": "23",
       "jersey": 32
     },
     {
@@ -301229,7 +301509,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "27",
+      "stat": "29",
       "jersey": 32
     },
     {
@@ -336579,7 +336859,7 @@
       "position": "QB",
       "category": "fumbles",
       "statType": "FUM",
-      "stat": "4",
+      "stat": "5",
       "jersey": 4
     },
     {
@@ -336609,7 +336889,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "ATT",
-      "stat": "42",
+      "stat": "57",
       "jersey": 4
     },
     {
@@ -336619,7 +336899,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "COMPLETIONS",
-      "stat": "21",
+      "stat": "30",
       "jersey": 4
     },
     {
@@ -336639,7 +336919,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "PCT",
-      "stat": "0.500",
+      "stat": "0.526",
       "jersey": 4
     },
     {
@@ -336649,7 +336929,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "TD",
-      "stat": "3",
+      "stat": "5",
       "jersey": 4
     },
     {
@@ -336659,7 +336939,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YDS",
-      "stat": "364",
+      "stat": "452",
       "jersey": 4
     },
     {
@@ -336669,7 +336949,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YPA",
-      "stat": "8.7",
+      "stat": "7.9",
       "jersey": 4
     },
     {
@@ -336679,7 +336959,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "59",
+      "stat": "65",
       "jersey": 4
     },
     {
@@ -336709,7 +336989,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "407",
+      "stat": "432",
       "jersey": 4
     },
     {
@@ -336719,7 +336999,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "6.9",
+      "stat": "6.6",
       "jersey": 4
     },
     {
@@ -349909,7 +350189,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "15",
+      "stat": "19",
       "jersey": 10
     },
     {
@@ -349939,7 +350219,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "29",
+      "stat": "33",
       "jersey": 10
     },
     {
@@ -380939,7 +381219,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "FGA",
-      "stat": "17",
+      "stat": "19",
       "jersey": 98
     },
     {
@@ -380949,7 +381229,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "FGM",
-      "stat": "13",
+      "stat": "15",
       "jersey": 98
     },
     {
@@ -380969,7 +381249,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "PCT",
-      "stat": "0.765",
+      "stat": "0.789",
       "jersey": 98
     },
     {
@@ -380979,7 +381259,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "PTS",
-      "stat": "64",
+      "stat": "73",
       "jersey": 98
     },
     {
@@ -380989,7 +381269,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "XPA",
-      "stat": "25",
+      "stat": "28",
       "jersey": 98
     },
     {
@@ -380999,7 +381279,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "XPM",
-      "stat": "25",
+      "stat": "28",
       "jersey": 98
     },
     {
@@ -381169,7 +381449,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "32",
+      "stat": "33",
       "jersey": 44
     },
     {
@@ -381209,7 +381489,7 @@
       "position": "WR",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "3",
+      "stat": "4",
       "jersey": 43
     },
     {
@@ -381239,7 +381519,7 @@
       "position": "WR",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "7",
+      "stat": "8",
       "jersey": 43
     },
     {
@@ -381479,7 +381759,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "11",
+      "stat": "12",
       "jersey": 57
     },
     {
@@ -381509,7 +381789,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "33",
+      "stat": "34",
       "jersey": 57
     },
     {
@@ -451079,7 +451359,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "PD",
-      "stat": "4",
+      "stat": "7",
       "jersey": 29
     },
     {
@@ -451109,7 +451389,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "32",
+      "stat": "33",
       "jersey": 29
     },
     {
@@ -451139,7 +451419,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "51",
+      "stat": "54",
       "jersey": 29
     },
     {
@@ -481479,7 +481759,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "7",
+      "stat": "9",
       "jersey": 99
     },
     {
@@ -481509,7 +481789,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "17",
+      "stat": "19",
       "jersey": 99
     },
     {
@@ -484929,7 +485209,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "10",
+      "stat": "12",
       "jersey": 44
     },
     {
@@ -484959,7 +485239,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "13",
+      "stat": "15",
       "jersey": 44
     },
     {
@@ -488009,7 +488289,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "0",
+      "stat": "1",
       "jersey": 52
     },
     {
@@ -488059,7 +488339,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "25",
+      "stat": "26",
       "jersey": 52
     },
     {
@@ -502279,7 +502559,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "6",
+      "stat": "7",
       "jersey": 18
     },
     {
@@ -502309,7 +502589,7 @@
       "position": "S",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "13",
+      "stat": "14",
       "jersey": 18
     },
     {
@@ -503359,7 +503639,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "97",
+      "stat": "114",
       "jersey": 28
     },
     {
@@ -503379,7 +503659,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "TD",
-      "stat": "2",
+      "stat": "3",
       "jersey": 28
     },
     {
@@ -503389,7 +503669,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "396",
+      "stat": "533",
       "jersey": 28
     },
     {
@@ -503399,7 +503679,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "4.1",
+      "stat": "4.7",
       "jersey": 28
     },
     {
@@ -539989,7 +540269,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "13",
+      "stat": "14",
       "jersey": 98
     },
     {
@@ -564009,7 +564289,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SACKS",
-      "stat": "0",
+      "stat": "0.5",
       "jersey": 22
     },
     {
@@ -564019,7 +564299,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "25",
+      "stat": "30",
       "jersey": 22
     },
     {
@@ -564039,7 +564319,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "1.5",
+      "stat": "2.0",
       "jersey": 22
     },
     {
@@ -564049,7 +564329,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "42",
+      "stat": "48",
       "jersey": 22
     },
     {
@@ -597449,7 +597729,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "21",
+      "stat": "27",
       "jersey": 21
     },
     {
@@ -597479,7 +597759,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "23",
+      "stat": "30",
       "jersey": 21
     },
     {
@@ -621409,7 +621689,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "LONG",
-      "stat": "25",
+      "stat": "33",
       "jersey": 0
     },
     {
@@ -621419,7 +621699,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "REC",
-      "stat": "3",
+      "stat": "4",
       "jersey": 0
     },
     {
@@ -621429,7 +621709,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "TD",
-      "stat": "0",
+      "stat": "1",
       "jersey": 0
     },
     {
@@ -621439,7 +621719,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "41",
+      "stat": "74",
       "jersey": 0
     },
     {
@@ -621449,7 +621729,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "13.7",
+      "stat": "18.5",
       "jersey": 0
     },
     {
@@ -636489,7 +636769,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "3",
+      "stat": "7",
       "jersey": 92
     },
     {
@@ -636519,7 +636799,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "6",
+      "stat": "10",
       "jersey": 92
     },
     {
@@ -645329,7 +645609,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "REC",
-      "stat": "20",
+      "stat": "26",
       "jersey": 19
     },
     {
@@ -645349,7 +645629,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "257",
+      "stat": "306",
       "jersey": 19
     },
     {
@@ -645359,7 +645639,7 @@
       "position": "WR",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "12.9",
+      "stat": "11.8",
       "jersey": 19
     },
     {
@@ -645369,7 +645649,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "8",
+      "stat": "11",
       "jersey": 19
     },
     {
@@ -645399,7 +645679,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "38",
+      "stat": "51",
       "jersey": 19
     },
     {
@@ -645409,7 +645689,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "4.8",
+      "stat": "4.6",
       "jersey": 19
     },
     {
@@ -645619,7 +645899,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "ATT",
-      "stat": "6",
+      "stat": "16",
       "jersey": 15
     },
     {
@@ -645629,7 +645909,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "COMPLETIONS",
-      "stat": "2",
+      "stat": "7",
       "jersey": 15
     },
     {
@@ -645649,7 +645929,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "PCT",
-      "stat": "0.333",
+      "stat": "0.438",
       "jersey": 15
     },
     {
@@ -645659,7 +645939,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "TD",
-      "stat": "0",
+      "stat": "1",
       "jersey": 15
     },
     {
@@ -645669,7 +645949,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YDS",
-      "stat": "29",
+      "stat": "135",
       "jersey": 15
     },
     {
@@ -645679,7 +645959,7 @@
       "position": "QB",
       "category": "passing",
       "statType": "YPA",
-      "stat": "4.8",
+      "stat": "8.4",
       "jersey": 15
     },
     {
@@ -645689,7 +645969,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "8",
+      "stat": "10",
       "jersey": 15
     },
     {
@@ -645719,7 +645999,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "85",
+      "stat": "88",
       "jersey": 15
     },
     {
@@ -645729,7 +646009,7 @@
       "position": "QB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "10.6",
+      "stat": "8.8",
       "jersey": 15
     },
     {
@@ -646029,7 +646309,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "10",
+      "stat": "15",
       "jersey": 8
     },
     {
@@ -646059,7 +646339,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "54",
+      "stat": "74",
       "jersey": 8
     },
     {
@@ -646069,7 +646349,7 @@
       "position": "WR",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "5.4",
+      "stat": "4.9",
       "jersey": 8
     },
     {
@@ -651649,7 +651929,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SACKS",
-      "stat": "1",
+      "stat": "2",
       "jersey": 94
     },
     {
@@ -651659,7 +651939,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "12",
+      "stat": "13",
       "jersey": 94
     },
     {
@@ -651679,7 +651959,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "8",
+      "stat": "9",
       "jersey": 94
     },
     {
@@ -651689,7 +651969,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "29",
+      "stat": "30",
       "jersey": 94
     },
     {
@@ -656719,7 +656999,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "4",
+      "stat": "5",
       "jersey": 56
     },
     {
@@ -656749,7 +657029,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "10",
+      "stat": "11",
       "jersey": 56
     },
     {
@@ -705509,7 +705789,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "4",
+      "stat": "5",
       "jersey": 5
     },
     {
@@ -705539,7 +705819,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "5",
+      "stat": "6",
       "jersey": 5
     },
     {
@@ -705619,7 +705899,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "19",
+      "stat": "21",
       "jersey": 2
     },
     {
@@ -705649,7 +705929,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "37",
+      "stat": "40",
       "jersey": 2
     },
     {
@@ -705689,7 +705969,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "7",
+      "stat": "8",
       "jersey": 96
     },
     {
@@ -705719,7 +705999,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "17",
+      "stat": "18",
       "jersey": 96
     },
     {
@@ -713789,7 +714069,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "12",
+      "stat": "17",
       "jersey": 21
     },
     {
@@ -713799,7 +714079,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "LONG",
-      "stat": "10",
+      "stat": "79",
       "jersey": 21
     },
     {
@@ -713809,7 +714089,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "TD",
-      "stat": "0",
+      "stat": "1",
       "jersey": 21
     },
     {
@@ -713819,7 +714099,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "42",
+      "stat": "127",
       "jersey": 21
     },
     {
@@ -713829,7 +714109,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "3.5",
+      "stat": "7.5",
       "jersey": 21
     },
     {
@@ -713859,7 +714139,7 @@
       "position": "RB",
       "category": "fumbles",
       "statType": "REC",
-      "stat": "0",
+      "stat": "1",
       "jersey": 26
     },
     {
@@ -713879,7 +714159,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "REC",
-      "stat": "13",
+      "stat": "14",
       "jersey": 26
     },
     {
@@ -713899,7 +714179,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "YDS",
-      "stat": "74",
+      "stat": "83",
       "jersey": 26
     },
     {
@@ -713909,7 +714189,7 @@
       "position": "RB",
       "category": "receiving",
       "statType": "YPR",
-      "stat": "5.7",
+      "stat": "5.9",
       "jersey": 26
     },
     {
@@ -713919,7 +714199,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "CAR",
-      "stat": "116",
+      "stat": "131",
       "jersey": 26
     },
     {
@@ -713949,7 +714229,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YDS",
-      "stat": "653",
+      "stat": "751",
       "jersey": 26
     },
     {
@@ -713959,7 +714239,7 @@
       "position": "RB",
       "category": "rushing",
       "statType": "YPC",
-      "stat": "5.6",
+      "stat": "5.7",
       "jersey": 26
     },
     {
@@ -713989,7 +714269,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SACKS",
-      "stat": "3",
+      "stat": "3.5",
       "jersey": 33
     },
     {
@@ -713999,7 +714279,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "60",
+      "stat": "68",
       "jersey": 33
     },
     {
@@ -714019,7 +714299,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "5.5",
+      "stat": "6.0",
       "jersey": 33
     },
     {
@@ -714029,7 +714309,7 @@
       "position": "LB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "97",
+      "stat": "108",
       "jersey": 33
     },
     {
@@ -719849,7 +720129,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "FGA",
-      "stat": "8",
+      "stat": "9",
       "jersey": 49
     },
     {
@@ -719859,7 +720139,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "FGM",
-      "stat": "5",
+      "stat": "6",
       "jersey": 49
     },
     {
@@ -719879,7 +720159,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "PCT",
-      "stat": "0.625",
+      "stat": "0.667",
       "jersey": 49
     },
     {
@@ -719889,7 +720169,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "PTS",
-      "stat": "29",
+      "stat": "36",
       "jersey": 49
     },
     {
@@ -719899,7 +720179,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "XPA",
-      "stat": "15",
+      "stat": "19",
       "jersey": 49
     },
     {
@@ -719909,7 +720189,7 @@
       "position": "PK",
       "category": "kicking",
       "statType": "XPM",
-      "stat": "14",
+      "stat": "18",
       "jersey": 49
     },
     {
@@ -760423,6 +760703,56 @@
       "jersey": 21
     },
     {
+      "playerId": "5384737",
+      "player": "Michael Sifford",
+      "teamId": 242,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "LONG",
+      "stat": "6",
+      "jersey": 22
+    },
+    {
+      "playerId": "5384737",
+      "player": "Michael Sifford",
+      "teamId": 242,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "REC",
+      "stat": "1",
+      "jersey": 22
+    },
+    {
+      "playerId": "5384737",
+      "player": "Michael Sifford",
+      "teamId": 242,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "TD",
+      "stat": "0",
+      "jersey": 22
+    },
+    {
+      "playerId": "5384737",
+      "player": "Michael Sifford",
+      "teamId": 242,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "YDS",
+      "stat": "6",
+      "jersey": 22
+    },
+    {
+      "playerId": "5384737",
+      "player": "Michael Sifford",
+      "teamId": 242,
+      "position": "WR",
+      "category": "receiving",
+      "statType": "YPR",
+      "stat": "6.0",
+      "jersey": 22
+    },
+    {
       "playerId": "5384739",
       "player": "Justin Powell",
       "teamId": 242,
@@ -764289,7 +764619,7 @@
       "position": "WR",
       "category": "kickReturns",
       "statType": "AVG",
-      "stat": "18.5",
+      "stat": "18.6",
       "jersey": 12
     },
     {
@@ -764309,7 +764639,7 @@
       "position": "WR",
       "category": "kickReturns",
       "statType": "NO",
-      "stat": "15",
+      "stat": "17",
       "jersey": 12
     },
     {
@@ -764329,7 +764659,7 @@
       "position": "WR",
       "category": "kickReturns",
       "statType": "YDS",
-      "stat": "277",
+      "stat": "316",
       "jersey": 12
     },
     {
@@ -764419,7 +764749,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "8",
+      "stat": "11",
       "jersey": 14
     },
     {
@@ -764449,7 +764779,7 @@
       "position": "CB",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "8",
+      "stat": "11",
       "jersey": 14
     },
     {
@@ -764469,7 +764799,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "QB HUR",
-      "stat": "0",
+      "stat": "1",
       "jersey": 93
     },
     {
@@ -764489,7 +764819,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "SOLO",
-      "stat": "8",
+      "stat": "9",
       "jersey": 93
     },
     {
@@ -764509,7 +764839,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TFL",
-      "stat": "4.5",
+      "stat": "5.5",
       "jersey": 93
     },
     {
@@ -764519,7 +764849,7 @@
       "position": "DL",
       "category": "defensive",
       "statType": "TOT",
-      "stat": "16",
+      "stat": "17",
       "jersey": 93
     },
     {

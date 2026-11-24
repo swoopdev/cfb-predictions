@@ -225,7 +225,9 @@ export function useScenarios(season = 2026) {
       [scenarioKeys.picks(season, id), scenarioKeys.picks(season, newId)],
       [scenarioKeys.autofilled(season, id), scenarioKeys.autofilled(season, newId)],
       [scenarioKeys.manualTiebreakers(season, id), scenarioKeys.manualTiebreakers(season, newId)],
-      [scenarioKeys.championshipPicks(season, id), scenarioKeys.championshipPicks(season, newId)]
+      [scenarioKeys.championshipPicks(season, id), scenarioKeys.championshipPicks(season, newId)],
+      [scenarioKeys.bracketPicks(season, id), scenarioKeys.bracketPicks(season, newId)],
+      [scenarioKeys.rankingOverride(season, id), scenarioKeys.rankingOverride(season, newId)]
     ]
     for (const [sourceKey, targetKey] of keyPairs) {
       const raw = localStorage.getItem(sourceKey)
@@ -260,6 +262,8 @@ export function useScenarios(season = 2026) {
     localStorage.removeItem(scenarioKeys.autofilled(season, id))
     localStorage.removeItem(scenarioKeys.manualTiebreakers(season, id))
     localStorage.removeItem(scenarioKeys.championshipPicks(season, id))
+    localStorage.removeItem(scenarioKeys.bracketPicks(season, id))
+    localStorage.removeItem(scenarioKeys.rankingOverride(season, id))
 
     registry.value = registry.value.filter(s => s.id !== id)
 

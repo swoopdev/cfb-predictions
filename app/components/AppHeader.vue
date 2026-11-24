@@ -2,6 +2,7 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { KNOWN_CONFERENCES } from '~/components/ConferenceFilter.vue'
 import { WEEKS } from '~/utils/schedule'
+import { CONFERENCE_SLUGS } from '~/utils/oddsFormat'
 
 const items = ref<NavigationMenuItem[]>([
   {
@@ -26,6 +27,17 @@ const items = ref<NavigationMenuItem[]>([
       label: conference,
       to: `/week/1?conf=${encodeURIComponent(conference)}`
     }))
+  },
+  {
+    label: 'Title Races',
+    children: Object.entries(CONFERENCE_SLUGS).map(([slug, conference]) => ({
+      label: conference,
+      to: `/conference/${slug}`
+    }))
+  },
+  {
+    label: 'Playoff',
+    to: '/playoff'
   }
 ])
 </script>

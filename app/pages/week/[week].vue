@@ -15,6 +15,8 @@ import { isWeekBoundary } from '~/utils/schedule'
 import { scenarioKeys } from '~/utils/scenarioKeys'
 import { useSharedPreview } from '~/composables/useSharedPreview'
 import { validatePicksShape } from '~/composables/usePicksStorage'
+import { hasScenarioExtras, validateBracketPicks, validateChampionshipPicks, validateRankingOverride } from '#shared/domain/playoff/scenarioExtras'
+import type { ScenarioExtras } from '#shared/domain/playoff/scenarioExtras'
 
 const route = useRoute()
 const router = useRouter()
@@ -139,6 +141,23 @@ async function handleShare(id: string) {
     manualDecisions = {}
   }
 
+  // Championship picks, bracket picks and the ranking override ride along
+  // in the link's extras record -- same validate-on-read discipline.
+  function readValidated<T>(key: string, validate: (parsed: unknown) => T, fallback: T): T {
+    const raw = localStorage.getItem(key)
+    if (!raw) return fallback
+    try {
+      return validate(JSON.parse(raw))
+    } catch {
+      return fallback
+    }
+  }
+  const extras: ScenarioExtras = {
+    championshipPicks: readValidated(scenarioKeys.championshipPicks(2026, id), validateChampionshipPicks, {}),
+    bracketPicks: readValidated(scenarioKeys.bracketPicks(2026, id), validateBracketPicks, { current: {}, projected: {} }),
+    rankingOverride: readValidated(scenarioKeys.rankingOverride(2026, id), validateRankingOverride, [])
+  }
+
   let code: string
   try {
     code = await encodeShareLink({
@@ -146,7 +165,8 @@ async function handleShare(id: string) {
       season: 2026,
       scheduleHash: games.value.scheduleHash,
       picks,
-      manualDecisions
+      manualDecisions,
+      extras
     })
   } catch (err) {
     // WR-02: an oversized scenario (an unusually large accumulation of
@@ -197,6 +217,16 @@ function handleSaveCopy() {
   localStorage.setItem(scenarioKeys.picks(2026, meta.id), JSON.stringify(sharedPreview.value.picks))
   if (Object.keys(sharedPreview.value.manualDecisions).length > 0) {
     localStorage.setItem(scenarioKeys.manualTiebreakers(2026, meta.id), JSON.stringify(sharedPreview.value.manualDecisions))
+  }
+  const extras = sharedPreview.value.extras
+  if (hasScenarioExtras(extras)) {
+    if (Object.keys(extras.championshipPicks).length > 0) {
+      localStorage.setItem(scenarioKeys.championshipPicks(2026, meta.id), JSON.stringify(extras.championshipPicks))
+    }
+    localStorage.setItem(scenarioKeys.bracketPicks(2026, meta.id), JSON.stringify(extras.bracketPicks))
+    if (extras.rankingOverride.length > 0) {
+      localStorage.setItem(scenarioKeys.rankingOverride(2026, meta.id), JSON.stringify(extras.rankingOverride))
+    }
   }
 
   handleDismissSharedPreview()

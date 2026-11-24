@@ -24,6 +24,10 @@ export const scenarioKeys = {
   autofilled: (season: number, scenarioId: string) => `cfb_autofilled_${season}_${scenarioId}`,
   manualTiebreakers: (season: number, scenarioId: string) => `cfb_manual_tiebreakers_${season}_${scenarioId}`,
   championshipPicks: (season: number, scenarioId: string) => `cfb_championship_picks_${season}_${scenarioId}`,
+  /** CFP bracket picks: `{ current: { slotId: teamId }, projected: { slotId: teamId } }`. */
+  bracketPicks: (season: number, scenarioId: string) => `cfb_bracket_picks_${season}_${scenarioId}`,
+  /** The user's drag-reordered projected CFP ranking (team ids, best first). */
+  rankingOverride: (season: number, scenarioId: string) => `cfb_ranking_override_${season}_${scenarioId}`,
   legacyPicks: (season: number) => `cfb_picks_${season}`,
   legacyAutofilled: (season: number) => `cfb_autofilled_${season}`,
   legacyManualTiebreakers: (season: number) => `cfb_manual_tiebreakers_${season}`,

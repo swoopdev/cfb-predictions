@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { encodeShareLink, decodeShareLink, MAX_FRAGMENT_CHARS, ShareLinkTooLargeError } from '../../shared/domain/shareLink'
 import type { Game } from '../../shared/types/schedule'
 import type { ConferenceDecisions } from '../../shared/domain/tiebreakers/invalidation'
+import { emptyScenarioExtras } from '../../shared/domain/playoff/scenarioExtras'
+import type { ScenarioExtras } from '../../shared/domain/playoff/scenarioExtras'
 
 /** Minimal, deterministic fixture Game -- placeholder fields only where the codec doesn't care. */
 function makeGame(id: number, homeId: number, awayId: number): Game {
@@ -442,5 +444,66 @@ describe('encodeShareLink size guard (WR-02)', () => {
 
     await expect(encodeShareLink({ games: games3, season: 2026, scheduleHash: '19c9e609', picks: {}, manualDecisions }))
       .resolves.toBeTypeOf('string')
+  })
+})
+
+describe('shareLink scenario extras (TLV tag 2)', () => {
+  const extras: ScenarioExtras = {
+    championshipPicks: { 'SEC': 61, 'Big Ten': 26 },
+    bracketPicks: { current: { 'r1-5-12': 251, 'final': 61 }, projected: { 'qf-1': 61 } },
+    rankingOverride: [61, 251, 26]
+  }
+  const decisions: ConferenceDecisions = { SEC: { abc12345: [251, 333] } }
+
+  it('round-trips championship picks, bracket picks and the ranking override alongside manual decisions', async () => {
+    const code = await encodeShareLink({ games: games3, season: 2026, scheduleHash: '19c9e609', picks: {}, manualDecisions: decisions, extras })
+    const result = await decodeShareLink(code, games3, '19c9e609')
+    if (result.status !== 'ok') throw new Error('expected ok')
+    expect(result.extras).toEqual(extras)
+    expect(result.manualDecisions).toEqual(decisions)
+  })
+
+  it('carries extras on their own, and keeps them on a schedule-hash mismatch (they are not positional)', async () => {
+    const code = await encodeShareLink({ games: games3, season: 2026, scheduleHash: '19c9e609', picks: {}, manualDecisions: {}, extras })
+    const result = await decodeShareLink(code, games3, 'deadbeef')
+    if (result.status !== 'ok') throw new Error('expected ok')
+    expect(result.hashMatched).toBe(false)
+    expect(result.extras).toEqual(extras)
+    expect(result.manualDecisions).toEqual({})
+  })
+
+  it('writes no extras record when every part is empty', async () => {
+    const withEmpty = await encodeShareLink({ games: games3, season: 2026, scheduleHash: '19c9e609', picks: {}, manualDecisions: {}, extras: emptyScenarioExtras() })
+    const without = await encodeShareLink({ games: games3, season: 2026, scheduleHash: '19c9e609', picks: {}, manualDecisions: {} })
+    expect(withEmpty).toBe(without)
+  })
+
+  it('skips an unknown tag and still reads the records after it', async () => {
+    const unknown = new Uint8Array([9, 0, 2, 0x7B, 0x7D]) // tag 9, length 2, "{}"
+    const manual = buildTlvBytes(JSON.stringify(decisions))
+    const tlv = new Uint8Array(unknown.length + manual.length)
+    tlv.set(unknown, 0)
+    tlv.set(manual, unknown.length)
+    const code = encodeBytesToBase64Url(buildBytesWithTlv(games3, {}, '19c9e609', tlv))
+    const result = await decodeShareLink(code, games3, '19c9e609')
+    if (result.status !== 'ok') throw new Error('expected ok')
+    expect(result.manualDecisions).toEqual(decisions)
+  })
+
+  it('drops a malformed extras record without touching the manual decisions before it', async () => {
+    const manual = buildTlvBytes(JSON.stringify(decisions))
+    const bad = new TextEncoder().encode('{not json')
+    const extrasRecord = new Uint8Array(3 + bad.length)
+    extrasRecord[0] = 2
+    new DataView(extrasRecord.buffer).setUint16(1, bad.length, false)
+    extrasRecord.set(bad, 3)
+    const tlv = new Uint8Array(manual.length + extrasRecord.length)
+    tlv.set(manual, 0)
+    tlv.set(extrasRecord, manual.length)
+    const code = encodeBytesToBase64Url(buildBytesWithTlv(games3, {}, '19c9e609', tlv))
+    const result = await decodeShareLink(code, games3, '19c9e609')
+    if (result.status !== 'ok') throw new Error('expected ok')
+    expect(result.manualDecisions).toEqual(decisions)
+    expect(result.extras).toEqual(emptyScenarioExtras())
   })
 })

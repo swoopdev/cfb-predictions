@@ -169,6 +169,7 @@ export const RawPollSchema = z.object({
 export const RawPollWeekSchema = z.object({
   season: z.number(),
   week: z.number(),
+  seasonType: z.string().optional(),
   polls: z.array(RawPollSchema)
 })
 
@@ -210,6 +211,79 @@ export function transformRankings(raw: unknown): RankingsOutput | undefined {
       .filter((r): r is typeof r & { rank: number } => r.rank !== null)
       .map(r => ({ teamId: r.teamId, rank: r.rank }))
   }
+}
+
+export interface CfpRankingsOutput {
+  season: number
+  week: number | null
+  rankings: { teamId: number, rank: number }[]
+}
+
+/**
+ * Finds the most recent CFP selection committee ranking across every poll
+ * week `/rankings` returned (regular-season weeks first, then postseason,
+ * each in week order). Unlike `transformRankings`, this never falls back to
+ * the AP poll: the newest week is usually AP-only for two days each week
+ * (AP publishes Sunday, the committee Tuesday), and the playoff bracket must
+ * not silently swap the committee's order for the writers'.
+ *
+ * Returns `week: null` with no rankings before the committee's first
+ * ranking of the season.
+ */
+export function transformCfpRankings(season: number, rawWeeks: readonly unknown[]): CfpRankingsOutput {
+  const weeks = rawWeeks
+    .map(raw => RawPollWeekSchema.safeParse(raw))
+    .filter(result => result.success)
+    .map(result => result.data)
+    .sort((a, b) => {
+      const typeOrder = (w: typeof a) => (w.seasonType === 'postseason' ? 1 : 0)
+      return typeOrder(a) - typeOrder(b) || a.week - b.week
+    })
+
+  for (let i = weeks.length - 1; i >= 0; i--) {
+    const week = weeks[i]!
+    const poll = week.polls.find(p => p.poll.toLowerCase().includes('playoff committee'))
+    if (!poll) continue
+    return {
+      season,
+      week: week.week,
+      rankings: poll.ranks
+        .filter((r): r is typeof r & { rank: number } => r.rank !== null)
+        .map(r => ({ teamId: r.teamId, rank: r.rank }))
+        .sort((a, b) => a.rank - b.rank)
+    }
+  }
+
+  return { season, week: null, rankings: [] }
+}
+
+/**
+ * Raw CFBD `/games?seasonType=postseason` shape: the regular game schema
+ * plus CFBD's free-text `notes` label ("College Football Playoff First
+ * Round", "Rose Bowl", ...).
+ */
+export const RawPostseasonGameSchema = RawGameSchema.extend({
+  notes: z.string().nullable().optional()
+})
+
+export interface PostseasonGameOutput extends GameOutput {
+  notes: string | null
+}
+
+/**
+ * Transforms every parseable postseason game, silently skipping malformed
+ * rows: postseason data is enrichment for the bracket page, so one bad row
+ * must not fail the daily fetch the way a bad regular-season game does.
+ */
+export function transformPostseasonGames(rawGames: readonly unknown[]): PostseasonGameOutput[] {
+  const out: PostseasonGameOutput[] = []
+  for (const raw of rawGames) {
+    const parsed = RawPostseasonGameSchema.safeParse(raw)
+    if (!parsed.success) continue
+    const game = parsed.data
+    out.push({ ...transformGame(game), notes: game.notes ?? null })
+  }
+  return out.sort((a, b) => a.id - b.id)
 }
 
 /**

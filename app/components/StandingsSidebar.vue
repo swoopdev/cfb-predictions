@@ -10,6 +10,7 @@ import type { StandingsResult } from '#shared/types/standings'
 import type { ConferenceId, RankGroup, TeamId } from '#shared/domain/tiebreakers/types'
 import { P4_CONFERENCES } from '#shared/domain/standings'
 import type { ResolvedTiebreakers, SlateCompletion } from '#shared/domain/standings'
+import { conferenceSlug } from '~/utils/oddsFormat'
 import StandingsTable from './StandingsTable.vue'
 
 /**
@@ -82,6 +83,13 @@ const props = withDefaults(defineProps<{
    * `commitOrdering` guard).
    */
   previewActive?: boolean
+  /**
+   * Per conference, each team's formatted chance to reach the title game.
+   * When present, every table gains that column and a link to the
+   * conference's title-race hub; absent (tests, share-link previews), the
+   * panel is exactly the four-column standings it always was.
+   */
+  titleGameOdds?: Partial<Record<ConferenceId, ReadonlyMap<number, string>>>
 }>(), {
   teamsById: () => new Map(),
   activeConference: () => [],
@@ -89,7 +97,8 @@ const props = withDefaults(defineProps<{
   slateComplete: undefined,
   commitOrdering: undefined,
   championshipPicks: undefined,
-  previewActive: false
+  previewActive: false,
+  titleGameOdds: undefined
 })
 
 /**
@@ -222,7 +231,19 @@ const open = defineModel<boolean>('open', { default: true })
               :show-heading="false"
               :championship-picks="championshipPicks"
               :preview-active="previewActive"
+              :title-game-odds="titleGameOdds?.[(item.value as ConferenceId)]"
             />
+            <NuxtLink
+              v-if="titleGameOdds"
+              :to="`/conference/${conferenceSlug(item.value)}`"
+              class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-muted hover:text-highlighted"
+            >
+              How each team gets to the title game
+              <UIcon
+                name="i-lucide-arrow-right"
+                class="size-3.5"
+              />
+            </NuxtLink>
           </template>
         </UAccordion>
       </template>

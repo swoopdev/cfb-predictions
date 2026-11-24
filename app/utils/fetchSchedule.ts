@@ -1,6 +1,9 @@
 import { $fetch } from 'ofetch'
 import type { Game, Team } from '#shared/types/schedule'
 import type { RankingsEnvelope } from '#shared/types/rankings'
+import type { CfpRankingsEnvelope } from '#shared/types/cfpRankings'
+import type { PostseasonGamesEnvelope } from '#shared/types/postseason'
+import type { OddsBaselineEnvelope } from '#shared/types/odds'
 import type { WinProbabilitiesEnvelope } from '#shared/types/winProbability'
 import type { BettingLinesEnvelope } from '#shared/types/bettingLines'
 import type { MediaEnvelope } from '#shared/types/media'
@@ -58,6 +61,18 @@ export async function fetchGamesEnvelope(season: number): Promise<GamesEnvelope>
  */
 export async function fetchRankings(season: number): Promise<RankingsEnvelope> {
   return await $fetch<RankingsEnvelope>(`/data/${season}/rankings.json`)
+}
+
+export async function fetchCfpRankings(season: number): Promise<CfpRankingsEnvelope> {
+  return await $fetch<CfpRankingsEnvelope>(`/data/${season}/cfp-rankings.json`)
+}
+
+export async function fetchPostseasonGames(season: number): Promise<PostseasonGamesEnvelope> {
+  return await $fetch<PostseasonGamesEnvelope>(`/data/${season}/postseason-games.json`)
+}
+
+export async function fetchOddsBaseline(season: number): Promise<OddsBaselineEnvelope> {
+  return await $fetch<OddsBaselineEnvelope>(`/data/${season}/odds-baseline.json`)
 }
 
 export async function fetchWinProbabilities(season: number): Promise<WinProbabilitiesEnvelope> {

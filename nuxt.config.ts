@@ -8,6 +8,7 @@ const teamsDataPath = fileURLToPath(new URL('./public/data/2026/teams.json', imp
 const teamIds: number[] = JSON.parse(readFileSync(teamsDataPath, 'utf-8')).teams.map((team: { id: number }) => team.id)
 
 const WEEKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+const ODDS_PAGES = ['/playoff', '/conference/sec', '/conference/big-ten', '/conference/big-12', '/conference/acc']
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -56,6 +57,7 @@ export default defineNuxtConfig({
         '/week/12',
         '/week/13',
         '/week/15',
+        ...ODDS_PAGES,
         '/sitemap.xml',
         '/robots.txt'
       ]
@@ -85,6 +87,7 @@ export default defineNuxtConfig({
   sitemap: {
     urls: () => [
       ...WEEKS.map(week => `/week/${week}`),
+      ...ODDS_PAGES,
       ...teamIds.map(id => `/team/${id}`)
     ]
   }

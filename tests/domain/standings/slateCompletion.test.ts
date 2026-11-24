@@ -104,9 +104,13 @@ describe('slateCompletionByConference', () => {
 })
 
 describe('the committed 2026 slate (reachability check)', () => {
-  it('has exactly SEC 72, Big Ten 81, Big 12 72, ACC 74 conference games out of 888 total', () => {
+  it('has exactly SEC 72, Big Ten 81, Big 12 72, ACC 74 conference games out of at least 888 total', () => {
     const { games, teams } = readSlate()
-    expect(games).toHaveLength(888)
+    // 888 at the season's first fetch; the daily job appends games CFBD
+    // schedules later (conference title games once matchups are set), so
+    // the total only grows. The per-conference counts below are the
+    // invariant that matters.
+    expect(games.length).toBeGreaterThanOrEqual(888)
 
     const expected: Record<string, number> = {
       'SEC': 72,

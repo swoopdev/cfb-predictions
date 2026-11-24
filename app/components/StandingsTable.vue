@@ -85,6 +85,13 @@ const props = withDefaults(defineProps<{
    * docblock for why.
    */
   previewActive?: boolean
+  /**
+   * Chance to reach the conference title game, already formatted, keyed by
+   * team id (`useScenarioOdds`/`useConferencePaths` via the picks page).
+   * Omitted -> no column at all, so the table stays four columns wherever
+   * odds aren't wired in.
+   */
+  titleGameOdds?: ReadonlyMap<number, string>
 }>(), {
   teamsById: () => new Map(),
   ranking: undefined,
@@ -92,8 +99,11 @@ const props = withDefaults(defineProps<{
   commitOrdering: undefined,
   showHeading: true,
   championshipPicks: undefined,
-  previewActive: false
+  previewActive: false,
+  titleGameOdds: undefined
 })
+
+const columnCount = computed(() => (props.titleGameOdds ? 5 : 4))
 
 const headingId = useId()
 
@@ -376,6 +386,16 @@ function logoFor(team: StandingsTeam): string {
           >
             Conf Record
           </th>
+          <th
+            v-if="titleGameOdds"
+            scope="col"
+            class="py-1.5 pl-2 text-right font-medium"
+          >
+            <abbr
+              title="Chance to reach the conference championship game"
+              class="no-underline"
+            >CCG</abbr>
+          </th>
         </tr>
       </thead>
       <tbody class="divide-y divide-default">
@@ -442,6 +462,12 @@ function logoFor(team: StandingsTeam): string {
             <td class="py-1.5 text-right tabular-nums whitespace-nowrap text-default">
               {{ row.team.confRecord.wins }}-{{ row.team.confRecord.losses }}
             </td>
+            <td
+              v-if="titleGameOdds"
+              class="py-1.5 pl-2 text-right tabular-nums whitespace-nowrap font-medium text-highlighted"
+            >
+              {{ titleGameOdds.get(row.team.id) ?? '—' }}
+            </td>
           </tr>
 
           <!-- §7.1: mounted immediately after the group's LAST row, inside
@@ -450,7 +476,7 @@ function logoFor(team: StandingsTeam): string {
           <tr v-if="row.group && row.groupKey !== undefined && row.isGroupLastRow && isExpanded(row.groupKey)">
             <td
               :id="reasoningPanelId(row.groupKey)"
-              colspan="4"
+              :colspan="columnCount"
               class="p-0"
             >
               <TiebreakerReasoning

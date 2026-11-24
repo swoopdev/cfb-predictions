@@ -7,8 +7,8 @@ on:
     # this drifts by an hour after the fall DST change rather than staying
     # pinned to 6am local.
     #
-    # Daily cadence costs ~12 CFBD calls/run (one per endpoint fetch-weekly-
-    # data.ts makes) x 30 days = ~360 calls/month, comfortably under the
+    # Daily cadence costs ~13 CFBD calls/run (one per endpoint fetch-weekly-
+    # data.ts makes) x 30 days = ~390 calls/month, comfortably under the
     # free tier's 1,000/month cap -- see https://collegefootballdata.com/api-tiers.
     - cron: '0 11 * * *'
   workflow_dispatch:
@@ -41,11 +41,16 @@ jobs:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
         run: pnpm fetch-weekly-data 2026
 
+      # Reads only the files fetched above -- no API calls. Precomputes the
+      # no-picks odds and title-game paths so the default view is instant.
+      - name: Compute baseline odds
+        run: pnpm compute-odds 2026
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/2026/rankings.json public/data/2026/win-probabilities.json public/data/2026/betting-lines.json public/data/2026/media.json public/data/2026/team-ratings.json public/data/2026/games.json public/data/2026/records.json public/data/2026/team-stats.json public/data/2026/player-stats.json
+          git add public/data/2026/rankings.json public/data/2026/cfp-rankings.json public/data/2026/win-probabilities.json public/data/2026/betting-lines.json public/data/2026/media.json public/data/2026/team-ratings.json public/data/2026/games.json public/data/2026/postseason-games.json public/data/2026/records.json public/data/2026/team-stats.json public/data/2026/player-stats.json public/data/2026/odds-baseline.json
           git diff --staged --quiet && exit 0
           git commit -m "chore: daily rankings, scores, and win probability data"
           git push

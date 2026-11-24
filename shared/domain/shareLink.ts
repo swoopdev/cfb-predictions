@@ -1,6 +1,18 @@
 import type { Game } from '../types/schedule'
 import type { ConferenceDecisions } from './tiebreakers/invalidation'
 import { validateConferenceDecisions } from './tiebreakers/invalidation'
+import { emptyScenarioExtras, hasScenarioExtras, scenarioExtrasWire, validateScenarioExtras } from './playoff/scenarioExtras'
+import type { ScenarioExtras } from './playoff/scenarioExtras'
+
+/**
+ * TLV record tags after the pick bitfield. Records are `[tag:u8][length:u16
+ * BE][JSON]`, in any order; a decoder skips tags it doesn't know, so new
+ * scenario state can ride along without a wire-version bump.
+ */
+const TLV_MANUAL_DECISIONS = 1
+const TLV_SCENARIO_EXTRAS = 2
+/** Defensive cap on records read from an untrusted code. */
+const MAX_TLV_RECORDS = 8
 
 /**
  * D-10's cheap first gate: a `#s=<code>` fragment longer than this is rejected
@@ -191,6 +203,8 @@ export interface EncodeShareLinkParams {
   scheduleHash: string
   picks: Readonly<Record<number, number>>
   manualDecisions: ConferenceDecisions
+  /** Championship picks, bracket picks, ranking override -- omitted entirely when empty. */
+  extras?: ScenarioExtras
 }
 
 /**
@@ -214,15 +228,20 @@ export async function encodeShareLink(params: EncodeShareLinkParams): Promise<st
   const gameCount = sorted.length
   const bitfieldBytes = Math.ceil((gameCount * 2) / 8)
 
-  const hasTlv = Object.keys(params.manualDecisions).length > 0
-  const jsonBytes = hasTlv ? new TextEncoder().encode(JSON.stringify(params.manualDecisions)) : null
-  // WR-02: `DataView.setUint16` silently wraps mod 65536 rather than
-  // throwing -- guard explicitly so a jsonBytes.length this large can never
-  // reach that write and produce an internally-inconsistent TLV record.
-  if (jsonBytes && jsonBytes.length > 0xFFFF) {
-    throw new ShareLinkTooLargeError(jsonBytes.length)
+  const records: { tag: number, json: Uint8Array }[] = []
+  if (Object.keys(params.manualDecisions).length > 0) {
+    records.push({ tag: TLV_MANUAL_DECISIONS, json: new TextEncoder().encode(JSON.stringify(params.manualDecisions)) })
   }
-  const tlvSectionBytes = hasTlv ? 3 + jsonBytes!.length : 0 // 1 tag byte + 2 length bytes + value
+  if (params.extras && hasScenarioExtras(params.extras)) {
+    records.push({ tag: TLV_SCENARIO_EXTRAS, json: new TextEncoder().encode(JSON.stringify(scenarioExtrasWire(params.extras))) })
+  }
+  // WR-02: `DataView.setUint16` silently wraps mod 65536 rather than
+  // throwing -- guard explicitly so a record this large can never reach
+  // that write and produce an internally-inconsistent TLV record.
+  for (const record of records) {
+    if (record.json.length > 0xFFFF) throw new ShareLinkTooLargeError(record.json.length)
+  }
+  const tlvSectionBytes = records.reduce((n, r) => n + 3 + r.json.length, 0) // per record: 1 tag byte + 2 length bytes + value
 
   const bytes = new Uint8Array(HEADER_BYTES + bitfieldBytes + tlvSectionBytes)
   writeHeader(new DataView(bytes.buffer), params.season, params.scheduleHash, gameCount)
@@ -233,11 +252,12 @@ export async function encodeShareLink(params: EncodeShareLinkParams): Promise<st
     packPick(bytes, HEADER_BYTES, i, value)
   })
 
-  if (hasTlv) {
-    const tlvOffset = HEADER_BYTES + bitfieldBytes
-    bytes[tlvOffset] = 1 // tag
-    new DataView(bytes.buffer).setUint16(tlvOffset + 1, jsonBytes!.length, false)
-    bytes.set(jsonBytes!, tlvOffset + 3)
+  let tlvOffset = HEADER_BYTES + bitfieldBytes
+  for (const record of records) {
+    bytes[tlvOffset] = record.tag
+    new DataView(bytes.buffer).setUint16(tlvOffset + 1, record.json.length, false)
+    bytes.set(record.json, tlvOffset + 3)
+    tlvOffset += 3 + record.json.length
   }
 
   // Compression (v2): the pick bitfield is fixed-width -- 888 games always
@@ -278,6 +298,7 @@ export interface DecodedShareLink {
   totalCount: number
   picks: Record<number, number>
   manualDecisions: ConferenceDecisions
+  extras: ScenarioExtras
 }
 
 export type DecodeShareLinkResult = DecodedShareLink | { status: 'malformed' }
@@ -362,34 +383,47 @@ export async function decodeShareLink(
     appliedCount++
   }
 
-  const manualDecisions = readTlvOverrides(bytes, HEADER_BYTES + bitfieldBytes)
+  const { manualDecisions, extras } = readTlvRecords(bytes, HEADER_BYTES + bitfieldBytes)
 
-  return { status: 'ok', hashMatched, appliedCount, totalCount, picks, manualDecisions }
+  return { status: 'ok', hashMatched, appliedCount, totalCount, picks, manualDecisions, extras }
 }
 
 /**
- * Reads the optional TLV manual-tiebreaker-overrides section starting at
- * `offset` (= HEADER_BYTES + bitfieldBytes, the payload's OWN gameCount-derived
- * boundary -- never `currentGames.length`, per D-08's whole reason for
- * existing). A structurally invalid or truncated TLV, or JSON that fails
- * `validateConferenceDecisions`'s shape checks, drops the overrides ONLY --
- * the caller's already-decoded picks bitfield is never affected, and this
- * never throws (D-11/D-12, T-08-03).
+ * Reads the optional TLV records starting at `offset` (= HEADER_BYTES +
+ * bitfieldBytes, the payload's OWN gameCount-derived boundary -- never
+ * `currentGames.length`, per D-08's whole reason for existing). Each record
+ * is parsed and validated on its own: a truncated record ends the section,
+ * unparseable JSON or a failed shape check drops just that record, and
+ * unknown tags are skipped by their length. The caller's already-decoded
+ * picks bitfield is never affected, and this never throws (D-11/D-12,
+ * T-08-03).
+ *
+ * Team/slot ids in the extras record are not positional, so -- like the
+ * manual decisions -- they apply regardless of the schedule-hash match; a
+ * stale bracket pick is simply ignored by `resolveBracket`.
  */
-function readTlvOverrides(bytes: Uint8Array, offset: number): ConferenceDecisions {
-  if (bytes.length <= offset) return {}
+function readTlvRecords(bytes: Uint8Array, start: number): { manualDecisions: ConferenceDecisions, extras: ScenarioExtras } {
+  let manualDecisions: ConferenceDecisions = {}
+  let extras = emptyScenarioExtras()
+  let offset = start
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
 
-  try {
-    if (bytes[offset] !== 1) return {} // not a recognized TLV record -- drop silently
-
-    const length = new DataView(bytes.buffer).getUint16(offset + 1, false)
-    if (offset + 3 + length > bytes.length) return {} // truncated TLV -- drop silently
-
+  for (let i = 0; i < MAX_TLV_RECORDS && offset + 3 <= bytes.length; i++) {
+    const tag = bytes[offset]!
+    const length = view.getUint16(offset + 1, false)
+    if (offset + 3 + length > bytes.length) break // truncated -- drop it and anything after
     const valueBytes = bytes.slice(offset + 3, offset + 3 + length)
-    const json = new TextDecoder().decode(valueBytes)
-    const parsed = JSON.parse(json) // malformed JSON throws here, caught below
-    return validateConferenceDecisions(parsed)
-  } catch {
-    return {}
+    offset += 3 + length
+    try {
+      if (tag === TLV_MANUAL_DECISIONS) {
+        manualDecisions = validateConferenceDecisions(JSON.parse(new TextDecoder().decode(valueBytes)))
+      } else if (tag === TLV_SCENARIO_EXTRAS) {
+        extras = validateScenarioExtras(JSON.parse(new TextDecoder().decode(valueBytes)))
+      }
+    } catch {
+      // Malformed JSON drops this record only.
+    }
   }
+
+  return { manualDecisions, extras }
 }

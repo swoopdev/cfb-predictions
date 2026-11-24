@@ -12,6 +12,7 @@
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-team-data": "tsx scripts/fetch-team-data.ts",
     "fetch-weekly-data": "tsx scripts/fetch-weekly-data.ts",
+    "compute-odds": "tsx scripts/compute-odds.ts",
     "test": "vitest run",
     "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json"
   },

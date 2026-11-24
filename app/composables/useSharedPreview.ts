@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import { decodeShareLink } from '#shared/domain/shareLink'
 import type { ConferenceDecisions } from '#shared/domain/tiebreakers/invalidation'
+import type { ScenarioExtras } from '#shared/domain/playoff/scenarioExtras'
 import type { GamesEnvelope } from '~/utils/fetchSchedule'
 
 /**
@@ -33,6 +34,8 @@ export type SharedPreviewVariant = 'none' | 'default' | 'mismatch' | 'malformed'
 export interface SharedPreviewState {
   picks: Record<number, number>
   manualDecisions: ConferenceDecisions
+  /** Championship picks, bracket picks and ranking override carried by the link. */
+  extras: ScenarioExtras
 }
 
 export function useSharedPreview(games: Ref<GamesEnvelope | undefined>, hash: Ref<string>) {
@@ -66,7 +69,7 @@ export function useSharedPreview(games: Ref<GamesEnvelope | undefined>, hash: Re
         return
       }
 
-      preview.value = { picks: result.picks, manualDecisions: result.manualDecisions }
+      preview.value = { picks: result.picks, manualDecisions: result.manualDecisions, extras: result.extras }
       counts.value = { applied: result.appliedCount, total: result.totalCount }
       bannerVariant.value = result.hashMatched ? 'default' : 'mismatch'
     },

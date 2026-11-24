@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { ref, nextTick } from 'vue'
 import { useSharedPreview } from '../../app/composables/useSharedPreview'
 import { encodeShareLink } from '../../shared/domain/shareLink'
+import { emptyScenarioExtras } from '../../shared/domain/playoff/scenarioExtras'
 import type { Game } from '../../shared/types/schedule'
 import type { GamesEnvelope } from '../../app/utils/fetchSchedule'
 
@@ -83,7 +84,7 @@ describe('useSharedPreview', () => {
     await flushDecode()
 
     expect(bannerVariant.value).toBe('default')
-    expect(preview.value).toEqual({ picks, manualDecisions: {} })
+    expect(preview.value).toEqual({ picks, manualDecisions: {}, extras: emptyScenarioExtras() })
     expect(counts.value).toEqual({ applied: 2, total: 2 })
   })
 
@@ -100,7 +101,7 @@ describe('useSharedPreview', () => {
     // CR-01 fail-closed: a hash mismatch means positional re-application is
     // unsafe, so nothing is applied even though the payload declared 1 pick.
     expect(counts.value).toEqual({ applied: 0, total: 1 })
-    expect(preview.value).toEqual({ picks: {}, manualDecisions: {} })
+    expect(preview.value).toEqual({ picks: {}, manualDecisions: {}, extras: emptyScenarioExtras() })
   })
 
   it('decodes to "malformed" for a syntactically invalid code', async () => {

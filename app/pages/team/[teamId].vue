@@ -85,6 +85,11 @@ const displayStats = computed(() => {
     .map(s => ({ label: s.label, value: stats.value![s.key] }))
 })
 
+// The active scenario's outlook (odds, title-game paths). FBS only -- an
+// FCS opponent's page has no playoff path to show.
+const { scenarios, activeScenarioId } = useScenarios(2026)
+const activeScenarioName = computed(() => scenarios.value.find(s => s.id === activeScenarioId.value)?.name)
+
 const loadState = computed<'loading' | 'error' | 'ready'>(() => {
   if (teamsError.value) return 'error'
   if (teamsPending.value) return 'loading'
@@ -186,6 +191,15 @@ const loadState = computed<'loading' | 'error' | 'ready'>(() => {
           </div>
         </div>
       </div>
+
+      <TeamOutlook
+        v-if="team.classification === 'fbs'"
+        :key="activeScenarioId"
+        :team="team"
+        :scenario-id="activeScenarioId"
+        :scenario-name="activeScenarioName"
+        class="mb-6"
+      />
 
       <!-- Coach career -->
       <div

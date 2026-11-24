@@ -13,6 +13,9 @@ import type { ConferenceGroup } from '~/utils/schedule'
 import { getAdjacentWeek } from '~/utils/schedule'
 import { fillWeekRemaining, fillSeasonRemaining, clearWeek, clearSeason } from '~/utils/bulkPickOperations'
 import type { SharedPreviewState } from '~/composables/useSharedPreview'
+import { useSeasonModelData } from '~/composables/useSeasonModelData'
+import { useConferencePaths, useScenarioOdds, useScenarioState } from '~/composables/useScenarioOdds'
+import { formatOdds } from '~/utils/oddsFormat'
 
 /**
  * Owns every scenario-scoped composable call (`usePicksStorage`,
@@ -186,12 +189,14 @@ const picks = computed<Record<number, number>>({
   }
 })
 
-// A share-link payload carries no championship picks -- the encoded
-// bitfield covers real CFBD game ids only -- so a preview starts from an
-// empty, purely in-memory map. It must never read or write the real active
-// scenario's championship storage (the same D-07 no-writes-during-preview
-// rule the picks seam above follows).
+// A share link carries its championship picks in the extras record; a
+// preview starts from a purely in-memory copy of them. It must never read
+// or write the real active scenario's championship storage (the same D-07
+// no-writes-during-preview rule the picks seam above follows).
 const previewChampionshipPicks = ref<Record<string, number>>({})
+watch(() => props.preview, (preview) => {
+  previewChampionshipPicks.value = { ...(preview?.extras.championshipPicks ?? {}) }
+}, { immediate: true })
 const championshipPicks = computed<Record<string, number>>(() =>
   (props.preview ? previewChampionshipPicks.value : storedChampionshipPicks.value)
 )
@@ -199,6 +204,33 @@ const championshipPicks = computed<Record<string, number>>(() =>
 const standings = computed<StandingsResult | undefined>(() => (props.preview ? previewStandings.value : storedStandings.value))
 const rankings = computed<ResolvedTiebreakers | undefined>(() => (props.preview ? previewRankingsWithManual.value : storedRankings.value))
 const slateComplete = computed<SlateCompletion | undefined>(() => (props.preview ? previewSlateComplete.value : storedSlateComplete.value))
+
+// Title-game odds for the sidebar's CCG column: exact enumeration where a
+// conference has few enough open games, simulation otherwise -- the same
+// numbers the conference hubs show. Real scenario only: a share-link
+// preview is a frozen snapshot with nothing to simulate against.
+const seasonData = useSeasonModelData(props.season)
+const { scenario: oddsScenario } = useScenarioState(props.scenarioId, props.season)
+const { teamOdds } = useScenarioOdds(seasonData, oddsScenario, { sims: 3000 })
+const conferencePaths = P4_CONFERENCES.map(conference => ({
+  conference,
+  paths: useConferencePaths(seasonData, oddsScenario, ref(conference)).paths
+}))
+
+const titleGameOdds = computed<Partial<Record<ConferenceId, ReadonlyMap<number, string>>> | undefined>(() => {
+  if (props.preview || teamOdds.value.size === 0) return undefined
+  const out: Partial<Record<ConferenceId, ReadonlyMap<number, string>>> = {}
+  for (const { conference, paths } of conferencePaths) {
+    const exact = paths.value?.mode === 'exact' ? new Map(paths.value.teams.map(t => [t.teamId, t.probability])) : undefined
+    const formatted = new Map<number, string>()
+    for (const row of standings.value?.[conference] ?? []) {
+      const p = exact?.get(row.id)
+      formatted.set(row.id, p !== undefined ? formatOdds(p, true) : formatOdds(teamOdds.value.get(row.id)?.titleGame))
+    }
+    out[conference] = formatted
+  }
+  return out
+})
 
 // Committing a NEW manual tiebreaker decision is disabled during an active
 // preview -- there is no scenario id to attach it to, and no requirement
@@ -359,6 +391,22 @@ function advanceWeek() {
               </UButton>
             </div>
             <div class="ml-auto flex items-center gap-2 lg:order-5 lg:ml-auto">
+              <UButton
+                to="/conference/sec"
+                icon="i-lucide-trophy"
+                color="neutral"
+                variant="ghost"
+                size="xl"
+                aria-label="Title races"
+              />
+              <UButton
+                to="/playoff"
+                icon="i-lucide-git-fork"
+                color="neutral"
+                variant="ghost"
+                size="xl"
+                aria-label="Playoff bracket"
+              />
               <UButton
                 to="/teams"
                 icon="i-lucide-search"
@@ -551,6 +599,7 @@ function advanceWeek() {
         :commit-ordering="commitOrdering"
         :championship-picks="championshipPicks"
         :preview-active="props.preview !== null"
+        :title-game-odds="titleGameOdds"
       />
       <USkeleton
         v-else-if="loadState === 'loading'"

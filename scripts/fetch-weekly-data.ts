@@ -3,6 +3,8 @@ import { client, getRankings, getPregameWinProbabilities, getLines, getMedia, ge
 
 import {
   transformRankings,
+  transformCfpRankings,
+  transformPostseasonGames,
   transformWinProbabilities,
   transformBettingLines,
   transformMedia,
@@ -49,13 +51,24 @@ if (rankingsError || !rawWeeks || rawWeeks.length === 0) {
   process.exit(1)
 }
 
-const latestWeek = RawPollWeekSchema.parse(rawWeeks[rawWeeks.length - 1])
+// CFBD does NOT return poll weeks in order (a live 2026 response came back
+// as weeks 1, 4, 2, 3, 11, 5, ...), so "the last entry" is not reliably the
+// latest week -- sort regular-season weeks before postseason, then by week.
+const sortedWeeks = rawWeeks
+  .map(raw => RawPollWeekSchema.parse(raw))
+  .sort((a, b) => Number(a.seasonType === 'postseason') - Number(b.seasonType === 'postseason') || a.week - b.week)
+const latestWeek = sortedWeeks[sortedWeeks.length - 1]!
 const rankingsOutput = transformRankings(latestWeek)
 if (!rankingsOutput) {
   console.error(`No AP or CFP committee poll found for season ${season}, week ${latestWeek.week} — refusing to overwrite committed data.`)
   process.exit(1)
 }
 const week = rankingsOutput.week
+
+// The committee ranking is looked up across ALL weeks, not just the newest:
+// the newest week is AP-only from Sunday until the committee's Tuesday
+// release, and the bracket must keep showing the committee's last order.
+const cfpRankingsOutput = transformCfpRankings(season, rawWeeks)
 
 const { data: rawWinProbs, error: wpError } = await getPregameWinProbabilities({ query: { year: season, week } })
 if (wpError || !rawWinProbs) {
@@ -126,6 +139,8 @@ const rawAts = await fetchOrWarn('ATS records', () => getTeamsAts({ query: { yea
 const rawRecords = await fetchOrWarn('records', () => getRecords({ query: { year: season } }))
 const rawTeamStats = await fetchOrWarn('team stats', () => getTeamStats({ query: { year: season, classification: 'fbs' } }))
 const rawPlayerStats = await fetchOrWarn('player season stats', () => getPlayerSeasonStats({ query: { year: season } }))
+// Bowls and CFP rounds -- kept out of games.json (see shared/types/postseason.ts).
+const rawPostseasonGames = await fetchOrWarn('postseason games', () => getGames({ query: { year: season, seasonType: 'postseason', classification: 'fbs' } }))
 
 // SP+/FPI/Elo/team-stats/player-stats are keyed by team name on the wire —
 // resolved back to our canonical teamId via the already-committed
@@ -155,6 +170,8 @@ const outDir = `public/data/${season}`
 await mkdir(outDir, { recursive: true })
 
 await writeFile(`${outDir}/rankings.json`, JSON.stringify(rankingsOutput, null, 2))
+await writeFile(`${outDir}/cfp-rankings.json`, JSON.stringify(cfpRankingsOutput, null, 2))
+await writeFile(`${outDir}/postseason-games.json`, JSON.stringify({ season, games: transformPostseasonGames(rawPostseasonGames) }, null, 2))
 await writeFile(`${outDir}/win-probabilities.json`, JSON.stringify(winProbabilitiesOutput, null, 2))
 await writeFile(`${outDir}/betting-lines.json`, JSON.stringify(bettingLinesOutput, null, 2))
 await writeFile(`${outDir}/media.json`, JSON.stringify(mediaOutput, null, 2))
@@ -168,6 +185,7 @@ const completedCount = games.filter(g => g.completed).length
 
 console.log(
   `Fetched ${rankingsOutput.rankings.length} rankings (${rankingsOutput.poll}, week ${week}), `
+  + `${cfpRankingsOutput.rankings.length} CFP committee rankings (week ${cfpRankingsOutput.week ?? 'none yet'}), `
   + `${winProbabilitiesOutput.probabilities.length} win probabilities, `
   + `${bettingLinesOutput.lines.length} betting lines, `
   + `${mediaOutput.media.length} media entries, `

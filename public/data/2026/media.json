@@ -3,6 +3,27 @@
   "week": 13,
   "media": [
     {
+      "gameId": 401866472,
+      "mediaType": "tv",
+      "outlet": "CBSSN",
+      "startTime": "2026-11-27T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401866473,
+      "mediaType": "tv",
+      "outlet": "ESPNU",
+      "startTime": "2026-11-27T17:00:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
+      "gameId": 401858536,
+      "mediaType": "tv",
+      "outlet": "CBS",
+      "startTime": "2026-11-27T17:08:00.000Z",
+      "isStartTimeTBD": false
+    },
+    {
       "gameId": 401934578,
       "mediaType": "web",
       "outlet": "ESPN+",
@@ -622,27 +643,6 @@
       "gameId": 401856762,
       "mediaType": "tv",
       "outlet": "ABC",
-      "startTime": "2026-11-27T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401858536,
-      "mediaType": "tv",
-      "outlet": "CBS",
-      "startTime": "2026-11-27T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866472,
-      "mediaType": "tv",
-      "outlet": "CBSSN",
-      "startTime": "2026-11-27T17:00:00.000Z",
-      "isStartTimeTBD": false
-    },
-    {
-      "gameId": 401866473,
-      "mediaType": "tv",
-      "outlet": "ESPNU",
       "startTime": "2026-11-27T17:00:00.000Z",
       "isStartTimeTBD": false
     },
